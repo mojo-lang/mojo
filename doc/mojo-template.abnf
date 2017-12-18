@@ -1,0 +1,37 @@
+;; GRAMMAR OF AN TEMPLATE
+template = 1*(text / multi-block / block / value / comment)
+
+block = block-begin template block-end
+block-begin = "{%" block-statements "%}"
+block-end = "{%" ["end" / ("end" end-tag)] "%}"
+
+end-tag =
+
+block-statement =
+block-statements = ((block-block-statement / for-block-statement) statements) / statements
+
+block-block-statement = (("define" "block") / "block" / "include") block-name
+for-block-statement = "for" pattern "in" expression
+raw-block-statement = "raw"
+
+multi-block = if-block
+
+if-block = "{%" "if" expression "%}" template *(if-block-else-if-part) [if-block-else-part] block-end
+if-block-else-if-part = "{%" "else" "if" expression "%}" template
+if-block-else-part = "{%" "else" "%}" template
+
+text = 1*char
+
+comment = comment-begin *(comment / char) comment-end
+comment-begin = "{#"
+comment-end = "#}"
+
+value = value-begin expression value-end
+value-begin = "{{"
+value-end = "}}"
+
+;%% if test line-end
+;%%
+;%% raw
+;%%
+;;{{foo | default('345')}}
