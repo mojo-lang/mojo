@@ -69,6 +69,17 @@ struct type_action<grammar::generic_parameter_clause::begin> {
     }
 };
 
+using namespace std::literals::string_literals;
+
+template <>
+struct type_action<grammar::type_alias_clause::predication> {
+    template <typename Input>
+    static void apply(const Input&, type_state& state) {
+        state.push_element();
+        state.array->type = "type_alias_declaration"s;
+    }
+};
+
 template <>
 struct type_action<grammar::type_inheritance_clause::predication> {
     template <typename Input>
@@ -78,7 +89,7 @@ struct type_action<grammar::type_inheritance_clause::predication> {
 };
 
 template <>
-struct type_action<grammar::type_declaration_clause::members_begin> {
+struct type_action<grammar::type_members_clause::members_begin> {
     template <typename Input>
     static void apply(const Input&, type_state& state) {
         state.push_element();
@@ -102,8 +113,8 @@ struct control<grammar::type_declaration_clause>
                                      errors> {};
 
 template <>
-struct control<grammar::type_declaration_clause::members>
-    : pegtl::change_state_and_action<grammar::type_declaration_clause::members,
+struct control<grammar::type_members_clause::members>
+    : pegtl::change_state_and_action<grammar::type_members_clause::members,
                                      declaration::type_members_state,
                                      array_action,
                                      errors> {};

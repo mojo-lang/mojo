@@ -8,6 +8,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -ftemplate-backtrace-limit=0 
 INCLUDE_DIRECTORIES(
     /usr/local/include
     ${PROJECT_SOURCE_DIR}/../ncraft/include
+        ${PROJECT_SOURCE_DIR}/../../ncraft/ncraft-core/include
+    ${PROJECT_SOURCE_DIR}/../lang/include
+    ${PROJECT_SOURCE_DIR}/../core/include
+
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/test
     ${PROJECT_SOURCE_DIR}/thirdparty/PEGTL
@@ -15,7 +19,8 @@ INCLUDE_DIRECTORIES(
 
 #AUX_SOURCE_DIRECTORY(TEST_FILES test/mojo)
 set(SOURCE_FILES
-        src/mojo.cpp include/mojo/lang/struct_field_of.hpp include/mojo/lang/struct_virtual_field.hpp)
+        include/mojo/grammar/rules.hpp
+        src/mojo.cpp)
 
 AUX_SOURCE_DIRECTORY(test/mojo MOJO_TEST_SRCS)
 AUX_SOURCE_DIRECTORY(test/mojo/grammar MOJO_GRAMMAR_TEST_SRCS)
@@ -39,12 +44,12 @@ add_executable(mojo_test
 target_link_libraries(mojo_test boost_system boost_filesystem)
 #add_executable(json_build ${JOSON_FILES})
 
-set(LANG_SOURCE_FILES
-        src/mojo/lang/data_type.cpp
-        src/mojo/lang/string_type.cpp
-        src/mojo/lang/numeric_type.cpp
-        test/mojo/lang/data_type_test.cpp)
+#set(LANG_SOURCE_FILES
+#        src/mojo/lang/data_type.cpp
+#        src/mojo/lang/string_type.cpp
+#        src/mojo/lang/numeric_type.cpp
+#        test/mojo/lang/data_type_test.cpp)
 
-add_executable(mojo_lang_test
-        ${LANG_SOURCE_FILES})
-target_link_libraries(mojo_lang_test boost_system boost_filesystem)
+#add_executable(mojo_lang_test
+#        ${LANG_SOURCE_FILES})
+#target_link_libraries(mojo_lang_test boost_system boost_filesystem)

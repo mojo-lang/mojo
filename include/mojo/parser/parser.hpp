@@ -26,6 +26,7 @@
 #include <mojo/parser/expression/parenthesized_expression.hpp>
 #include <mojo/parser/expression/postfix_expression.hpp>
 #include <mojo/parser/expression/prefix_expression.hpp>
+#include <mojo/parser/expression/string_prefix_literal.hpp>
 #include <mojo/parser/expression/wildcard_expression.hpp>
 #include <mojo/parser/generics.hpp>
 #include <mojo/parser/pattern.hpp>

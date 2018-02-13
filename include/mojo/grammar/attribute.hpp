@@ -9,16 +9,20 @@
 namespace mojo {
 namespace grammar {
 
-struct attribute_argument_begin : pegtl::one<'('> {};
-struct attribute_argument_end : pegtl::one<')'> {};
-struct attribute_argument
-    : pegtl::seq<attribute_argument_begin, seps, expression, seps, attribute_argument_end> {
-    using begin = attribute_argument_begin;
-    using end = attribute_argument_end;
+struct attribute_arguments_begin : pegtl::one<'('> {};
+struct attribute_arguments_end : pegtl::one<')'> {};
+struct attribute_arguments_separator : pegtl::one<','> {};
+struct attribute_arguments_content : pegtl::list<expression, attribute_arguments_separator, sep> {};
+struct attribute_arguments
+    : pegtl::seq<attribute_arguments_begin, seps, attribute_arguments_content, seps, attribute_arguments_end> {
+    using begin = attribute_arguments_begin;
+    using end = attribute_arguments_end;
+    using content = attribute_arguments_content;
+    using separator = attribute_arguments_separator;
 };
 
 struct attribute_clause
-    : pegtl::sor<decimal_digits, pegtl::seq<path_identifier, pre_pad_opt<attribute_argument, pegtl::ascii::blank>>> {};
+    : pegtl::sor<decimal_digits, pegtl::seq<generic_path_identifier, pre_pad_opt<attribute_arguments, pegtl::ascii::blank>>> {};
 
 /**
  * GRAMMAR OF AN ATTRIBUTE

@@ -20,8 +20,8 @@ Term {
 }
 
 
-insert(friend_of) | {from: sally, to: john, since: 2016-12-3}
-insert(has_read) | {from: sally, to: gdb, rating: 4, on: 2015-3-15}
+insert(friend_of) | {from: sally, to: john, since: T'2016-12-3'}
+insert(has_read) | {from: sally, to: gdb, rating: 4, on: T'2015-3-15'}
 
 person | name == 'sally' | friend_of(john) | since
 

@@ -51,7 +51,7 @@ struct dictionary_term_state : term_state {
     dictionary_term_state(const char* name) : dictionary(make_term(name)) {
     }
     dictionary_term_state(const char* name, const char* field_name)
-            : dictionary(make_term(name)), field_name(field_name) {
+        : dictionary(make_term(name)), field_name(field_name) {
     }
 
     void add_key() {
@@ -78,27 +78,26 @@ struct dictionary_term_state : term_state {
     }
 };
 
-template<typename Rule>
-struct array_action : pegtl::nothing<Rule> {
-};
+template <typename Rule>
+struct array_action : pegtl::nothing<Rule> {};
 
-template<char Char>
+template <char Char>
 struct array_action<pegtl::one<Char>> {
-    template<typename Input, typename State>
-    static void apply(const Input&, State &state) {
+    template <typename Input, typename State>
+    static void apply(const Input&, State& state) {
         state.push_element();
     }
 };
 
-template<char Char>
-struct array_action<grammar::separator<Char>> {
-    template<typename Input, typename State>
-    static void apply(const Input&, State &state) {
+template <char Char, char AtChar>
+struct array_action<grammar::separator<Char, AtChar>> {
+    template <typename Input, typename State>
+    static void apply(const Input&, State& state) {
         state.push_element();
     }
 };
 
-}
-}
+}  // namespace parser
+}  // namespace mojo
 
 #endif  // MOJO_PARSER_TERM_STATE_HPP

@@ -101,29 +101,38 @@ type BoundStakeMarkEdge {
 }
 
 /// 
-service StakeMarkService {
-	
+interface StakeMarkService {
 	///
 	///
 	@http.get('/stake_marks')
-	func get_stake_mark(location: LngLat) -> StakeMark {
-		edges | min_dist(location, 100) | project_point -> {
-				stake_mark_edge | id == project_point.id | stake_marks[project_point.index] | {
-					road_number
-					road_name
-					location: project_point.point
-					value: {
-						km: value.km
-						meter: value.meter + project_point.distance
-					}
-				}}
-	}
+    get_stake_mark(location: LngLat //< 
+						) -> StakeMark //<
 
 	///
 	///
 	@http.get('/stakemarks/{road}/{stake_mark}')
-	func locate_stake_mark(road:String, stake_mark:String, direction:RoadDirection=forward) -> StakeMark {
-		var sm_value = StakeMark.Value(stake_mark)
+	locate_stake_mark(road:String,
+	                  stake_mark:String,
+					  direction:RoadDirection=forward
+					  ) -> StakeMark
+}
+
+// impl
+func StakeMarkService.get_stake_mark(location: LngLat) -> StakeMark {
+	edges | min_dist(location, 100) | project_point -> {
+			stake_mark_edge | id == project_point.id | stake_marks[project_point.index] | {
+				road_number
+				road_name
+				location: project_point.point
+				value: {
+					km: value.km
+					meter: value.meter + project_point.distance
+				}
+			}}
+}
+
+func StakeMarkService.locate_stake_mark(road:String, stake_mark:String, direction:RoadDirection=forward) -> StakeMark {
+	var sm_value = StakeMark.Value(stake_mark)
 		bound_stake_marks |
 			$.road_number == road &&
 				$.value.kilometer == sm_value.kilometer &&

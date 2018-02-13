@@ -16,19 +16,25 @@ struct seps : pegtl::star<sep> {};
 struct inline_sep : pegtl::sor<pegtl::ascii::blank, block_comment> {};
 struct inline_seps : pegtl::star<inline_sep> {};
 
-template <char Char>
+template <char Char, char AtChar>
 struct separator
-    : pegtl::seq<inline_seps, pegtl::sor<pegtl::seq<seps, pegtl::one<Char>>, pegtl::eolf, pegtl::one<Char>>> {
+    : pegtl::seq<inline_seps, pegtl::sor<pegtl::seq<seps, pegtl::one<Char>>, pegtl::eolf, pegtl::at<pegtl::one<AtChar>>>> {
 };
 
-using value_separator = separator<','>;
+template <char Char>
+struct separator<Char, '_'>
+    : pegtl::seq<inline_seps, pegtl::sor<pegtl::seq<seps, pegtl::one<Char>>, pegtl::eolf>> {
+};
+
+// support line break in separator
+template <typename Rule, char Char, char AtChar = '_'>
+using list = pegtl::seq<Rule, pegtl::star<separator<Char, AtChar>, seps, Rule>>;
+
+using value_separator = separator<',', '_'>;
+using statement_separator = separator<';', '}'>;
 
 template <typename Rule, typename Pad>
 using pre_pad_opt = pegtl::opt<pegtl::star<Pad>, Rule>;
-
-// support line break in separator
-template <typename Rule, typename Sep, typename Pad>
-using list = pegtl::list<Rule, pegtl::seq<Sep, pegtl::star<Pad>>>;
 
 template <typename Rule, typename Sep, typename Pad>
 using list_tail =

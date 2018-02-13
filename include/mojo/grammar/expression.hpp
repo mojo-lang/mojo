@@ -1,7 +1,6 @@
 #ifndef MOJO_GRAMMAR_EXPRESSION_HPP
 #define MOJO_GRAMMAR_EXPRESSION_HPP
 
-#include <pegtl.hh>
 #include <mojo/grammar/generics.hpp>
 #include <mojo/grammar/identifier.hpp>
 #include <mojo/grammar/keys.hpp>
@@ -9,6 +8,7 @@
 #include <mojo/grammar/operators.hpp>
 #include <mojo/grammar/rules.hpp>
 #include <mojo/grammar/string_literal.hpp>
+#include <pegtl.hh>
 
 namespace mojo {
 namespace grammar {
@@ -165,6 +165,9 @@ struct array_literal
 struct path_identifier_separator : pegtl::one<'.'> {};
 struct path_identifier : pegtl::list<identifier, path_identifier_separator> {};
 
+struct generic_path_identifier
+    : pegtl::seq<path_identifier, pegtl::opt<generic_argument_clause>> {};
+
 struct object_literal_key
     : pegtl::sor<path_identifier, integer_literal, static_string_literal> {};
 struct object_literal_value_separator : pegtl::one<':'> {};
@@ -193,11 +196,16 @@ struct object_literal
     using end = object_literal_end;
 };
 
+struct string_prefix : pegtl::seq<pegtl::alpha, pegtl::rep_max<7, pegtl::alnum>> {};
+struct string_prefix_literal : pegtl::seq<string_prefix, static_string_literal> {};
+
 /**
  * GRAMMAR OF A LITERAL EXPRESSION
  */
-struct literal_expression : pegtl::sor<literal, array_literal, object_literal> {};
-}
-}
+struct literal_expression
+    : pegtl::sor<string_prefix_literal, literal, array_literal, object_literal> {};
+
+}  // namespace grammar
+}  // namespace mojo
 
 #endif  // MOJO_GRAMMAR_EXPRESSION_HPP

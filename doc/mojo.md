@@ -107,11 +107,11 @@
 
 4. String（字符串） "" ''
 
-5. String Template  "{}"template
+5. String Template  t"{}"
 
 6. Bytes (数据)
 
-7. Regex (正则表达式) /^sss$/
+7. Regex (正则表达式) r'^sss$'
 
 8. 数量   p t m k  PB TB MB 34KB ?
 

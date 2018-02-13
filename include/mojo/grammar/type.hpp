@@ -1,13 +1,14 @@
 #ifndef MOJO_GRAMMAR_TYPE_HPP
 #define MOJO_GRAMMAR_TYPE_HPP
 
-#include <pegtl.hh>
 #include <mojo/grammar/identifier.hpp>
 #include <mojo/grammar/rules.hpp>
+#include <pegtl.hh>
 
 namespace mojo {
 namespace grammar {
 
+struct union_type;
 struct array_type;
 struct dictionary_type;
 struct tuple_type;
@@ -15,23 +16,33 @@ struct function_type;
 struct simplified_one_parameter_function_type;
 
 struct type_identifier;
-struct metatype_type;
+
 struct primary_type
     : pegtl::sor<array_type, dictionary_type, tuple_type, type_identifier> {};
 
 /**
  * GRAMMAR OF A TYPE
  */
-struct type : pegtl::sor<function_type, primary_type, metatype_type> {};
+struct data_type : pegtl::sor<union_type, primary_type> {};
+struct type : pegtl::sor<function_type, data_type> {};
 
 /**
  * GRAMMAR OF A TYPE ANNOTATION
  */
 struct attributes;
+struct required_attribute : pegtl::one<'!'> {};
+struct optional_attribute : pegtl::one<'?'> {};
 struct type_annotation_predication : pegtl::one<':'> {};
+
+using primary_type_annotation = pegtl::seq<
+    primary_type,
+    pre_pad_opt<pegtl::sor<required_attribute, optional_attribute>, pegtl::ascii::blank>,
+    pre_pad_opt<attributes, pegtl::ascii::blank>>;
+
+struct primary_type_annotation_clause : primary_type_annotation {};
+struct data_type_annotation_clause : pegtl::sor<union_type, primary_type_annotation> {};
 struct type_annotation_clause
-    : pegtl::sor<pegtl::seq<primary_type, pre_pad_opt<attributes, pegtl::ascii::blank>>,
-                 function_type> {};
+    : pegtl::sor<union_type, function_type, primary_type_annotation> {};
 
 struct type_annotation
     : pegtl::seq<type_annotation_predication, blanks, type_annotation_clause> {
@@ -79,7 +90,8 @@ struct tuple_type
     using content = tuple_type_body;
 };
 
-struct function_type_parameters : pegtl::list<type, pegtl::one<','>, sep> {};
+struct function_type_parameters
+    : pegtl::list<type_annotation_clause, pegtl::one<','>, sep> {};
 
 /**
  * GRAMMAR OF A FUNCTION TYPE
@@ -93,7 +105,7 @@ struct function_type : pegtl::sor<pegtl::seq<pegtl::one<'('>,
                                              seps,
                                              function_type_return_arrow,
                                              seps,
-                                             type>,
+                                             type_annotation_clause>,
                                   simplified_one_parameter_function_type> {};
 
 /**
@@ -101,13 +113,16 @@ struct function_type : pegtl::sor<pegtl::seq<pegtl::one<'('>,
  *
  * this is a syntactic sugar for the only one parameter function.
  */
-struct simplified_one_parameter_function_type
-    : pegtl::seq<primary_type, seps, function_type_return_arrow, seps, type> {};
+struct simplified_one_parameter_function_type : pegtl::seq<primary_type_annotation_clause,
+                                                           seps,
+                                                           function_type_return_arrow,
+                                                           seps,
+                                                           type_annotation_clause> {};
 
 /**
  * GRAMMAR OF AN ARRAY TYPE
  */
-struct array_type_content : type {};
+struct array_type_content : type_annotation_clause {};
 struct array_type
     : pegtl::seq<pegtl::one<'['>, seps, array_type_content, seps, pegtl::one<']'>> {
     using content = array_type_content;
@@ -116,26 +131,40 @@ struct array_type
 /**
  * GRAMMAR OF A DICTIONARY TYPE
  */
-
 struct dictionary_type_separator : pegtl::one<':'> {};
-struct dictionary_type_content
-    : pegtl::seq<type_identifier, seps, dictionary_type_separator, seps, type> {};
+struct dictionary_key
+    : pegtl::seq<type_identifier, pre_pad_opt<attributes, pegtl::ascii::blank>> {};
+struct dictionary_type_content : pegtl::seq<dictionary_key,
+                                            seps,
+                                            dictionary_type_separator,
+                                            seps,
+                                            type_annotation_clause> {};
 struct dictionary_type
     : pegtl::seq<pegtl::one<'{'>, seps, dictionary_type_content, seps, pegtl::one<'}'>> {
 };
 
 /**
- *  GRAMMAR OF A METATYPE TYPE
+ * GRAMMAR OF A UNION TYPE
  */
-struct metatype_type_suffix : pegtl_string_t(".Type") {};
-struct metatype_type : pegtl::seq<primary_type, metatype_type_suffix> {};
+struct union_type_separator : pegtl::one<'|'> {};
+struct union_type
+    : pegtl::seq<
+          primary_type_annotation_clause,
+          pegtl::plus<seps, union_type_separator, seps, primary_type_annotation_clause>> {
+};
+
+/**
+ * GRAMMAR OF A INTERSECTION TYPE
+ */
 
 /**
  * GRAMMAR OF A TYPE INHERITANCE CLAUSE
  */
 struct type_inheritance_clause_content_separator : pegtl::one<','> {};
 struct type_inheritance_clause_content
-    : pegtl::list<type_identifier, type_inheritance_clause_content_separator, sep> {
+    : pegtl::list<data_type_annotation_clause,
+                  type_inheritance_clause_content_separator,
+                  sep> {
     using separator = type_inheritance_clause_content_separator;
 };
 struct type_inheritance_predication : pegtl::one<':'> {};
@@ -145,7 +174,7 @@ struct type_inheritance_clause
     using predication = type_inheritance_predication;
     using content = type_inheritance_clause_content;
 };
-}
-}
+}  // namespace grammar
+}  // namespace mojo
 
 #endif  // MOJO_GRAMMAR_TYPE_HPP

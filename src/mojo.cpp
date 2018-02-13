@@ -26,7 +26,8 @@ int main(int argc, char* argv[]) {
     }
     else {
         pegtl::parse_file<mojo::grammar::grammar, pegtl::nothing, mojo::parser::control>(file_name, state);
+        std::cout << *state.term << std::endl;
     }
-    std::cout << *state.term << std::endl;
+
     return 0;
 }

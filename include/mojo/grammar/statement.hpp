@@ -16,10 +16,6 @@ struct loop_statement;
 struct branch_statement;
 struct control_transfer_statement;
 
-struct statement_separator
-    : pegtl::seq<inline_seps,
-                 pegtl::sor<pegtl::eolf, pegtl::one<';'>, pegtl::at<pegtl::one<'}'>>>> {};
-
 /**
  * GRAMMAR OF A STATEMENT
  */
@@ -28,8 +24,7 @@ struct statement : pegtl::sor<loop_statement,
                               control_transfer_statement,
                               declaration,
                               expression> {};
-struct statements : pegtl::seq<statement,
-                               pegtl::star<statement_separator, seps, statement>> {
+struct statements : list<statement, ';', '}'> {
 };
 
 /**
@@ -97,7 +92,7 @@ struct else_statement : pegtl::seq<key_else, seps, else_statement_clause> {};
 struct match_arrow : pegtl_string_t("=>") {};
 struct match_case
     : pegtl::seq<pattern, seps, match_arrow, seps, pegtl::sor<code_block, expression>> {};
-struct match_cases : pegtl::plus<pegtl::seq<seps, match_case, statement_separator>> {};
+struct match_cases : list<match_case, ';', '}'> {};
 
 /**
  * GRAMMAR OF A SWITCH STATEMENT

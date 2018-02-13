@@ -1,9 +1,9 @@
 #ifndef MOJO_GRAMMAR_DECLARATION_HPP
 #define MOJO_GRAMMAR_DECLARATION_HPP
 
-#include <pegtl.hh>
 #include <mojo/grammar/statement.hpp>
 #include <mojo/grammar/type.hpp>
+#include <pegtl.hh>
 
 namespace mojo {
 namespace grammar {
@@ -134,7 +134,7 @@ struct enum_member : pegtl::seq<pegtl::opt<document, document_separator>,
 
 struct enum_members_begin : pegtl::one<'{'> {};
 struct enum_members_end : pegtl::one<'}'> {};
-struct enum_members : list<enum_member, separator<','>, sep> {};
+struct enum_members : list<enum_member, ',', '}'> {};
 struct enum_declaration_clause : pegtl::seq<type_name,
                                             pegtl::pad_opt<type_inheritance_clause, sep>,
                                             enum_members_begin,
@@ -162,46 +162,58 @@ struct type_member_declaration : pegtl::seq<identifier,
 struct type_member_group_declaration;
 struct type_dynamic_member_declaration {};
 
+struct type_field
+    : pegtl::seq<pegtl::opt<document, document_separator>, type_member_declaration> {};
+
 struct type_member
     : pegtl::seq<pegtl::opt<document, document_separator>,
                  pegtl::sor<type_member_declaration,
                             pegtl::seq<pegtl::opt<attributes, attribute_separator>,
-                                       pegtl::sor<type_declaration, enum_declaration>>,
-                            type_member_group_declaration>> {
+                                       pegtl::sor<type_declaration,
+                                                  enum_declaration,
+                                                  type_member_group_declaration>>>> {
     using member = type_member_declaration;
     using group_member = type_member_group_declaration;
     using inner_type = type_declaration;
     using inner_enum = enum_declaration;
 };
 
-struct type_members : list<type_member, separator<','>, sep> {};
+struct type_alias_predication : pegtl::one<'='> {};
+struct type_alias_clause : pegtl::seq<type_alias_predication, seps, data_type> {
+    using predication = type_alias_predication;
+};
+
+struct type_members : list<type_member, ',', '}'> {};
+
 struct type_members_begin : pegtl::one<'{'> {};
 struct type_members_end : pegtl::one<'}'> {};
-struct type_declaration_clause : pegtl::seq<type_name,
-                                            pegtl::pad_opt<generic_parameter_clause, sep>,
-                                            pegtl::pad_opt<type_inheritance_clause, sep>,
-                                            type_members_begin,
-                                            seps,
-                                            type_members,
-                                            seps,
-                                            type_members_end> {
+struct type_members_clause
+    : pegtl::seq<type_members_begin, seps, type_members, seps, type_members_end> {
     using member = type_member;
     using members_begin = type_members_begin;
     using members_end = type_members_end;
     using members = type_members;
 };
 
-struct type_member_group_members : list<type_member_declaration, separator<','>, sep> {};
+struct type_declaration_clause
+    : pegtl::seq<type_name,
+                 pegtl::pad_opt<generic_parameter_clause, sep>,
+                 seps,
+                 pegtl::sor<type_alias_clause,
+                            pegtl::seq<type_inheritance_clause,
+                                       pegtl::opt<pegtl::seq<seps, type_members_clause>>>,
+                            type_members_clause>> {
+};
+
+struct type_member_group_members : list<type_field, ',', '}'> {};
 struct type_member_group_members_begin : pegtl::one<'{'> {};
 struct type_member_group_members_end : pegtl::one<'}'> {};
-struct type_member_group_declaration : pegtl::seq<attributes,
-                                                  attribute_separator,
-                                                  type_member_group_members_begin,
+struct type_member_group_declaration : pegtl::seq<type_member_group_members_begin,
                                                   seps,
                                                   type_member_group_members,
                                                   seps,
                                                   type_member_group_members_end> {
-    using member = type_member_declaration;
+    using member = type_field;
     using members_begin = type_member_group_members_begin;
     using members_end = type_member_group_members_end;
     using members = type_member_group_members;
@@ -219,7 +231,7 @@ struct service_member : pegtl::seq<pegtl::opt<document, document_separator>,
                                    pegtl::opt<attributes, attribute_separator>,
                                    method_declaration> {};
 
-struct service_members : list<service_member, separator<','>, sep> {
+struct service_members : list<service_member, ',', '}'> {
     using member = method_declaration;
 };
 struct service_members_begin : pegtl::one<'{'> {};
@@ -273,7 +285,7 @@ struct declaration
                                 attribute_declaration>>> {};
 
 struct declarations : pegtl::plus<declaration> {};
-}
-}
+}  // namespace grammar
+}  // namespace mojo
 
 #endif  // MOJO_GRAMMAR_DECLARATION_HPP

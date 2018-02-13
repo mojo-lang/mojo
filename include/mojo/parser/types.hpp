@@ -48,6 +48,11 @@ struct tuple_type_state : array_term_state {
     }
 };
 
+struct union_type_state : array_term_state {
+    union_type_state() : array_term_state("union_type") {
+    }
+};
+
 struct function_type_parameters_state : array_term_state {
     function_type_parameters_state() : array_term_state("function_type_parameters") {
     }
@@ -65,6 +70,24 @@ struct type_inheritance_state : array_term_state {
 
 template <typename Rule>
 struct type_action : pegtl::nothing<Rule> {};
+
+template <>
+struct type_action<grammar::required_attribute> {
+    template <typename Input>
+    static void apply(const Input&, type_annotation_state& state) {
+        state.term = make_term("required_attribute");
+        state.push_element();
+    }
+};
+
+template <>
+struct type_action<grammar::optional_attribute> {
+    template <typename Input>
+    static void apply(const Input&, type_annotation_state& state) {
+        state.term = make_term("optional_attribute");
+        state.push_element();
+    }
+};
 
 template <>
 struct type_action<grammar::attributes::predication> {
@@ -115,12 +138,10 @@ struct type_action<grammar::dictionary_type_separator> {
 };
 
 template <>
-struct type_action<grammar::metatype_type_suffix> {
+struct type_action<grammar::union_type_separator> {
     template <typename Input>
-    static void apply(const Input&, term_state& state) {
-        auto new_term = make_term("metatype_type");
-        new_term->terms.emplace_back(std::move(state.term));
-        state.term = new_term;
+    static void apply(const Input&, union_type_state& state) {
+        state.push_element();
     }
 };
 
@@ -173,6 +194,19 @@ struct control<grammar::type_annotation_clause>
                                      errors> {};
 
 template <>
+struct control<grammar::primary_type_annotation_clause>
+    : pegtl::change_state_and_action<grammar::primary_type_annotation_clause,
+                                     type_annotation_state,
+                                     type_action,
+                                     errors> {};
+template <>
+struct control<grammar::data_type_annotation_clause>
+    : pegtl::change_state_and_action<grammar::data_type_annotation_clause,
+                                     type_annotation_state,
+                                     type_action,
+                                     errors> {};
+
+template <>
 struct control<grammar::array_type::content>
     : pegtl::change_state_and_action<grammar::array_type::content,
                                      array_type_state,
@@ -187,8 +221,11 @@ struct control<grammar::dictionary_type_content>
                                      errors> {};
 
 template <>
-struct control<grammar::metatype_type>
-    : pegtl::change_action<grammar::metatype_type, type_action, errors> {};
+struct control<grammar::dictionary_key>
+    : pegtl::change_state_and_action<grammar::dictionary_key,
+                                     type_annotation_state,
+                                     type_action,
+                                     errors> {};
 
 template <>
 struct control<grammar::tuple_type_element>
@@ -202,6 +239,13 @@ struct control<grammar::tuple_type_body>
     : pegtl::change_state_and_action<grammar::tuple_type_body,
                                      tuple_type_state,
                                      array_action,
+                                     errors> {};
+
+template <>
+struct control<grammar::union_type>
+    : pegtl::change_state_and_action<grammar::union_type,
+                                     union_type_state,
+                                     type_action,
                                      errors> {};
 
 template <>

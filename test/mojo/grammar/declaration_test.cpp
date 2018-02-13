@@ -26,7 +26,7 @@ TEST_CASE("declaration_test", "[declaration]") {
     simple_success_check<grammar::declaration, action>("import f.*");
     simple_success_check<grammar::declaration, action>("import foobar as fb");
     simple_success_check<grammar::declaration, action>("import foo.bar as fb");
-    simple_success_check<grammar::declaration, action>("import foo.bar.Foo, Bar, convert, to");
+    simple_success_check<grammar::declaration, action>("import foo.bar.{Foo, Bar, convert, to}");
     simple_success_check<grammar::declaration, action>("import foo.bar.Foo as FbFoo, Bar as FbBar, convert, to as fb_to");
 
     simple_success_check<grammar::declaration, action>("var a = 0");

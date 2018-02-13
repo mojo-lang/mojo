@@ -19,6 +19,11 @@ struct generic_identifier_state : array_term_state {
     }
 };
 
+struct generic_path_identifier_state : array_term_state {
+    generic_path_identifier_state() : array_term_state("generic_path_identifier") {
+    }
+};
+
 template <typename Rule>
 struct identifier_action : pegtl::nothing<Rule> {};
 
@@ -59,7 +64,19 @@ struct identifier_action<grammar::path_identifier_separator> {
         state.push_element();
     }
 };
-}
+
+template <typename Rule>
+struct generic_path_identifier_action : pegtl::nothing<Rule> {};
+
+template <>
+struct generic_path_identifier_action<grammar::generic_argument_clause::begin> {
+    template <typename Input>
+    static void apply(const Input&, generic_path_identifier_state& state) {
+        state.push_element();
+    }
+};
+
+}  // namespace expression
 
 template <>
 struct control<grammar::identifier>
@@ -78,7 +95,14 @@ struct control<grammar::path_identifier>
                                      expression::path_identifier_state,
                                      expression::identifier_action,
                                      errors> {};
-}
-}
+
+template <>
+struct control<grammar::generic_path_identifier>
+    : pegtl::change_state_and_action<grammar::generic_path_identifier,
+                                     expression::generic_path_identifier_state,
+                                     expression::generic_path_identifier_action,
+                                     errors> {};
+}  // namespace parser
+}  // namespace mojo
 
 #endif  // MOJO_PARSER_EXPRESSION_IDENTIFER_HPP

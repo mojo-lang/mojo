@@ -7,8 +7,7 @@ namespace mojo {
 namespace grammar {
 
 struct match_expression_case : match_case {};
-struct match_expression_cases
-    : pegtl::plus<pegtl::seq<seps, match_expression_case, statement_separator>> {};
+struct match_expression_cases : list<match_expression_case, ';', '_'> {};
 
 /**
  * GRAMMAR OF A MATCH EXPRESSION
