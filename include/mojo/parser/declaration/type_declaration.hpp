@@ -4,33 +4,34 @@
 #include <mojo/grammar/grammar.hpp>
 #include <mojo/parser/control.hpp>
 #include <mojo/parser/term_state.hpp>
+#include <mojo/parser/term_types.hpp>
 
 namespace mojo {
 namespace parser {
 namespace declaration {
 
 struct type_state : array_term_state {
-    type_state() : array_term_state("type_declaration") {
+    type_state() : array_term_state(kTypeDecl) {
     }
 };
 
 struct type_members_state : array_term_state {
-    type_members_state() : array_term_state("type_members") {
+    type_members_state() : array_term_state(kStructMembers) {
     }
 };
 
 struct type_member_state : array_term_state {
-    type_member_state() : array_term_state("type_member") {
+    type_member_state() : array_term_state(kStructMember) {
     }
 };
 
 struct type_member_group_state : array_term_state {
-    type_member_group_state() : array_term_state("type_member_group") {
+    type_member_group_state() : array_term_state(kStructMemberGroup) {
     }
 };
 
 struct type_member_group_members_state : array_term_state {
-    type_member_group_members_state() : array_term_state("type_members") {
+    type_member_group_members_state() : array_term_state(kStructMembers) {
     }
 };
 
@@ -69,14 +70,14 @@ struct type_action<grammar::generic_parameter_clause::begin> {
     }
 };
 
-using namespace std::literals::string_literals;
+
 
 template <>
 struct type_action<grammar::type_alias_clause::predication> {
     template <typename Input>
     static void apply(const Input&, type_state& state) {
         state.push_element();
-        state.array->type = "type_alias_declaration"s;
+        state.array->type = kTypeAliasDecl;
     }
 };
 

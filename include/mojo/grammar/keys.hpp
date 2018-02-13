@@ -32,7 +32,7 @@ struct str_or : pegtl_string_t("or") {};
 struct str_package : pegtl_string_t("package") {};
 struct str_repeat : pegtl_string_t("repeat") {};
 struct str_return : pegtl_string_t("return") {};
-struct str_service : pegtl_string_t("service") {};
+struct str_service : pegtl_string_t("interface") {};
 struct str_true : pegtl_string_t("true") {};
 struct str_type : pegtl_string_t("type") {};
 struct str_var : pegtl_string_t("var") {};

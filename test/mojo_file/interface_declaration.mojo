@@ -72,8 +72,8 @@ type BoundStakeMarkEdge {
 	geometry : Line 
 }
 
-/// service for stake mark
-service StakeMarkService {
+/// interface for stake mark
+interface StakeMarkService {
 	
 	/// comments
 	@http.get('/stake_marks')

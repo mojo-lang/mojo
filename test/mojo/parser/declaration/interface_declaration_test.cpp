@@ -5,19 +5,19 @@
 namespace {
 using namespace mojo;
 
-TEST_CASE("service_declaration_parser", "[declaration]") {
-    const char* service_1 =
+TEST_CASE("interface_declaration_parser", "[declaration]") {
+    const char* interface_1 =
         "/// this is \n"
         "/// comment \n"
         "@api('testt')\n"
-        "service FooService {\n"
+        "interface FooService {\n"
         "  /// this is \n"
         "  /// comment \n"
         "  @path('get')\n"
         "  echo(str:String)->String"
         "}";
 
-    simple_success_parse<grammar::grammar>(service_1);
+    simple_success_parse<grammar::grammar>(interface_1);
 }
 }
 

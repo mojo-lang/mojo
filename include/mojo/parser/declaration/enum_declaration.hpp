@@ -4,23 +4,24 @@
 #include <mojo/grammar/grammar.hpp>
 #include <mojo/parser/control.hpp>
 #include <mojo/parser/term_state.hpp>
+#include <mojo/parser/term_types.hpp>
 
 namespace mojo {
 namespace parser {
 namespace declaration {
 
 struct enum_state : array_term_state {
-    enum_state() : array_term_state("enum_declaration") {
+    enum_state() : array_term_state(kEnumDecl) {
     }
 };
 
 struct enum_members_state : array_term_state {
-    enum_members_state() : array_term_state("enum_members") {
+    enum_members_state() : array_term_state(kEnumMembers) {
     }
 };
 
 struct enum_member_state : array_term_state {
-    enum_member_state() : array_term_state("enum_member") {
+    enum_member_state() : array_term_state(kEnumMember) {
     }
 };
 

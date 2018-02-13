@@ -10,7 +10,7 @@
 #include <mojo/parser/declaration/import_declaration.hpp>
 #include <mojo/parser/declaration/initializer.hpp>
 #include <mojo/parser/declaration/package_declaration.hpp>
-#include <mojo/parser/declaration/service_declaration.hpp>
+#include <mojo/parser/declaration/interface_declaration.hpp>
 #include <mojo/parser/declaration/type_construction_declaration.hpp>
 #include <mojo/parser/declaration/type_declaration.hpp>
 #include <mojo/parser/declaration/variable_declaration.hpp>

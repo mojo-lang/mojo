@@ -227,34 +227,34 @@ struct type_declaration : pegtl::seq<key_type, seps, type_declaration_clause> {}
 struct method_declaration
     : pegtl::seq<pegtl::pad_opt<key_func, sep>, function_declaration_clause> {};
 
-struct service_member : pegtl::seq<pegtl::opt<document, document_separator>,
+struct interface_member : pegtl::seq<pegtl::opt<document, document_separator>,
                                    pegtl::opt<attributes, attribute_separator>,
                                    method_declaration> {};
 
-struct service_members : list<service_member, ',', '}'> {
+struct interface_members : list<interface_member, ',', '}'> {
     using member = method_declaration;
 };
-struct service_members_begin : pegtl::one<'{'> {};
-struct service_members_end : pegtl::one<'}'> {};
+struct interface_members_begin : pegtl::one<'{'> {};
+struct interface_members_end : pegtl::one<'}'> {};
 
-struct service_declaration_clause
+struct interface_declaration_clause
     : pegtl::seq<type_name,
                  pegtl::pad_opt<type_inheritance_clause, sep>,
-                 service_members_begin,
+                 interface_members_begin,
                  seps,
-                 service_members,
+                 interface_members,
                  seps,
-                 service_members_end> {
-    using member = service_members::member;
-    using members_begin = service_members_begin;
-    using members_end = service_members;
-    using members = service_members;
+                 interface_members_end> {
+    using member = interface_members::member;
+    using members_begin = interface_members_begin;
+    using members_end = interface_members;
+    using members = interface_members;
 };
 
 /**
  * GRAMMAR OF A INTERFACE DECLARATION
  */
-struct service_declaration : pegtl::seq<key_service, seps, service_declaration_clause> {};
+struct interface_declaration : pegtl::seq<key_service, seps, interface_declaration_clause> {};
 
 struct attribute_declaration_clause
     : pegtl::seq<identifier, seps, type_annotation, pre_pad_opt<initializer, sep>> {};
@@ -277,7 +277,7 @@ struct declaration
                                            pegtl::sor<type_declaration,
                                                       function_declaration,
                                                       enum_declaration,
-                                                      service_declaration,
+                                                      interface_declaration,
                                                       type_construction_declaration>>,
                                 package_declaration,
                                 constant_declaration,

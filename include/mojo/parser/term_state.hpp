@@ -21,7 +21,10 @@ struct array_term_state : term_state {
     TermPtr array;
 
     array_term_state() = default;
-    array_term_state(const char* name) : array(make_term(name)) {
+    array_term_state(std::string&& name) : array(make_term(std::move(name))) {
+    }
+
+    array_term_state(const std::string& name) : array(make_term(name)) {
     }
 
     void push_element() {

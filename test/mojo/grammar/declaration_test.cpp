@@ -67,27 +67,27 @@ TEST_CASE("declaration_test", "[declaration]") {
 
     simple_success_check<grammar::declaration, action>(type_2);
 
-    const char* service_1 =
+    const char* interface_1 =
             "/// that is \n"
             "/// comment \n"
             "@api('testt')\n"
-            "service FooService {\n"
+            "interface FooService {\n"
             "  /// this is \n"
             "  /// comment"
             "  @path('get')\n"
             "  echo(str:String)->String"
             "}";
 
-    simple_success_check<grammar::declaration, action>(service_1);
+    simple_success_check<grammar::declaration, action>(interface_1);
 
-    const char* service_2 =
-            "service FooService {\n"
+    const char* interface_2 =
+            "interface FooService {\n"
             "  /// this is \n"
             "  /// comment\n"
             "  @path('get')\n"
             "  echo(str:String)->String"
             "}";
-    simple_success_check<grammar::declaration, action>(service_2);
+    simple_success_check<grammar::declaration, action>(interface_2);
 
     simple_success_check<grammar::grammar, action>("type Highway {\n\tnumber: String @1 //< 道路国家标准编号\n\tstart : String @2\n\tend   : String @3\n}");
 }

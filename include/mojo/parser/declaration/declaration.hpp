@@ -78,8 +78,8 @@ struct control<grammar::type_member>
                                      errors> {};
 
 template <>
-struct control<grammar::service_member>
-    : pegtl::change_state_and_action<grammar::service_member,
+struct control<grammar::interface_member>
+    : pegtl::change_state_and_action<grammar::interface_member,
                                      declaration::declaration_term_state,
                                      declaration::declaration_action,
                                      errors> {};

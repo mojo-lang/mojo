@@ -1,4 +1,4 @@
-service StakeMarkService {
+interface StakeMarkService {
     get_stake_mark(location: LngLat) -> StakeMark {
         edges | min_dist(location, 100) | ( project_point ) -> {
                 stake_mark_edge | id == project_point.id | stake_marks[project_point.index] | {
