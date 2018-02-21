@@ -1,24 +1,37 @@
 #ifndef MOJO_PARSER_TERM_TYPES_HPP
 #define MOJO_PARSER_TERM_TYPES_HPP
 
-using namespace std::literals::string_literals;
-
 namespace mojo {
 namespace parser {
 
-const std::string kTypeAliasDecl = "type_alias_declaration"s;
+/**
+ * Lac
+ */
+extern const std::string kDocument;
 
-const std::string kTypeDecl = "type_declaration"s;
+extern const std::string kAttribute;
+extern const std::string kAttributes;
 
-const std::string kStructMember = "type_member"s;
-const std::string kStructMembers = "type_members"s;
-const std::string kStructMemberGroup = "type_member_group"s;
+/**
+ * Types Declaration
+ */
+extern const std::string kTypeAliasDecl;
 
+extern const std::string kTypeDecl;
 
-const std::string kEnumDecl = "enum_declaration"s;
+extern const std::string kTypeName;
+extern const std::string kTypeInheritance;
 
-const std::string kEnumMember = "enum_member"s;
-const std::string kEnumMembers = "enum_members"s;
+extern const std::string kTypeAnnotation;
+
+extern const std::string kStructMembers;
+extern const std::string kStructField;
+extern const std::string kStructFieldGroup;
+
+extern const std::string kEnumDecl;
+
+extern const std::string kEnumMember;
+extern const std::string kEnumMembers;
 
 }
 }

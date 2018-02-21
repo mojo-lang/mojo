@@ -64,7 +64,7 @@ struct function_type_state : array_term_state {
 };
 
 struct type_inheritance_state : array_term_state {
-    type_inheritance_state() : array_term_state("type_inheritance") {
+    type_inheritance_state() : array_term_state(kTypeInheritance) {
     }
 };
 

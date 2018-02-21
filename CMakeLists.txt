@@ -20,7 +20,7 @@ INCLUDE_DIRECTORIES(
 #AUX_SOURCE_DIRECTORY(TEST_FILES test/mojo)
 set(SOURCE_FILES
         include/mojo/grammar/rules.hpp
-        src/mojo.cpp)
+        src/mojo.cpp src/mojo/parser/term_types.cpp include/mojo/parser/ast/attributes_parser.hpp include/mojo/parser/ast/attribute_parser.hpp include/mojo/parser/ast/parser.hpp include/mojo/parser/ast/type_annotation_parser.hpp include/mojo/parser/ast/type_inheritance_parser.hpp include/mojo/parser/ast/enum_decl_parser.hpp include/mojo/parser/ast/value_decl_parser.hpp include/mojo/parser/ast/struct_field_parser.hpp include/mojo/parser/ast/const_decl_parser.hpp include/mojo/parser/ast/struct_field_group_parser.hpp)
 
 AUX_SOURCE_DIRECTORY(test/mojo MOJO_TEST_SRCS)
 AUX_SOURCE_DIRECTORY(test/mojo/grammar MOJO_GRAMMAR_TEST_SRCS)
@@ -45,10 +45,10 @@ target_link_libraries(mojo_test boost_system boost_filesystem)
 #add_executable(json_build ${JOSON_FILES})
 
 #set(LANG_SOURCE_FILES
-#        src/mojo/lang/data_type.cpp
-#        src/mojo/lang/string_type.cpp
-#        src/mojo/lang/numeric_type.cpp
-#        test/mojo/lang/data_type_test.cpp)
+#        src/mojo/ast/data_type.cpp
+#        src/mojo/ast/string_type.cpp
+#        src/mojo/ast/numeric_type.cpp
+#        test/mojo/ast/data_type_test.cpp)
 
 #add_executable(mojo_lang_test
 #        ${LANG_SOURCE_FILES})

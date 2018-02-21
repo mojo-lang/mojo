@@ -21,12 +21,12 @@ struct type_members_state : array_term_state {
 };
 
 struct type_member_state : array_term_state {
-    type_member_state() : array_term_state(kStructMember) {
+    type_member_state() : array_term_state(kStructField) {
     }
 };
 
 struct type_member_group_state : array_term_state {
-    type_member_group_state() : array_term_state(kStructMemberGroup) {
+    type_member_group_state() : array_term_state(kStructFieldGroup) {
     }
 };
 

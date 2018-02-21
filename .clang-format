@@ -91,7 +91,7 @@ IncludeCategories:
     Priority:        14
   - Regex:           '^(<|")ncraft/(concurrent|net)/'
     Priority:        16
-  - Regex:           '^(<|")ncraft/(channel|handler|service)/'
+  - Regex:           '^(<|")ncraft/(channel|handler|interface)/'
     Priority:        18
   - Regex:           '^(<|")ncraft/(http|nrpc)/'
     Priority:        20

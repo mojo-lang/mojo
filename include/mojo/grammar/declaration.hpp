@@ -254,7 +254,7 @@ struct interface_declaration_clause
 /**
  * GRAMMAR OF A INTERFACE DECLARATION
  */
-struct interface_declaration : pegtl::seq<key_service, seps, interface_declaration_clause> {};
+struct interface_declaration : pegtl::seq<key_interface, seps, interface_declaration_clause> {};
 
 struct attribute_declaration_clause
     : pegtl::seq<identifier, seps, type_annotation, pre_pad_opt<initializer, sep>> {};
