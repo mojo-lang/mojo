@@ -4,33 +4,40 @@
 ;; ## Lexical Structure
 ;;
 ;; ### GRAMMAR OF A COMMENT
-
 comment = line-comment / block-comment
+
 line-comment = "//"
+block-comment = "/*"
 
 ;;
 ;; #### GRAMMAR OF A DOCUMENT_COMMENT
 ;;
-document = following-document / up-document
-following-document = "///"
-up-document = "//<"
+document = line-document / following-document
+
+line-document = "///"
+following-document = "//<"
 
 ;; ### GRAMMAR OF AN IDENTIFIER
-identifier = identifier-head [ identifier-characters ] / implicit-parameter-name
+identifier = value-name / type-name / implicit-parameter-name
 identifier-list = identifier / identifier "," identifier-list
 
-identifier-head = %x61-7A / %xA1-%xFF
-                / %x0100-%x02FF / %x0370-%x167F / %x1681-%x180D / %x180F-%x1DBF / %x1E00-%x1FFF
-                / %x200B-%x200D / %x202A-%x20CF / %x2100-%x23FF / %x2460-%x2FFF / %x3001-%xD7FF
-                / %xF900-%xFD3D / %xFD40-%xFDCF / %xFDF0-%xFE1F / %xFE30-%xFE44 / %xFE47-%xFFFD
+value-name = value-name-head [ value-name-characters ]
+value-name-head = %x61-7A / %xA1-%xFF
+                / %x0100-%x02FF / %x0370-%x167F 
+                / %x1681-%x180D / %x180F-%x1DBF / %x1E00-%x1FFF
+                / %x200B-%x200D / %x202A-%x20CF / %x2100-%x23FF / %x2460-%x2FFF
+                / %x3001-%xD7FF
+                / %xF900-%xFD3D / %xFD40-%xFDCF / %xFDF0-%xFE1F
+                / %xFE30-%xFE44 / %xFE47-%xFFFD
                 / %x10000-1FFFD / %x20000-2FFFD / %x30000-3FFFD
                 / %x40000-4FFFD / %x50000-5FFFD / %x60000-6FFFD
                 / %x70000-7FFFD / %x80000-8FFFD / %x90000-9FFFD
                 / %xA0000-AFFFD / %xB0000-BFFFD / %xC0000-CFFFD
                 / %xD0000-DFFFD / %xE1000-EFFFD
-
-identifier-character = identifier-head / %x61-7A / "_" / DIGIT
-identifier-characters = identifier-character [ identifier-characters ]
+value-name-character = value-name-head / "_" / DIGIT
+                     / %x41-5A / %x0300-%x036F
+                     / %x1DC0-%x1DFF / %x20D0-%x20FF / %xFE20-%xFE2F
+value-name-characters = value-name-character [ value-name-character ]
 
 type-name = type-name-head [ type-name-characters ]
 type-name-head = %x41-5A
@@ -44,10 +51,11 @@ literal = numeric-literal / string-literal / boolean-literal / null-literal
 
 numeric-literal = [ "-" ] integer-literal / [ "-" ] floating-point-literal
 boolean-literal = "true" / "false"
-null-literal = "none"
+null-literal = "null"
 
 ;; GRAMMAR OF AN INTEGER LITERAL
-integer-literal = binary-literal / octal-literal / decimal-literal / hexadecimal-literal
+integer-literal = binary-literal / octal-literal / decimal-literal
+                / hexadecimal-literal
 
 binary-literal = "0b" binary-digit [ binary-literal-characters ]
 binary-digit = "0" / "1"
@@ -71,31 +79,37 @@ hexadecimal-literal-characters = hexadecimal-literal-character [ hexadecimal-lit
 
 ;; GRAMMAR OF A FLOATING-POINT LITERAL
 floating-point-literal = decimal-literal [ decimal-fraction ] [ decimal-exponent ]
+                       / subnormal-numbers
 
 decimal-fraction = "." decimal-literal
 decimal-exponent = floating-point-e [ sign ] decimal-literal
 floating-point-e = "e" / "E"
 sign = "+" / "-"
 
-;;subnormal_numbers = "Infinity" / "-Infinity" / "NaN"
+subnormal-numbers = "Infinity" / "-Infinity" / "NaN"
 
 ;; GRAMMAR OF A STRING LITERAL
 string-literal = static-string-literal / interpolated-string-literal
 
-static-string-literal = DQUOTE [ double-quoted-text ] DQUOTE / "'" [ single-quoted-text ] "'"
+static-string-literal = DQUOTE [ double-quoted-text ] DQUOTE
+                      / "'" [ single-quoted-text ] "'"
 double-quoted-text = double-quoted-text-item [ double-quoted-text ]
-double-quoted-text-item = escaped-character / %x0-%x09 / %xB-%x0C / %x0E-%x21 / %x23-%x5B /
-                          %x5D-%xD7FF / %xE000-%x10FFFF
+double-quoted-text-item = escaped-character
+                        / %x0-%x09 / %xB-%x0C / %x0E-%x21 / %x23-%x5B
+                        / %x5D-%xD7FF / %xE000-%x10FFFF
 
 single-quoted-text = single-quoted-text-item [ single-quoted-text ]
-single-quoted-text-item = escaped-character / %x0-%x09 / %xB-%x0C / %x0E-%x26 / %x28-%x5B /
-                          %x5D-%xD7FF / %xE000-%x10FFFF
+single-quoted-text-item = escaped-character
+                        / %x0-%x09 / %xB-%x0C / %x0E-%x26 / %x28-%x5B
+                        / %x5D-%xD7FF / %xE000-%x10FFFF
 
-interpolated-string-literal = DQUOTE [ interpolated-text ] DQUOTE / "'" [ interpolated-text ] "'"
+interpolated-string-literal = DQUOTE [ interpolated-text ] DQUOTE
+                            / "'" [ interpolated-text ] "'"
 interpolated-text = interpolated-text-item [ interpolated-text ]
-interpolated-text-item = "\{" expression "}" / quoted-text-item
+interpolated-text-item = "${" expression "}" / quoted-text-item
 
-escaped-character = "\0" / "\\" / "\t" / "\n" / "\r" / %x5c.22 / "\'" / "\u" 4HEXDIG
+escaped-character = "\0" / "\\" / "\t" / "\n" / "\r" / DQUOTE / "\'"
+                  / "\u" 4HEXDIG
                   / "\u{" unicode-scalar-digits "}"
 unicode-scalar-digits = 1*8(HEXDIG)
 
@@ -154,7 +168,7 @@ variadic_operator = "..."
 type = array-type / map-type / tuple-type / function-type / type-identifier
 
 ;; GRAMMAR OF A TYPE ANNOTATION
-type-annotation = ":"  type [ attributes ]
+type-annotation = ":"  type [ ( "!" / "?" ) ] [ attributes ]
 
 ;; GRAMMAR OF A TYPE IDENTIFIER
 bare-type-identifier = type-name [ generic-argument-clause ] /
@@ -330,9 +344,10 @@ defer-statement = "defer" code-block
 ;; GRAMMAR OF A DECLARATION
 declaration = package-declaration /
               import-declaration /
-              const-declaration /
-              var-declaration /
+              constant-declaration /
+              variable-declaration /
               type-declaration /
+              type-construction-declaration /
               function-declaration /
               enum-declaration /
               interface-declaration /
@@ -356,7 +371,7 @@ import-path-identifier = identifier / operator
 
 ;; GRAMMAR OF A CONSTANT DECLARATION
 constant-declaration = "const" pattern-initializer-list
-pattern-initializer-list = pattern-initializer / pattern-initializer "," pattern-initializer-list
+pattern-initializer-list = pattern-initializer / ( pattern-initializer "," pattern-initializer-list )
 pattern-initializer = pattern initializer
 initializer = "=" expression
 
@@ -410,19 +425,19 @@ attribute-declaration = "attribute" attribute-name  type-annotation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; GRAMMAR OF AN ATTRIBUTE
-attribute = "!" / "?" / ( "@" decimal-digits ) / ( "@" attribute-name [ attribute-argument-clause ] )
+attribute = ( "@" decimal-digits ) / ( "@" attribute-name [ attribute-argument-clause ] )
 
-attribute-name = path-identifier
-attribute-argument-clause = "(" [expression] ")"
+attribute-name = generic-path-identifier
+attribute-argument-clause = "(" [ attribute-arguments ] ")"
 
-group-attribute = "@{" [ group-attribute-element-list ] "}"
+attribute-arguments = expression / expression "," attribute-arguments
 
-group-attribute-element-list = group-attribute-element [ group-attribute-element-list ]
-group-attribute-element = path-identifier ":" expression
+attribute-group = "@{" [ attribute-group-element-list ] "}"
 
-attributes = ( group-attribute / attribute ) [ attributes ]
+attribute-group-element-list = attribute-group-element [ attribute-group-element-list ]
+attribute-group-element = generic-path-identifier ":" expression
 
-attributes = attribute [ attributes ]
+attributes = ( attribute-group / attribute ) [ attributes ]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Patterns
