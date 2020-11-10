@@ -1,0 +1,493 @@
+;; # The Grammar of the Mojo Language
+;;
+
+;; ## Lexical Structure
+;;
+;; ### GRAMMAR OF A COMMENT
+comment = line-comment / block-comment
+
+line-comment = "//"
+block-comment = "/*"
+
+;;
+;; #### GRAMMAR OF A DOCUMENT_COMMENT
+;;
+document = line-document / following-document
+
+line-document = "///"
+following-document = "//<"
+
+;; ### GRAMMAR OF AN IDENTIFIER
+identifier = value-name / type-name / implicit-parameter-name
+identifier-list = identifier / identifier "," identifier-list
+
+value-name = value-name-head [ value-name-characters ]
+value-name-head = %x61-7A / %xA1-%xFF
+                / %x0100-%x02FF / %x0370-%x167F 
+                / %x1681-%x180D / %x180F-%x1DBF / %x1E00-%x1FFF
+                / %x200B-%x200D / %x202A-%x20CF / %x2100-%x23FF / %x2460-%x2FFF
+                / %x3001-%xD7FF
+                / %xF900-%xFD3D / %xFD40-%xFDCF / %xFDF0-%xFE1F
+                / %xFE30-%xFE44 / %xFE47-%xFFFD
+                / %x10000-1FFFD / %x20000-2FFFD / %x30000-3FFFD
+                / %x40000-4FFFD / %x50000-5FFFD / %x60000-6FFFD
+                / %x70000-7FFFD / %x80000-8FFFD / %x90000-9FFFD
+                / %xA0000-AFFFD / %xB0000-BFFFD / %xC0000-CFFFD
+                / %xD0000-DFFFD / %xE1000-EFFFD
+value-name-character = value-name-head / "_" / DIGIT
+                     / %x41-5A / %x0300-%x036F
+                     / %x1DC0-%x1DFF / %x20D0-%x20FF / %xFE20-%xFE2F
+value-name-characters = value-name-character [ value-name-character ]
+
+type-name = type-name-head [ type-name-characters ]
+type-name-head = %x41-5A
+type-name-character = ALPHA / DIGIT
+type-name-characters = type-name-character [ type-name-characters ]
+
+implicit-parameter-name = "$" [ decimal-digits ]
+
+;; GRAMMAR OF A LITERAL
+literal = numeric-literal / string-literal / boolean-literal / null-literal
+
+numeric-literal = [ "-" ] integer-literal / [ "-" ] floating-point-literal
+boolean-literal = "true" / "false"
+null-literal = "null"
+
+;; GRAMMAR OF AN INTEGER LITERAL
+integer-literal = binary-literal / octal-literal / decimal-literal
+                / hexadecimal-literal
+
+binary-literal = "0b" binary-digit [ binary-literal-characters ]
+binary-digit = "0" / "1"
+binary-literal-character = binary-digit / "_"
+binary-literal-characters = binary-literal-character [ binary-literal-characters ]
+
+octal-literal = "0o" octal-digit [ octal-literal-characters ]
+octal-digit = %x30-37
+octal-digit-character = octal-digit / "_"
+octal-digit-characters = octal-digit-character [ octal-digit-characters ]
+
+decimal-literal = decimal-digit [ decimal-literal-characters ]
+decimal-digit = DIGIT
+decimal-digits = decimal-digit [ decimal-digits ]
+decimal-literal-character = decimal-digit / "_"
+decimal-literal-characters = decimal-literal-character [ decimal-literal-characters ]
+
+hexadecimal-literal = "0x" HEXDIG [ exadecimal-literal-characters ]
+hexadecimal-literal-character = HEXDIG / "_"
+hexadecimal-literal-characters = hexadecimal-literal-character [ hexadecimal-literal-characters ]
+
+;; GRAMMAR OF A FLOATING-POINT LITERAL
+floating-point-literal = decimal-literal [ decimal-fraction ] [ decimal-exponent ]
+                       / subnormal-numbers
+
+decimal-fraction = "." decimal-literal
+decimal-exponent = floating-point-e [ sign ] decimal-literal
+floating-point-e = "e" / "E"
+sign = "+" / "-"
+
+subnormal-numbers = "Infinity" / "-Infinity" / "NaN"
+
+;; GRAMMAR OF A STRING LITERAL
+string-literal = static-string-literal / interpolated-string-literal
+
+static-string-literal = DQUOTE [ double-quoted-text ] DQUOTE
+                      / "'" [ single-quoted-text ] "'"
+double-quoted-text = double-quoted-text-item [ double-quoted-text ]
+double-quoted-text-item = escaped-character
+                        / %x0-%x09 / %xB-%x0C / %x0E-%x21 / %x23-%x5B
+                        / %x5D-%xD7FF / %xE000-%x10FFFF
+
+single-quoted-text = single-quoted-text-item [ single-quoted-text ]
+single-quoted-text-item = escaped-character
+                        / %x0-%x09 / %xB-%x0C / %x0E-%x26 / %x28-%x5B
+                        / %x5D-%xD7FF / %xE000-%x10FFFF
+
+interpolated-string-literal = DQUOTE [ interpolated-text ] DQUOTE
+                            / "'" [ interpolated-text ] "'"
+interpolated-text = interpolated-text-item [ interpolated-text ]
+interpolated-text-item = "${" expression "}" / quoted-text-item
+
+escaped-character = "\0" / "\\" / "\t" / "\n" / "\r" / DQUOTE / "\'"
+                  / "\u" 4HEXDIG
+                  / "\u{" unicode-scalar-digits "}"
+unicode-scalar-digits = 1*8(HEXDIG)
+
+;; datetime
+;datetime-literal = date-year "-" date-month "-" date-day "T" time-hour ":" time-mimute ":" time-second [ "." time-second-fraction ] time-zone
+;date-year = 4DIGIT
+;date-month = "0" %d1-9 / "1" %d0-2
+;date-day = "0" %d1-9 / %d1-2 DIGIT / "30" / "31"
+;time-hour = %d0-1 DIGIT / "2" %d0-3
+;time-mimute = %d0-5 DIGIT
+;time-second = time-mimute
+;time-second-fraction = 3DIGIT / 6DIGIT / 9DIGIT
+;time-zone = "Z" / ("+"/"-") time-hour ":" time-mimute
+
+;duration-literal = 1*DIGIT ("Y" / "M" / "D" / "h" / "m" / "s" / "ms" / "us" / "ns")
+
+;; GRAMMAR OF OPERATORS
+operator = prefix-operator / infix-operator / postfix-operator
+
+prefix-operator = "-" / "!" / "not"
+
+binary-operator = arithmetic-operator /
+                  assignment-operator /
+                  relational-operator /
+                  logic-operator /
+                  bitwise_logic_operator /
+                  bitwise_shift_operator /
+                  pipeline-operator /
+                  range_operator /
+                  range_in_operator
+
+postfix-operator = ""
+
+arithmetic-operator = "*" / "/" / "%" / "^" / "+" / "-"
+assignment-operator = "=" / "+=" / "-=" / "*=" / "/=" / "^="
+relational-operator = "<" / "<=" / ">" / ">=" / "==" / "!="
+
+logic-operator = "&&" / "||" / "and" / "or"
+bitwise-logic-operator = "&&&" / "|||" / "xor"
+bitwise-shift-operator = ">>>" / "<<<"
+pipeline-operator = "|"
+
+range_operator = ".." / "..<" / "<.." / "<..<"
+range_in_operator = "in"
+
+variadic_operator = "..."
+
+;; ? :
+;; . -> => () {} [] <>
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Types
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; GRAMMAR OF A TYPE
+type = array-type / map-type / tuple-type / function-type / type-identifier
+
+;; GRAMMAR OF A TYPE ANNOTATION
+type-annotation = ":"  type [ ( "!" / "?" ) ] [ attributes ]
+
+;; GRAMMAR OF A TYPE IDENTIFIER
+bare-type-identifier = type-name [ generic-argument-clause ] /
+                       type-name [ generic-argument-clause ] "." bare-type-identifier
+
+type-identifier = [ package-name "." ] bare-type-identifier
+
+;; GRAMMAR OF A TUPLE TYPE
+tuple-type = "(" tuple-type-body ")"
+
+tuple-type-body = tuple-type-element-list
+tuple-type-element-list = tuple-type-element /
+                          tuple-type-element "," tuple-type-element-list
+tuple-type-element = type [ attributes ] / element-name type-annotation
+element-name = identifier
+
+;; GRAMMAR OF A FUNCTION TYPE
+function-type = "(" function-type-parameters ")" "->" type / type "->" type
+
+function-type-parameters = type / type "," function-type-parameters
+
+;; GRAMMAR OF AN ARRAY TYPE
+array-type = "[" type "]"
+
+;; GRAMMAR OF A DICTIONARY TYPE
+dictionary-type = "{" type ":" type "}"
+
+;; GRAMMAR OF A TYPE INHERITANCE CLAUSE
+type-inheritance-clause = ":" type-inheritance-list
+type-inheritance-list = type-identifier / type-identifier "," type-inheritance-list
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Expressions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; GRAMMAR OF A CONDITIONAL OPERATOR
+conditional-operator = "?" expression ":"
+
+;; GRAMMAR OF A PRIMARY EXPRESSION
+primary-expression = identifier [ generic-argument-clause ] /
+                     literal-expression /
+                     closure-expression /
+                     parenthesized-expression /
+                     wildcard-expression
+
+;; GRAMMAR OF A LITERAL EXPRESSION
+literal-expression = literal / array-literal / object-literal
+
+array-literal = "[" [ array-literal-items ] "]"
+array-literal-items = array-literal-item [ "," ] / array-list-item "," array-list-items
+array-literal-item = expression
+
+object-literal = "{" [ object-literal-items ] "}"
+object-literal-items = object-literal-item [ "," ] / object-literal-item "," object-literal-items
+object-literal-item = (identifier / literal) ":" expression
+
+literal-operator = type-name-head [ type-name-characters ]
+literal-operator-head = ALPHA
+literal-operator-character = ALPHA / DIGIT
+literal-operator-characters = literal-operator-character[ literal-operator-characters ]
+
+numeric-suffix-literal = numeric-literal numeric-suffix
+numeric-suffix = numeric-suffix-head [ 1 * 11 numeric-suffix-character ]
+numeric-suffix-head = ALPHA
+numeric-suffix-character = ALPHA / DIGIT
+
+string-prefix-literal = string-prefix static-string-literal
+string-prefix = string-prefix-head [ 1 * 7 string-prefix-character ]
+string-prefix-head = ALPHA
+string-prefix-character = ALPHA / DIGIT
+
+;; GRAMMAR OF A CLOSURE EXPRESSION
+closure-expression = closure-signature "->" statement /
+                     closure-signature "->" type-identifier "{" statements "}"
+
+closure-signature = closure-parameter-clause "->" function-list
+closure-parameter-clause = "(" ")" /
+                           "(" closure-parameter-list ")" /
+                           identifier-list
+closure-parameter-list = closure-parameter /
+                         closure-parameter "," closure-parameter-list
+closure-parameter = closure-parameter-name [ type-annotation ] /
+                    closure-parameter-name "..."
+closure-parameter-name = identifier
+
+;; GRAMMAR OF A PARENTHESIZED EXPRESSION
+parenthesized-expression = "(" [ expression-element-list ] ")"
+expression-element-list = expression-element / ( expression-element "," expression-element-list )
+expression-element = expression / ( identifier ":" expression )
+
+;; GRAMMAR OF A WILDCARD EXPRESSION
+wildcard-expression = "_"
+
+;; GRAMMAR OF A POSTFIX EXPRESSION
+postfix-expression = primary-expression /
+                     postfix-expression postfix-operator /
+                     function-call-expression /
+                     explicit-member-expression /
+                     subscript-expression
+
+;; GRAMMAR OF A FUNCTION CALL EXPRESSION
+function-call-expression = postfix-expression parenthesized-expression
+
+;; GRAMMAR OF AN EXPLICIT MEMBER EXPRESSION
+explicit-member-expression = postfix-expression "." decimal-digits /
+                             postfix-expression "." match-expression /
+                             postfix-expression "." identifier [ generic-argument-clause ]
+
+;; GRAMMAR OF A SUBSCRIPT EXPRESSION
+subscript-expression = postfix-expression "[" expression-list "]"
+
+match-expression =
+
+project-expression = 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Statements
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; GRAMMAR OF A STATEMENT
+statement = expression /
+            declaration /
+            loop-statement /
+            branch-statement /
+            control-transfer-statement /
+            defer-statement
+
+statements = statement statement_seperator [ statements ]
+statement_seperator = ";" / CRLF
+
+;; GRAMMAR OF A LOOP STATEMENT
+loop-statement = for-in-statement / while-statement / repeat-while-statement
+
+;; GRAMMAR OF A FOR-IN STATEMENT
+for-statement = "for" pattern "in" expression code-block
+
+;; GRAMMAR OF A WHILE STATEMENT
+while-statement = "while" expression code-block
+
+;; GRAMMAR OF A REPEAT-WHILE STATEMENT
+repeat-while-statement = "repeat" code-block [ "while" expression ]
+
+;; GRAMMAR OF A BRANCH STATEMENT
+branch-statement = if-statement /  match-statement
+
+;; GRAMMAR OF AN IF STATEMENT
+if-statement = if expression code-block [ else-clause ]
+else-clause = "else" code-block / "else" if-statement
+
+;; GRAMMAR OF A MATCH STATEMENT
+match-statement = "match" expression "{" match-cases "}"
+switch-cases = match-case [ match-cases ]
+switch-case = case-label statements / default-label statements
+
+case-label = case case-item-list ":"
+case-item-list = pattern [ where-clause] /  pattern [ where-clause ] , case-item-list
+default-label = "default:"
+
+;; GRAMMAR OF A CONTROL TRANSFER STATEMENT
+control-transfer-statement = break-statement / continue-statement / return-statement
+
+;; GRAMMAR OF A BREAK STATEMENT
+break-statement = "break"
+
+;; GRAMMAR OF A CONTINUE STATEMENT
+continue-statement = "continue"
+
+;; GRAMMAR OF A RETURN STATEMENT
+return-statement = "return" [ expression ]
+
+defer-statement = "defer" code-block
+
+;; GRAMMAR OF A DECLARATION
+declaration = package-declaration /
+              import-declaration /
+              constant-declaration /
+              variable-declaration /
+              type-declaration /
+              type-construction-declaration /
+              function-declaration /
+              enum-declaration /
+              interface-declaration /
+              attribute-declaration
+declarations = declaration [ declarations ]
+
+;; GRAMMAR OF A CODE BLOCK
+code-block = "{" [ statements ] "}"
+
+;; GRAMMAR OF AN PACKAGE DECLARATION
+package-declaration = "package" package-name
+
+package-name = ""
+
+;; GRAMMAR OF AN IMPORT DECLARATION
+import-declaration = "import" [ import-kind ] import-path "as" identifier
+
+import-kind = "type" / "enum" / "interface" / "func" / "const"
+import-path = import-path-identifier / import-path-identifier "." import-path
+import-path-identifier = identifier / operator
+
+;; GRAMMAR OF A CONSTANT DECLARATION
+constant-declaration = "const" pattern-initializer-list
+pattern-initializer-list = pattern-initializer / ( pattern-initializer "," pattern-initializer-list )
+pattern-initializer = pattern initializer
+initializer = "=" expression
+
+;; GRAMMAR OF A FUNCTION DECLARATION
+function-declaration = "func" function-name [ generic-parameter-clause ] function-signature [ function-body ]
+
+function-name = identifier / operator
+function-signature = parameter-clause function-result
+function-result = "->" type-annotation
+function-body = code-block
+
+parameter-clause = "(" ")" / "(" parameter-list ")"
+parameter-list = parameter / parameter "," parameter-list
+parameter = parameter-name type-annotation [ default-argument-clause ] /
+            parameter-name type-annotation "..."
+parameter-name = identifier
+default-argument-clause = "=" expression
+
+;; GRAMMAR OF AN ENUMERATION DECLARATION
+enum-declaration = "enum" enum-name [ type-inheritance-clause ] "{" enum-members "}"
+
+enum-name = type-identifier
+enum-value-name = identifier
+
+enum-members = enum-member [ enum-members ]
+enum-member = enum-value-name raw-value-assignment [ attributes ]
+raw-value-assignment = "=" raw-value-literal
+raw-value-literal = numeric-literal / static-string-literal / boolean-literal
+
+;; GRAMMAR OF A TYPE DECLARATION
+type-declaration = "type" type-name [ generic-parameter-clause ] [ type-inheritance-clause ] type-body
+
+type-body = "{" [ type-inner-decalrations ] "}"
+type-inner-decalrations = type-inner-decalration [ type-inner-decalration ]
+type-inner-decalration = variable-declaration / type-declaration / enum-declaration
+
+;; GRAMMAR OF A INTERFACE DECLARATION
+interface-declaration = "interface" interface-name interface-body
+
+interface-name = type-name
+interface-body = "{" [ method-declarations ] "}"
+
+method-declaration = identifier function-signature
+method-declarations = method-declaration [ method-declarations ]
+
+;; GRAMMAR OF A ATTRIBUTE DECLARATION
+attribute-declaration = "attribute" attribute-name  type-annotation
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Attributes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; GRAMMAR OF AN ATTRIBUTE
+attribute = ( "@" decimal-digits ) / ( "@" attribute-name [ attribute-argument-clause ] )
+
+attribute-name = generic-path-identifier
+attribute-argument-clause = "(" [ attribute-arguments ] ")"
+
+attribute-arguments = expression / expression "," attribute-arguments
+
+attribute-group = "@{" [ attribute-group-element-list ] "}"
+
+attribute-group-element-list = attribute-group-element [ attribute-group-element-list ]
+attribute-group-element = generic-path-identifier ":" expression
+
+attributes = ( attribute-group / attribute ) [ attributes ]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Patterns
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; GRAMMAR OF A PATTERN
+pattern = wildcard-pattern [ type-annotation ] /
+          identifier-pattern [ type-annotation ] /
+          ;value-binding-pattern /
+          tuple-pattern [ type-annotation ] /
+          enum-value-pattern /
+          ;optional-pattern /
+          type-casting-pattern /
+          expression-pattern
+
+;; GRAMMAR OF A WILDCARD PATTERN
+wildcard-pattern = "_"
+
+;; GRAMMAR OF AN IDENTIFIER PATTERN
+identifier-pattern = identifier
+
+;; GRAMMAR OF A VALUE-BINDING PATTERN
+;value-binding-pattern → var pattern  let pattern
+
+;; GRAMMAR OF A TUPLE PATTERN
+tuple-pattern = "(" [ tuple-pattern-element-list ] ")"
+tuple-pattern-element-list = tuple-pattern-element / tuple-pattern-element "," tuple-pattern-element-list
+tuple-pattern-element = pattern / identifier ":" pattern
+
+;; GRAMMAR OF AN ENUMERATION CASE PATTERN
+enum-value-pattern = [ type-identifier ] "." enum-value-name [ tuple-pattern ]
+
+;; GRAMMAR OF A TYPE CASTING PATTERN
+type-casting-pattern = is-pattern / as-pattern
+is-pattern = "is" type
+as-pattern = pattern "as" type
+
+;; GRAMMAR OF AN EXPRESSION PATTERN
+expression-pattern = expression
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic Parameters and Arguments
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; GRAMMAR OF A GENERIC PARAMETER CLAUSE
+generic-parameter-clause = "<" generic-parameter-list ">"
+generic-parameter-list = generic-parameter / generic-parameter "," generic-parameter-list
+generic-parameter = type-name / type-name ":" type-identifier
+
+;; GRAMMAR OF A GENERIC ARGUMENT CLAUSE
+generic-argument-clause = "<" generic-argument-list ">"
+generic-argument-list = generic-argument / generic-argument "," generic-argument-list
+generic-argument = type

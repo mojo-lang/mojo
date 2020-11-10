@@ -1,0 +1,17 @@
+package {{name}}
+
+{{#consts}}
+{{doc}}
+const {name} = {value};
+{/consts}
+
+
+{#enums}
+{doc}
+enum class {name} {
+	{#fields}
+		{name} = {value}, //{doc}
+	{/fields}
+};
+
+{/enums}

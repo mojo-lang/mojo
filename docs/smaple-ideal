@@ -1,0 +1,54 @@
+friend_fields = (user:User, size:Int) -> {
+		id: user.id,
+		name: user.name,
+		profilePic: user.profilePic | $.size == size
+	}
+}
+
+friend_fields = user:User, size:Int -> {
+	id: user.id,
+	name: user.name,
+	profilePic: user.profilePic | $.size == size
+}
+
+users | id == 4 | {
+	friends | limit(10) | friend_fields(50)
+}
+
+profiles | handles in ['zuck', 'cocacola'] | match $ {
+		is User: return {
+			handle
+			friends | count
+		},
+		is Page: return {
+			handle
+			likers | count
+		}
+	}
+
+expanded:Bool;
+
+users | handle == 'zuck' | {
+	id
+	name
+
+	@include : ($) {
+		if expand {
+			return {
+				firstName,
+				lastName
+			}
+		}
+	}
+}
+
+
+match(zoom) { }
+
+function
+	//zoom -> stop(zoom, [], []);
+	stops(${zoom}, [5,1], [6,2]);
+
+	stops(${zoo}, ${rating}, [0,0,1], []);
+
+filter

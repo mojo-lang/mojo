@@ -1,0 +1,67 @@
+Term {
+	type = kFunCall,
+	symbol = test,
+	args = [
+		_X_,
+		Term {
+			type: kFunction,
+			args: [
+				Term {
+					type: Datum,
+					datum: Datum {
+						type: R_Array;
+						r_array = 
+					}
+				},
+			]
+		}
+	]
+
+}
+
+
+insert(friend_of) | {from: sally, to: john, since: T'2016-12-3'}
+insert(has_read) | {from: sally, to: gdb, rating: 4, on: T'2015-3-15'}
+
+person | name == 'sally' | friend_of(john) | since
+
+match(person, has_read, book['']) | avg(rating)
+
+has_read(person, book[''])
+
+person -> has_read(book[''])
+
+person <-> friend()
+
+persion <- 
+
+person | name in ['sally', 'john'] | has_read(books['']) | order(on) | limit(1) | name
+
+movie | title ~= 'T.*' | acted_in(person, $) | {title: movie.title, cast: count()}
+
+(node1) -> (node2) | 
+
+match(node1, any, node2) 
+
+person['Anna'] | friend()
+
+
+tracks
+
+edgid
+
+{
+	"12333" : [],
+	"23323" : []
+}
+
+获取转弯限制：
+
+233 -> 2333
+444 -> 4556
+
+track -> mapmatch
+	  -> traval
+	  
+
+travals | (traval) { traval | match(...) | {} }
