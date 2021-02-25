@@ -36,7 +36,7 @@ options {
     tokenVocab=MojoLexer;
 }
 
-mojoFile : (EOL* statements)? EOL* EOF;
+mojoFile : EOL* (statements)? EOL* EOF;
 
 // Statements
 
@@ -47,7 +47,10 @@ statement
  | loopStatement
  | branchStatement
  | controlTransferStatement
+ | freeDocument
  ;
+
+freeDocument : document;
 
 statements
     : statement (eos EOL* statement)* SEMI?
@@ -55,11 +58,11 @@ statements
 
 // GRAMMAR OF A LOOP STATEMENT
 
-loopStatement :
- | forInStatement
- | whileStatement
- //| repeatWhileStatement
- ;
+loopStatement
+    : forInStatement
+    | whileStatement
+  //| repeatWhileStatement
+    ;
 
 // GRAMMAR OF A FOR_IN STATEMENT
 
@@ -136,13 +139,14 @@ genericParameterClause : LT EOL* genericParameters EOL* GT;
 genericParameters : genericParameter (eovWithDocument EOL* genericParameter)* eovWithDocument?;
 genericParameter
  : typeName
+ | typeName ELLIPSIS
  | typeName typeAnnotation
  ;
 
 // GRAMMAR OF A GENERIC ARGUMENT CLAUSE
 
 genericArgumentClause : LT EOL* genericArguments EOL* GT;
-genericArguments : genericArgument (eov EOL* genericArgument)* eov;
+genericArguments : genericArgument (eov EOL* genericArgument)*;
 genericArgument : type_ attributes?;
 
 // context-sensitive. Allow < as pre, post, or binary op
@@ -152,17 +156,31 @@ genericArgument : type_ attributes?;
 
 // GRAMMAR OF A DECLARATION
 
-declaration
- : packageDeclaration
- | importDeclaration
- | constantDeclaration
- | variableDeclaration
- | typeAliasDeclaration
- | functionDeclaration
- | enumDeclaration
- | structDeclaration
- | interfaceDeclaration
- ;
+//declaration
+// : packageDeclaration
+// | importDeclaration
+// | constantDeclaration
+// | variableDeclaration
+// | typeAliasDeclaration
+// | functionDeclaration
+// | enumDeclaration
+// | structDeclaration
+// | interfaceDeclaration
+// | attributeDeclaration
+// ;
+
+declaration : document? (attributes EOL)?
+      ( packageDeclaration
+      | importDeclaration
+      | constantDeclaration
+      | variableDeclaration
+      | typeAliasDeclaration
+      | functionDeclaration
+      | enumDeclaration
+      | structDeclaration
+      | interfaceDeclaration
+      | attributeDeclaration
+      );
 
 //declarations : declaration+ ;
 
@@ -171,9 +189,10 @@ declaration
 codeBlock : LCURLY (EOL* statements)? EOL* RCURLY ;
 
 // GRAMMAR OF A PACKAGE DECLARATION
-packageDeclaration : document? (EOL* attributes)? EOL* KEYWORD_PACKAGE packageIdentifier (EOL* objectLiteral)?;
+packageDeclaration : KEYWORD_PACKAGE packageIdentifier (EOL* objectLiteral)?;
 
-packageIdentifier : Identifier (DOT Identifier)* ;
+packageIdentifier : packageName (DOT packageName)* ;
+packageName : VALUE_IDENTIFIER;
 
 // GRAMMAR OF AN IMPORT DECLARATION
 importDeclaration
@@ -197,7 +216,7 @@ importType : typeName importTypeAsClause?;
 // GRAMMAR OF A CONSTANT DECLARATION
 
 constantDeclaration
-  : document? (EOL* attributes)? EOL* KEYWORD_CONST patternInitializers
+  : KEYWORD_CONST patternInitializers
   ;
 patternInitializers
   : patternInitializer (COMMA patternInitializer)*
@@ -218,26 +237,26 @@ variableDeclaration
 
 // GRAMMAR OF A TYPE ALIAS DECLARATION
 typeAliasDeclaration
-  : document? (EOL* attributes)? EOL* KEYWORD_TYPE typealiasName genericParameterClause? EOL* typealiasAssignment
+  : KEYWORD_TYPE typeAliasName genericParameterClause? EOL* typeAliasAssignment
   ;
 
-typealiasName : typeName ;
-typealiasAssignment : assignmentOperator EOL* type_ ;
+typeAliasName : typeName ;
+typeAliasAssignment : assignmentOperator EOL* type_ attributes?;
 
 // GRAMMAR OF A FUNCTION DECLARATION
 functionDeclaration : functionHead functionName genericParameterClause? functionSignature (EOL* functionBody)? ;
 
-functionHead : document? (EOL* attributes)? EOL* KEYWORD_FUNC ;
+functionHead : KEYWORD_FUNC ;
 
 functionName : declarationIdentifier | operator ;
 
 functionSignature
- : functionParameterClause (EOL* functionResult)?
+ : functionParameterClause followingDocument? (EOL* functionResult)?
  ;
  
 functionResult : arrowOperator (labelIdentifier COLON)? type_ attributes? (EOL* followingDocument)? ;
 
-functionBody : LCURLY (eov* followingDocument)? (EOL* statements)? EOL* RCURLY ;
+functionBody : LCURLY followingDocument? (EOL* statements)? EOL* RCURLY ;
 
 functionParameterClause
   : LPAREN RPAREN
@@ -256,27 +275,29 @@ functionParameter
 // GRAMMAR OF AN ENUMERATION DECLARATION
 
 enumDeclaration
-  : document? (EOL* attributes)? EOL* KEYWORD_ENUM enumName genericParameterClause? (EOL* typeInheritanceClause)? EOL* enumBody
+  : KEYWORD_ENUM enumName genericParameterClause? (EOL* typeInheritanceClause)? EOL* enumBody
   ;
 
-enumBody : LCURLY (eov* followingDocument)? (EOL* enumMembers)? EOL* RCURLY ;
+enumBody : LCURLY (followingDocument)? (EOL* enumMembers)? EOL* RCURLY ;
 
 enumName: typeName;
 enumMembers : enumMember (eovWithDocument EOL* enumMember)* eovWithDocument?;
 
 enumMember
- :  document? (EOL* attributes)? EOL* declarationIdentifier attributes? (EOL* initializer)?
+ : document? (attributes EOL)? declarationIdentifier attributes? (EOL* initializer)?
+ //| freeDocument
  ;
 
 // GRAMMAR OF A STRUCTURE DECLARATION
 structDeclaration
- : document? (EOL* attributes)? EOL* KEYWORD_TYPE structName genericParameterClause? (EOL* typeInheritanceClause)? (EOL* structBody)?
+ : KEYWORD_TYPE structName genericParameterClause? structType
  ;
 
 structName : typeName;
+structType : (EOL* typeInheritanceClause)? (EOL* structBody)?;
 
 structBody
-   : LCURLY (eov* followingDocument)? (EOL* structMembers)? EOL* RCURLY
+   : LCURLY followingDocument? (EOL* structMembers)? EOL* RCURLY
    ;
 
 structMembers
@@ -285,43 +306,51 @@ structMembers
   //| structMember eosWithDocument EOL* structMembers
   ;
 
-structMember 
- : structMemberDeclaration
- | structDeclaration
+structMember
+ : document? (attributes EOL)?
+ ( structDeclaration
  | enumDeclaration
  | constantDeclaration
  | typeAliasDeclaration
+ | structMemberDeclaration
+ //| freeDocument
+ )
  ;
 
 structMemberDeclaration
-  : document? (EOL* attributes)? EOL* declarationIdentifier typeAnnotation (EOL* initializer )?
+  : declarationIdentifier typeAnnotation (EOL* initializer )?
   ;
 
 // GRAMMAR OF A INTERFACE DECLARATION
 
 interfaceDeclaration
-  : document? (EOL* attributes)? EOL* KEYWORD_INTERFACE interfaceName genericParameterClause? (EOL* typeInheritanceClause)? EOL* interfaceBody ;
+  : KEYWORD_INTERFACE interfaceName genericParameterClause? (EOL* typeInheritanceClause)? EOL* interfaceBody ;
 
 interfaceName : typeName ;
-interfaceBody : LCURLY (eov* followingDocument)? (EOL* interfaceMembers)? EOL* RCURLY ;
+interfaceBody : LCURLY followingDocument? (EOL* interfaceMembers)? EOL* RCURLY ;
 
 interfaceMembers
   : interfaceMember (eosWithDocument EOL* interfaceMember)* eosWithDocument?
   ;
 
 interfaceMember
- : interfaceMethodDeclaration
- | typeAliasDeclaration
+ : document? (attributes EOL)?
+ ( typeAliasDeclaration
+ | interfaceMethodDeclaration
+ //| freeDocument
+ )
  ;
 
 // GRAMMAR OF A INTERFACE METHOD DECLARATION
+interfaceMethodDeclaration : functionName genericParameterClause? EOL* functionSignature;
 
-interfaceMethodDeclaration : document? (EOL* attributes)? EOL* functionName genericParameterClause? EOL* functionSignature;
+// GRAMMAR OF A ATTRIBUTE DECLARATION
+attributeDeclaration
+  : document? (EOL* attribute)? KEYWORD_ATTRIBUTE attributeName genericParameterClause? (structType | typeAnnotation);
 
 // Patterns
 
 // GRAMMAR OF A PATTERN
-
 pattern
  : wildcard_pattern typeAnnotation?
  | identifierPattern typeAnnotation?
@@ -362,13 +391,13 @@ expression_pattern : expression  ;
 // Attributes
 
 // GRAMMAR OF AN ATTRIBUTE
-
 attribute
- : '@' attributeName attributeArgumentClause?
+ : '@' DecimalLiteral
+ | '@' attributeIdentifier genericArgumentClause? attributeArgumentClause?
  ;
 
-attributeName :  attributeNameIdentifier | DecimalLiteral;
-attributeNameIdentifier : Identifier ( DOT Identifier)*;
+attributeIdentifier : ((packageIdentifier DOT)? attributeName);
+attributeName : VALUE_IDENTIFIER;
 
 attributeArgumentClause : LPAREN (EOL*  expressions)? EOL* RPAREN  ;
 
@@ -415,6 +444,7 @@ type_casting_operator
 
 primaryExpression
  : declarationIdentifier genericArgumentClause?
+ | typeIdentifier DOT declarationIdentifier genericArgumentClause?
  | literalExpression
  //| closure_expression
  | parenthesizedExpression
@@ -447,10 +477,10 @@ objectLiteral
  ;
 
 objectLiteralItems
-  : objectLiteralItem (eovWithDocument EOL* objectLiteralItem)* eovWithDocument?
+  : objectLiteralItem (eov EOL* objectLiteralItem)* eov?
   ;
  
-objectLiteralItem : document? expression COLON expression;
+objectLiteralItem : expression COLON expression;
 
 // GRAMMAR OF A CLOSURE EXPRESSION
 
@@ -528,7 +558,7 @@ postfixExpression
 // ! is a postfix operator already
 // | postfixExpression '!'                                            # forced_value_expression
 // ? is a postfix operator already
-// | postfixExpression QUESTION                                            # optional_chaining_expression
+// | postfixExpression QUESTION                                           # optional_chaining_expression
  ;
 
 // GRAMMAR OF A FUNCTION CALL EXPRESSION
@@ -562,7 +592,9 @@ argument_name : labelIdentifier COLON ;
 type_
  : basicType
  | functionType
+ | type_ BANG
  | type_ QUESTION
+ | type_ ELLIPSIS
  ;
 
 basicType
@@ -585,7 +617,7 @@ typeAnnotation : COLON type_ attributes?;
 typeIdentifier : (packageIdentifier DOT)? typeIdentifierClause (DOT typeIdentifierClause)* ;
 typeIdentifierClause : typeName genericArgumentClause? ;
 
-typeName : TypeName ;
+typeName : TYPE_IDENTIFIER ;
 
 // GRAMMAR OF A TUPLE TYPE
 tupleType : LPAREN (EOL* tupleTypeElements)? EOL* RPAREN ;
@@ -618,7 +650,7 @@ arrayType : LBRACK type_ attributes? RBRACK ;
 
 // GRAMMAR OF A DICTIONARY TYPE
 
-dictionaryType : LCURLY type_ COLON type_  attributes? RCURLY ;
+dictionaryType : LCURLY type_ attributes? COLON type_  attributes? RCURLY ;
 
 // GRAMMAR OF AN OPTIONAL TYPE
 
@@ -629,7 +661,7 @@ dictionaryType : LCURLY type_ COLON type_  attributes? RCURLY ;
 
 typeInheritanceClause : COLON EOL* typeInheritances ;
 typeInheritances : typeInheritance (eovWithDocument EOL* typeInheritance)* eovWithDocument? ;
-typeInheritance : typeIdentifier attributes? ;
+typeInheritance : primeType attributes? ;
 
 
 // ---------- Lexical Structure -----------
@@ -642,19 +674,19 @@ typeInheritance : typeIdentifier attributes? ;
 
 // var x = 1; funx x() {}; class x {}
 declarationIdentifier
-     : Identifier
+     : VALUE_IDENTIFIER
      | keyword_as_identifier_in_declarations
      ;
 
 // external, internal argument name
 labelIdentifier
-     : Identifier
+     : VALUE_IDENTIFIER
      | keyword_as_identifier_in_labels
      ;
 
 path_identifier : declarationIdentifier ( DOT declarationIdentifier)*;
 
-identifier : Identifier | Implicit_parameter_name
+identifier : VALUE_IDENTIFIER | IMPLICIT_PARAMETER_NAME
  ;
 
 // identifier_list : identifier (COMMA identifier)* ;
@@ -691,7 +723,7 @@ keyword_as_identifier_in_declarations
 | 'continue'
 | 'else'
 | 'enum'
-| 'false'
+//| 'false'
 | 'for'
 | 'func'
 | 'if'
@@ -707,7 +739,7 @@ keyword_as_identifier_in_declarations
 | 'repeat'
 | 'return'
 | 'struct'
-| 'true'
+//| 'true'
 | 'type'
 | 'var'
 | 'while'
@@ -817,7 +849,7 @@ compilation_condition_OR  : OR OR ;
 compilation_condition_GE  : GT EQUAL ;
 arrowOperator	:  RIGHT_ARROW;
 range_operator	:  DOT_DOT ;
-range_right_open_operator : DOT_DOT_LT;
+half_open_range_operator : DOT_DOT_LT;
 same_type_equals:  EQUAL EQUAL ;
 
 /**
@@ -825,7 +857,10 @@ same_type_equals:  EQUAL EQUAL ;
  it is treated as a binary operator. As an example, the + operator in a+b
   and a + b is treated as a binary operator."
 */
-binaryOperator :  operator ;
+binaryOperator
+    : range_operator
+    | half_open_range_operator
+    | operator;
 
 /**
  "If an operator has whitespace on the left side only, it is treated as a
@@ -853,12 +888,12 @@ operator
 
 operator_character
   : operator_head
-  | Operator_following_character
+  | OPERATOR_FOLLOWING_CHARACTER
   ;
 
 operator_head
   : ('/' | '=' | '-' | '+' | '!' | '*' | '%' | '&' | '|' | '<' | '>' | '^' | '~' | QUESTION) // wrapping in (..) makes it a fast set comparison
-  | Operator_head_other
+  | OPERATOR_HEAD_OTHER
   ;
 
 dot_operator_head 		: DOT ;
@@ -866,7 +901,11 @@ dot_operator_character  : DOT | operator_character ;
 
 // GRAMMAR OF A LITERAL
 
-literal : numericLiteral | stringLiteral | BoolLiteral | NullLiteral  ;
+literal : numericLiteral | stringLiteral | boolLiteral | nullLiteral  ;
+
+boolLiteral : KEYWORD_TRUE | KEYWORD_FALSE ;
+
+nullLiteral : KEYWORD_NULL ;
 
 numericLiteral
  : negatePrefixOperator? integerLiteral
@@ -890,15 +929,15 @@ stringLiteral
   | InterpolatedStringLiteral
   ;
 
-eos : SEMI | EOL+;
-eov : COMMA | EOL+;
+eos : SEMI | EOL;
+eov : COMMA | EOL;
 
 eosWithDocument
-  : (SEMI (EOL* followingDocument)?
-  | (EOL* followingDocument)? EOL+)
+  : SEMI (followingDocument EOL)?
+  | followingDocument? EOL
   ;
 
 eovWithDocument
-  : (COMMA (EOL* followingDocument)?
-  | (EOL* followingDocument)? EOL+)
+  : COMMA (followingDocument EOL)?
+  | followingDocument? EOL
   ;

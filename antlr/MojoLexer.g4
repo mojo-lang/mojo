@@ -72,20 +72,19 @@ RIGHT_RIGHT_ARROWS : '=' '>';
 RIGHT_ARROW : '-' '>';
 
 DOT_DOT    : '.' '.';
-LT_DOT_DOT : '<' '.' '.';
 DOT_DOT_LT : '.' '.' '<';
 
 ELLIPSIS : '.' '.' '.';
 
-TypeName
+TYPE_IDENTIFIER
  : [A-Z][a-zA-Z0-9]*
 ;
 
-Identifier
- : Identifier_head Identifier_characters?
+VALUE_IDENTIFIER
+ : VALUE_IDENTIFIER_HEAD VALUE_IDENTIFIER_CHARACTERS?
 ;
 
-fragment Identifier_head
+fragment VALUE_IDENTIFIER_HEAD
  : [a-z]
  | '\u00A8' | '\u00AA' | '\u00AD' | '\u00AF' | [\u00B2-\u00B5] | [\u00B7-\u00BA]
  | [\u00BC-\u00BE] | [\u00C0-\u00D6] | [\u00D8-\u00F6] | [\u00F8-\u00FF]
@@ -99,16 +98,14 @@ fragment Identifier_head
  | [\uFE47-\uFFFD]
  ;
 
-fragment Identifier_character : [0-9A-Z_]
+fragment VALUE_IDENTIFIER_CHARACTER : [0-9A-Z_]
  | [\u0300-\u036F] | [\u1DC0-\u1DFF] | [\u20D0-\u20FF] | [\uFE20-\uFE2F]
- | Identifier_head
+ | VALUE_IDENTIFIER_HEAD
  ;
 
-fragment Identifier_characters : Identifier_character+ ;
+fragment VALUE_IDENTIFIER_CHARACTERS : VALUE_IDENTIFIER_CHARACTER+ ;
 
-
-
-Operator_head_other // valid operator chars not used by Swift itself
+OPERATOR_HEAD_OTHER // valid operator chars not used by Swift itself
   : [\u00A1-\u00A7]
   | [\u00A9\u00AB]
   | [\u00AC\u00AE]
@@ -125,7 +122,7 @@ Operator_head_other // valid operator chars not used by Swift itself
   | [\u3008-\u3030]
   ;
 
-Operator_following_character
+OPERATOR_FOLLOWING_CHARACTER
   : [\u0300-\u036F]
   | [\u1DC0-\u1DFF]
   | [\u20D0-\u20FF]
@@ -134,14 +131,7 @@ Operator_following_character
   //| [\uE0100-\uE01EF]  ANTLR can't do >16bit char
   ;
 
-
-Implicit_parameter_name : DOLLER PureDecimalDigits ;
-
-
-BoolLiteral : KEYWORD_TRUE | KEYWORD_FALSE ;
-
-NullLiteral : KEYWORD_NULL ;
-
+IMPLICIT_PARAMETER_NAME : DOLLER PureDecimalDigits ;
 
 BinaryLiteral : '0b' Binary_digit BinaryLiteral_characters? ;
 fragment Binary_digit : [01] ;
@@ -236,7 +226,11 @@ LineComment
   : '//' (~[/<\u000A\u000D] ~[\u000A\u000D]*)?
   -> channel(HIDDEN) ;
 
+LineCommentForDocument
+  : '////' ~[\u000A\u000D]*
+  -> channel(HIDDEN) ;
+
 EOL   : '\u000A' | '\u000D' '\u000A'; // \r\n
 
-LineDocument : '///' ~[\u000A\u000D]*;
+LineDocument : '///' (~[/<\u000A\u000D] ~[\u000A\u000D]*)?;
 FollowingLineDocument : '//<' ~[\u000A\u000D]*;

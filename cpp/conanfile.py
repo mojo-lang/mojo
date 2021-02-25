@@ -1,15 +1,19 @@
-from conans import ConanFile, CMake
+from conans import ConanFile, CMake, tools
+import os
 
-class NcraftConan(ConanFile):
-   settings = "os", "compiler", "build_type", "arch"
-   generators = "cmake"
-   requires = "catch2/2.2.1@bincrafters/stable","double-conversion/3.0.0@bincrafters/stable"
 
-   def imports(self):
-      self.copy("*.dll", dst="bin", src="bin") # From bin to bin
-      self.copy("*.dylib*", dst="bin", src="lib") # From lib to bin
+class PEGTLConan(ConanFile):
+    name = "PEGTL"
+    version = "2.0.0"
+    license = "MIT"
+    username = "taocpp"
+    url = "https://github.com/%s/PEGTL.git" % username
 
-   def build(self):
-      cmake = CMake(self)
-      cmake.configure()
-      cmake.build()
+    def source(self):
+        tools.download("https://github.com/%s/PEGTL/archive/%s.zip" % (self.username, self.version),
+                       "PEGTL.zip")
+        tools.unzip("PEGTL.zip" )
+
+    def package(self):
+        self.copy("*", "include/tao", "PEGTL-%s/include/tao"%self.version)
+

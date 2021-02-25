@@ -1,91 +1,64 @@
 package parser
 
 import (
-	"errors"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/mojo-lang/lang/go/pkg/lang"
-	"io/ioutil"
-	"log"
-	path2 "path"
-	"strings"
+	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/parser/semantic"
+	"github.com/mojo-lang/mojo/go/pkg/parser/syntax"
 )
 
 type Parser struct {
+	Dependencies map[string]*lang.Package
 }
 
 func New() *Parser {
 	return &Parser{}
 }
 
-func (p Parser) Parse(mojo string) (*lang.SourceFile, error) {
-	input := antlr.NewInputStream(mojo)
-	return p.ParseStream(input)
-}
-
-func (p Parser) ParseStream(input *antlr.InputStream) (*lang.SourceFile, error) {
-	lexer := NewMojoLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-
-	parser := NewMojoParser(stream)
-	parser.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-	parser.BuildParseTrees = true
-
-	tree := parser.MojoFile()
-	visitor := NewMojoFileVisitor()
-	result := visitor.Visit(tree).(bool)
-	if result {
-		print(visitor.SourceFile.String())
-		return visitor.SourceFile, nil
-	} else {
-		print("parser failed")
-	}
-
-	return nil, errors.New("parse failed")
-}
-
 func (p Parser) ParseFile(filename string) (*lang.SourceFile, error) {
-	input, err := antlr.NewFileStream(filename)
-	if err != nil {
-		return nil, err
-	}
-	return p.ParseStream(input.InputStream)
+	parser := syntax.Parser{}
+	return parser.ParseFile(filename)
 }
 
-func (p Parser) ParsePackage(path string) (map[string]*lang.Package, error) {
-	packages := make(map[string]*lang.Package)
-	files, err := ioutil.ReadDir(path)
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-
-	currentPkgName := strings.TrimPrefix(path, "./")
-	currentPkgName = strings.TrimPrefix(currentPkgName, "../")
-	currentPkgName = strings.ReplaceAll(currentPkgName, "/", ".")
-	currentPkgName = strings.ReplaceAll(currentPkgName, "\\", ".")
-
-	for _, f := range files {
-		if f.IsDir() {
-			pkgs, err := p.ParsePackage(path2.Join(path, f.Name()))
-			if err != nil {
-				return nil, err
-			}
-
-			for k, v := range pkgs {
-				packages[k] = v
-			}
-		} else {
-			sourceFile, err := p.ParseFile(path2.Join(path, f.Name()))
-			if err != nil {
-				return nil, err
-			}
-
-			if packages[currentPkgName] == nil {
-				packages[currentPkgName] = &lang.Package{}
-			}
-
-			packages[currentPkgName].SourceFiles = append(packages[currentPkgName].SourceFiles, sourceFile)
+func hasRootPackage(packages map[string]*lang.Package, rootName string) bool {
+	for k, _ := range packages {
+		if k == rootName {
+			return true
 		}
 	}
-	return packages, nil
+	return false
+}
+
+func (p Parser) ParsePackage(path string, pkgName string) (map[string]*lang.Package, error) {
+	syntaxParser := syntax.Parser{}
+	pkgs, err := syntaxParser.ParsePackage(path, pkgName)
+	if err != nil {
+		logs.Errorw("failed to parse package", "package", pkgName, "error", err.Error())
+		return nil, err
+	}
+
+	options := make(map[string]interface{})
+	var packages lang.Packages
+	for _, pkg := range pkgs {
+		packages = append(packages, pkg)
+	}
+	for key, pkg := range p.Dependencies {
+		packages = append(packages, pkg)
+		options[key+".disable"] = true
+	}
+
+	if !hasRootPackage(pkgs, pkgName) {
+		pkgs[pkgName] = &lang.Package{
+			Name:     lang.GetPackageName(pkgName),
+			FullName: pkgName,
+		}
+		packages = append(packages, pkgs[pkgName])
+	}
+
+	err = semantic.ParsePackages(packages, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return pkgs, err
 }
