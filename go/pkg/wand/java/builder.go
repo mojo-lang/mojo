@@ -3,9 +3,9 @@ package java
 import (
 	"errors"
 	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/mojo/go/pkg/wand/builder"
 	"github.com/otiai10/copy"
 	"io/ioutil"
 	"os"
@@ -14,14 +14,17 @@ import (
 )
 
 type Builder struct {
-	PWD     string
-	Path    string
-	Output  string
-	Package *lang.Package
-	Files   []*descriptor.FileDescriptor
+	builder.Builder
+	Output string
+	Files  []*descriptor.FileDescriptor
 }
 
 func (b Builder) protocJava() error {
+	if b.DisableGeneration {
+		logs.Infow("disable generation, skip to build java.")
+		return nil
+	}
+
 	if b.Package == nil {
 		return errors.New("")
 	}

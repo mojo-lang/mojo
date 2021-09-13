@@ -54,5 +54,10 @@ func (c *Compiler) compilePackage(ctx *context.Context, pkg *lang.Package) error
 		return err
 	}
 
+	goPkg := &GoPackageNameCompiler{}
+	if err := goPkg.Compile(ctx, pkg); err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -29,7 +29,7 @@ func CompileNominalType(ctx *Context, t *lang.NominalType) (string, string, erro
 		}
 	}
 
-	if IsSystemScalarType(t.Name) {
+	if t.IsScalar() {
 		return "Scalar", t.Name, nil
 	}
 
@@ -107,6 +107,8 @@ func CompileEnum(ctx *Context, decl *lang.EnumDecl, enumDescriptor *desc.EnumDes
 	return nil
 }
 
+const inheritSourceFileKey = "inherit-source-file"
+
 func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.MessageDescriptor) error {
 	ctx.Open(decl, structDescriptor)
 	defer func() {
@@ -158,9 +160,12 @@ func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.M
 			}
 		} else {
 			for _, inherit := range decl.Type.Inherits {
+				//ctx.SetOption(inheritSourceFileKey, make(map[string]bool))
 				if err := compileStructInherit(ctx, inherit, structDescriptor); err != nil {
+					//ctx.DeleteOption(inheritSourceFileKey)
 					return err
 				}
+				//ctx.DeleteOption(inheritSourceFileKey)
 			}
 
 			if err := compileStructFields(ctx, decl.Type.Fields, structDescriptor); err != nil {
@@ -191,6 +196,7 @@ func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.M
 	return nil
 }
 
+//TODO 不在相同的package下的inherit不需要进行Boxed类型的处理
 func compileStructInherit(ctx *Context, inherit *lang.NominalType, descriptor *desc.MessageDescriptor) error {
 	decl := inherit.TypeDeclaration.GetStructDecl()
 	if decl == nil || decl.Type == nil {
@@ -203,16 +209,25 @@ func compileStructInherit(ctx *Context, inherit *lang.NominalType, descriptor *d
 		}
 	}
 
-	for _, dependency := range decl.ResolvedIdentifiers {
-		fileName := dependency.SourceFile
+	unifyFileName := func(fileName string) string {
 		if strings.HasSuffix(fileName, ".mojo") {
-			fileName = strings.TrimSuffix(fileName, "mojo") + "proto"
+			return strings.TrimSuffix(fileName, "mojo") + "proto"
 		} else {
-			fileName = fileName + ".proto"
+			return fileName + ".proto"
 		}
+	}
 
-		file := ctx.GetFileDescriptor()
-		if file != nil && !IsSystemFile(fileName) && fileName != *file.Name {
+	file := ctx.GetFileDescriptor()
+	//FIXME remove the inherit dependency file to protobuf file imports
+	//sourceFiles, ok := ctx.GetOption(inheritSourceFileKey).(map[string]bool)
+	//if !ok {
+	//	sourceFiles = make(map[string]bool)
+	//}
+	//sourceFiles[unifyFileName(decl.SourceFileName)] = true
+
+	for _, dependency := range decl.ResolvedIdentifiers {
+		fileName := unifyFileName(dependency.SourceFile)
+		if file != nil && !IsSystemFile(fileName) && fileName != *file.Name /*&& !sourceFiles[fileName]*/ {
 			file.Dependency = append(file.Dependency, fileName)
 		}
 	}
@@ -349,7 +364,7 @@ func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *
 
 const OptionsDependency = "mojo/mojo.proto"
 
-func addOptionsDependency(ctx *Context)  {
+func addOptionsDependency(ctx *Context) {
 	fileDescriptor := ctx.GetFileDescriptor()
 	for _, dep := range fileDescriptor.Dependency {
 		if dep == OptionsDependency {

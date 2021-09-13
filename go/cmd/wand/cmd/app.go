@@ -25,7 +25,7 @@ import (
 type App struct {
 	cli.App
 
-	Verbose bool //= flag.BoolP("verbose", "v", false, "Verbose output")
+	Verbose bool //= flag.BoolP("verbose", "v", false, "Verbose Output")
 	Help    bool //= flag.BoolP("help", "h", false, "Print usage")
 
 	BinName   string // = filepath.Base(os.Args[0])

@@ -10,27 +10,68 @@ type SchemaCompiler struct {
 	Components *openapi.Components
 }
 
+func wrapCode(code string) *document.Inline {
+	return document.NewCodeInlineFrom(code)
+}
+
+func wrapCodeToBlock(code string) *document.Block {
+	return document.NewPainBlock(wrapCode(code))
+}
+
 func (s *SchemaCompiler) Compile(schema *openapi.Schema) (*document.Document, error) {
 	doc := &document.Document{}
 
-	if schema.Type == openapi.Schema_TYPE_OBJECT {
+	if schema.Type == openapi.Schema_TYPE_OBJECT || len(schema.AllOf) > 0 {
 		table := &document.Table{
 			Caption:   nil,
 			Alignment: 0,
-			Header: &document.Table_Header{
-				Values: []*document.Table_Cell{
-					document.NewTextCell("字段"),
-					document.NewTextCell("类型"),
-					document.NewTextCell("格式类型"),
-					document.NewTextCell("是否必须"),
-					document.NewTextCell("默认值"),
-					document.NewTextCell("说明"),
-				},
-			},
+			Header:    document.NewTextTableHeader("字段", "类型", "格式类型", "是否必须", "默认值", "说明"),
 		}
 
 		ctx := &Context{}
 		s.compileFields(ctx, schema, table)
+
+		doc.AppendTable(table)
+	} else if schema.Type == openapi.Schema_TYPE_ARRAY {
+		table := &document.Table{
+			Caption:   nil,
+			Alignment: 0,
+			Header:    document.NewTextTableHeader("字段", "类型", "说明"),
+		}
+		row := &document.Table_Row{}
+
+		row.Values = append(row.Values, document.NewTextTableCell(""))
+
+		typeName := schema.GetTypeName(s.Components.Schemas)
+		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeName)))
+
+		// 说明
+		d := schema.Items.GetDescription(s.Components)
+		if d != nil {
+			row.Values = append(row.Values, &document.Table_Cell{Values: doc.Blocks})
+		}
+
+		table.Rows = append(table.Rows, row)
+		doc.AppendTable(table)
+	} else if len(schema.OneOf) > 0 {
+		table := &document.Table{
+			Caption:   nil,
+			Alignment: 0,
+			Header:    document.NewTextTableHeader("类型", "说明"),
+		}
+
+		for _, item := range schema.OneOf {
+			row := &document.Table_Row{}
+
+			typeName := item.GetTypeName(s.Components.Schemas)
+			row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeName)))
+
+			// 说明
+			summary := item.GetSummary(s.Components)
+			row.Values = append(row.Values, document.NewTextTableCell(summary))
+
+			table.Rows = append(table.Rows, row)
+		}
 
 		doc.AppendTable(table)
 	}
@@ -47,7 +88,7 @@ func (s *SchemaCompiler) compileFields(ctx *Context, schema *openapi.Schema, tab
 				if sc != nil {
 					s.compileFields(ctx, sc, table)
 				} else {
-					logs.Warnw("failed to find referenced schema", "url", url.Encode(), "schema", schema.Title)
+					logs.Warnw("failed to find referenced schema", "url", url.Format(), "schema", schema.Title)
 				}
 			} else {
 				sc := sch.GetSchema()
@@ -63,12 +104,21 @@ func (s *SchemaCompiler) compileFields(ctx *Context, schema *openapi.Schema, tab
 	for key, property := range schema.Properties {
 		row := &document.Table_Row{}
 
-		row.Values = append(row.Values, document.NewTextCell(key))
-		row.Values = append(row.Values, document.NewTextCell(property.GetSchemaName()))
+		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(key)))
 
-		row.Values = append(row.Values, document.NewTextCell("")) // 格式类型
-		row.Values = append(row.Values, document.NewTextCell("")) // 是否必须
-		row.Values = append(row.Values, document.NewTextCell("")) // 默认值
+		typeName := property.GetTypeName(s.Components.Schemas)
+		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeName)))
+
+		typeFormat := property.GetFormat(s.Components.Schemas)
+		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeFormat))) // 格式类型
+
+		required := "否"
+		if schema.IsPropertyRequired(key) {
+			required = "是"
+		}
+		row.Values = append(row.Values, document.NewTextTableCell(required)) // 是否必须
+
+		row.Values = append(row.Values, document.NewTextTableCell("")) // 默认值
 
 		// 说明
 		doc := property.GetDescription(s.Components)

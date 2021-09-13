@@ -6,8 +6,8 @@ import (
 	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
 	"github.com/iancoleman/strcase"
 	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	langcompiler "github.com/mojo-lang/mojo/go/pkg/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
 	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 	"github.com/mojo-lang/mojo/go/pkg/util"
@@ -148,15 +148,7 @@ func (c *Compiler) compileFileOptions(ctx *compiler.Context, file *lang.SourceFi
 
 	repository := pkg.Repository
 	if repository != nil {
-		goPackageFullName := strings.ReplaceAll(pkg.FullName, ".", "/")
-		goPackageName := pkg.Name
-		if core.IsVersionTag(pkg.Name) {
-			segments := strings.Split(pkg.FullName, ".")
-			if len(segments) > 1 {
-				goPackageName = segments[len(segments)-2]
-			}
-		}
-		goPackage := fmt.Sprintf("%s%s/go/pkg/%s;%s", repository.Authority.Host, repository.Path, goPackageFullName, goPackageName)
+		goPackage := fmt.Sprintf("%s;%s", pkg.GoFullPackageName(), pkg.GoPackageName())
 		fileDescriptor.Options.GoPackage = &goPackage
 	}
 
@@ -285,6 +277,10 @@ func (c *Compiler) compileMethod(ctx *compiler.Context, method *lang.FunctionDec
 		Fields: method.Signature.Parameters,
 	}
 
+	if pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination"); pagination {
+		s.Type.Fields = append(s.Type.Fields, langcompiler.GeneratePaginationParameters()...)
+	}
+
 	c.compileStruct(ctx, s, desc.NewMessageDescriptor(ctx.GetFileDescriptor()))
 
 	m.InputType = &s.Name
@@ -294,6 +290,11 @@ func (c *Compiler) compileMethod(ctx *compiler.Context, method *lang.FunctionDec
 	result := method.Signature.Result
 	if result == nil {
 		m.OutputType = &nullTypeName
+
+		file := ctx.GetFileDescriptor()
+		if file != nil {
+			file.Dependency = append(file.Dependency, "mojo/core/null.proto")
+		}
 	} else {
 		if result.Name == "Tuple" {
 			name := strcase.ToCamel(method.Name) + "Response"

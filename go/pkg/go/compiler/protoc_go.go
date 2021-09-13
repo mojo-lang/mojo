@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"errors"
+	_ "github.com/gogo/protobuf/protoc-gen-gogo/grpc"
 	plugin "github.com/gogo/protobuf/protoc-gen-gogo/plugin"
 	"github.com/gogo/protobuf/vanity"
 	"github.com/gogo/protobuf/vanity/command"
@@ -35,16 +36,37 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 	cmd.Args = append(cmd.Args, "--descriptor_set_out=/dev/stdout")
 
 	var outFiles util.CodeGeneratedFiles
+
+	/// gogoproto will clean the plugin after the first run `command.Generate(req)`
+	/// make sure the service files will use the grpc plugin
+	fileGroups := make([][]*descriptor.FileDescriptor, 2, 2)
 	for _, file := range files {
+		if file.HasService() {
+			fileGroups[0] = append(fileGroups[0], file)
+		} else {
+			fileGroups[1] = append(fileGroups[1], file)
+		}
+	}
+
+	for _, group := range fileGroups {
+		if len(group) == 0 {
+			continue
+		}
+
 		fileCmd := &exec.Cmd{
 			Path: cmd.Path,
 			Args: cmd.Args,
 			Dir:  cmd.Dir,
 		}
-		fileCmd.Args = append(fileCmd.Args, *file.Name)
-		out, err := fileCmd.CombinedOutput()
+
+		for _, file := range group {
+			fileCmd.Args = append(fileCmd.Args, *file.Name)
+		}
+		out, err := fileCmd.Output()
+		cmdstr := fileCmd.String()
+		println(cmdstr)
 		if err != nil {
-			logs.Errorw("failed to run protoc cmd", "error", string(out), "cmd", cmd.String())
+			logs.Errorw("failed to run protoc cmd", "error", string(out), "cmd", fileCmd.String())
 			return nil, err
 		}
 
@@ -59,12 +81,16 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 		//vanity.ForEachFile(fs, vanity.TurnOffGogoImport)
 		vanity.ForEachFieldInFiles(fs, descriptor.JsonTagLowerCamelCase)
 
+		parameter := "plugins=grpc"
 		req := &plugin.CodeGeneratorRequest{
 			ProtoFile: fs,
+			Parameter: &parameter,
 		}
 		for _, f := range fs {
-			if *f.Name == *file.Name {
-				req.FileToGenerate = append(req.FileToGenerate, *f.Name)
+			for _, file := range group {
+				if *f.Name == *file.Name {
+					req.FileToGenerate = append(req.FileToGenerate, *f.Name)
+				}
 			}
 		}
 		resp := command.Generate(req)
@@ -74,14 +100,16 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 
 		for _, f := range resp.File {
 			if f.Name != nil && f.Content != nil {
-				goPath := "pkg/" + strings.ReplaceAll(*file.Package, ".", "/")
-				pos := strings.Index(*f.Name, goPath)
-				if pos >= 0 {
-					name := (*f.Name)[pos:]
-					outFiles = append(outFiles, &util.CodeGeneratedFile{
-						Name:    name,
-						Content: *f.Content,
-					})
+				for _, file := range group {
+					goPath := "pkg/" + strings.ReplaceAll(*file.Package, ".", "/")
+					pos := strings.Index(*f.Name, goPath)
+					if pos >= 0 {
+						name := (*f.Name)[pos:]
+						outFiles = append(outFiles, &util.CodeGeneratedFile{
+							Name:    name,
+							Content: *f.Content,
+						})
+					}
 				}
 			}
 		}

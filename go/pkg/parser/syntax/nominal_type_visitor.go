@@ -110,6 +110,7 @@ func (n *NominalTypeVisitor) VisitArrayType(ctx *ArrayTypeContext) interface{} {
 			Name: "Array",
 			GenericArguments: []*lang.NominalType{
 				{
+					Package:          nominalType.Package,
 					Name:             nominalType.Name,
 					GenericArguments: nominalType.GenericArguments,
 					Attributes:       nominalType.Attributes,

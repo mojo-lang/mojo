@@ -4,8 +4,6 @@ import "github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 type ArrayLiteralVisitor struct {
 	*BaseMojoParserVisitor
-
-	Expression *lang.ArrayLiteralExpr
 }
 
 func NewArrayLiteralVisitor() *ArrayLiteralVisitor {
@@ -31,13 +29,13 @@ func (e *ArrayLiteralVisitor) VisitArrayLiteralItems(ctx *ArrayLiteralItemsConte
 	}
 
 	if len(expressions) > 0 {
-		return &lang.ArrayLiteralExpr{
+		return lang.NewArrayLiteralExpr(&lang.ArrayLiteralExpr{
 			StartPosition: nil,
 			EndPosition:   nil,
 			Kind:          0,
 			Implicit:      false,
 			Elements:      expressions,
-		}
+		})
 	}
 
 	return nil

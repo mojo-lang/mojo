@@ -16,6 +16,8 @@ type CodeGeneratedFile struct {
 
 	// The file contents.
 	Content string
+
+	SkipIfExist bool
 }
 
 type CodeGeneratedFiles []*CodeGeneratedFile

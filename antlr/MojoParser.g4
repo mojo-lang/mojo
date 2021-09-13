@@ -397,7 +397,7 @@ attribute
  ;
 
 attributeIdentifier : ((packageIdentifier DOT)? attributeName);
-attributeName : VALUE_IDENTIFIER;
+attributeName : VALUE_IDENTIFIER | keyword_as_identifier_in_labels;
 
 attributeArgumentClause : LPAREN (EOL*  expressions)? EOL* RPAREN  ;
 

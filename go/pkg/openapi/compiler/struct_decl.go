@@ -65,8 +65,11 @@ func CompileStructDecl(ctx *Context, decl *lang.StructDecl) error {
 
 func compileStructDecl(ctx *Context, decl *lang.StructDecl) (*openapi.ReferenceableSchema, error) {
 	if decl.Type == nil {
-		logs.Warnw("skip it, this is no type", ctx.GetNamesForLogs()...)
-		return nil, nil
+		logs.Warnw("compile an empty object because of the struct has no type", ctx.GetNamesForLogs()...)
+		return openapi.NewReferenceableSchema(&openapi.Schema{
+			Title: decl.GetFullName(),
+			Type:  openapi.Schema_TYPE_OBJECT,
+		}), nil
 	}
 
 	schema := &openapi.Schema{
@@ -74,19 +77,35 @@ func compileStructDecl(ctx *Context, decl *lang.StructDecl) (*openapi.Referencea
 		ExternalDocs:  nil,
 		Example:       nil,
 		Title:         decl.GetFullName(),
-		Description:   nil,
+		Description:   &openapi.CachedDocument{Cache: decl.GetDocument().GetContent()},
 	}
 
 	if len(decl.Type.Fields) > 0 {
 		schema.Type = openapi.Schema_TYPE_OBJECT
 		schema.Properties = make(map[string]*openapi.ReferenceableSchema)
 		for _, field := range decl.Type.Fields {
+			if private, _ := field.GetBoolAttribute("private"); private {
+				continue
+			}
+
 			s, err := compileNominalType(ctx, field.Type)
 			if err != nil {
 				return nil, err
 			}
+
 			name := strcase.ToLowerCamel(field.Name)
+			if alias, _ := field.GetStringAttribute("alias"); len(alias) > 0 {
+				name = strcase.ToLowerCamel(alias)
+			}
 			schema.Properties[name] = s
+
+			if field.Document != nil {
+				s.SetDescription(&openapi.CachedDocument{Cache: field.GetDocument().GetContent()})
+			}
+
+			if required, _ := lang.GetBoolAttribute(field.Type.Attributes, "required"); required {
+				schema.Required = append(schema.Required, name)
+			}
 		}
 	}
 

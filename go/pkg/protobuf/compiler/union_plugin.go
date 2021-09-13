@@ -26,9 +26,34 @@ func init() {
 }
 
 func (p *UnionPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
+	s := ConstructBoxedUnion(t, p.pluralize)
+	if s == nil {
+		return "", "", nil
+	} else {
+		file := ctx.GetFileDescriptor()
+		msgDescriptor := desc.NewMessageDescriptor(file)
+		err := CompileStruct(ctx, s, msgDescriptor)
+		if err != nil {
+			return "", "", errors.New(fmt.Sprintf("failed to compile struct: %s", err.Error()))
+		}
+
+		oneOfName := ToSnake(*msgDescriptor.Name)
+		msgDescriptor.OneofDecl = append(msgDescriptor.OneofDecl, &descriptor.OneofDescriptorProto{
+			Name: &oneOfName,
+		})
+		index := int32(0)
+		for _, field := range msgDescriptor.Field {
+			field.OneofIndex = &index
+		}
+
+		return "struct", s.Name, nil
+	}
+}
+
+func ConstructBoxedUnion(t *lang.NominalType, p *pluralize.Client) *lang.StructDecl {
 	originName, err := lang.GetStringAttribute(t.Attributes, lang.OriginalTypeAliasName)
 	if err != nil { // directly union declaration
-
+		return nil
 	} else {
 		labelFormat, _ := lang.GetStringAttribute(t.Attributes, "label_format")
 
@@ -50,7 +75,7 @@ func (p *UnionPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string
 				}
 
 				// auto generate
-				label = p.generateLabel(argument, labelFormat)
+				label = generateLabel(argument, labelFormat, p)
 			}
 
 			s.Type.Fields = append(s.Type.Fields, &lang.ValueDecl{
@@ -58,40 +83,21 @@ func (p *UnionPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string
 				Type: argument,
 			})
 		}
-
-		file := ctx.GetFileDescriptor()
-		msgDescriptor := desc.NewMessageDescriptor(file)
-		err = CompileStruct(ctx, s, msgDescriptor)
-		if err != nil {
-			return "", "", errors.New(fmt.Sprintf("failed to compile struct: %s", err.Error()))
-		}
-
-		oneOfName := ToSnake(*msgDescriptor.Name)
-		msgDescriptor.OneofDecl = append(msgDescriptor.OneofDecl, &descriptor.OneofDescriptorProto{
-			Name: &oneOfName,
-		})
-		index := int32(0)
-		for _, field := range msgDescriptor.Field {
-			field.OneofIndex = &index
-		}
-
-		return "struct", s.Name, nil
+		return s
 	}
-
-	return "", "", nil
 }
 
-func (p *UnionPlugin) generateLabel(argument *lang.NominalType, labelFormat string) string {
+func generateLabel(argument *lang.NominalType, labelFormat string, p *pluralize.Client) string {
 	if labelFormat == "{}" {
 		return ToSnake(argument.Name)
 	} else {
 		fullName := argument.GetFullName()
-		if IsSystemScalarType(fullName) {
+		if argument.IsScalar() {
 			return ToSnake(argument.Name) + "_val"
 		} else if fullName == "mojo.core.Array" {
 			name := argument.GenericArguments[0].Name
 			name = ToSnake(name + "_val")
-			return p.pluralize.Plural(name)
+			return p.Plural(name)
 		} else if fullName == "mojo.core.Dictionary" {
 			name := argument.GenericArguments[1].Name
 			return ToSnake(name + "_map_vals")

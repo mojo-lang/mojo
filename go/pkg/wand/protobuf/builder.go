@@ -2,17 +2,15 @@ package protobuf
 
 import (
 	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/go/pkg/wand/builder"
 	path2 "path"
 )
 
 type Builder struct {
-	PWD     string
-	Path    string
-	Output  string
-	Package *lang.Package
+	builder.Builder
+	Output string
 }
 
 func (b Builder) Build() ([]*descriptor.FileDescriptor, error) {
@@ -23,6 +21,11 @@ func (b Builder) Build() ([]*descriptor.FileDescriptor, error) {
 	if err != nil {
 		logs.Errorw("failed to compile protobuf", "package", b.Package.FullName, "error", err.Error())
 		return nil, err
+	}
+
+	if b.DisableGeneration {
+		logs.Infow("disable generation, skip to generate protobuf.")
+		return compiler.Files, nil
 	}
 
 	output := path2.Join(b.Path, "protobuf")

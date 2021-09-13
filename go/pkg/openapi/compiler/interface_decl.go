@@ -6,6 +6,7 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/document/go/pkg/markdown"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	langcompiler "github.com/mojo-lang/mojo/go/pkg/compiler"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"strings"
 )
@@ -27,6 +28,7 @@ func CompileInterface(ctx *Context, decl *lang.InterfaceDecl) (*openapi.OpenAPI,
 	}
 
 	title := ""
+	description := ""
 	document := decl.Document.Parse().GetStructured()
 	if document != nil && len(document.Blocks) > 0 {
 		if header := document.Blocks[0].GetHeader(); header != nil {
@@ -36,18 +38,34 @@ func CompileInterface(ctx *Context, decl *lang.InterfaceDecl) (*openapi.OpenAPI,
 			} else {
 				title = h
 			}
+		} else if paragraph := document.Blocks[0].GetParagraph(); paragraph != nil {
+			p, err := markdown.New().RenderBlocksToString(document.Blocks[0])
+			if err != nil {
+				logs.Warnw("failed to render paragraph text", "error", err.Error())
+			} else {
+				title = p
+			}
+		}
+
+		if len(document.Blocks) > 1 {
+			var err error
+			description, err = markdown.New().RenderBlocksToString(document.Blocks[1:]...)
+			if err != nil {
+				logs.Warnw("failed to render description text", "error", err.Error())
+			}
 		}
 	}
 
 	api.Info = &openapi.Info{
 		Title:          title,
-		Description:    nil,
+		Description:    &openapi.CachedDocument{Cache: description},
 		TermsOfService: nil,
 		Contact:        nil,
 		License:        nil,
 		Version:        version,
 	}
 
+	ctx.SetOption("interface.attributes", decl.Attributes)
 	for _, method := range decl.Type.Methods {
 		err := compileMethod(ctx, method, api)
 		if err != nil {
@@ -58,67 +76,71 @@ func CompileInterface(ctx *Context, decl *lang.InterfaceDecl) (*openapi.OpenAPI,
 }
 
 func compileMethod(ctx *Context, method *lang.FunctionDecl, api *openapi.OpenAPI) error {
-	for _, name := range methods {
-		path, _ := lang.GetStringAttribute(method.Attributes, name)
-		if len(path) == 0 {
-			continue
-		}
+	item := &openapi.PathItem{}
+	summary, description := compileDescription(ctx, method)
+	op := &openapi.Operation{
+		Summary:     summary,
+		Description: description,
+		OperationId: method.Name,
+	}
+	setSourceTag := false
 
-		var tags []string
-		resource, _ := lang.GetStringAttribute(method.Attributes, "resource")
-		if len(resource) > 0 {
-			tags = append(tags, resource)
-		}
+	for _, attribute := range method.Attributes {
+		setOperation := func(op *openapi.Operation, httpMethod string) (string, error) {
+			if len(attribute.Arguments) > 0 {
+				if value := attribute.Arguments[0].GetStringLiteralExpr(); value != nil {
+					if len(value.Value) == 0 {
+						return "", nil
+					}
 
-		paths, pathParams := compilePath(path)
-		for i, p := range paths {
-			ctx.SetOption("pathParams", pathParams[i])
-			item := &openapi.PathItem{}
-			summary, description := compileDescription(ctx, method)
+					path, pathParam := CompilePath(value.Value)
+					ctx.SetOption("pathParams", pathParam)
+					parameters, err := CompileParameters(ctx, method, httpMethod)
+					if err != nil {
+						return "", err
+					}
 
-			parameters, err := compileParameters(ctx, method, item)
-			if err != nil {
-				return err
-			}
+					op.Parameters = parameters
+					op.Responses = compileResponses(ctx, method)
+					if httpCanCarryBody(httpMethod) {
+						op.RequestBody = compileRequestBody(ctx, method)
+					}
 
-			switch name {
-			case "http.get":
-				item.Get = &openapi.Operation{
-					Summary:     summary,
-					Description: description,
-					OperationId: method.Name,
-					Tags:        tags,
-					Parameters:  parameters,
-					Responses:   compileResponses(ctx, method, item),
-				}
-			case "http.post", "http.put", "http.patch":
-				item.Post = &openapi.Operation{
-					Summary:     summary,
-					Description: description,
-					OperationId: method.Name,
-					Tags:        tags,
-					Parameters:  parameters,
-					RequestBody: nil,
-					Responses:   compileResponses(ctx, method, item),
-				}
-			case "http.delete":
-				item.Post = &openapi.Operation{
-					Summary:     summary,
-					Description: description,
-					OperationId: method.Name,
-					Tags:        tags,
-					Parameters:  parameters,
-				}
-			case "http.options", "http.head", "http.trace":
-				item.Post = &openapi.Operation{
-					Summary:     summary,
-					Description: description,
-					OperationId: method.Name,
-					Tags:        tags,
-					Parameters:  parameters,
+					return path, nil
 				}
 			}
-			api.Paths.Values[p] = item
+			return "", nil
+		}
+
+		if attribute.Package == "http" {
+			switch attribute.Name {
+			case "get", "post", "put", "patch", "delete", "options", "head", "trace":
+				path, err := setOperation(op, attribute.Name)
+				if err != nil {
+					return err
+				}
+				item.SetOperation(attribute.Name, op)
+				if i, ok := api.Paths.Values[path]; ok {
+					api.Paths.Values[path] = i.Merge(item)
+				} else {
+					api.Paths.Values[path] = item
+				}
+			case "resource":
+				resource, _ := lang.GetStringAttribute(method.Attributes, "http.resource")
+				if len(resource) > 0 {
+					op.Tags = append(op.Tags, resource)
+					setSourceTag = true
+				}
+			}
+		}
+	}
+
+	if !setSourceTag {
+		if attributes, ok := ctx.GetOption("interface.attributes").([]*lang.Attribute); ok {
+			resource, _ := lang.GetStringAttribute(attributes, "http.resource")
+			if len(resource) > 0 {
+				op.Tags = append(op.Tags, resource)
+			}
 		}
 	}
 
@@ -130,17 +152,28 @@ func compileDescription(ctx *Context, method *lang.FunctionDecl) (string, *opena
 	md := markdown.New()
 	summary := ""
 	description := ""
-	if len(sd.Blocks) > 0 {
-		summary, _ = md.RenderBlocksToString(sd.Blocks[0])
-	}
-	if len(sd.Blocks) > 1 {
-		description, _ = md.RenderBlocksToString(sd.Blocks[1:]...)
+
+	if sd != nil {
+		if len(sd.Blocks) > 0 {
+			summary, _ = md.RenderBlocksToString(sd.Blocks[0])
+		}
+		if len(sd.Blocks) > 1 {
+			description, _ = md.RenderBlocksToString(sd.Blocks[1:]...)
+		}
 	}
 
 	return summary, &openapi.CachedDocument{Cache: description}
 }
 
-func compileParameter(ctx *Context, decl *lang.ValueDecl) (*openapi.Parameter, error) {
+func httpCanCarryBody(method string) bool {
+	switch method {
+	case "post", "put", "patch":
+		return true
+	}
+	return false
+}
+
+func compileParameter(ctx *Context, decl *lang.ValueDecl, method *lang.FunctionDecl, httpMethod string) (*openapi.Parameter, error) {
 	parameter := &openapi.Parameter{
 		Name: decl.Name,
 	}
@@ -156,10 +189,10 @@ func compileParameter(ctx *Context, decl *lang.ValueDecl) (*openapi.Parameter, e
 	}
 	parameter.Schema = schema
 
-	if v, e := lang.GetBoolAttribute(decl.Type.Attributes, "required"); e == nil && v {
+	if v, e := decl.GetBoolAttribute("required"); e == nil && v {
 		parameter.Required = true
 	}
-	if v, e := lang.GetBoolAttribute(decl.Type.Attributes, "deprecated"); e == nil && v {
+	if v, e := decl.GetBoolAttribute("deprecated"); e == nil && v {
 		parameter.Deprecated = true
 	}
 
@@ -170,7 +203,7 @@ func compileParameter(ctx *Context, decl *lang.ValueDecl) (*openapi.Parameter, e
 		parameter.Name = unwrappedField + "_" + decl.Name
 		if pathParams[fullName] {
 			parameter.In = openapi.Parameter_LOCATION_PATH
-			//TODO the required param should get from ValueDecl from context
+			//TODO the required param should get from ValueDecl from Context
 			parameter.Required = true
 		} else {
 			parameter.In = openapi.Parameter_LOCATION_QUERY
@@ -179,28 +212,48 @@ func compileParameter(ctx *Context, decl *lang.ValueDecl) (*openapi.Parameter, e
 		parameter.In = openapi.Parameter_LOCATION_QUERY
 	}
 
+	if len(method.Signature.Parameters) == 1 &&
+		parameter.In != openapi.Parameter_LOCATION_PATH &&
+		httpCanCarryBody(httpMethod) &&
+		!decl.GetType().IsScalar() {
+
+		decl.SetBoolAttribute("http.body", true)
+		return nil, nil
+	}
+
+	if decl.HasAttribute("http.body") {
+		return nil, nil
+	}
+
 	return parameter, nil
 }
 
-func compileParameters(ctx *Context, method *lang.FunctionDecl, item *openapi.PathItem) ([]*openapi.ReferenceableParameter, error) {
+func CompileParameters(ctx *Context, method *lang.FunctionDecl, httpMethod string) ([]*openapi.ReferenceableParameter, error) {
 	var parameters []*openapi.ReferenceableParameter
 
-	for _, param := range method.Signature.Parameters {
-		if v, err := lang.GetBoolAttribute(param.Type.GetAttributes(), "unwrap"); err == nil && v {
+	params := method.Signature.Parameters
+	if pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination"); pagination {
+		params = append(params, langcompiler.GeneratePaginationParameters()...)
+	}
+
+	for _, param := range params {
+		if v, err := param.GetBoolAttribute("unwrap"); err == nil && v {
 
 			if decl := param.Type.GetTypeDeclaration().GetStructDecl(); decl != nil {
 				ctx.SetOption("unwrappedField", param.Name)
 				for _, field := range decl.GetType().GetFields() {
-					parameter, err := compileParameter(ctx, field)
+					parameter, err := compileParameter(ctx, field, method, httpMethod)
 					if err != nil {
 						return nil, err
 					}
-					parameters = append(parameters, openapi.NewReferenceableParameter(parameter))
+					if parameter != nil {
+						parameters = append(parameters, openapi.NewReferenceableParameter(parameter))
+					}
 				}
 				ctx.DeleteOption("unwrappedField")
 			}
 		} else {
-			parameter, err := compileParameter(ctx, param)
+			parameter, err := compileParameter(ctx, param, method, httpMethod)
 			if err != nil {
 				return nil, err
 			}
@@ -210,7 +263,37 @@ func compileParameters(ctx *Context, method *lang.FunctionDecl, item *openapi.Pa
 	return parameters, nil
 }
 
-func compileResponses(ctx *Context, method *lang.FunctionDecl, item *openapi.PathItem) *openapi.Responses {
+// must call after compile parameter
+func compileRequestBody(ctx *Context, method *lang.FunctionDecl) *openapi.ReferenceableRequestBody {
+	var body *lang.ValueDecl
+	for _, parameter := range method.Signature.Parameters {
+		if parameter.HasAttribute("http.body") {
+			body = parameter
+		}
+	}
+
+	if body != nil {
+		schema, err := compileNominalType(ctx, body.GetType())
+		if err != nil {
+			return nil
+		}
+
+		requestBody := &openapi.RequestBody{
+			Description: nil,
+			Content:     nil,
+			Required:    true,
+		}
+
+		requestBody.Content = map[string]*openapi.MediaType{
+			core.ApplicationJson: {Schema: schema},
+		}
+		return openapi.NewReferenceableRequestBody(requestBody)
+	}
+
+	return nil
+}
+
+func compileResponses(ctx *Context, method *lang.FunctionDecl) *openapi.Responses {
 	responses := &openapi.Responses{Values: map[string]*openapi.ReferenceableResponse{
 		"200": openapi.NewReferenceableResponse(&openapi.Response{
 			Description: "OK",
@@ -220,20 +303,19 @@ func compileResponses(ctx *Context, method *lang.FunctionDecl, item *openapi.Pat
 	}}
 
 	if method.Signature.Result != nil {
-		c := &ReferenceCompiler{}
-		schema, err := c.Compile(ctx, method.Signature.Result)
+		schema, err := compileNominalType(ctx, method.Signature.Result)
 		if err != nil {
 			return nil
 		}
 		responses.Values["200"].GetResponse().Content = map[string]*openapi.MediaType{
-			"application/json": {Schema: schema},
+			core.ApplicationJson: {Schema: schema},
 		}
 	}
 
 	return responses
 }
 
-func compilePath(path string) ([]string, []map[string]bool) {
+func CompilePath(path string) (string, map[string]bool) {
 	ts := core.NewTemplateString(path)
 	p := bytes.Buffer{}
 	parameters := make(map[string]bool)
@@ -248,5 +330,5 @@ func compilePath(path string) ([]string, []map[string]bool) {
 			p.WriteString(segment.Content)
 		}
 	}
-	return []string{p.String()}, []map[string]bool{parameters}
+	return p.String(), parameters
 }

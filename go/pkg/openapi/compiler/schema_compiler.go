@@ -14,22 +14,31 @@ type ReferenceCompiler struct {
 }
 
 func (r *ReferenceCompiler) Compile(ctx *Context, nominalType *lang.NominalType) (*openapi.ReferenceableSchema, error) {
-	if ctx.Components != nil && ctx.Components.Schemas != nil {
-		fullName := nominalType.GetFullName()
-		schema := ctx.Components.Schemas[fullName]
-		if schema != nil {
-			return openapi.NewReferencedSchema(&openapi.Reference{
-				Ref: &core.Url{
-					Fragment: openapi.ReferenceRoot + fullName,
-				},
-			}), nil
-		} else if structDecl := nominalType.TypeDeclaration.GetStructDecl(); structDecl != nil {
-			if err := CompileStructDecl(ctx, structDecl); err != nil {
-				return nil, err
-			}
-
-			return r.Compile(ctx, nominalType)
+	if ctx.Components == nil {
+		ctx.Components = &openapi.Components{
+			Schemas: make(map[string]*openapi.Schema),
 		}
 	}
+	if ctx.Components.Schemas == nil {
+		ctx.Components.Schemas = make(map[string]*openapi.Schema)
+	}
+
+	fullName := nominalType.GetFullName()
+	schema := ctx.Components.Schemas[fullName]
+	if schema != nil {
+		return openapi.NewReferencedSchema(&openapi.Reference{
+			Ref: &core.Url{
+				Fragment: openapi.ReferenceRoot + fullName,
+			},
+		}), nil
+	} else if structDecl := nominalType.TypeDeclaration.GetStructDecl(); structDecl != nil {
+		if err := CompileStructDecl(ctx, structDecl); err != nil {
+			return nil, err
+		}
+		return r.Compile(ctx, nominalType)
+	} else if aliasDecl := nominalType.TypeDeclaration.GetTypeAliasDecl(); aliasDecl != nil {
+		return CompileTypeAliasDecl(ctx, aliasDecl)
+	}
+
 	return nil, nil
 }

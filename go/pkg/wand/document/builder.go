@@ -2,21 +2,24 @@ package document
 
 import (
 	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/document"
+	"github.com/mojo-lang/mojo/go/pkg/wand/builder"
 	"github.com/mojo-lang/mojo/go/pkg/wand/openapi"
 	path2 "path"
 )
 
 type Builder struct {
-	PWD      string
-	Path     string
+	builder.Builder
 	Output   string
-	Package  *lang.Package
 	OpenAPIs *openapi.OpenAPIs
 }
 
 func (b Builder) Build() error {
+	if b.DisableGeneration {
+		logs.Infow("disable generation, skip to build document.")
+		return nil
+	}
+
 	logs.Infow("begin to build document.", "pwd", b.PWD, "path", b.Path)
 
 	compiler := document.NewCompiler(path2.Join(b.PWD, b.Path), b.Package, b.OpenAPIs)

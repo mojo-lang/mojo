@@ -25,14 +25,16 @@ func init() {
 	plugins["mojo.core.Array"] = p
 }
 
-func (p *ArrayPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
+func CompileArrayToStruct(t *lang.NominalType) (*lang.StructDecl, error) {
 	if t.Name != "Array" {
-		return "", "", errors.New("")
+		return nil, errors.New("")
 	}
 
 	if len(t.GenericArguments) != 1 {
-		return "", "", errors.New("")
+		return nil, errors.New("")
 	}
+
+	p := pluralize.NewClient()
 
 	t.Attributes = lang.SetIntegerAttribute(t.Attributes, "number", 1)
 
@@ -45,9 +47,23 @@ func (p *ArrayPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string
 	}
 
 	val := t.GenericArguments[0]
-	s.Name = p.pluralize.Plural(strcase.ToCamel(val.Name))
 
-	err := CompileStruct(ctx, s, descriptor.NewMessageDescriptor(ctx.GetFileDescriptor()))
+	if name, _ := lang.GetStringAttribute(t.Attributes, lang.OriginalTypeAliasName); len(name) > 0 {
+		s.Name = name
+	} else {
+		s.Name = p.Plural(strcase.ToCamel(val.Name))
+	}
+
+	return s, nil
+}
+
+func (p *ArrayPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
+	s, err := CompileArrayToStruct(t)
+	if err != nil {
+		return "", "", err
+	}
+
+	err = CompileStruct(ctx, s, descriptor.NewMessageDescriptor(ctx.GetFileDescriptor()))
 	if err != nil {
 		return "", "", errors.New(fmt.Sprintf("failed to compile the arry field in %s.%s: %s",
 			"", //ctx.Message.Name,

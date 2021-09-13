@@ -1,0 +1,19 @@
+module {{.Name}}
+
+{{range .Dependencies}} {{if .Path}}
+replace {{.Name}} => {{.Path}}
+{{- end}}
+{{- end}}
+
+go {{.Version}}
+
+require (
+	github.com/gogo/protobuf v1.3.2
+	github.com/iancoleman/strcase v0.1.3 // indirect
+	github.com/json-iterator/go v1.1.10
+	github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742
+	{{- range .Dependencies}}
+	{{.Name}} {{.Version}}
+	{{- end}}
+	github.com/stretchr/testify v1.7.0
+)

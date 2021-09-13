@@ -47,7 +47,7 @@ func parsePackage(decl *lang.PackageDecl) *lang.PackageDecl {
 					decl.Package.License = value.Value
 				}
 			case "dependencies":
-				if value := field.Value.GetObjectLiteralExpr(); value != nil {
+				if value := field.Value.GetDictionaryLiteralExpr(); value != nil {
 					decl.Package.Dependencies = parseDependencies(value)
 				}
 			case "repository":
@@ -66,10 +66,10 @@ func parsePackage(decl *lang.PackageDecl) *lang.PackageDecl {
 	return decl
 }
 
-func parseDependencies(obj *lang.ObjectLiteralExpr) map[string]*lang.Package_Requirement {
+func parseDependencies(obj *lang.DictionaryLiteralExpr) map[string]*lang.Package_Requirement {
 	dependencies := make(map[string]*lang.Package_Requirement)
-	for _, f := range obj.Fields {
-		if k := f.Name.GetStringLiteralExpr(); k != nil {
+	for _, f := range obj.Entries {
+		if k := f.Key.GetStringLiteralExpr(); k != nil {
 			pkgName := k.Value
 			if v := f.Value.GetStringLiteralExpr(); v != nil {
 				dependencies[pkgName] = &lang.Package_Requirement{

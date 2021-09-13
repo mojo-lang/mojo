@@ -28,6 +28,8 @@ func GetExpression(ctx IExpressionContext) *lang.Expression {
 			return lang.NewArrayLiteralExpr(expr)
 		case *lang.ObjectLiteralExpr:
 			return lang.NewObjectLiteralExpr(expr)
+		case *lang.DictionaryLiteralExpr:
+			return lang.NewDictionaryLiteralExpr(expr)
 		case *lang.IdentifierExpr:
 			return lang.NewIdentifierExpr(expr)
 		default:
@@ -69,10 +71,10 @@ func (e *ExpressionVisitor) VisitPrimaryExpression(ctx *PrimaryExpressionContext
 	if identifierCtx != nil {
 		if identifier, ok := identifierCtx.Accept(e).(*lang.Identifier); ok {
 			arguments := GetGenericArguments(ctx.GenericArgumentClause())
-			return &lang.IdentifierExpr{
+			return lang.NewIdentifierExpr(&lang.IdentifierExpr{
 				Identifier:       identifier,
 				GenericArguments: arguments,
-			}
+			})
 		}
 	}
 

@@ -50,6 +50,9 @@ func (s *StructDeclarationVisitor) VisitStructDeclaration(ctx *StructDeclaration
 						for _, typeAliasDecl := range decl.TypeAliasDecls {
 							typeAliasDecl.EnclosingType = enclosingType
 						}
+						if d.Type == nil {
+							logs.Warnw("declaration an opaque struct", "struct", name)
+						}
 					} else {
 						logs.Errorw("failed to parse struct type", "struct", name, "code", structType.GetText())
 					}
@@ -79,6 +82,9 @@ func (s *StructDeclarationVisitor) VisitStructType(ctx *StructTypeContext) inter
 			if decl == nil {
 				decl = &lang.StructDecl{Type: &lang.StructType{}}
 			}
+			if decl.Type == nil {
+				decl.Type = &lang.StructType{}
+			}
 			decl.Type.Inherits = t
 		} else {
 			fmt.Print("===> error")
@@ -102,7 +108,8 @@ func (s *StructDeclarationVisitor) VisitStructBody(ctx *StructBodyContext) inter
 	if members != nil {
 		return members.Accept(s)
 	}
-	return nil
+
+	return &lang.StructDecl{}
 }
 
 func (s *StructDeclarationVisitor) VisitStructMembers(ctx *StructMembersContext) interface{} {
@@ -124,8 +131,11 @@ func (s *StructDeclarationVisitor) VisitStructMembers(ctx *StructMembersContext)
 				return following
 			}
 		}
+		var document *lang.Document
 		for i, member := range members {
-			document := GetEosDocument(documents[i])
+			if len(documents) > 0 {
+				document = GetEosDocument(documents[i])
+			}
 			switch m := member.Accept(s).(type) {
 			case *lang.StructDecl:
 				decl.StructDecls = append(decl.StructDecls, m)

@@ -111,7 +111,8 @@ func (c *Compiler) compileTypeAlias(ctx *compiler.Context, decl *lang.TypeAliasD
 		ctx.Close()
 	}()
 
-	return compiler.CompileTypeAliasDecl(ctx, decl)
+	_, err := compiler.CompileTypeAliasDecl(ctx, decl)
+	return err
 }
 
 func (c *Compiler) compileStruct(ctx *compiler.Context, decl *lang.StructDecl) error {
@@ -143,7 +144,7 @@ func (c *Compiler) compileInterface(ctx *compiler.Context, decl *lang.InterfaceD
 	}
 
 	api.Components = ctx.Components
-	key :=  lang.TypeNameToFileName(decl.GetFullName())
+	key := lang.TypeNameToFileName(decl.GetFullName())
 	c.APIs[key] = api
 	return nil
 }

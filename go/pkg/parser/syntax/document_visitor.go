@@ -75,7 +75,11 @@ func (d *DocumentVisitor) VisitDocument(ctx *DocumentContext) interface{} {
 			Column: lineDocument.StartPosition.Column + int64(len(line.GetText())),
 		}
 
-		lineDocument.Line = strings.TrimPrefix(line.GetText(), "///")
+		if strings.HasPrefix(line.GetText(), "/// ") {
+			lineDocument.Line = strings.TrimPrefix(line.GetText(),"/// ")
+		} else {
+			lineDocument.Line = strings.TrimPrefix(line.GetText(),"///")
+		}
 
 		document.Lines = append(document.Lines, lineDocument)
 	}
@@ -95,7 +99,12 @@ func (d *DocumentVisitor) VisitFollowingDocument(ctx *FollowingDocumentContext) 
 	line.StartPosition = GetPosition(ctx.GetStart())
 	line.EndPosition = GetPosition(ctx.GetStop())
 	line.Following = true
-	line.Line = strings.TrimPrefix(ctx.GetText(), "//<")
+
+	if strings.HasPrefix(ctx.GetText(), "//< ") {
+		line.Line = strings.TrimPrefix(ctx.GetText(),"//< ")
+	} else {
+		line.Line = strings.TrimPrefix(ctx.GetText(),"//<")
+	}
 
 	document.Lines = append(document.Lines, line)
 	return document

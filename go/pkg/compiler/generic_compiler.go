@@ -547,7 +547,7 @@ func (c *GenericCompiler) compileGenericTypeAlias(ctx *context.Context, nominalT
 		Name:        compiledDecl.Name,
 		FullName:    lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
 		SourceFile:  file.FullName,
-		Declaration: lang.NewTypeAliasDecl(compiledDecl),
+		Declaration: lang.NewTypeAliasDeclaration(compiledDecl),
 	}
 
 	// update the identifiers in the current scope
@@ -559,7 +559,7 @@ func (c *GenericCompiler) compileGenericTypeAlias(ctx *context.Context, nominalT
 		}
 
 		if identifier != nil {
-			identifier.Declaration = lang.NewTypeAliasDecl(compiledDecl)
+			identifier.Declaration = lang.NewTypeAliasDeclaration(compiledDecl)
 			id = identifier
 		}
 	} else {
@@ -746,15 +746,15 @@ func (c *GenericCompiler) compileGenericStructType(ctx *context.Context, nominal
 		Name:        compiledDecl.Name,
 		FullName:    lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
 		SourceFile:  file.FullName,
-		Declaration: lang.NewStructDecl(compiledDecl),
+		Declaration: lang.NewStructDeclaration(compiledDecl),
 	}
 
 	// update the identifiers in the current scope
 	if nameConflict {
 		// update the identifier in scope, may be in the file or the struct scope
-		identifier := scope.Identifiers[structDecl.Name]
+		identifier := scope.Identifiers[typeName]
 		if identifier != nil {
-			identifier.Declaration = lang.NewStructDecl(compiledDecl)
+			identifier.Declaration = lang.NewStructDeclaration(compiledDecl)
 			id = identifier
 		}
 	} else {

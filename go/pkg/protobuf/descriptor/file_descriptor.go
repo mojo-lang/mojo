@@ -44,6 +44,10 @@ func (f *FileDescriptor) HasOptions() bool {
 		options.JavaOuterClassname != nil
 }
 
+func (f *FileDescriptor) HasService() bool {
+	return f != nil && len(f.Services) > 0
+}
+
 func (f *FileDescriptor) IsMessageExist(name string) bool {
 	if f == nil {
 		return false

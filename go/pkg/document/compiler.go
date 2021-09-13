@@ -38,6 +38,11 @@ func (c *Compiler) Compile() (Documents, error) {
 		Components: c.OpenAPIs.Components,
 	}
 	for name, schema := range c.OpenAPIs.Components.Schemas {
+		if schema == nil {
+			//FIXME make sure scheme here should NOT be nil
+			continue
+		}
+
 		document, err := schemaCompiler.Compile(schema)
 		if err != nil {
 			return nil, err

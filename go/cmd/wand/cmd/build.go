@@ -3,14 +3,17 @@ package cmd
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/go/pkg/wand/builder"
 	"github.com/mojo-lang/mojo/go/pkg/wand/document"
 	_go "github.com/mojo-lang/mojo/go/pkg/wand/go"
 	"github.com/mojo-lang/mojo/go/pkg/wand/java"
 	"github.com/mojo-lang/mojo/go/pkg/wand/mojo"
+	"github.com/mojo-lang/mojo/go/pkg/wand/ncraft/gokit"
 	"github.com/mojo-lang/mojo/go/pkg/wand/openapi"
 	"github.com/mojo-lang/mojo/go/pkg/wand/protobuf"
 	"github.com/urfave/cli/v2"
 	"os"
+	"strings"
 )
 
 type BuildCmd struct {
@@ -22,9 +25,18 @@ type BuildCmd struct {
 
 	PackageName string
 
-	pwd    string
-	path   string
-	output string
+	Target string
+	Engine string
+
+	Output string
+
+	pwd  string
+	path string
+
+	disableMojoGeneration bool
+
+	// the git repository for the generated code
+	Repository string
 }
 
 func init() {
@@ -72,14 +84,54 @@ func (b *BuildCmd) Build() {
 			Usage:       "the mojo package name to compile",
 			Destination: &b.PackageName,
 		},
+		&cli.StringFlag{
+			Name:        "engine",
+			Aliases:     []string{"e"},
+			Usage:       "the ncraft engine to generate",
+			Destination: &b.Engine,
+		},
+		&cli.StringFlag{
+			Name:        "target",
+			Aliases:     []string{"t"},
+			Usage:       "the target to generate",
+			Destination: &b.Target,
+		},
+		&cli.StringFlag{
+			Name:        "output",
+			Aliases:     []string{"o"},
+			Usage:       "the Output to generate",
+			Destination: &b.Output,
+		},
+		&cli.StringFlag{
+			Name:        "repo",
+			Aliases:     []string{"sr"},
+			Usage:       "the git repository of NCraft releated code",
+			Destination: &b.Repository,
+		},
 	}
 
 	b.BaseCmd.Command.Action = b.Execute
 }
 
 func (b *BuildCmd) Execute(ctx *cli.Context) error {
+	ncraft := false
+	if strings.HasPrefix(b.Target, "ncraft") {
+		ncraft = true
+		b.disableMojoGeneration = true
+	}
+
 	// build the mojo package
 	if err := b.buildMojo(); err != nil {
+		return err
+	}
+
+	// compile the target package to openapi
+	if err := b.buildOpenapi(); err != nil {
+		return err
+	}
+
+	// compile the target package to document
+	if err := b.buildDocument(); err != nil {
 		return err
 	}
 
@@ -100,14 +152,13 @@ func (b *BuildCmd) Execute(ctx *cli.Context) error {
 
 	// compile the resource to sql orm file (including sql script, create table)
 
-	// compile the target package to openapi
-	if err := b.buildOpenapi(); err != nil {
-		return err
-	}
-
-	// compile the target package to document
-	if err := b.buildDocument(); err != nil {
-		return err
+	if ncraft {
+		switch b.Engine {
+		case "gokit":
+			if err := b.buildGokit(); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
@@ -115,58 +166,88 @@ func (b *BuildCmd) Execute(ctx *cli.Context) error {
 
 func (b *BuildCmd) buildMojo() (err error) {
 	b.Package, err = mojo.Builder{
-		PWD:  b.pwd,
-		Path: b.path,
+		Builder: builder.Builder{
+			PWD:  b.pwd,
+			Path: b.path,
+		},
 	}.Build()
 	return err
 }
 
 func (b *BuildCmd) buildProtobuf() (err error) {
 	b.Files, err = protobuf.Builder{
-		PWD:     b.pwd,
-		Path:    b.path,
-		Output:  b.output,
-		Package: b.Package,
+		Builder: builder.Builder{
+			PWD:               b.pwd,
+			Path:              b.path,
+			Package:           b.Package,
+			DisableGeneration: b.disableMojoGeneration,
+		},
+		Output: b.Output,
 	}.Build()
 	return err
 }
 
 func (b *BuildCmd) buildGo() error {
 	return _go.Builder{
-		PWD:     b.pwd,
-		Path:    b.path,
-		Output:  b.output,
-		Package: b.Package,
-		Files:   b.Files,
+		Builder: builder.Builder{
+			PWD:               b.pwd,
+			Path:              b.path,
+			Package:           b.Package,
+			DisableGeneration: b.disableMojoGeneration,
+		},
+		Output: b.Output,
+		Files:  b.Files,
 	}.Build()
 }
 
 func (b *BuildCmd) buildJava() error {
 	return java.Builder{
-		PWD:     b.pwd,
-		Path:    b.path,
-		Output:  b.output,
-		Package: b.Package,
-		Files:   b.Files,
+		Builder: builder.Builder{
+			PWD:               b.pwd,
+			Path:              b.path,
+			Package:           b.Package,
+			DisableGeneration: b.disableMojoGeneration,
+		},
+		Output: b.Output,
+		Files:  b.Files,
 	}.Build()
 }
 
 func (b *BuildCmd) buildOpenapi() (err error) {
 	b.OpenAPIs, err = openapi.Builder{
-		PWD:     b.pwd,
-		Path:    b.path,
-		Output:  b.output,
-		Package: b.Package,
+		Builder: builder.Builder{
+			PWD:               b.pwd,
+			Path:              b.path,
+			Package:           b.Package,
+			DisableGeneration: b.disableMojoGeneration,
+		},
+		Output: b.Output,
 	}.Build()
 	return err
 }
 
 func (b *BuildCmd) buildDocument() error {
 	return document.Builder{
-		PWD:      b.pwd,
-		Path:     b.path,
-		Output:   b.output,
-		Package:  b.Package,
+		Builder: builder.Builder{
+			PWD:               b.pwd,
+			Path:              b.path,
+			Package:           b.Package,
+			DisableGeneration: b.disableMojoGeneration,
+		},
+		Output:   b.Output,
 		OpenAPIs: b.OpenAPIs,
+	}.Build()
+}
+
+func (b *BuildCmd) buildGokit() error {
+	return gokit.Builder{
+		Builder: builder.Builder{
+			PWD:     b.pwd,
+			Path:    b.path,
+			Package: b.Package,
+		},
+		Type:       strings.TrimPrefix(b.Target, "ncraft."),
+		Output:     b.Output,
+		Repository: b.Repository,
 	}.Build()
 }

@@ -21,8 +21,20 @@ func NewObjectLiteralVisitor() *ObjectLiteralVisitor {
 func GetObjectLiteral(ctx IObjectLiteralContext) *lang.ObjectLiteralExpr {
 	if ctx != nil {
 		visitor := NewObjectLiteralVisitor()
-		if expr, ok := ctx.Accept(visitor).(*lang.ObjectLiteralExpr); ok {
-			return expr
+		if expr, ok := ctx.Accept(visitor).(*lang.Expression); ok {
+			return expr.GetObjectLiteralExpr()
+		} else {
+			fmt.Print("===> error")
+		}
+	}
+	return nil
+}
+
+func GetDictionaryLiteral(ctx IObjectLiteralContext) *lang.DictionaryLiteralExpr {
+	if ctx != nil {
+		visitor := NewObjectLiteralVisitor()
+		if expr, ok := ctx.Accept(visitor).(*lang.Expression); ok {
+			return expr.GetDictionaryLiteralExpr()
 		} else {
 			fmt.Print("===> error")
 		}
@@ -49,7 +61,31 @@ func (e *ObjectLiteralVisitor) VisitObjectLiteralItems(ctx *ObjectLiteralItemsCo
 		item.Accept(e)
 	}
 
-	return e.Expression
+	//TODO need to be check the validation of the object expression
+	if len(e.Expression.Fields) > 0 {
+		fieldName := e.Expression.Fields[0].Name
+		_, err := fieldName.EvalIdentifier()
+		if err != nil { // NOT IDENTIFIER, change to dictionary
+			dictionary := &lang.DictionaryLiteralExpr{
+				StartPosition: e.Expression.StartPosition,
+				EndPosition:   e.Expression.EndPosition,
+				Kind:          e.Expression.Kind,
+				Implicit:      e.Expression.Implicit,
+			}
+
+			for _, field := range e.Expression.Fields {
+				entry := &lang.DictionaryLiteralExpr_Entry{
+					Key:   field.Name,
+					Value: field.Value,
+				}
+				dictionary.Entries = append(dictionary.Entries, entry)
+			}
+
+			return lang.NewDictionaryLiteralExpr(dictionary)
+		}
+	}
+
+	return lang.NewObjectLiteralExpr(e.Expression)
 }
 
 func (e *ObjectLiteralVisitor) VisitObjectLiteralItem(ctx *ObjectLiteralItemContext) interface{} {

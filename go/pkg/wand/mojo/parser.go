@@ -158,14 +158,18 @@ func (p *Parser) TreePackages(packages map[string]*lang.Package) (*lang.Package,
 			}
 			parent := packages[root]
 			child := packages[names[i]]
-			parent.Children = append(parent.Children, child)
+			if !parent.HasChild(child.FullName) {
+				parent.Children = append(parent.Children, child)
+			}
 		} else {
 			for j := len(roots) - 1; j >= 0; j-- {
 				if strings.HasPrefix(names[i], roots[j]) {
 					parent := packages[roots[j]]
 					child := packages[names[i]]
-					parent.Children = append(parent.Children, child)
-					roots = roots[0:j+1]
+					if !parent.HasChild(child.FullName) {
+						parent.Children = append(parent.Children, child)
+					}
+					roots = roots[0 : j+1]
 					break
 				}
 			}

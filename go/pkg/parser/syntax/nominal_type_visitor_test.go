@@ -20,6 +20,21 @@ func TestNominalTypeVisitor_VisitArrayType(t *testing.T) {
 	assert.Equal(t, "Int", nominalType.GenericArguments[0].Name)
 }
 
+func TestNominalTypeVisitor_VisitArrayType2(t *testing.T) {
+	const arrayType = `type Val{ val: [mojo.lang.StructType] }`
+
+	parser := &Parser{}
+	file, err := parser.ParseString(arrayType)
+
+	assert.NoError(t, err)
+	nominalType := getNominalType(file)
+	assert.NotNil(t, nominalType)
+	assert.Equal(t, "Array", nominalType.Name)
+	assert.Equal(t, 1, len(nominalType.GenericArguments))
+	assert.Equal(t, "mojo.lang", nominalType.GenericArguments[0].Package)
+	assert.Equal(t, "StructType", nominalType.GenericArguments[0].Name)
+}
+
 func TestNominalTypeVisitor_VisitPrimeType_PackageName(t *testing.T) {
 	const primeType = `type Val{ val: mojo.core.Int }`
 

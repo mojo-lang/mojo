@@ -121,7 +121,7 @@ func (p *Namer) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error {
 		declaration.PackageName = file.PackageName
 		declaration.SourceFileName = file.FullName
 
-		identifier := ctx.Declare(lang.NewStructDecl(declaration))
+		identifier := ctx.Declare(lang.NewStructDeclaration(declaration))
 		identifier.SourceFile = file.FullName
 		p.ParseStruct(ctx, declaration)
 	}
@@ -130,7 +130,7 @@ func (p *Namer) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error {
 		declaration.PackageName = file.PackageName
 		declaration.SourceFileName = file.FullName
 
-		identifier := ctx.Declare(lang.NewEnumDecl(declaration))
+		identifier := ctx.Declare(lang.NewEnumDeclaration(declaration))
 		identifier.SourceFile = file.FullName
 		p.ParseEnum(ctx, declaration)
 	}
@@ -139,7 +139,7 @@ func (p *Namer) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error {
 		declaration.PackageName = file.PackageName
 		declaration.SourceFileName = file.FullName
 
-		identifier := ctx.Declare(lang.NewTypeAliasDecl(declaration))
+		identifier := ctx.Declare(lang.NewTypeAliasDeclaration(declaration))
 		identifier.SourceFile = file.FullName
 		p.ParseTypeAlias(ctx, declaration)
 	}

@@ -7,7 +7,9 @@ import (
 )
 
 func TestExpressionVisitor_VisitExpression_False(t *testing.T) {
-	const typeAttribute = `@default(false) type Mailbox{}`
+	const typeAttribute = `
+@default(false)
+type Mailbox{}`
 
 	parser := &Parser{}
 	file, err := parser.ParseString(typeAttribute)
@@ -40,7 +42,7 @@ func getExpression(file *lang.SourceFile) *lang.Expression {
 			if len(attributes) > 0 {
 				expressions := attributes[0].GetArguments()
 				if len(expressions) > 0 {
-					return expressions[0]
+					return expressions[0].Value
 				}
 			}
 		}

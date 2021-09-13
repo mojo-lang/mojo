@@ -1,4 +1,4 @@
-@template("{longitude},{latitude}")
+@format("{longitude},{latitude}")
 type LngLat {
 	longitude: Double @1
 	latitude  : Double @2
@@ -47,7 +47,7 @@ type District {
 type StakeMark {
 	
 	/// 桩号值对象。用以表示K23+345的桩号，分成`kilometer`部分和`meter`部分。
-	@template('T{kilometer}[+.]{meter}')
+	@format('T{kilometer}[+.]{meter}')
 	type Value {
 	    kilometer: Int32 @1  //< kilometer part of the stake mark value. e.g. 23
 	    meter    : Int32 @2  //< meter part of the stake mark value. e.g. 345

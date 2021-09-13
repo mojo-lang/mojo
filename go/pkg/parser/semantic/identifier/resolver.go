@@ -334,5 +334,13 @@ func resolveNominalType(ctx *plugin.Context, t *lang.NominalType) ([]*lang.Ident
 		unresolveds = append(unresolveds, urs...)
 	}
 
+	for _, attribute := range t.Attributes {
+		for _, argument := range attribute.GenericArguments {
+			rs, urs := resolveNominalType(ctx, argument)
+			resolveds = append(resolveds, rs...)
+			unresolveds = append(unresolveds, urs...)
+		}
+	}
+
 	return resolveds, unresolveds
 }
