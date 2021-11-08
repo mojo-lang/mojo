@@ -4,7 +4,7 @@ const Middlewares = `
 package handlers
 
 import (
-	"github.com/ncraft/ncraft-go/pkg/middleware"
+	"github.com/ncraft-io/ncraft-go/pkg/middleware"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/go-kit/kit/tracing/opentracing"
 	stdopentracing "github.com/opentracing/opentracing-go"

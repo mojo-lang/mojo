@@ -101,7 +101,7 @@ import (
 
 	stdopentracing "github.com/opentracing/opentracing-go"
 	httptransport "github.com/go-kit/kit/transport/http"
-	nhttp "github.com/ncraft/ncraft-go/pkg/transport/http"
+	nhttp "github.com/ncraft-io/ncraft-go/pkg/transport/http"
 
 	{{range $i := .ExternalMessageImports}}
 	"{{$i}}"
