@@ -278,7 +278,7 @@ function_type_argument_list
 function_type_argument
 argument_label
 array_type
-dictionary_type
+map_type
 type_inheritance_clause
 type_inheritance_list
 declaration_identifier

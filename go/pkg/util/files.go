@@ -56,7 +56,8 @@ func IsGeneratedFile(path string) bool {
 		firstLine = strings.TrimSpace(firstLine)
 
 		return strings.HasPrefix(firstLine, "// Code generated") &&
-			strings.HasSuffix(firstLine, "DO NOT EDIT.")
+			(strings.HasSuffix(firstLine, "DO NOT EDIT.") ||
+				strings.HasSuffix(firstLine, "DO NOT EDIT!"))
 	}
 	return false
 }

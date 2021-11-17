@@ -64,7 +64,7 @@ func GetEosDocument(ctx IEosWithDocumentContext) *lang.Document {
 }
 
 func (d *DocumentVisitor) VisitDocument(ctx *DocumentContext) interface{} {
-	lines := ctx.AllLineDocument()
+	lines := ctx.AllLINE_DOCUMENT()
 	document := &lang.Document{}
 	for _, line := range lines {
 		lineDocument := &lang.LineDocument{}

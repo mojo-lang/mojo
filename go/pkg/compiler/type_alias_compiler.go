@@ -47,7 +47,7 @@ func (c *TypeAliasCompiler) Compile(ctx *context.Context, pkg *lang.Package) err
 
 		sourceFile.ResolvedIdentifiers = nil
 		for _, id := range identifiers {
-			if id.SourceFile == sourceFile.FullName {
+			if id.SourceFileName == sourceFile.FullName {
 				continue
 			}
 			sourceFile.ResolvedIdentifiers = append(sourceFile.ResolvedIdentifiers, id)
@@ -184,7 +184,7 @@ func (c *TypeAliasCompiler) compileNominalType(ctx *context.Context, nominalType
 	aliasType := &lang.NominalType{
 		StartPosition:   aliasDecl.Type.StartPosition,
 		EndPosition:     aliasDecl.Type.EndPosition,
-		Package:         aliasDecl.Type.Package,
+		PackageName:     aliasDecl.Type.PackageName,
 		Name:            aliasDecl.Type.Name,
 		TypeDeclaration: aliasDecl.Type.TypeDeclaration,
 		Attributes:      aliasDecl.Type.Attributes,

@@ -27,8 +27,7 @@ func (m *MojoFileVisitor) Visit(tree antlr.ParseTree) interface{} {
 }
 
 func (m *MojoFileVisitor) VisitMojoFile(ctx *MojoFileContext) interface{} {
-	statements := ctx.Statements()
-	if statements != nil {
+	if statements := ctx.Statements(); statements != nil {
 		visitor := NewStatementsVisitor()
 		if s, ok := statements.Accept(visitor).([]*lang.Statement); ok {
 			m.SourceFile.Statements = s

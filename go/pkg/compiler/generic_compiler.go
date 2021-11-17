@@ -2,15 +2,16 @@ package compiler
 
 import (
 	"errors"
-	"github.com/golang/protobuf/proto"
-	"github.com/iancoleman/strcase"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/context"
 	path2 "path"
 	"strings"
+
+	"github.com/golang/protobuf/proto"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-// compile the Generic Type to Nominal type except the Array, Dictionary, Tuple, Union, Intersection
+// compile the Generic Type to Nominal type except the Array, Map, Tuple, Union, Intersection
 type GenericCompiler struct {
 	Options  map[string]interface{}
 	NewFiles []*lang.SourceFile
@@ -83,7 +84,7 @@ func (c *GenericCompiler) Compile(ctx *context.Context, pkg *lang.Package) error
 
 		sourceFile.ResolvedIdentifiers = nil
 		for _, id := range identifiers {
-			if id.SourceFile == sourceFile.FullName {
+			if id.SourceFileName == sourceFile.FullName {
 				continue
 			}
 			sourceFile.ResolvedIdentifiers = append(sourceFile.ResolvedIdentifiers, id)
@@ -130,7 +131,7 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 		addIdentifiers(identifiers, ids)
 		if structDecl != nil {
 			structDecl.EnclosingType = &lang.NominalType{
-				Package:         decl.PackageName,
+				PackageName:     decl.PackageName,
 				Name:            decl.Name,
 				TypeDeclaration: lang.NewStructTypeDeclaration(decl),
 			}
@@ -156,7 +157,7 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 			if id != nil {
 				identifiers[id.FullName] = id
 				return &lang.NominalType{
-					Package:         id.Package,
+					PackageName:     id.PackageName,
 					Name:            id.Name,
 					TypeDeclaration: lang.NewTypeDeclarationFromDeclaration(id.Declaration),
 					Attributes:      nominalType.Attributes,
@@ -196,7 +197,7 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 						}
 						if id != nil {
 							inherit.GenericArguments[i] = &lang.NominalType{
-								Package:         id.Package,
+								PackageName:     id.PackageName,
 								Name:            id.Name,
 								TypeDeclaration: lang.NewTypeDeclarationFromDeclaration(id.Declaration),
 								Attributes:      argument.Attributes,
@@ -227,7 +228,7 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 						}
 						if id != nil {
 							field.Type.GenericArguments[i] = &lang.NominalType{
-								Package:         id.Package,
+								PackageName:     id.PackageName,
 								Name:            id.Name,
 								TypeDeclaration: lang.NewTypeDeclarationFromDeclaration(id.Declaration),
 								Attributes:      argument.Attributes,
@@ -275,7 +276,7 @@ func (c *GenericCompiler) CompileTypeAlias(ctx *context.Context, decl *lang.Type
 		}
 	} else {
 		decl.Type = &lang.NominalType{
-			Package:         id.Package,
+			PackageName:     id.PackageName,
 			Name:            id.Name,
 			Attributes:      decl.Type.Attributes,
 			TypeDeclaration: lang.NewTypeDeclarationFromDeclaration(id.Declaration),
@@ -290,7 +291,7 @@ func (c *GenericCompiler) CompileTypeAlias(ctx *context.Context, decl *lang.Type
 /// TODO support configure
 var exceptionalTypes = map[string]bool{
 	"mojo.core.Array":        true,
-	"mojo.core.Dictionary":   true,
+	"mojo.core.Map":          true,
 	"mojo.core.Tuple":        true,
 	"mojo.core.Union":        true,
 	"mojo.core.Intersection": true,
@@ -368,7 +369,7 @@ func (c *GenericCompiler) instantiateTypeAlias(ctx *context.Context, nominalType
 	aliasType := &lang.NominalType{
 		StartPosition:   aliasDecl.Type.StartPosition,
 		EndPosition:     aliasDecl.Type.EndPosition,
-		Package:         aliasDecl.Type.Package,
+		PackageName:     aliasDecl.Type.PackageName,
 		Name:            aliasDecl.Type.Name,
 		TypeDeclaration: aliasDecl.Type.TypeDeclaration,
 		Attributes:      aliasDecl.Type.Attributes,
@@ -543,11 +544,11 @@ func (c *GenericCompiler) compileGenericTypeAlias(ctx *context.Context, nominalT
 	compiledDecl.ResolvedIdentifiers = resolvedIdentifiers
 
 	id := &lang.Identifier{
-		Package:     compiledDecl.PackageName,
-		Name:        compiledDecl.Name,
-		FullName:    lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
-		SourceFile:  file.FullName,
-		Declaration: lang.NewTypeAliasDeclaration(compiledDecl),
+		PackageName:    compiledDecl.PackageName,
+		Name:           compiledDecl.Name,
+		FullName:       lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
+		SourceFileName: file.FullName,
+		Declaration:    lang.NewTypeAliasDeclaration(compiledDecl),
 	}
 
 	// update the identifiers in the current scope
@@ -687,7 +688,7 @@ func (c *GenericCompiler) compileGenericStructType(ctx *context.Context, nominal
 		if replaced != nil {
 			field.Type = &lang.NominalType{
 				Name:            replaced.Name,
-				Package:         replaced.Package,
+				PackageName:     replaced.PackageName,
 				TypeDeclaration: replaced.TypeDeclaration,
 				Attributes:      f.Type.Attributes,
 				EnclosingType:   replaced.EnclosingType,
@@ -695,7 +696,7 @@ func (c *GenericCompiler) compileGenericStructType(ctx *context.Context, nominal
 		} else {
 			field.Type = &lang.NominalType{
 				Name:            f.Type.Name,
-				Package:         f.Type.Package,
+				PackageName:     f.Type.PackageName,
 				TypeDeclaration: f.Type.TypeDeclaration,
 				Attributes:      f.Type.Attributes,
 				EnclosingType:   f.Type.EnclosingType,
@@ -705,7 +706,7 @@ func (c *GenericCompiler) compileGenericStructType(ctx *context.Context, nominal
 				if replaced != nil {
 					field.Type.GenericArguments = append(field.Type.GenericArguments, &lang.NominalType{
 						Name:            replaced.Name,
-						Package:         replaced.Package,
+						PackageName:     replaced.PackageName,
 						TypeDeclaration: replaced.TypeDeclaration,
 						Attributes:      field.Type.GenericArguments[i].Attributes,
 						EnclosingType:   replaced.EnclosingType,
@@ -731,8 +732,8 @@ func (c *GenericCompiler) compileGenericStructType(ctx *context.Context, nominal
 	}
 	for _, argument := range nominalType.GenericArguments {
 		resolvedIdentifiers = append(resolvedIdentifiers, &lang.Identifier{
-			Package:            argument.Package,
-			SourceFile:         argument.TypeDeclaration.GetSourceFileName(),
+			PackageName:        argument.PackageName,
+			SourceFileName:     argument.TypeDeclaration.GetSourceFileName(),
 			EnclosingTypeNames: nil,
 			Name:               argument.Name,
 			FullName:           argument.GetFullName(),
@@ -742,11 +743,11 @@ func (c *GenericCompiler) compileGenericStructType(ctx *context.Context, nominal
 	compiledDecl.ResolvedIdentifiers = lang.MergeDependencies(resolvedIdentifiers)
 
 	id := &lang.Identifier{
-		Package:     compiledDecl.PackageName,
-		Name:        compiledDecl.Name,
-		FullName:    lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
-		SourceFile:  file.FullName,
-		Declaration: lang.NewStructDeclaration(compiledDecl),
+		PackageName:    compiledDecl.PackageName,
+		Name:           compiledDecl.Name,
+		FullName:       lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
+		SourceFileName: file.FullName,
+		Declaration:    lang.NewStructDeclaration(compiledDecl),
 	}
 
 	// update the identifiers in the current scope

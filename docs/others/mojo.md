@@ -53,7 +53,7 @@
    }
    ```
 
-   ​
+   
 
 2. Meta Function
 
@@ -70,7 +70,7 @@
    };
    ```
 
-   ​
+   
 
 3. Enum类型
 
@@ -83,7 +83,7 @@
    		Saturday,
    		Sunday
    	}
-
+ 	
    	enum {
    	}
    ​
@@ -103,7 +103,7 @@
       1. "#" Hex_digits
    3. Real 浮点数
       inf
-   4. ​
+   4. 
 
 4. String（字符串） "" ''
 
@@ -127,7 +127,7 @@
    9. Micro_second: us
    10. Nano_second: 5ns
 
-10. ​
+10. 
 11. Tuple（元组）
    省略field name的对象，field的次序应该与对象的layout一致，不存在赋值为null
 
@@ -142,10 +142,8 @@
 17. Range
     [4..]
     4..8
-    4<..8
-    4<..<8
     4..<8
-
+    
 18. Object（对象）｛｝
 
    Generic Object
@@ -172,7 +170,7 @@
                		Express % Express
                		Express ^ Express
                ```
-               比较符
+          ​     比较符
                ```
                		Express > Express
                		Express < Express
@@ -181,7 +179,7 @@
                		Express <= Express
                		Express != Express
                ```
-               逻辑符
+          ​     逻辑符
                ```
                		Express && Express
                		Express || Express
@@ -227,15 +225,15 @@
 	3. 函数定义语句
 	func function() {
 	}
-
+	
 	4. if
-
+	
 	5. match
 		match(obj) {
 	      1: print("one");
 	      _: Error{};
 		}
-
+	
 	6. for
 		for (i in Sequence<Object>) {
 		}

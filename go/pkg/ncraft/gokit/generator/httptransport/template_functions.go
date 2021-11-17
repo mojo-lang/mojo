@@ -1,11 +1,12 @@
 package httptransport
 
 import (
-	gogen "github.com/golang/protobuf/protoc-gen-go/generator"
-	"github.com/iancoleman/strcase"
-	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 	"strings"
 	"text/template"
+
+	gogen "github.com/golang/protobuf/protoc-gen-go/generator"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 )
 
 // TemplateFunctions contains a series of utility functions to be passed into

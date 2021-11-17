@@ -9,21 +9,21 @@ import (
 	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 )
 
-type DictionaryPlugin struct {
+type MapPlugin struct {
 }
 
 func init() {
-	p := plugins["mojo.core.Dictionary"]
+	p := plugins["mojo.core.Map"]
 	if p == nil {
 		p = make([]Plugin, 0)
 	}
-	p = append(p, &DictionaryPlugin{})
+	p = append(p, &MapPlugin{})
 
-	plugins["mojo.core.Dictionary"] = p
+	plugins["mojo.core.Map"] = p
 }
 
-func (p *DictionaryPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
-	if t.Name != "Dictionary" {
+func (p *MapPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
+	if t.Name != "Map" {
 		return "", "", errors.New("")
 	}
 

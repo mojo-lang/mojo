@@ -7,12 +7,10 @@ import (
 )
 
 func TestExpressionVisitor_VisitExpression_False(t *testing.T) {
-	const typeAttribute = `
-@default(false)
-type Mailbox{}`
+	const falseLiteral = `false`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(typeAttribute)
+	file, err := parser.ParseString(falseLiteral)
 
 	assert.NoError(t, err)
 	expr := getExpression(file)
@@ -22,10 +20,10 @@ type Mailbox{}`
 }
 
 func TestExpressionVisitor_VisitExpression_True(t *testing.T) {
-	const typeAttribute = `@default(true) type Mailbox{}`
+	const trueLiteral = `true`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(typeAttribute)
+	file, err := parser.ParseString(trueLiteral)
 
 	assert.NoError(t, err)
 	expr := getExpression(file)
@@ -34,18 +32,35 @@ func TestExpressionVisitor_VisitExpression_True(t *testing.T) {
 	assert.Equal(t, true, expr.GetBoolLiteralExpr().Value)
 }
 
+func TestExpressionVisitor_VisitExpression_BinaryExpression(t *testing.T) {
+	const binaryExpression = `a+b+c*d*e`
+
+	parser := &Parser{}
+	file, err := parser.ParseString(binaryExpression)
+
+	assert.NoError(t, err)
+	expr := getExpression(file)
+	assert.NotNil(t, expr)
+
+	binaryExpr := expr.GetBinaryExpr()
+	assert.NotNil(t, binaryExpr)
+	assert.Equal(t, "+", binaryExpr.Operator.Symbol)
+	assert.NotNil(t, binaryExpr.LeftHandArgument.GetBinaryExpr())
+	assert.Equal(t, "+", binaryExpr.LeftHandArgument.GetBinaryExpr().Operator.Symbol)
+}
+
+func TestExpressionVisitor_VisitExpression_BinaryExpressionError(t *testing.T) {
+	const expression = `a - - - b`
+
+	parser := &Parser{}
+	_, err := parser.ParseString(expression)
+	assert.Error(t, err)
+}
+
 func getExpression(file *lang.SourceFile) *lang.Expression {
 	if len(file.Statements) > 0 {
 		statement := file.Statements[0]
-		if decl := statement.GetDeclaration(); decl != nil {
-			attributes := decl.GetStructDecl().Attributes
-			if len(attributes) > 0 {
-				expressions := attributes[0].GetArguments()
-				if len(expressions) > 0 {
-					return expressions[0].Value
-				}
-			}
-		}
+		return statement.GetExpression()
 	}
 	return nil
 }

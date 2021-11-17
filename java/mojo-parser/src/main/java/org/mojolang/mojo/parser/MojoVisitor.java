@@ -787,11 +787,11 @@ public interface MojoVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArray_type(MojoParser.Array_typeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MojoParser#dictionary_type}.
+	 * Visit a parse tree produced by {@link MojoParser#map_type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDictionary_type(MojoParser.Dictionary_typeContext ctx);
+	T visitMap_type(MojoParser.Map_typeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MojoParser#type_inheritance_clause}.
 	 * @param ctx the parse tree

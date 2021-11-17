@@ -11,24 +11,24 @@ import (
 )
 
 var PrimeTypes = map[string]bool{
-	core.UInt8TypeName:      true,
-	core.UInt16TypeName:     true,
-	core.UInt32TypeName:     true,
-	core.UInt64TypeName:     true,
-	core.Int8TypeName:       true,
-	core.Int16TypeName:      true,
-	core.Int32TypeName:      true,
-	core.Int64TypeName:      true,
-	core.IntTypeName:        true,
-	core.UIntTypeName:       true,
-	core.Float32TypeName:    true,
-	core.Float64TypeName:    true,
-	core.BoolTypeName:       true,
-	core.StringTypeName:     true,
-	core.BytesTypeName:      true,
-	core.ArrayTypeName:      true,
-	core.DictionaryTypeName: true,
-	core.UnionTypeName:      true,
+	core.UInt8TypeName:   true,
+	core.UInt16TypeName:  true,
+	core.UInt32TypeName:  true,
+	core.UInt64TypeName:  true,
+	core.Int8TypeName:    true,
+	core.Int16TypeName:   true,
+	core.Int32TypeName:   true,
+	core.Int64TypeName:   true,
+	core.IntTypeName:     true,
+	core.UIntTypeName:    true,
+	core.Float32TypeName: true,
+	core.Float64TypeName: true,
+	core.BoolTypeName:    true,
+	core.StringTypeName:  true,
+	core.BytesTypeName:   true,
+	core.ArrayTypeName:   true,
+	core.MapTypeName:     true,
+	core.UnionTypeName:   true,
 }
 
 func CompileStructDecl(ctx *Context, decl *lang.StructDecl) error {
@@ -122,14 +122,23 @@ func compileStructDecl(ctx *Context, decl *lang.StructDecl) (*openapi.Referencea
 		if inheritCount == 1 && len(decl.Type.Fields) == 0 {
 			reference := schemas[0].GetReference()
 			if reference != nil {
-				s := ctx.Components.Schemas[reference.GetSchemaName()]
-				return openapi.NewReferenceableSchema(s), nil
+				schema.AllOf = []*openapi.ReferenceableSchema{schemas[0]}
 			} else {
+				s := schemas[0].GetSchema()
+				s.Title = schema.Title
+				s.Description = schema.Description
 				return schemas[0], nil
 			}
 		} else {
 			s := &openapi.Schema{}
-			schemas = append(schemas, openapi.NewReferenceableSchema(schema))
+			s.Title = schema.Title
+			s.Description = schema.Description
+
+			if len(schema.Properties) > 0 {
+				schema.Description = nil
+				schemas = append(schemas, openapi.NewReferenceableSchema(schema))
+			}
+
 			s.AllOf = schemas
 			return openapi.NewReferenceableSchema(s), nil
 		}

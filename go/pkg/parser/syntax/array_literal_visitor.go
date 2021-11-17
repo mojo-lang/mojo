@@ -29,7 +29,7 @@ func (e *ArrayLiteralVisitor) VisitArrayLiteralItems(ctx *ArrayLiteralItemsConte
 	}
 
 	if len(expressions) > 0 {
-		return lang.NewArrayLiteralExpr(&lang.ArrayLiteralExpr{
+		return lang.NewArrayLiteralExpression(&lang.ArrayLiteralExpr{
 			StartPosition: nil,
 			EndPosition:   nil,
 			Kind:          0,

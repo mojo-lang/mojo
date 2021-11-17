@@ -72,7 +72,7 @@ public class MojoParser extends Parser {
 		RULE_type_name = 111, RULE_tuple_type = 112, RULE_tuple_type_element_list = 113, 
 		RULE_tuple_type_element = 114, RULE_function_type = 115, RULE_function_type_argument_clause = 116, 
 		RULE_function_type_argument_list = 117, RULE_function_type_argument = 118, 
-		RULE_argument_label = 119, RULE_array_type = 120, RULE_dictionary_type = 121, 
+		RULE_argument_label = 119, RULE_array_type = 120, RULE_map_type = 121, 
 		RULE_type_inheritance_clause = 122, RULE_type_inheritance_list = 123, 
 		RULE_declaration_identifier = 124, RULE_label_identifier = 125, RULE_path_identifier = 126, 
 		RULE_identifier = 127, RULE_keyword_as_identifier_in_declarations = 128, 
@@ -118,7 +118,7 @@ public class MojoParser extends Parser {
 			"argument_name", "type_", "type_annotation", "type_identifier", "type_identifier_clause", 
 			"type_name", "tuple_type", "tuple_type_element_list", "tuple_type_element", 
 			"function_type", "function_type_argument_clause", "function_type_argument_list", 
-			"function_type_argument", "argument_label", "array_type", "dictionary_type", 
+			"function_type_argument", "argument_label", "array_type", "map_type", 
 			"type_inheritance_clause", "type_inheritance_list", "declaration_identifier", 
 			"label_identifier", "path_identifier", "identifier", "keyword_as_identifier_in_declarations", 
 			"keyword_as_identifier_in_labels", "document", "following_document", 
@@ -7663,8 +7663,8 @@ public class MojoParser extends Parser {
 		public Array_typeContext array_type() {
 			return getRuleContext(Array_typeContext.class,0);
 		}
-		public Dictionary_typeContext dictionary_type() {
-			return getRuleContext(Dictionary_typeContext.class,0);
+		public Map_typeContext map_type() {
+			return getRuleContext(Map_typeContext.class,0);
 		}
 		public Function_typeContext function_type() {
 			return getRuleContext(Function_typeContext.class,0);
@@ -7725,7 +7725,7 @@ public class MojoParser extends Parser {
 			case 2:
 				{
 				setState(1038);
-				dictionary_type();
+				map_type();
 				}
 				break;
 			case 3:
@@ -8619,7 +8619,7 @@ public class MojoParser extends Parser {
 		return _localctx;
 	}
 
-	public static class Dictionary_typeContext extends ParserRuleContext {
+	public static class Map_typeContext extends ParserRuleContext {
 		public TerminalNode LCURLY() { return getToken(MojoParser.LCURLY, 0); }
 		public List<Type_Context> type_() {
 			return getRuleContexts(Type_Context.class);
@@ -8632,28 +8632,28 @@ public class MojoParser extends Parser {
 			return getRuleContext(AttributesContext.class,0);
 		}
 		public TerminalNode RCURLY() { return getToken(MojoParser.RCURLY, 0); }
-		public Dictionary_typeContext(ParserRuleContext parent, int invokingState) {
+		public Map_typeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_dictionary_type; }
+		@Override public int getRuleIndex() { return RULE_map_type; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof MojoListener ) ((MojoListener)listener).enterDictionary_type(this);
+			if ( listener instanceof MojoListener ) ((MojoListener)listener).enterMap_type(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof MojoListener ) ((MojoListener)listener).exitDictionary_type(this);
+			if ( listener instanceof MojoListener ) ((MojoListener)listener).exitMap_type(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof MojoVisitor ) return ((MojoVisitor<? extends T>)visitor).visitDictionary_type(this);
+			if ( visitor instanceof MojoVisitor ) return ((MojoVisitor<? extends T>)visitor).visitMap_type(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final Dictionary_typeContext dictionary_type() throws RecognitionException {
-		Dictionary_typeContext _localctx = new Dictionary_typeContext(_ctx, getState());
-		enterRule(_localctx, 242, RULE_dictionary_type);
+	public final Map_typeContext map_type() throws RecognitionException {
+		Map_typeContext _localctx = new Map_typeContext(_ctx, getState());
+		enterRule(_localctx, 242, RULE_map_type);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{

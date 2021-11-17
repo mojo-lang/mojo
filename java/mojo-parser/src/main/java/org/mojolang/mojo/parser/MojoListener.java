@@ -1304,15 +1304,15 @@ public interface MojoListener extends ParseTreeListener {
 	 */
 	void exitArray_type(MojoParser.Array_typeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MojoParser#dictionary_type}.
+	 * Enter a parse tree produced by {@link MojoParser#map_type}.
 	 * @param ctx the parse tree
 	 */
-	void enterDictionary_type(MojoParser.Dictionary_typeContext ctx);
+	void enterMap_type(MojoParser.Map_typeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MojoParser#dictionary_type}.
+	 * Exit a parse tree produced by {@link MojoParser#map_type}.
 	 * @param ctx the parse tree
 	 */
-	void exitDictionary_type(MojoParser.Dictionary_typeContext ctx);
+	void exitMap_type(MojoParser.Map_typeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MojoParser#type_inheritance_clause}.
 	 * @param ctx the parse tree

@@ -19,40 +19,38 @@ package {{.GoPackageName}}
 
 import (
 	"strconv"
-	"unsafe"
 )
 
-var {{CompactFullName .FullName}}Names = map[int32]string{
-{{range .EnumItems}}
-	{{.Number}}: "{{.Value}}",
-{{end}}
+var {{CompactFullName .FullName}}Names = map[int32]string{ {{range .Items}}
+	{{.Number}}: "{{.Value}}",{{end}}
 }
 
-var {{CompactFullName .FullName}}Values = map[string]{{.FullName}}{
-{{range .EnumItems}}
-	"{{.Value}}": {{$.EnclosingName}}_{{ToUpper $.EnumName}}_{{ToUpper .RawValue}},
-{{end}}
+var {{CompactFullName .FullName}}Values = map[string]{{.FullName}}{ {{range .Items}}
+	"{{.Value}}": {{$.WrapName}}_{{ToScreamingSnake $.Name}}_{{ToScreamingSnake .RawValue}},{{end}}
 }
 
-func (x {{EnclosingName}}_{{EnumName}}) Format() string {
+func (x {{.FullName}}) Format() string {
 	s, ok := {{CompactFullName .FullName}}Names[int32(x)]
 	if ok {
 		return s
 	}
+	if int(x) == 0 {
+	    return "unspecified"
+	}
 	return strconv.Itoa(int(x))
 }
 
-{{$FirstItem := index .EnumItems 0}}
+{{$FirstItem := index .Items 0}}
 
-func (x *{{EnclosingName}}_{{EnumName}}) Parse(value string) {
+func (x *{{.FullName}}) Parse(value string) {
 	if x != nil {
 		s, ok := {{CompactFullName .FullName}}Values[value]
 		if ok {
 			*x = s
 		} else {
-			*x = {{.EnclosingName}}_{{.Upper .EnumName}}_{{.Upper .FirstItem.RawValue}}
+			*x = {{$.WrapName}}_{{ToScreamingSnake $.Name}}_{{ToScreamingSnake $FirstItem.RawValue}}
 		}
 	} else {
-		*x = {{.EnclosingName}}_{{.Upper .EnumName}}_{{.Upper .FirstItem.RawValue}}
+		*x = {{$.WrapName}}_{{ToScreamingSnake $.Name}}_{{ToScreamingSnake $FirstItem.RawValue}}
 	}
 }

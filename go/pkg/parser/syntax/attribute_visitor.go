@@ -17,7 +17,7 @@ func NewAttributeVisitor() *AttributeVisitor {
 }
 
 func (a *AttributeVisitor) VisitAttribute(ctx *AttributeContext) interface{} {
-	number := ctx.DecimalLiteral()
+	number := ctx.DECIMAL_LITERAL()
 	if number != nil {
 		v, err := strconv.ParseInt(number.GetText(), 10, 32)
 		if err != nil {
@@ -31,7 +31,7 @@ func (a *AttributeVisitor) VisitAttribute(ctx *AttributeContext) interface{} {
 		return &lang.Attribute{
 			StartPosition:    GetPosition(number.GetSymbol()),
 			EndPosition:      nil,
-			Package:          "",
+			PackageName:      "",
 			Name:             "number",
 			GenericArguments: nil,
 			Arguments: []*lang.Argument{
@@ -70,7 +70,7 @@ func (a *AttributeVisitor) VisitAttributeIdentifier(ctx *AttributeIdentifierCont
 		return &lang.Attribute{
 			Name:          identifier.GetText(),
 			StartPosition: GetPosition(identifier.GetStart()),
-			Package:       GetPackageIdentifier(ctx.PackageIdentifier()),
+			PackageName:   GetPackageIdentifier(ctx.PackageIdentifier()),
 		}
 	}
 	return nil

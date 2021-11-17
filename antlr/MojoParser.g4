@@ -144,7 +144,6 @@ genericParameter
  ;
 
 // GRAMMAR OF A GENERIC ARGUMENT CLAUSE
-
 genericArgumentClause : LT EOL* genericArguments EOL* GT;
 genericArguments : genericArgument (eov EOL* genericArgument)*;
 genericArgument : type_ attributes?;
@@ -152,23 +151,8 @@ genericArgument : type_ attributes?;
 // context-sensitive. Allow < as pre, post, or binary op
 //lt : {_input.LT(1).getText().equals("<")}? operator ;
 //gt : {_input.LT(1).getText().equals(">")}? operator ;
-// Declarations
 
 // GRAMMAR OF A DECLARATION
-
-//declaration
-// : packageDeclaration
-// | importDeclaration
-// | constantDeclaration
-// | variableDeclaration
-// | typeAliasDeclaration
-// | functionDeclaration
-// | enumDeclaration
-// | structDeclaration
-// | interfaceDeclaration
-// | attributeDeclaration
-// ;
-
 declaration : document? (attributes EOL)?
       ( packageDeclaration
       | importDeclaration
@@ -182,10 +166,7 @@ declaration : document? (attributes EOL)?
       | attributeDeclaration
       );
 
-//declarations : declaration+ ;
-
 // GRAMMAR OF A CODE BLOCK
-
 codeBlock : LCURLY (EOL* statements)? EOL* RCURLY ;
 
 // GRAMMAR OF A PACKAGE DECLARATION
@@ -201,7 +182,7 @@ importDeclaration
 importPath : importPathIdentifier (DOT importPathIdentifier)*  ;
 importPathIdentifier : declarationIdentifier;
 
-importAllClause : DOT MUL;
+importAllClause : DOT STAR;
 
 importValueAsClause : KEYWORD_AS declarationIdentifier;
 
@@ -352,19 +333,19 @@ attributeDeclaration
 
 // GRAMMAR OF A PATTERN
 pattern
- : wildcard_pattern typeAnnotation?
+ : wildcardPattern typeAnnotation?
  | identifierPattern typeAnnotation?
- | tuple_pattern typeAnnotation?
+ | tuplePattern typeAnnotation?
  //| enum_value_pattern
- | optional_pattern
+ | optionalPattern
  | KEYWORD_IS type_
  | pattern KEYWORD_AS type_
- | expression_pattern
+ | expressionPattern
  ;
 
 // GRAMMAR OF A WILDCARD PATTERN
 
-wildcard_pattern : UNDERSCORE  ;
+wildcardPattern : UNDERSCORE  ;
 
 // GRAMMAR OF AN IDENTIFIER PATTERN
 
@@ -372,32 +353,32 @@ identifierPattern : declarationIdentifier ;
 
 // GRAMMAR OF A TUPLE PATTERN
 
-tuple_pattern : LPAREN tuple_pattern_element_list? RPAREN  ;
-tuple_pattern_element_list
-	:	tuple_pattern_element (COMMA tuple_pattern_element)*
+tuplePattern : LPAREN tuplePatternElementList? RPAREN  ;
+tuplePatternElementList
+	:	tuplePatternElement (COMMA tuplePatternElement)*
 	;
-tuple_pattern_element : pattern  ;
+tuplePatternElement : pattern  ;
 
 // GRAMMAR OF AN ENUMERATION CASE PATTERN
 
 //enum_value_pattern : typeIdentifier? DOT enum_case_name tuple_pattern? ;
 
 // GRAMMAR OF AN OPTIONAL PATTERN
-optional_pattern : identifierPattern QUESTION ;
+optionalPattern : identifierPattern QUESTION ;
 
 // GRAMMAR OF AN EXPRESSION PATTERN
-expression_pattern : expression  ;
+expressionPattern : expression  ;
 
 // Attributes
 
 // GRAMMAR OF AN ATTRIBUTE
 attribute
- : '@' DecimalLiteral
+ : '@' DECIMAL_LITERAL
  | '@' attributeIdentifier genericArgumentClause? attributeArgumentClause?
  ;
 
 attributeIdentifier : ((packageIdentifier DOT)? attributeName);
-attributeName : VALUE_IDENTIFIER | keyword_as_identifier_in_labels;
+attributeName : VALUE_IDENTIFIER | keywordAsIdentifierInLabels;
 
 attributeArgumentClause : LPAREN (EOL*  expressions)? EOL* RPAREN  ;
 
@@ -412,65 +393,87 @@ expression : prefixExpression binaryExpressions? ;
 expressions : expression (eov EOL* expression)* eov?;
 
 // GRAMMAR OF A PREFIX EXPRESSION
-
 prefixExpression
   : prefixOperator postfixExpression
   | postfixExpression
   ;
 
 // GRAMMAR OF A BINARY EXPRESSION
-
 binaryExpression
   : binaryOperator prefixExpression
   | assignmentOperator prefixExpression
-  | conditional_operator prefixExpression
-  | type_casting_operator
+  | conditionalOperator prefixExpression
+  | typeCastingOperator
   ;
 
 binaryExpressions : binaryExpression+ ;
 
 // GRAMMAR OF A CONDITIONAL OPERATOR
-
-conditional_operator : QUESTION expression COLON ;
+conditionalOperator : QUESTION expression COLON ;
 
 // GRAMMAR OF A TYPE_CASTING OPERATOR
-
-type_casting_operator
+typeCastingOperator
   : KEYWORD_IS type_
   | KEYWORD_AS type_
   ;
 
 // GRAMMAR OF A PRIMARY EXPRESSION
-
 primaryExpression
  : declarationIdentifier genericArgumentClause?
- | typeIdentifier DOT declarationIdentifier genericArgumentClause?
  | literalExpression
- //| closure_expression
+ | typeIdentifier DOT declarationIdentifier genericArgumentClause?
+ | closureExpression
  | parenthesizedExpression
  | tupleExpression
  | implicitMemberExpression
  | wildcardExpression
+ | structConstructionExpression
  //| key_path_expression
  ;
 
 // GRAMMAR OF A LITERAL EXPRESSION
-
 literalExpression
- : literal
+ : numericOperatorLiteral
+ | stringOperatorLiteral
+ | literal
  | arrayLiteral
+ | mapLiteral
  | objectLiteral
+ | structLiteral
  ;
+
+numericOperatorLiteral : numericLiteral postfixLiteralOperator ;
+stringOperatorLiteral : prefixLiteralOperator stringLiteral;
+
+postfixLiteralOperator : TYPE_IDENTIFIER | VALUE_IDENTIFIER ;
+prefixLiteralOperator : VALUE_IDENTIFIER;
 
 arrayLiteral : LBRACK (EOL* arrayLiteralItems)? EOL* RBRACK ;
 
 arrayLiteralItems
   : arrayLiteralItem (eov EOL* arrayLiteralItem)* eov?
-// : arrayLiteralItem eov?
-// | arrayLiteralItem eov EOL* arrayLiteralItems
  ;
  
 arrayLiteralItem : expression ;
+
+mapLiteral
+   : LCURLY (EOL* mapLiteralItems)? EOL* RCURLY
+   ;
+
+mapLiteralItems
+    : (mapLiteralItem (eov EOL* mapLiteralItem)* eov?)
+    //| (mapLiteralIntegerItem (eov EOL* mapLiteralIntegerItem)* eov?)
+    ;
+
+mapLiteralItem
+    : (stringLiteral | integerLiteral) COLON expression;
+
+//mapLiteralStringItem
+//    : stringLiteral COLON expression;
+//
+//mapLiteralIntegerItem
+//    : integerLiteral COLON expression
+//    ;
 
 objectLiteral
  : LCURLY (EOL* objectLiteralItems)? EOL* RCURLY
@@ -479,43 +482,33 @@ objectLiteral
 objectLiteralItems
   : objectLiteralItem (eov EOL* objectLiteralItem)* eov?
   ;
- 
-objectLiteralItem : expression COLON expression;
+
+objectLiteralItem
+    : pathIdentifier (COLON expression)?
+    ;
+
+structLiteral
+    : typeIdentifier objectLiteral
+    ;
+
+structConstructionExpression
+    : typeIdentifier functionCallSuffix
+    ;
 
 // GRAMMAR OF A CLOSURE EXPRESSION
+closureExpression
+    : LCURLY statements RCURLY
+    | LCURLY closureParameters EOL* RIGHT_ARROW (EOL* type_)? EOL* statements RCURLY
+    ;
 
-// : LCURLY closure_signature? statement* RCURLY ;
+closureParameters
+    : closureParameter (eov EOL* closureParameter)* eov?
+    ;
 
-//closure_signature
-// : capture_list? closure_parameter_clause functionResult? 'in'
-// | capture_list 'in'
-// ;
-
-//closure_parameter_clause
-// : LPAREN RPAREN
-// | LPAREN closure_parameter_list RPAREN
-// | closure_parameter_clause_identifier_list
-// ;
-
-// Renamed rule "identifier_list"
-//closure_parameter_clause_identifier_list : declarationIdentifier (COMMA declarationIdentifier)* ;
-
-//closure_parameter_list : closure_parameter (COMMA closure_parameter)* ;
-
-//closure_parameter
-// : closure_parameter_name typeAnnotation?
-// | closure_parameter_name typeAnnotation range_operator
-// ;
-
-//closure_parameter_name : labelIdentifier ;
-
-//capture_list : LBRACK capture_list_items RBRACK ;
-
-//capture_list_items : capture_list_item (COMMA capture_list_item)* ;
-
-//capture_list_item : capture_specifier? expression ;
-
-//capture_specifier : 'weak' | 'unowned' | 'unowned(safe)' | 'unowned(unsafe)'  ;
+closureParameter
+    : functionParameter
+    | labelIdentifier
+    ;
 
 // GRAMMAR OF A IMPLICIT MEMBER EXPRESSION
 
@@ -523,8 +516,11 @@ implicitMemberExpression : DOT labelIdentifier ; // let a: MyType = .default; st
 
 // GRAMMAR OF A PARENTHESIZED EXPRESSION
 
-parenthesizedExpression : LPAREN EOL* expression EOL* RPAREN ;
-
+parenthesizedExpression
+    : LPAREN EOL* (
+        expression //|
+        //expression GRAPH_RIGHT_PATH expression
+      ) EOL* RPAREN ;
 // GRAMMAR OF A TUPLE EXPRESSION
 
 tupleExpression
@@ -541,52 +537,56 @@ tupleElement
 
 wildcardExpression : UNDERSCORE ;
 
-// GRAMMAR OF A POSTFIX EXPRESSION (inlined many rules from spec to avoid indirect left-recursion)
+// GRAMMAR OF A POSTFIX EXPRESSION
+postfixExpression: primaryExpression suffixExpression* postfixOperator?;
 
-postfixExpression
- : primaryExpression                                                   # primary
- | postfixExpression postfixOperator                                   # postfixOperation
- | postfixExpression functionCallArgumentClause                        # functionCallExpression
- //| postfixExpression functionCallArgumentClause? trailing_closure    # function_call_expression_with_closure
- | postfixExpression DOT PureDecimalDigits                           # explicitMemberExpression1
- | postfixExpression DOT declarationIdentifier genericArgumentClause?          # explicitMemberExpression2
- | postfixExpression DOT declarationIdentifier LPAREN argumentNameList RPAREN            # explicitMemberExpression3
-// This does't exist in the swift grammar, but this valid swift statement fails without it
-// self.addTarget(self, action: #selector(nameOfAction(_:)))
- | postfixExpression LPAREN argumentNameList RPAREN                           # explicitMemberExpression4
- | postfixExpression LBRACK expressions RBRACK                          # subscriptExpression
-// ! is a postfix operator already
-// | postfixExpression '!'                                            # forced_value_expression
-// ? is a postfix operator already
-// | postfixExpression QUESTION                                           # optional_chaining_expression
- ;
+suffixExpression
+    : functionCallSuffix
+    | explicitMemberSuffix
+    | subscriptSuffix
+    ;
+
+explicitMemberSuffix:
+	DOT (
+		PURE_DECIMAL_DIGITS
+		| identifier (
+			genericArgumentClause
+			| LPAREN argumentNames RPAREN
+		)?
+	);
+
+subscriptSuffix: LBRACK functionCallArguments RBRACK;
 
 // GRAMMAR OF A FUNCTION CALL EXPRESSION
-
-// See the optimization in postfixExpression. It should be doing exactly this:
-//
-// function-call-expression → postfix-expression­ function-call-argument-clause­
-// function-call-expression → postfix-expression­ function-call-argument-clause­?­ trailing-closure
+functionCallSuffix
+    : functionCallArgumentClause? trailingClosures
+    | functionCallArgumentClause
+	;
 
 functionCallArgumentClause
  : LPAREN RPAREN
- | LPAREN function_call_argument_list RPAREN
+ | LPAREN functionCallArguments RPAREN
  ;
 
-function_call_argument_list : function_call_argument ( COMMA function_call_argument )* ;
+functionCallArguments : functionCallArgument ( COMMA functionCallArgument )* ;
 
-function_call_argument
+functionCallArgument
  : expression
  | labelIdentifier COLON expression
  | operator
  | labelIdentifier COLON operator
  ;
 
-//trailing_closure : closure_expression ;
+trailingClosures:
+	closureExpression labeledTrailingClosures?;
+
+labeledTrailingClosures: labeledTrailingClosure+;
+
+labeledTrailingClosure: identifier COLON closureExpression;
 
 // GRAMMAR OF AN EXPLICIT MEMBER EXPRESSION
-argumentNameList : argument_name (argument_name)* ;
-argument_name : labelIdentifier COLON ;
+argumentNames : argumentName (argumentName)* ;
+argumentName : labelIdentifier COLON ;
 
 // GRAMMAR OF A TYPE
 type_
@@ -598,14 +598,14 @@ type_
  ;
 
 basicType
- : basicType attributes? EOL* OR EOL* basicType attributes? #Union
+ : basicType attributes? EOL* PIPE EOL* basicType attributes? #Union
  | basicType attributes? EOL* AND EOL* basicType attributes? #Intersection
  | primeType #Prime
  ;
 
 primeType
  : arrayType
- | dictionaryType
+ | mapType
  | tupleType
  | typeIdentifier
  ;
@@ -628,20 +628,7 @@ tupleTypeElement : ( declarationIdentifier COLON )? type_ attributes? ;
 
 // GRAMMAR OF A FUNCTION TYPE
 functionType
- : functionTypeArgumentClause arrowOperator type_
- ;
- 
-functionTypeArgumentClause
- : LPAREN RPAREN
- | LPAREN functionTypeArguments range_operator? RPAREN
- ;
- 
-functionTypeArguments : functionTypeArgument (eov EOL* functionTypeArgument)* eov?
- ;
- 
-functionTypeArgument
- : labelIdentifier COLON type_ ELLIPSIS attributes?
- | labelIdentifier typeAnnotation
+ : functionParameterClause arrowOperator type_
  ;
 
 // GRAMMAR OF AN ARRAY TYPE
@@ -650,7 +637,7 @@ arrayType : LBRACK type_ attributes? RBRACK ;
 
 // GRAMMAR OF A DICTIONARY TYPE
 
-dictionaryType : LCURLY type_ attributes? COLON type_  attributes? RCURLY ;
+mapType : LCURLY type_ attributes? COLON type_  attributes? RCURLY ;
 
 // GRAMMAR OF AN OPTIONAL TYPE
 
@@ -675,16 +662,16 @@ typeInheritance : primeType attributes? ;
 // var x = 1; funx x() {}; class x {}
 declarationIdentifier
      : VALUE_IDENTIFIER
-     | keyword_as_identifier_in_declarations
+     | keywordAsIdentifierInDeclarations
      ;
 
 // external, internal argument name
 labelIdentifier
      : VALUE_IDENTIFIER
-     | keyword_as_identifier_in_labels
+     | keywordAsIdentifierInLabels
      ;
 
-path_identifier : declarationIdentifier ( DOT declarationIdentifier)*;
+pathIdentifier : declarationIdentifier ( DOT declarationIdentifier)*;
 
 identifier : VALUE_IDENTIFIER | IMPLICIT_PARAMETER_NAME
  ;
@@ -714,76 +701,68 @@ identifier : VALUE_IDENTIFIER | IMPLICIT_PARAMETER_NAME
  // In source code of swift there are multiple cases of error diag::keyword_cant_be_identifier.
  // Maybe it is not even a single error when keyword can't be identifier.
  //
-keyword_as_identifier_in_declarations
-: KEYWORD_AND
-| KEYWORD_AS
-| 'attribute'
-| 'break'
-| 'const'
-| 'continue'
-| 'else'
-| 'enum'
-//| 'false'
-| 'for'
-| 'func'
-| 'if'
-| 'import'
-| 'in'
-| 'interface'
-| KEYWORD_IS
-| 'match'
-| 'not'
-| 'null'
-| 'or'
-| 'package'
-| 'repeat'
-| 'return'
-| 'struct'
-//| 'true'
-| 'type'
-| 'var'
-| 'while'
-| 'xor'
-;
+keywordAsIdentifierInDeclarations
+    : KEYWORD_AND
+    | KEYWORD_AS
+    | KEYWORD_ATTRIBUTE
+    | 'break'
+    | 'const'
+    | 'enum'
+    | 'func'
+    | 'if'
+    | 'import'
+    | 'in'
+    | 'interface'
+    | KEYWORD_IS
+    | 'match'
+    | 'not'
+    | KEYWORD_NULL
+    | 'package'
+    | 'repeat'
+    | 'return'
+    | 'struct'
+    | 'type'
+    | 'var'
+    | 'xor'
+    ;
 
-// func x(Any: Any)
-keyword_as_identifier_in_labels
-: 'and'
-| KEYWORD_AS
-| 'attribute'
-| 'break'
-| 'const'
-| 'continue'
-| 'else'
-| 'enum'
-| 'false'
-| 'for'
-| 'func'
-| 'if'
-| 'import'
-| 'in'
-| 'interface'
-| KEYWORD_IS
-| 'match'
-| 'not'
-| 'null'
-| 'or'
-| 'package'
-| 'repeat'
-| 'return'
-| 'struct'
-| 'true'
-| 'type'
-| 'var'
-| 'while'
-| 'xor'
- ;
+keywordAsIdentifierInLabels
+    : 'and'
+    | KEYWORD_AS
+    | 'attribute'
+    | 'break'
+    | 'const'
+    | 'continue'
+    | 'else'
+    | 'enum'
+    | 'false'
+    | 'for'
+    | 'func'
+    | 'if'
+    | 'import'
+    | 'in'
+    | 'interface'
+    | KEYWORD_IS
+    | 'match'
+    | 'not'
+    | 'null'
+    | 'or'
+    | 'package'
+    | 'repeat'
+    | 'return'
+    | 'struct'
+    | 'true'
+    | 'type'
+    | 'var'
+    | 'while'
+    | 'xor'
+    ;
 
 // GRAMMAR A DOCUMENT_COMMENT
 
-document : LineDocument (EOL LineDocument)* EOL;
+document : LINE_DOCUMENT (EOL LINE_DOCUMENT)* EOL;
 
-followingDocument : FollowingLineDocument (EOL FollowingLineDocument)*;
+followingDocument : FOLLOWING_LINE_DOCUMENT (EOL FOLLOWING_LINE_DOCUMENT)*;
 
 // GRAMMAR OF OPERATORS
 
@@ -828,12 +807,10 @@ From doc on operators:
  into two or more tokens. The remainder is treated the same way and may
  be split again. As a result, there is no need to use whitespace to
  disambiguate between the closing > characters in constructs like
- Dictionary<String, Array<Int>>. In this example, the closing >
+ Map<String, Array<Int>>. In this example, the closing >
  characters are not treated as a single token that may then be
  misinterpreted as a bit shift >> operator.
 */
-
-//operator : binaryOperator | prefixOperator | postfixOperator ;
 
 /* these following tokens are also a binaryOperator so much come first as special case */
 
@@ -842,15 +819,11 @@ assignmentOperator : EQUAL ;
 /** Need to separate this out from prefixOperator as it's referenced in numericLiteral
  *  as specifically a negation prefix op.
  */
-negatePrefixOperator : SUB;
+negatePrefixOperator : MINUS;
 
-compilation_condition_AND : AND AND ;
-compilation_condition_OR  : OR OR ;
-compilation_condition_GE  : GT EQUAL ;
-arrowOperator	:  RIGHT_ARROW;
-range_operator	:  DOT_DOT ;
-half_open_range_operator : DOT_DOT_LT;
-same_type_equals:  EQUAL EQUAL ;
+arrowOperator	      : RIGHT_ARROW;
+rangeOperator	      : DOT_DOT ;
+halfOpenRangeOperator : DOT_DOT_LT;
 
 /**
  "If an operator has whitespace around both sides or around neither side,
@@ -858,8 +831,8 @@ same_type_equals:  EQUAL EQUAL ;
   and a + b is treated as a binary operator."
 */
 binaryOperator
-    : range_operator
-    | half_open_range_operator
+    : rangeOperator
+    | halfOpenRangeOperator
     | operator;
 
 /**
@@ -879,12 +852,17 @@ prefixOperator :  operator ;
  the ++ operator in a++.b is treated as a postfix unary operator (a++ .b
  rather than a ++ .b)."
  */
-postfixOperator :  operator ;
+postfixOperator: PLUS_PLUS | MINUS_MINUS;
 
 operator
-  : operator_head     (operator_character)*
+  : operator_head     operator_characters?
   | dot_operator_head (dot_operator_character)*
   ;
+
+operator_characters: (
+		//{_input.get(_input.index()-1).getType()!=WS}? operator_character
+		{p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS}? operator_character
+)+;
 
 operator_character
   : operator_head
@@ -900,7 +878,6 @@ dot_operator_head 		: DOT ;
 dot_operator_character  : DOT | operator_character ;
 
 // GRAMMAR OF A LITERAL
-
 literal : numericLiteral | stringLiteral | boolLiteral | nullLiteral  ;
 
 boolLiteral : KEYWORD_TRUE | KEYWORD_FALSE ;
@@ -909,24 +886,22 @@ nullLiteral : KEYWORD_NULL ;
 
 numericLiteral
  : negatePrefixOperator? integerLiteral
- | negatePrefixOperator? FloatLiteral
+ | negatePrefixOperator? FLOAT_LITERAL
  ;
 
 // GRAMMAR OF AN INTEGER LITERAL
-
 integerLiteral
- : BinaryLiteral
- | OctalLiteral
- | DecimalLiteral
- | PureDecimalDigits
- | HexadecimalLiteral
+ : BINARY_LITERAL
+ | OCTAL_LITERAL
+ | DECIMAL_LITERAL
+ | PURE_DECIMAL_DIGITS
+ | HEXADECIMAL_LITERAL
  ;
 
 // GRAMMAR OF A STRING LITERAL
-
 stringLiteral
-  : StaticStringLiteral
-  | InterpolatedStringLiteral
+  : STATIC_STRING_LITERAL
+  | INTERPOLATED_STRING_LITERAL
   ;
 
 eos : SEMI | EOL;

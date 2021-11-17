@@ -19,8 +19,8 @@ struct attribute_arguments_state : array_term_state {
     }
 };
 
-struct group_attribute_state : dictionary_term_state {
-    group_attribute_state() : dictionary_term_state(kAttributeGroup, kAttribute) {
+struct group_attribute_state : map_term_state {
+    group_attribute_state() : map_term_state(kAttributeGroup, kAttribute) {
     }
 };
 

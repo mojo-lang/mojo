@@ -50,21 +50,25 @@ COLON  	: ':' ;
 SEMI   	: ';' ;
 LT 		: '<' ;
 GT 		: '>' ;
-UNDERSCORE : '_' ;
 BANG 	: '!' ;
 QUESTION: '?' ;
 AT 		: '@' ;
 AND 	: '&' ;
-SUB 	: '-' ;
+MINUS 	: '-' ;
 EQUAL 	: '=' ;
-OR 		: '|' ;
-DIV 	: '/' ;
-ADD 	: '+' ;
-MUL 	: '*' ;
-MOD 	: '%' ;
+PIPE 	: '|' ;
+SLASH 	: '/' ;
+PLUS 	: '+' ;
+STAR 	: '*' ;
+PERCENT : '%' ;
 CARET 	: '^' ;
 TILDE 	: '~' ;
 DOLLER  : '$' ;
+BACKTICK: '`' ;
+UNDERSCORE : '_' ;
+
+PLUS_PLUS   : '+''+';
+MINUS_MINUS : '-''-';
 
 COLON_EQUAL : ':' '=';
 
@@ -75,6 +79,14 @@ DOT_DOT    : '.' '.';
 DOT_DOT_LT : '.' '.' '<';
 
 ELLIPSIS : '.' '.' '.';
+
+GRAPH_RIGHT_PATH : ')' '-' '-' '>' '(';
+GRAPH_LEFT_PATH : ')' '<' '-' '-' '(';
+GRAPH_PATH: ')' '-' '-' '(';
+GRAPH_CONSTRAINT_PATH_LEFT: ')' '-' '[';
+GRAPH_CONSTRAINT_PATH_LEFT_ARROW: ')' '<' '-' '[';
+GRAPH_CONSTRAINT_PATH_RIGHT: ']' '-' '(';
+GRAPH_CONSTRAINT_PATH_RIGHT_ARROW: ']' '-' '>' '(';
 
 TYPE_IDENTIFIER
  : [A-Z][a-zA-Z0-9]*
@@ -122,6 +134,112 @@ OPERATOR_HEAD_OTHER // valid operator chars not used by Swift itself
   | [\u3008-\u3030]
   ;
 
+IMPLICIT_PARAMETER_NAME : DOLLER PURE_DECIMAL_DIGITS ;
+
+BINARY_LITERAL : '0b' BINARY_DIGIT BINARYLITERAL_CHARACTERS? ;
+fragment BINARY_DIGIT : [01] ;
+fragment BINARY_LITERAL_CHARACTER : BINARY_DIGIT | '_'  ;
+fragment BINARYLITERAL_CHARACTERS : BINARY_LITERAL_CHARACTER+ ;
+
+OCTAL_LITERAL : '0o' OCTAL_DIGIT OCTAL_LITERAL_CHARACTERS? ;
+fragment OCTAL_DIGIT : [0-7] ;
+fragment OCTAL_LITERAL_CHARACTER : OCTAL_DIGIT | '_'  ;
+fragment OCTAL_LITERAL_CHARACTERS : OCTAL_LITERAL_CHARACTER+ ;
+
+DECIMAL_LITERAL		: [0-9] [0-9_]* ;
+PURE_DECIMAL_DIGITS   : [0-9]+ ;
+fragment DECIMAL_DIGIT : [0-9] ;
+fragment DECIMAL_LITERAL_CHARACTER : DECIMAL_DIGIT | '_'  ;
+fragment DECIMAL_LITERAL_CHARACTERS : DECIMAL_LITERAL_CHARACTER+ ;
+
+HEXADECIMAL_LITERAL : '0x' HEXADECIMAL_DIGIT HEXADECIMAL_LITERAL_CHARACTERS? ;
+fragment HEXADECIMAL_DIGIT : [0-9a-fA-F] ;
+fragment HEXADECIMAL_LITERAL_CHARACTER : HEXADECIMAL_DIGIT | '_'  ;
+fragment HEXADECIMAL_LITERAL_CHARACTERS : HEXADECIMAL_LITERAL_CHARACTER+ ;
+
+// GRAMMAR OF A FLOATING_POINT LITERAL
+
+FLOAT_LITERAL
+ : DECIMAL_LITERAL DECIMAL_FRACTION? DECIMAL_EXPONENT?
+ | HEXADECIMAL_LITERAL HEXADECIMAL_FRACTION? HEXADECIMAL_EXPONENT
+ ;
+
+fragment DECIMAL_FRACTION : '.' DECIMAL_LITERAL ;
+fragment DECIMAL_EXPONENT : FLOATING_POINT_E SIGN? DECIMAL_LITERAL ;
+fragment HEXADECIMAL_FRACTION : '.' HEXADECIMAL_DIGIT HEXADECIMAL_LITERAL_CHARACTERS? ;
+fragment HEXADECIMAL_EXPONENT : FLOATING_POINT_P SIGN? DECIMAL_LITERAL ;
+fragment FLOATING_POINT_E : [eE] ;
+fragment FLOATING_POINT_P : [pP] ;
+fragment SIGN : [+\-] ;
+
+STATIC_STRING_LITERAL
+    : '"' DOUBLE_QUOTED_TEXT? '"'
+    | '\'' SINGLE_QUOTED_TEXT? '\''
+    ;
+
+fragment DOUBLE_QUOTED_TEXT : DOUBLE_QUOTED_TEXT_ITEM+ ;
+fragment SINGLE_QUOTED_TEXT : SINGLE_QUOTED_TEXT_ITEM+ ;
+
+fragment
+DOUBLE_QUOTED_TEXT_ITEM
+  : ESCAPED_CHARACTER
+  | ~["\n\r\\]
+  ;
+
+fragment
+SINGLE_QUOTED_TEXT_ITEM
+  : ESCAPED_CHARACTER
+  | ~['\n\r\\]
+  ;
+
+fragment
+ESCAPED_CHARACTER
+  : '\\' [0\\tnr"']
+  | '\\x' HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT
+  | '\\u' HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT
+  | '\\u' '{' HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT '}'
+  | '\\u' '{' HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT '}'
+  ;
+
+INTERPOLATED_STRING_LITERAL
+  : '"' DOUBLE_INTERPOLATED_TEXT_ITEM* '"'
+  | '\'' SINGLE_INTERPOLATED_TEXT_ITEM* '\''
+  ;
+
+fragment
+DOUBLE_INTERPOLATED_TEXT_ITEM
+  : '\\{' (INTERPOLATED_STRING_LITERAL | DOUBLE_INTERPOLATED_TEXT_ITEM)+ '}' // nested strings allowed
+  | DOUBLE_QUOTED_TEXT_ITEM
+  ;
+
+fragment
+SINGLE_INTERPOLATED_TEXT_ITEM
+  : '\\{' (INTERPOLATED_STRING_LITERAL | SINGLE_INTERPOLATED_TEXT_ITEM)+ '}' // nested strings allowed
+  | SINGLE_QUOTED_TEXT_ITEM
+  ;
+
+WS
+  : [\u0020\u0009\u000B\u000C\u0000]
+  -> channel(HIDDEN) ;
+
+DELIMITED_COMMENT
+  : '/*' (DELIMITED_COMMENT|.)*? '*/'
+  -> channel(HIDDEN) ; // nesting comments allowed
+
+LINE_COMMENT
+  : '//' (~[/<\u000A\u000D] ~[\u000A\u000D]*)?
+  -> channel(HIDDEN) ;
+
+LINE_COMMENT_FOR_DOCUMENT
+  : '////' ~[\u000A\u000D]*
+  -> channel(HIDDEN) ;
+
+EOL   : '\u000A' | '\u000D' '\u000A'; // \r\n
+
+LINE_DOCUMENT : '///' (~[/<\u000A\u000D] ~[\u000A\u000D]*)?;
+FOLLOWING_LINE_DOCUMENT : '//<' ~[\u000A\u000D]*;
+
+//fragment
 OPERATOR_FOLLOWING_CHARACTER
   : [\u0300-\u036F]
   | [\u1DC0-\u1DFF]
@@ -130,107 +248,3 @@ OPERATOR_FOLLOWING_CHARACTER
   | [\uFE20-\uFE2F]
   //| [\uE0100-\uE01EF]  ANTLR can't do >16bit char
   ;
-
-IMPLICIT_PARAMETER_NAME : DOLLER PureDecimalDigits ;
-
-BinaryLiteral : '0b' Binary_digit BinaryLiteral_characters? ;
-fragment Binary_digit : [01] ;
-fragment BinaryLiteral_character : Binary_digit | '_'  ;
-fragment BinaryLiteral_characters : BinaryLiteral_character+ ;
-
-OctalLiteral : '0o' Octal_digit OctalLiteral_characters? ;
-fragment Octal_digit : [0-7] ;
-fragment OctalLiteral_character : Octal_digit | '_'  ;
-fragment OctalLiteral_characters : OctalLiteral_character+ ;
-
-DecimalLiteral		: [0-9] [0-9_]* ;
-PureDecimalDigits   : [0-9]+ ;
-fragment Decimal_digit : [0-9] ;
-fragment Decimal_literal_character : Decimal_digit | '_'  ;
-fragment Decimal_literal_characters : Decimal_literal_character+ ;
-
-HexadecimalLiteral : '0x' Hexadecimal_digit Hexadecimal_literal_characters? ;
-fragment Hexadecimal_digit : [0-9a-fA-F] ;
-fragment Hexadecimal_literal_character : Hexadecimal_digit | '_'  ;
-fragment Hexadecimal_literal_characters : Hexadecimal_literal_character+ ;
-
-// GRAMMAR OF A FLOATING_POINT LITERAL
-
-FloatLiteral
- : DecimalLiteral Decimal_fraction? Decimal_exponent?
- | HexadecimalLiteral Hexadecimal_fraction? Hexadecimal_exponent
- ;
-
-fragment Decimal_fraction : '.' DecimalLiteral ;
-fragment Decimal_exponent : Floating_point_e Sign? DecimalLiteral ;
-fragment Hexadecimal_fraction : '.' Hexadecimal_digit Hexadecimal_literal_characters? ;
-fragment Hexadecimal_exponent : Floating_point_p Sign? DecimalLiteral ;
-fragment Floating_point_e : [eE] ;
-fragment Floating_point_p : [pP] ;
-fragment Sign : [+\-] ;
-
-
-StaticStringLiteral
-    : '"' Double_quoted_text? '"'
-    | '\'' Single_quoted_text? '\''
-    ;
-
-fragment Double_quoted_text : Double_quoted_text_item+ ;
-fragment Single_quoted_text : Single_quoted_text_item+ ;
-
-fragment Double_quoted_text_item
-  : Escaped_character
-  | ~["\n\r\\]
-  ;
-
-fragment Single_quoted_text_item
-  : Escaped_character
-  | ~['\n\r\\]
-  ;
-
-fragment
-Escaped_character
-  : '\\' [0\\tnr"']
-  | '\\x' Hexadecimal_digit Hexadecimal_digit
-  | '\\u' Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit
-  | '\\u' '{' Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit '}'
-  | '\\u' '{' Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit Hexadecimal_digit '}'
-  ;
-
-InterpolatedStringLiteral
-  : '"' Double_interpolated_text_item* '"'
-  | '\'' Single_interpolated_text_item* '\''
-  ;
-
-fragment
-Double_interpolated_text_item
-  : '\\{' (InterpolatedStringLiteral | Double_interpolated_text_item)+ '}' // nested strings allowed
-  | Double_quoted_text_item
-  ;
-
-fragment
-Single_interpolated_text_item
-  : '\\{' (InterpolatedStringLiteral | Single_interpolated_text_item)+ '}' // nested strings allowed
-  | Single_quoted_text_item
-  ;
-
-WS
-  : [\u0020\u0009\u000B\u000C\u0000]
-  -> skip ;
-
-DelimitedComment
-  : '/*' (DelimitedComment|.)*? '*/'
-  -> channel(HIDDEN) ; // nesting comments allowed
-
-LineComment
-  : '//' (~[/<\u000A\u000D] ~[\u000A\u000D]*)?
-  -> channel(HIDDEN) ;
-
-LineCommentForDocument
-  : '////' ~[\u000A\u000D]*
-  -> channel(HIDDEN) ;
-
-EOL   : '\u000A' | '\u000D' '\u000A'; // \r\n
-
-LineDocument : '///' (~[/<\u000A\u000D] ~[\u000A\u000D]*)?;
-FollowingLineDocument : '//<' ~[\u000A\u000D]*;

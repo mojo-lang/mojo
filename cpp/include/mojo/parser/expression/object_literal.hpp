@@ -8,8 +8,8 @@ namespace mojo {
 namespace parser {
 namespace expression {
 
-struct object_state : dictionary_term_state {
-    object_state() : dictionary_term_state("object_literal", "object_field") {
+struct object_state : map_term_state {
+    object_state() : map_term_state("object_literal", "object_field") {
     }
 };
 

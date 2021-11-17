@@ -13,9 +13,14 @@ type U<T1, T2> = Union<T1, T2, String>
 
 type V = U<String, Int>
 
+type IntArray = [Int64]
+
 type Foo {
     v: V @1
+
     r: R<DateTime> @2
 
     rv: R<V> @3
+
+    arrays: [IntArray] @4
 }

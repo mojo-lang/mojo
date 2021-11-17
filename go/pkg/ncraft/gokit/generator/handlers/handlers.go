@@ -4,14 +4,15 @@ package handlers
 
 import (
 	"bytes"
-	"github.com/iancoleman/strcase"
-	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
-	"github.com/pkg/errors"
 	"go/ast"
 	"go/parser"
 	"go/printer"
 	"go/token"
 	"io"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
+	"github.com/pkg/errors"
 
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers/templates"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"

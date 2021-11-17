@@ -34,26 +34,49 @@ func (codec *{{CompactFullName .FullName}}Codec) Decode(ptr unsafe.Pointer, iter
 	any := iter.ReadAny()
     {{ToLowerCamel .Name}} := (*{{.FullName}})(ptr)
     switch any.ValueType() {
+        {{if .HasBoolField}}case jsoniter.BoolValue:
+        {{- end}}
+        {{if .HasNumberField}}case jsoniter.NumberValue:
+        {{- end}}
+        {{if .HasStringField}}case jsoniter.StringValue:
+        {{- end}}
+        {{if .HasArrayField}}case jsoniter.ArrayValue:
+        {{- end}}
+        {{if .HasObjectField}}case jsoniter.ObjectValue:
+        {{if .Discriminator}}
+        t := any.Get("{{.Discriminator}}").ToString()
+        switch t {
+        {{range $i := .ObjectFields}}
+        case "{{$i.Name}}":
+            val := &{{$i.Format}}{}
+            any.ToVal(val)
+            {{ToLowerCamel $.Name}}.{{$.FullName}} = &{{$.FullName}}_{{$i.Format}}{ {{$i.Format}}: val}
+        {{end}}
+        }
+        {{else}}
+        {{end}}
+        {{- end}}
     }
-    //if any.ValueType() == jsoniter.ArrayValue {
-    //    any.ToVal(&{{ToLowerCamel .Name}}.Values)
-    //}
 }
 
 func (codec *{{CompactFullName .FullName}}Codec) IsEmpty(ptr unsafe.Pointer) bool {
 	{{ToLowerCamel .Name}} := (*{{.FullName}})(ptr)
-	return {{ToLowerCamel .Name}} == nil || len({{ToLowerCamel .Name}}.Values) == 0
+	return 	{{ToLowerCamel .Name}} == nil || {{ToLowerCamel .Name}}.{{.FullName}} == nil
 }
 
 func (codec *{{CompactFullName .FullName}}Codec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
 	{{ToLowerCamel .Name}} := (*{{.FullName}})(ptr)
 
-    stream.WriteArrayStart()
-    for i, v := range {{ToLowerCamel .Name}}.Values {
-        if i > 0 {
-            stream.WriteMore()
-        }
-        stream.WriteVal(v)
+    switch x := {{ToLowerCamel .Name}}.{{.FullName}}.(type) { {{range $i := .ObjectFields}}
+    case *{{$.FullName}}_{{$i.Name}}:
+        stream.WriteVal(x.{{$i.Name}}) {{end}} {{range $i := .ArrayFields}}
+    case *{{$.FullName}}_{{$i.Name}}:
+        stream.WriteVal(x.{{$i.Name}}) {{ end}} {{range $i := .StringFields}}
+    case *{{$.FullName}}_{{$i.Name}}:
+        stream.WriteVal(x.{{$i.Name}}) {{ end}} {{range $i := .NumberFields}}
+    case *{{$.FullName}}_{{$i.Name}}:
+       stream.WriteVal(x.{{$i.Name}}) {{ end}} {{if .HasBoolField}}
+    case *{{$.FullName}}_{{$i.Name}}:
+           stream.WriteVal(x.{{$i.Name}}) {{end}}
     }
-    stream.WriteArrayEnd()
 }

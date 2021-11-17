@@ -68,7 +68,7 @@ func compileMessage(ctx *Context, decl *lang.StructDecl) (*types.Message, error)
 				fieldType.Name = t.GenericArguments[0].Name
 				fieldType.ArrayType = true
 			}
-		case "mojo.core.Dictionary":
+		case "mojo.core.Map":
 		default:
 			fieldType.Name = t.Name
 		}
@@ -102,8 +102,8 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, service *types.Servi
 	}
 
 	registerType := func(t *lang.NominalType) {
-		if !t.IsScalar() && !t.IsDictionaryType() && !t.IsArrayType() && !t.IsUnionType() {
-			RegisterMessagePackage(t.Name, GetGoPackage(t.Package))
+		if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() {
+			RegisterMessagePackage(t.Name, GetGoPackage(t.PackageName))
 
 			if len(t.GenericArguments) == 0 {
 				if t.TypeDeclaration != nil && t.TypeDeclaration.GetEnumDecl() != nil {
@@ -112,7 +112,7 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, service *types.Servi
 					service.ImportStructs = append(service.ImportStructs, t.Name)
 				}
 
-				if path, ok := ctx.GoPackageImports[t.Package]; ok {
+				if path, ok := ctx.GoPackageImports[t.PackageName]; ok {
 					service.ImportPaths = append(service.ImportPaths, path)
 				}
 			}
@@ -121,7 +121,7 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, service *types.Servi
 
 	for _, field := range r.Type.Fields {
 		t := field.Type
-		if t.IsDictionaryType() {
+		if t.IsMapType() {
 			for _, gt := range t.GenericArguments {
 				registerType(gt)
 			}
@@ -148,7 +148,7 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, service *types.Servi
 			Name:           "Null",
 		}
 		result = &lang.NominalType{
-			Package:         "mojo.core",
+			PackageName:     "mojo.core",
 			Name:            "Null",
 			TypeDeclaration: lang.NewStructTypeDeclaration(decl),
 		}
@@ -203,7 +203,7 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, service *types.Servi
 	}
 
 	for _, attribute := range method.Attributes {
-		if attribute.Package != "http" {
+		if attribute.PackageName != "http" {
 			continue
 		}
 
@@ -365,8 +365,7 @@ func compileBindingField(schema *openapi.Schema, index map[string]*openapi.Schem
 		if schema.AdditionalProperties != nil { // map
 			field.Type = &types.FieldType{
 				Map: &types.Map{
-					KeyType:
-					&types.FieldType{
+					KeyType: &types.FieldType{
 						Name: "string",
 					},
 					ValueType: compileBindingField(schema.GetAdditionalProperties().GetSchema(), index).GetType(),

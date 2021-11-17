@@ -3,6 +3,7 @@ package document
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/document/compiler"
+	"strings"
 )
 import "github.com/mojo-lang/mojo/go/pkg/openapi"
 
@@ -27,7 +28,11 @@ func NewCompiler(path string, pkg *lang.Package, apis *openapi.OpenAPIs) *Compil
 func (c *Compiler) Compile() (Documents, error) {
 	apiCompiler := &compiler.ApiCompiler{}
 	for name, api := range c.OpenAPIs.APIs {
-		document, err := apiCompiler.Compile(api)
+		if !strings.HasPrefix(name, c.Package.FullName) {
+			continue
+		}
+
+		document, err := apiCompiler.Compile(c.Package, api)
 		if err != nil {
 			return nil, err
 		}
@@ -43,7 +48,12 @@ func (c *Compiler) Compile() (Documents, error) {
 			continue
 		}
 
-		document, err := schemaCompiler.Compile(schema)
+		if !strings.HasPrefix(name, c.Package.FullName) {
+			continue
+		}
+
+		decl := c.Package.Scope.GetIdentifier(name).GetDeclaration()
+		document, err := schemaCompiler.Compile(decl, schema)
 		if err != nil {
 			return nil, err
 		}

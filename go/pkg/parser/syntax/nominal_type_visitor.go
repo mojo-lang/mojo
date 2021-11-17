@@ -54,7 +54,7 @@ func (n *NominalTypeVisitor) VisitTypeAnnotation(ctx *TypeAnnotationContext) int
 	typeCtx := ctx.Type_()
 	if typeCtx != nil {
 		if nominalType, ok := typeCtx.Accept(n).(*lang.NominalType); ok {
-			nominalType.Attributes = GetAttributes(ctx.Attributes())
+			nominalType.Attributes = append(nominalType.Attributes, GetAttributes(ctx.Attributes())...)
 			return nominalType
 		}
 	}
@@ -77,7 +77,20 @@ func (n *NominalTypeVisitor) VisitType_(ctx *Type_Context) interface{} {
 	if optional != nil {
 		nominalType := GetType(ctx.Type_())
 		if nominalType != nil {
+			attribute := lang.NewImplicitBoolAttribute("mojo.core", "optional")
+			nominalType.Attributes = append(nominalType.Attributes, attribute)
 		}
+		return nominalType
+	}
+
+	required := ctx.BANG()
+	if required != nil {
+		nominalType := GetType(ctx.Type_())
+		if nominalType != nil {
+			attribute := lang.NewImplicitBoolAttribute("mojo.core", "required")
+			nominalType.Attributes = append(nominalType.Attributes, attribute)
+		}
+		return nominalType
 	}
 
 	return nil
@@ -110,7 +123,7 @@ func (n *NominalTypeVisitor) VisitArrayType(ctx *ArrayTypeContext) interface{} {
 			Name: "Array",
 			GenericArguments: []*lang.NominalType{
 				{
-					Package:          nominalType.Package,
+					PackageName:      nominalType.PackageName,
 					Name:             nominalType.Name,
 					GenericArguments: nominalType.GenericArguments,
 					Attributes:       nominalType.Attributes,
@@ -122,7 +135,7 @@ func (n *NominalTypeVisitor) VisitArrayType(ctx *ArrayTypeContext) interface{} {
 	return nil
 }
 
-func (n *NominalTypeVisitor) VisitDictionaryType(ctx *DictionaryTypeContext) interface{} {
+func (n *NominalTypeVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
 	keyTypeCtx := ctx.Type_(0)
 	if keyTypeCtx != nil {
 		keyType := keyTypeCtx.Accept(n).(*lang.NominalType)
@@ -132,7 +145,7 @@ func (n *NominalTypeVisitor) VisitDictionaryType(ctx *DictionaryTypeContext) int
 			valueType := valueTypeCtx.Accept(n).(*lang.NominalType)
 
 			return &lang.NominalType{
-				Name: "Dictionary",
+				Name: "Map",
 				GenericArguments: []*lang.NominalType{
 					{
 						Name:             keyType.Name,
@@ -258,7 +271,7 @@ func (n *NominalTypeVisitor) VisitPrimeType(ctx *PrimeTypeContext) interface{} {
 		return arrayTypeCtx.Accept(n)
 	}
 
-	dictTypeCtx := ctx.DictionaryType()
+	dictTypeCtx := ctx.MapType()
 	if dictTypeCtx != nil {
 		return dictTypeCtx.Accept(n)
 	}

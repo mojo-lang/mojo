@@ -1552,13 +1552,13 @@ public class MojoBaseListener implements MojoListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDictionary_type(MojoParser.Dictionary_typeContext ctx) { }
+	@Override public void enterMap_type(MojoParser.Map_typeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDictionary_type(MojoParser.Dictionary_typeContext ctx) { }
+	@Override public void exitMap_type(MojoParser.Map_typeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

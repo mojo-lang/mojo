@@ -2,8 +2,7 @@ package compiler
 
 type Data struct {
 	BoxedArrays       []*BoxedArray
-	BoxedDictionaries []*BoxedDictionary
-	BoxedStrings      []*BoxedString
+	BoxedDictionaries []*BoxedMap
 	BoxedUnions       []*BoxedUnion
 	Enums             []*Enum
 	GoMod             *GoMod

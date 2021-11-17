@@ -16,7 +16,7 @@ import (
 )
 
 var _ = compiler.ArrayPlugin{}
-var _ = compiler.DictionaryPlugin{}
+var _ = compiler.MapPlugin{}
 var _ = compiler.TuplePlugin{}
 var _ = compiler.UnionPlugin{}
 
@@ -189,7 +189,7 @@ func getOrganizationPrefix(pkg *lang.Package) string {
 
 func (c *Compiler) compileImport(file *lang.SourceFile, descriptor *desc.FileDescriptor) error {
 	for _, dependency := range file.ResolvedIdentifiers {
-		fileName := dependency.SourceFile
+		fileName := dependency.SourceFileName
 		if strings.HasSuffix(fileName, ".mojo") {
 			fileName = strings.TrimSuffix(fileName, "mojo") + "proto"
 		} else {

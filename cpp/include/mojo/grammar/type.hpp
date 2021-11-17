@@ -10,7 +10,7 @@ namespace grammar {
 
 struct union_type;
 struct array_type;
-struct dictionary_type;
+struct map_type;
 struct tuple_type;
 struct function_type;
 struct simplified_one_parameter_function_type;
@@ -18,7 +18,7 @@ struct simplified_one_parameter_function_type;
 struct type_identifier;
 
 struct primary_type
-    : pegtl::sor<array_type, dictionary_type, tuple_type, type_identifier> {};
+    : pegtl::sor<array_type, map_type, tuple_type, type_identifier> {};
 
 /**
  * GRAMMAR OF A TYPE
@@ -131,16 +131,16 @@ struct array_type
 /**
  * GRAMMAR OF A DICTIONARY TYPE
  */
-struct dictionary_type_separator : pegtl::one<':'> {};
-struct dictionary_key
+struct map_type_separator : pegtl::one<':'> {};
+struct map_key
     : pegtl::seq<type_identifier, pre_pad_opt<attributes, pegtl::ascii::blank>> {};
-struct dictionary_type_content : pegtl::seq<dictionary_key,
+struct map_type_content : pegtl::seq<map_key,
                                             seps,
-                                            dictionary_type_separator,
+                                            map_type_separator,
                                             seps,
                                             type_annotation_clause> {};
-struct dictionary_type
-    : pegtl::seq<pegtl::one<'{'>, seps, dictionary_type_content, seps, pegtl::one<'}'>> {
+struct map_type
+    : pegtl::seq<pegtl::one<'{'>, seps, map_type_content, seps, pegtl::one<'}'>> {
 };
 
 /**

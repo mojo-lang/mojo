@@ -112,6 +112,6 @@ Union类型转换成json，由于json的类型较少，如果无法区分的情�
 3. `discriminator`字段添加方案
    1. 对于基本类型的处理方案
    2. 对于Array类型的处理方案
-   3. 对于Dictionary类型的处理方案
+   3. 对于Map类型的处理方案
 4. Union内嵌Union
 5. 

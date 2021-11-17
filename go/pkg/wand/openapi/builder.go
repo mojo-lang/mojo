@@ -33,7 +33,7 @@ func (b Builder) Build() (*OpenAPIs, error) {
 	if len(b.Output) > 0 {
 		output = b.Output
 	}
-	generator := openapi.NewGenerator(compiler.APIs, compiler.Components)
+	generator := openapi.NewGenerator(b.Package, compiler.APIs, compiler.Components)
 	err = generator.Generate(output)
 	if err != nil {
 		logs.Errorw("generate openapi failed", "pwd", b.PWD, "path", b.Path, "package", b.Package.FullName, "error", err.Error())

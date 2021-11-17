@@ -194,7 +194,7 @@ function-type-parameters = type / type "," function-type-parameters
 array-type = "[" type "]"
 
 ;; GRAMMAR OF A DICTIONARY TYPE
-dictionary-type = "{" type ":" type "}"
+map-type = "{" type ":" type "}"
 
 ;; GRAMMAR OF A TYPE INHERITANCE CLAUSE
 type-inheritance-clause = ":" type-inheritance-list

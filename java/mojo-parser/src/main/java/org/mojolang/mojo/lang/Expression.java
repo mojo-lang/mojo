@@ -127,14 +127,14 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 58: {
-            org.mojolang.mojo.lang.DictionaryLiteralExpr.Builder subBuilder = null;
+            org.mojolang.mojo.lang.MapLiteralExpr.Builder subBuilder = null;
             if (expressionCase_ == 7) {
-              subBuilder = ((org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_).toBuilder();
+              subBuilder = ((org.mojolang.mojo.lang.MapLiteralExpr) expression_).toBuilder();
             }
             expression_ =
-                input.readMessage(org.mojolang.mojo.lang.DictionaryLiteralExpr.parser(), extensionRegistry);
+                input.readMessage(org.mojolang.mojo.lang.MapLiteralExpr.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom((org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_);
+              subBuilder.mergeFrom((org.mojolang.mojo.lang.MapLiteralExpr) expression_);
               expression_ = subBuilder.buildPartial();
             }
             expressionCase_ = 7;
@@ -394,28 +394,28 @@ private static final long serialVersionUID = 0L;
 
   public static final int DICTIONARY_LITERAL_EXPR_FIELD_NUMBER = 7;
   /**
-   * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+   * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
    */
-  public boolean hasDictionaryLiteralExpr() {
+  public boolean hasMapLiteralExpr() {
     return expressionCase_ == 7;
   }
   /**
-   * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+   * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
    */
-  public org.mojolang.mojo.lang.DictionaryLiteralExpr getDictionaryLiteralExpr() {
+  public org.mojolang.mojo.lang.MapLiteralExpr getMapLiteralExpr() {
     if (expressionCase_ == 7) {
-       return (org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_;
+       return (org.mojolang.mojo.lang.MapLiteralExpr) expression_;
     }
-    return org.mojolang.mojo.lang.DictionaryLiteralExpr.getDefaultInstance();
+    return org.mojolang.mojo.lang.MapLiteralExpr.getDefaultInstance();
   }
   /**
-   * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+   * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
    */
-  public org.mojolang.mojo.lang.DictionaryLiteralExprOrBuilder getDictionaryLiteralExprOrBuilder() {
+  public org.mojolang.mojo.lang.MapLiteralExprOrBuilder getMapLiteralExprOrBuilder() {
     if (expressionCase_ == 7) {
-       return (org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_;
+       return (org.mojolang.mojo.lang.MapLiteralExpr) expression_;
     }
-    return org.mojolang.mojo.lang.DictionaryLiteralExpr.getDefaultInstance();
+    return org.mojolang.mojo.lang.MapLiteralExpr.getDefaultInstance();
   }
 
   public static final int OBJECT_LITERAL_EXPR_FIELD_NUMBER = 8;
@@ -477,7 +477,7 @@ private static final long serialVersionUID = 0L;
       output.writeMessage(6, (org.mojolang.mojo.lang.ArrayLiteralExpr) expression_);
     }
     if (expressionCase_ == 7) {
-      output.writeMessage(7, (org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_);
+      output.writeMessage(7, (org.mojolang.mojo.lang.MapLiteralExpr) expression_);
     }
     if (expressionCase_ == 8) {
       output.writeMessage(8, (org.mojolang.mojo.lang.ObjectLiteralExpr) expression_);
@@ -517,7 +517,7 @@ private static final long serialVersionUID = 0L;
     }
     if (expressionCase_ == 7) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(7, (org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_);
+        .computeMessageSize(7, (org.mojolang.mojo.lang.MapLiteralExpr) expression_);
     }
     if (expressionCase_ == 8) {
       size += com.google.protobuf.CodedOutputStream
@@ -568,8 +568,8 @@ private static final long serialVersionUID = 0L;
             .equals(other.getArrayLiteralExpr());
         break;
       case 7:
-        result = result && getDictionaryLiteralExpr()
-            .equals(other.getDictionaryLiteralExpr());
+        result = result && getMapLiteralExpr()
+            .equals(other.getMapLiteralExpr());
         break;
       case 8:
         result = result && getObjectLiteralExpr()
@@ -616,7 +616,7 @@ private static final long serialVersionUID = 0L;
         break;
       case 7:
         hash = (37 * hash) + DICTIONARY_LITERAL_EXPR_FIELD_NUMBER;
-        hash = (53 * hash) + getDictionaryLiteralExpr().hashCode();
+        hash = (53 * hash) + getMapLiteralExpr().hashCode();
         break;
       case 8:
         hash = (37 * hash) + OBJECT_LITERAL_EXPR_FIELD_NUMBER;
@@ -829,10 +829,10 @@ private static final long serialVersionUID = 0L;
         }
       }
       if (expressionCase_ == 7) {
-        if (dictionaryLiteralExprBuilder_ == null) {
+        if (mapLiteralExprBuilder_ == null) {
           result.expression_ = expression_;
         } else {
-          result.expression_ = dictionaryLiteralExprBuilder_.build();
+          result.expression_ = mapLiteralExprBuilder_.build();
         }
       }
       if (expressionCase_ == 8) {
@@ -917,7 +917,7 @@ private static final long serialVersionUID = 0L;
           break;
         }
         case DICTIONARY_LITERAL_EXPR: {
-          mergeDictionaryLiteralExpr(other.getDictionaryLiteralExpr());
+          mergeMapLiteralExpr(other.getMapLiteralExpr());
           break;
         }
         case OBJECT_LITERAL_EXPR: {
@@ -1789,67 +1789,67 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        org.mojolang.mojo.lang.DictionaryLiteralExpr, org.mojolang.mojo.lang.DictionaryLiteralExpr.Builder, org.mojolang.mojo.lang.DictionaryLiteralExprOrBuilder> dictionaryLiteralExprBuilder_;
+        org.mojolang.mojo.lang.MapLiteralExpr, org.mojolang.mojo.lang.MapLiteralExpr.Builder, org.mojolang.mojo.lang.MapLiteralExprOrBuilder> mapLiteralExprBuilder_;
     /**
-     * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+     * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
      */
-    public boolean hasDictionaryLiteralExpr() {
+    public boolean hasMapLiteralExpr() {
       return expressionCase_ == 7;
     }
     /**
-     * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+     * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
      */
-    public org.mojolang.mojo.lang.DictionaryLiteralExpr getDictionaryLiteralExpr() {
-      if (dictionaryLiteralExprBuilder_ == null) {
+    public org.mojolang.mojo.lang.MapLiteralExpr getMapLiteralExpr() {
+      if (mapLiteralExprBuilder_ == null) {
         if (expressionCase_ == 7) {
-          return (org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_;
+          return (org.mojolang.mojo.lang.MapLiteralExpr) expression_;
         }
-        return org.mojolang.mojo.lang.DictionaryLiteralExpr.getDefaultInstance();
+        return org.mojolang.mojo.lang.MapLiteralExpr.getDefaultInstance();
       } else {
         if (expressionCase_ == 7) {
-          return dictionaryLiteralExprBuilder_.getMessage();
+          return mapLiteralExprBuilder_.getMessage();
         }
-        return org.mojolang.mojo.lang.DictionaryLiteralExpr.getDefaultInstance();
+        return org.mojolang.mojo.lang.MapLiteralExpr.getDefaultInstance();
       }
     }
     /**
-     * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+     * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
      */
-    public Builder setDictionaryLiteralExpr(org.mojolang.mojo.lang.DictionaryLiteralExpr value) {
-      if (dictionaryLiteralExprBuilder_ == null) {
+    public Builder setMapLiteralExpr(org.mojolang.mojo.lang.MapLiteralExpr value) {
+      if (mapLiteralExprBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         expression_ = value;
         onChanged();
       } else {
-        dictionaryLiteralExprBuilder_.setMessage(value);
+        mapLiteralExprBuilder_.setMessage(value);
       }
       expressionCase_ = 7;
       return this;
     }
     /**
-     * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+     * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
      */
-    public Builder setDictionaryLiteralExpr(
-        org.mojolang.mojo.lang.DictionaryLiteralExpr.Builder builderForValue) {
-      if (dictionaryLiteralExprBuilder_ == null) {
+    public Builder setMapLiteralExpr(
+        org.mojolang.mojo.lang.MapLiteralExpr.Builder builderForValue) {
+      if (mapLiteralExprBuilder_ == null) {
         expression_ = builderForValue.build();
         onChanged();
       } else {
-        dictionaryLiteralExprBuilder_.setMessage(builderForValue.build());
+        mapLiteralExprBuilder_.setMessage(builderForValue.build());
       }
       expressionCase_ = 7;
       return this;
     }
     /**
-     * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+     * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
      */
-    public Builder mergeDictionaryLiteralExpr(org.mojolang.mojo.lang.DictionaryLiteralExpr value) {
-      if (dictionaryLiteralExprBuilder_ == null) {
+    public Builder mergeMapLiteralExpr(org.mojolang.mojo.lang.MapLiteralExpr value) {
+      if (mapLiteralExprBuilder_ == null) {
         if (expressionCase_ == 7 &&
-            expression_ != org.mojolang.mojo.lang.DictionaryLiteralExpr.getDefaultInstance()) {
-          expression_ = org.mojolang.mojo.lang.DictionaryLiteralExpr.newBuilder((org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_)
+            expression_ != org.mojolang.mojo.lang.MapLiteralExpr.getDefaultInstance()) {
+          expression_ = org.mojolang.mojo.lang.MapLiteralExpr.newBuilder((org.mojolang.mojo.lang.MapLiteralExpr) expression_)
               .mergeFrom(value).buildPartial();
         } else {
           expression_ = value;
@@ -1857,18 +1857,18 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (expressionCase_ == 7) {
-          dictionaryLiteralExprBuilder_.mergeFrom(value);
+          mapLiteralExprBuilder_.mergeFrom(value);
         }
-        dictionaryLiteralExprBuilder_.setMessage(value);
+        mapLiteralExprBuilder_.setMessage(value);
       }
       expressionCase_ = 7;
       return this;
     }
     /**
-     * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+     * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
      */
-    public Builder clearDictionaryLiteralExpr() {
-      if (dictionaryLiteralExprBuilder_ == null) {
+    public Builder clearMapLiteralExpr() {
+      if (mapLiteralExprBuilder_ == null) {
         if (expressionCase_ == 7) {
           expressionCase_ = 0;
           expression_ = null;
@@ -1879,49 +1879,49 @@ private static final long serialVersionUID = 0L;
           expressionCase_ = 0;
           expression_ = null;
         }
-        dictionaryLiteralExprBuilder_.clear();
+        mapLiteralExprBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+     * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
      */
-    public org.mojolang.mojo.lang.DictionaryLiteralExpr.Builder getDictionaryLiteralExprBuilder() {
-      return getDictionaryLiteralExprFieldBuilder().getBuilder();
+    public org.mojolang.mojo.lang.MapLiteralExpr.Builder getMapLiteralExprBuilder() {
+      return getMapLiteralExprFieldBuilder().getBuilder();
     }
     /**
-     * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+     * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
      */
-    public org.mojolang.mojo.lang.DictionaryLiteralExprOrBuilder getDictionaryLiteralExprOrBuilder() {
-      if ((expressionCase_ == 7) && (dictionaryLiteralExprBuilder_ != null)) {
-        return dictionaryLiteralExprBuilder_.getMessageOrBuilder();
+    public org.mojolang.mojo.lang.MapLiteralExprOrBuilder getMapLiteralExprOrBuilder() {
+      if ((expressionCase_ == 7) && (mapLiteralExprBuilder_ != null)) {
+        return mapLiteralExprBuilder_.getMessageOrBuilder();
       } else {
         if (expressionCase_ == 7) {
-          return (org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_;
+          return (org.mojolang.mojo.lang.MapLiteralExpr) expression_;
         }
-        return org.mojolang.mojo.lang.DictionaryLiteralExpr.getDefaultInstance();
+        return org.mojolang.mojo.lang.MapLiteralExpr.getDefaultInstance();
       }
     }
     /**
-     * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+     * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        org.mojolang.mojo.lang.DictionaryLiteralExpr, org.mojolang.mojo.lang.DictionaryLiteralExpr.Builder, org.mojolang.mojo.lang.DictionaryLiteralExprOrBuilder> 
-        getDictionaryLiteralExprFieldBuilder() {
-      if (dictionaryLiteralExprBuilder_ == null) {
+        org.mojolang.mojo.lang.MapLiteralExpr, org.mojolang.mojo.lang.MapLiteralExpr.Builder, org.mojolang.mojo.lang.MapLiteralExprOrBuilder> 
+        getMapLiteralExprFieldBuilder() {
+      if (mapLiteralExprBuilder_ == null) {
         if (!(expressionCase_ == 7)) {
-          expression_ = org.mojolang.mojo.lang.DictionaryLiteralExpr.getDefaultInstance();
+          expression_ = org.mojolang.mojo.lang.MapLiteralExpr.getDefaultInstance();
         }
-        dictionaryLiteralExprBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            org.mojolang.mojo.lang.DictionaryLiteralExpr, org.mojolang.mojo.lang.DictionaryLiteralExpr.Builder, org.mojolang.mojo.lang.DictionaryLiteralExprOrBuilder>(
-                (org.mojolang.mojo.lang.DictionaryLiteralExpr) expression_,
+        mapLiteralExprBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.mojolang.mojo.lang.MapLiteralExpr, org.mojolang.mojo.lang.MapLiteralExpr.Builder, org.mojolang.mojo.lang.MapLiteralExprOrBuilder>(
+                (org.mojolang.mojo.lang.MapLiteralExpr) expression_,
                 getParentForChildren(),
                 isClean());
         expression_ = null;
       }
       expressionCase_ = 7;
       onChanged();;
-      return dictionaryLiteralExprBuilder_;
+      return mapLiteralExprBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<

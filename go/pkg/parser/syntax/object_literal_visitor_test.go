@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestObjectLiteralVisitor_VisitObjectLiteral (t *testing.T) {
+func TestObjectLiteralVisitor_VisitObjectLiteral(t *testing.T) {
 	const typeAttribute = `
 @default({"key": "value"})
 type Mailbox{}`
@@ -18,16 +18,16 @@ type Mailbox{}`
 	expr := getExpression(file)
 	assert.NotNil(t, expr)
 
-	dictionary := make(map[string]string)
-	expr.EvalStringDictionaryLiteral(func(key string, value *lang.Expression) error {
+	map := make(map[string]string)
+	expr.EvalStringMapLiteral(func(key string, value *lang.Expression) error {
 		v, err := value.EvalStringLiteral()
 		if err != nil {
 			return err
 		}
-		dictionary[key] = v
+		map[key] = v
 		return nil
 	})
 
-	assert.NotEmpty(t, dictionary)
-	assert.Equal(t, "value", dictionary["key"])
+	assert.NotEmpty(t, map)
+	assert.Equal(t, "value", map["key"])
 }

@@ -1,9 +1,9 @@
 package _go
 
 import (
-	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/go/compiler"
 	protocompiler "github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
@@ -17,17 +17,15 @@ type Compiler struct {
 	Package *lang.Package
 	Files   []*descriptor.FileDescriptor
 
-	Data      *compiler.Data
-	pluralize *pluralize.Client
+	Data *compiler.Data
 }
 
 func NewCompiler(path string, pkg *lang.Package, files []*descriptor.FileDescriptor) *Compiler {
 	return &Compiler{
-		Path:      path,
-		Package:   pkg,
-		Files:     files,
-		pluralize: pluralize.NewClient(),
-		Data:      compiler.NewData(),
+		Path:    path,
+		Package: pkg,
+		Files:   files,
+		Data:    compiler.NewData(),
 	}
 }
 
@@ -125,8 +123,9 @@ func (c *Compiler) compileFile(ctx *context.Context, file *lang.SourceFile) erro
 
 var whiteList = map[string]bool{
 	"Strings":  true,
-	"Integers": true,
-	"Doubles":  true,
+	"StringValues":  true,
+	"IntegerValues": true,
+	"DoubleValues":  true,
 }
 
 func (c *Compiler) compileStruct(ctx *context.Context, decl *lang.StructDecl) error {
@@ -165,7 +164,7 @@ func (c *Compiler) compileStruct(ctx *context.Context, decl *lang.StructDecl) er
 		if decl.IsBoxedType() {
 			valueType := decl.Type.Inherits[0]
 			valueName := "value"
-			if fullName := valueType.GetFullName(); fullName == "mojo.core.Array" || fullName == "mojo.core.Dictionary" {
+			if fullName := valueType.GetFullName(); fullName == "mojo.core.Array" || fullName == "mojo.core.Map" {
 				valueName = "values"
 			}
 			valueDecl := &lang.ValueDecl{
@@ -243,7 +242,7 @@ func (c *Compiler) compileStructField(ctx *context.Context, field *lang.ValueDec
 				}
 			}
 		}
-	case "Dictionary":
+	case "Map":
 
 	default:
 	}
@@ -316,7 +315,7 @@ func (c *Compiler) compileNominalType(ctx *context.Context, t *lang.NominalType)
 			}},
 		}
 		s.PackageName = pkg.GetFullName()
-		s.Name = c.pluralize.Plural(strcase.ToCamel(t.GenericArguments[0].Name))
+		s.Name = transformer.Plural(strcase.ToCamel(t.GenericArguments[0].Name))
 
 		setAttributes(s)
 
@@ -326,7 +325,7 @@ func (c *Compiler) compileNominalType(ctx *context.Context, t *lang.NominalType)
 			return "", errors.Wrapf(err, "failed to compile the arry field in %s", s.Name)
 		}
 		return s.Name, nil
-	} else if t.Name == "Dictionary" {
+	} else if t.Name == "Map" {
 		if len(t.GenericArguments) != 2 {
 			return "", errors.New("")
 		}
@@ -358,7 +357,7 @@ func (c *Compiler) compileNominalType(ctx *context.Context, t *lang.NominalType)
 		}
 		return s.Name, nil
 	} else if t.Name == "Union" {
-		s := protocompiler.ConstructBoxedUnion(t, c.pluralize)
+		s := protocompiler.ConstructBoxedUnion(t)
 		if s != nil { // skip if directly union declaration
 			for _, field := range s.Type.Fields {
 				c.compileNominalType(ctx, field.Type)

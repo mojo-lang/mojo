@@ -3,8 +3,8 @@
 
 package org.mojolang.mojo.lang;
 
-public interface DictionaryLiteralExprOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:mojo.lang.DictionaryLiteralExpr)
+public interface MapLiteralExprOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:mojo.lang.MapLiteralExpr)
     com.google.protobuf.MessageOrBuilder {
 
   /**

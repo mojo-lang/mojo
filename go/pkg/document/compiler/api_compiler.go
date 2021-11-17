@@ -3,20 +3,23 @@ package compiler
 import (
 	"github.com/mojo-lang/document/go/pkg/markdown"
 	"github.com/mojo-lang/document/go/pkg/mojo/document"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"net/http"
 )
 
 type ApiCompiler struct {
-	Api *openapi.OpenAPI
+	Package *lang.Package
+	Api     *openapi.OpenAPI
 }
 
-func (a *ApiCompiler) Compile(api *openapi.OpenAPI) (*document.Document, error) {
+func (a *ApiCompiler) Compile(pkg *lang.Package, api *openapi.OpenAPI) (*document.Document, error) {
 	ctx := &Context{Context: &context.Context{}}
 	doc := &document.Document{}
 
 	a.Api = api
+	a.Package = pkg
 	a.compileHeader(ctx, api, doc)
 
 	err := openapi.OrderedPathItemIterator(api.Paths.Values, func(path string, item *openapi.PathItem) error {
@@ -175,6 +178,7 @@ func (a *ApiCompiler) compileMethod(ctx *Context, path string, method string, op
 	doc.AppendCodeBlock(requestPath)
 
 	compiler := &OperationCompiler{
+		Package:    a.Package,
 		Components: a.Api.Components,
 	}
 	op, err := compiler.Compile(operation)

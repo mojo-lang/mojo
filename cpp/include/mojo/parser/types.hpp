@@ -33,8 +33,8 @@ struct array_type_state : array_term_state {
     }
 };
 
-struct dictionary_type_state : array_term_state {
-    dictionary_type_state() : array_term_state("dictionary_type") {
+struct map_type_state : array_term_state {
+    map_type_state() : array_term_state("map_type") {
     }
 };
 
@@ -130,9 +130,9 @@ struct type_action<grammar::generic_type_name_separator> {
 };
 
 template <>
-struct type_action<grammar::dictionary_type_separator> {
+struct type_action<grammar::map_type_separator> {
     template <typename Input>
-    static void apply(const Input&, dictionary_type_state& state) {
+    static void apply(const Input&, map_type_state& state) {
         state.push_element();
     }
 };
@@ -214,15 +214,15 @@ struct control<grammar::array_type::content>
                                      errors> {};
 
 template <>
-struct control<grammar::dictionary_type_content>
-    : pegtl::change_state_and_action<grammar::dictionary_type_content,
-                                     dictionary_type_state,
+struct control<grammar::map_type_content>
+    : pegtl::change_state_and_action<grammar::map_type_content,
+                                     map_type_state,
                                      type_action,
                                      errors> {};
 
 template <>
-struct control<grammar::dictionary_key>
-    : pegtl::change_state_and_action<grammar::dictionary_key,
+struct control<grammar::map_key>
+    : pegtl::change_state_and_action<grammar::map_key,
                                      type_annotation_state,
                                      type_action,
                                      errors> {};

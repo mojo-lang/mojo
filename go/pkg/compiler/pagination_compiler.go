@@ -7,8 +7,8 @@ var (
 		Implicit: true,
 		Name:     "page_size",
 		Type: &lang.NominalType{
-			Package: "mojo.core",
-			Name:    "Int32",
+			PackageName: "mojo.core",
+			Name:        "Int32",
 			TypeDeclaration: lang.NewStructTypeDeclaration(&lang.StructDecl{
 				PackageName:    "mojo.core",
 				SourceFileName: "mojo/core/numeric.mojo",
@@ -31,8 +31,8 @@ var (
 		Implicit: true,
 		Name:     "page_token",
 		Type: &lang.NominalType{
-			Package: "mojo.core",
-			Name:    "String",
+			PackageName: "mojo.core",
+			Name:        "String",
 			TypeDeclaration: lang.NewStructTypeDeclaration(&lang.StructDecl{
 				PackageName:    "mojo.core",
 				SourceFileName: "mojo/core/string.mojo",

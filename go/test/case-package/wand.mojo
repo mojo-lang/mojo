@@ -1,3 +1,3 @@
-package mapping {
+package maps {
 
 }

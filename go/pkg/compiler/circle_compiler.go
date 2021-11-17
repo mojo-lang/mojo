@@ -57,7 +57,7 @@ func (c *CircleCompiler) compile(ctx *context.Context, pkg *lang.Package) (pollu
 	for _, sourceFile := range pkg.SourceFiles {
 		if file, err := lang.GetStringAttribute(sourceFile.Attributes, circle.DependencyCircle); err == nil {
 			for _, identifier := range sourceFile.Scope.Identifiers {
-				identifier.SourceFile = file
+				identifier.SourceFileName = file
 			}
 			sourceFile.Attributes = lang.RemoveAttribute(sourceFile.Attributes, circle.DependencyCircle)
 

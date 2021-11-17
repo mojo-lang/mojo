@@ -48,7 +48,7 @@ func (p *Resolver) ParserSourceFile(ctx *plugin.Context, file *lang.SourceFile) 
 		resolveds := lang.MergeDependencies(file.ResolvedIdentifiers)
 		file.ResolvedIdentifiers = []*lang.Identifier{}
 		for _, resolved := range resolveds {
-			if resolved.SourceFile != file.FullName {
+			if resolved.SourceFileName != file.FullName {
 				file.ResolvedIdentifiers = append(file.ResolvedIdentifiers, resolved)
 			}
 		}
@@ -300,8 +300,8 @@ func resolveNominalType(ctx *plugin.Context, t *lang.NominalType) ([]*lang.Ident
 	fullName := t.Name
 	enclosingNames := lang.GetEnclosingNames(t.EnclosingType)
 	var identifier *lang.Identifier
-	if len(t.Package) > 0 {
-		fullName = lang.GetFullName(t.Package, enclosingNames, t.Name)
+	if len(t.PackageName) > 0 {
+		fullName = lang.GetFullName(t.PackageName, enclosingNames, t.Name)
 		identifier = ctx.Lookup(fullName)
 	} else {
 		identifier = ctx.Lookup(t.Name)
@@ -314,13 +314,13 @@ func resolveNominalType(ctx *plugin.Context, t *lang.NominalType) ([]*lang.Ident
 	var unresolveds []*lang.Identifier
 
 	if identifier != nil {
-		t.Package = identifier.Package
+		t.PackageName = identifier.PackageName
 		t.TypeDeclaration = lang.NewTypeDeclarationFromDeclaration(identifier.Declaration)
 		t.EnclosingType = identifier.Declaration.GetEnclosingType()
 		resolveds = append(resolveds, identifier)
 	} else {
 		ident := &lang.Identifier{
-			Package:       t.Package,
+			PackageName:   t.PackageName,
 			StartPosition: t.StartPosition,
 			Name:          t.Name,
 			FullName:      fullName,

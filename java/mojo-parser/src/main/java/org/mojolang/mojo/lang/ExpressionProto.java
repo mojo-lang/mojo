@@ -55,15 +55,15 @@ public final class ExpressionProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_mojo_lang_ArrayLiteralExpr_ValueEntry_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_mojo_lang_DictionaryLiteralExpr_descriptor;
+    internal_static_mojo_lang_MapLiteralExpr_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_mojo_lang_DictionaryLiteralExpr_fieldAccessorTable;
+      internal_static_mojo_lang_MapLiteralExpr_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_mojo_lang_DictionaryLiteralExpr_ValueEntry_descriptor;
+    internal_static_mojo_lang_MapLiteralExpr_ValueEntry_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_mojo_lang_DictionaryLiteralExpr_ValueEntry_fieldAccessorTable;
+      internal_static_mojo_lang_MapLiteralExpr_ValueEntry_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_mojo_lang_ObjectLiteralExpr_descriptor;
   static final 
@@ -94,8 +94,8 @@ public final class ExpressionProto {
       "string_literal_expr\030\005 \001(\0132\034.mojo.lang.St" +
       "ringLiteralExprH\000\0229\n\022array_literal_expr\030" +
       "\006 \001(\0132\033.mojo.lang.ArrayLiteralExprH\000\022C\n\027" +
-      "dictionary_literal_expr\030\007 \001(\0132 .mojo.lan" +
-      "g.DictionaryLiteralExprH\000\022;\n\023object_lite" +
+      "map_literal_expr\030\007 \001(\0132 .mojo.lan" +
+      "g.MapLiteralExprH\000\022;\n\023object_lite" +
       "ral_expr\030\010 \001(\0132\034.mojo.lang.ObjectLiteral" +
       "ExprH\000B\014\n\nexpression\"\211\001\n\017NullLiteralExpr" +
       "\022+\n\016start_position\030\001 \001(\0132\023.mojo.lang.Pos" +
@@ -128,7 +128,7 @@ public final class ExpressionProto {
       "2\023.mojo.lang.Position\022)\n\014end_position\030\002 " +
       "\001(\0132\023.mojo.lang.Position\022\014\n\004kind\030\003 \001(\005\022\020" +
       "\n\010implicit\030\004 \001(\010\022:\n\005value\030\n \003(\0132+.mojo.l" +
-      "ang.DictionaryLiteralExpr.ValueEntry\032,\n\n" +
+      "ang.MapLiteralExpr.ValueEntry\032,\n\n" +
       "ValueEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002" +
       "8\001\"\213\001\n\021ObjectLiteralExpr\022+\n\016start_positi" +
       "on\030\001 \001(\0132\023.mojo.lang.Position\022)\n\014end_pos" +
@@ -156,7 +156,7 @@ public final class ExpressionProto {
     internal_static_mojo_lang_Expression_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_mojo_lang_Expression_descriptor,
-        new java.lang.String[] { "NullLiteralExpr", "BoolLiteralExpr", "IntegerLiteralExpr", "FloatLiteralExpr", "StringLiteralExpr", "ArrayLiteralExpr", "DictionaryLiteralExpr", "ObjectLiteralExpr", "Expression", });
+        new java.lang.String[] { "NullLiteralExpr", "BoolLiteralExpr", "IntegerLiteralExpr", "FloatLiteralExpr", "StringLiteralExpr", "ArrayLiteralExpr", "MapLiteralExpr", "ObjectLiteralExpr", "Expression", });
     internal_static_mojo_lang_NullLiteralExpr_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_mojo_lang_NullLiteralExpr_fieldAccessorTable = new
@@ -199,17 +199,17 @@ public final class ExpressionProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_mojo_lang_ArrayLiteralExpr_ValueEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_mojo_lang_DictionaryLiteralExpr_descriptor =
+    internal_static_mojo_lang_MapLiteralExpr_descriptor =
       getDescriptor().getMessageTypes().get(7);
-    internal_static_mojo_lang_DictionaryLiteralExpr_fieldAccessorTable = new
+    internal_static_mojo_lang_MapLiteralExpr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_mojo_lang_DictionaryLiteralExpr_descriptor,
+        internal_static_mojo_lang_MapLiteralExpr_descriptor,
         new java.lang.String[] { "StartPosition", "EndPosition", "Kind", "Implicit", "Value", });
-    internal_static_mojo_lang_DictionaryLiteralExpr_ValueEntry_descriptor =
-      internal_static_mojo_lang_DictionaryLiteralExpr_descriptor.getNestedTypes().get(0);
-    internal_static_mojo_lang_DictionaryLiteralExpr_ValueEntry_fieldAccessorTable = new
+    internal_static_mojo_lang_MapLiteralExpr_ValueEntry_descriptor =
+      internal_static_mojo_lang_MapLiteralExpr_descriptor.getNestedTypes().get(0);
+    internal_static_mojo_lang_MapLiteralExpr_ValueEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_mojo_lang_DictionaryLiteralExpr_ValueEntry_descriptor,
+        internal_static_mojo_lang_MapLiteralExpr_ValueEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_mojo_lang_ObjectLiteralExpr_descriptor =
       getDescriptor().getMessageTypes().get(8);

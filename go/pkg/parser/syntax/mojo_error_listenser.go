@@ -1,6 +1,7 @@
 package syntax
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/mojo-lang/core/go/pkg/logs"
 )
@@ -8,7 +9,8 @@ import (
 type MojoErrorListener struct {
 	*antlr.DiagnosticErrorListener
 
-	FileName string
+	Error      error
+	FileName   string
 	Diagnosing bool
 }
 
@@ -19,7 +21,8 @@ func NewMojoErrorListener() *MojoErrorListener {
 }
 
 func (m *MojoErrorListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol interface{}, line, column int, msg string, e antlr.RecognitionException) {
-	logs.Warnw(msg, "file", m.FileName, "line", line, "column", column)
+	m.Error = fmt.Errorf("file: %s, line: %d, column: %d, message: %s %w", m.FileName, line, column, msg, e)
+	logs.Errorw(msg, "file", m.FileName, "line", line, "column", column)
 }
 
 func (m *MojoErrorListener) ReportAmbiguity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, exact bool, ambigAlts *antlr.BitSet, configs antlr.ATNConfigSet) {

@@ -3,14 +3,14 @@ package compiler
 import (
 	"errors"
 	"fmt"
-	"github.com/gertd/go-pluralize"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
 	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 )
 
 type UnionPlugin struct {
-	pluralize *pluralize.Client
 }
 
 func init() {
@@ -18,18 +18,14 @@ func init() {
 	if p == nil {
 		p = make([]Plugin, 0)
 	}
-	p = append(p, &UnionPlugin{
-		pluralize: pluralize.NewClient(),
-	})
+	p = append(p, &UnionPlugin{})
 
 	plugins["mojo.core.Union"] = p
 }
 
 func (p *UnionPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
-	s := ConstructBoxedUnion(t, p.pluralize)
-	if s == nil {
-		return "", "", nil
-	} else {
+	s := ConstructBoxedUnion(t)
+	if s != nil {
 		file := ctx.GetFileDescriptor()
 		msgDescriptor := desc.NewMessageDescriptor(file)
 		err := CompileStruct(ctx, s, msgDescriptor)
@@ -37,7 +33,7 @@ func (p *UnionPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string
 			return "", "", errors.New(fmt.Sprintf("failed to compile struct: %s", err.Error()))
 		}
 
-		oneOfName := ToSnake(*msgDescriptor.Name)
+		oneOfName := strcase.ToSnake(*msgDescriptor.Name)
 		msgDescriptor.OneofDecl = append(msgDescriptor.OneofDecl, &descriptor.OneofDescriptorProto{
 			Name: &oneOfName,
 		})
@@ -48,9 +44,11 @@ func (p *UnionPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string
 
 		return "struct", s.Name, nil
 	}
+
+	return "", "", nil
 }
 
-func ConstructBoxedUnion(t *lang.NominalType, p *pluralize.Client) *lang.StructDecl {
+func ConstructBoxedUnion(t *lang.NominalType) *lang.StructDecl {
 	originName, err := lang.GetStringAttribute(t.Attributes, lang.OriginalTypeAliasName)
 	if err != nil { // directly union declaration
 		return nil
@@ -75,7 +73,7 @@ func ConstructBoxedUnion(t *lang.NominalType, p *pluralize.Client) *lang.StructD
 				}
 
 				// auto generate
-				label = generateLabel(argument, labelFormat, p)
+				label = generateLabel(argument, labelFormat)
 			}
 
 			s.Type.Fields = append(s.Type.Fields, &lang.ValueDecl{
@@ -87,21 +85,21 @@ func ConstructBoxedUnion(t *lang.NominalType, p *pluralize.Client) *lang.StructD
 	}
 }
 
-func generateLabel(argument *lang.NominalType, labelFormat string, p *pluralize.Client) string {
+func generateLabel(argument *lang.NominalType, labelFormat string) string {
 	if labelFormat == "{}" {
-		return ToSnake(argument.Name)
+		return strcase.ToSnake(argument.Name)
 	} else {
 		fullName := argument.GetFullName()
 		if argument.IsScalar() {
-			return ToSnake(argument.Name) + "_val"
+			return strcase.ToSnake(argument.Name) + "_val"
 		} else if fullName == "mojo.core.Array" {
 			name := argument.GenericArguments[0].Name
-			name = ToSnake(name + "_val")
-			return p.Plural(name)
-		} else if fullName == "mojo.core.Dictionary" {
+			name = strcase.ToSnake(name + "_val")
+			return transformer.Plural(name)
+		} else if fullName == "mojo.core.Map" {
 			name := argument.GenericArguments[1].Name
-			return ToSnake(name + "_map_vals")
+			return strcase.ToSnake(name + "_map_vals")
 		}
-		return ToSnake(argument.Name) + "_val"
+		return strcase.ToSnake(argument.Name) + "_val"
 	}
 }

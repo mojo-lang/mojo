@@ -3,10 +3,12 @@ package compiler
 import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/document/go/pkg/mojo/document"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 )
 
 type OperationCompiler struct {
+	Package    *lang.Package
 	Components *openapi.Components
 }
 
@@ -100,7 +102,7 @@ func (o *OperationCompiler) compilePathParameters(ctx *Context, parameters []*op
 	table := &document.Table{
 		Caption:   nil,
 		Alignment: 0,
-		Header: document.NewTextTableHeader("参数名", "参数类型", "格式类型", "说明"),
+		Header:    document.NewTextTableHeader("参数名", "参数类型", "格式类型", "说明"),
 	}
 
 	for _, parameter := range parameters {
@@ -127,7 +129,7 @@ func (o *OperationCompiler) compileQueryParameters(ctx *Context, parameters []*o
 	table := &document.Table{
 		Caption:   nil,
 		Alignment: 0,
-		Header: document.NewTextTableHeader("参数名", "参数类型", "格式类型", "是否必须", "默认值", "说明"),
+		Header:    document.NewTextTableHeader("参数名", "参数类型", "格式类型", "是否必须", "默认值", "说明"),
 	}
 
 	for _, parameter := range parameters {
@@ -163,24 +165,32 @@ func (o *OperationCompiler) compileRequestBody(ctx *Context, body *openapi.Reque
 		return nil
 	}
 
-	compiler := &SchemaCompiler{Components: o.Components}
 	if mediaType, ok := body.Content[core.ApplicationJson]; ok {
-		schema := mediaType.Schema.GetSchemaOf(o.Components.Schemas)
-		document, err := compiler.Compile(schema)
+		o.compileMediaType(mediaType, doc)
+	}
+	return nil
+}
+
+func (o *OperationCompiler) compileMediaType(mediaType *openapi.MediaType, doc *document.Document) error {
+	compiler := &SchemaCompiler{Components: o.Components}
+	schema := mediaType.Schema.GetSchemaOf(o.Components.Schemas)
+
+	decl := o.Package.GetIdentifier(schema.Title).GetDeclaration()
+	document, err := compiler.Compile(decl, schema)
+	if err != nil {
+		return err
+	}
+	doc.Blocks = append(doc.Blocks, document.Blocks...)
+
+	deps := schema.Dependencies(o.Components.Schemas)
+	for _, dep := range deps {
+		decl = o.Package.GetIdentifier(dep.Title).GetDeclaration()
+		document, err = compiler.Compile(decl, dep)
 		if err != nil {
 			return err
 		}
+		doc.AppendHeaderFrom(4, wrapCode(dep.Title))
 		doc.Blocks = append(doc.Blocks, document.Blocks...)
-
-		deps := schema.Dependencies(o.Components.Schemas)
-		for _, dep := range deps {
-			document, err = compiler.Compile(dep)
-			if err != nil {
-				return err
-			}
-			doc.AppendHeaderFrom(4, wrapCode(dep.Title))
-			doc.Blocks = append(doc.Blocks, document.Blocks...)
-		}
 	}
 	return nil
 }
@@ -190,24 +200,8 @@ func (o *OperationCompiler) compileResponse(ctx *Context, response *openapi.Resp
 		return nil
 	}
 
-	compiler := &SchemaCompiler{Components: o.Components}
 	if mediaType, ok := response.Content[core.ApplicationJson]; ok {
-		schema := mediaType.Schema.GetSchemaOf(o.Components.Schemas)
-		document, err := compiler.Compile(schema)
-		if err != nil {
-			return err
-		}
-		doc.Blocks = append(doc.Blocks, document.Blocks...)
-
-		deps := schema.Dependencies(o.Components.Schemas)
-		for _, dep := range deps {
-			document, err = compiler.Compile(dep)
-			if err != nil {
-				return err
-			}
-			doc.AppendHeaderFrom(4, wrapCode(dep.Title))
-			doc.Blocks = append(doc.Blocks, document.Blocks...)
-		}
+		o.compileMediaType(mediaType, doc)
 	}
 
 	return nil

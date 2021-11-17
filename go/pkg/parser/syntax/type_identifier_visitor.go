@@ -22,7 +22,7 @@ func (t *TypeIdentifierVisitor) VisitTypeIdentifier(ctx *TypeIdentifierContext) 
 
 	for _, identifier := range identifiers {
 		t := identifier.Accept(t).(*lang.NominalType)
-		t.Package = packageIdentifier
+		t.PackageName = packageIdentifier
 
 		if nominalType == nil {
 			nominalType = t

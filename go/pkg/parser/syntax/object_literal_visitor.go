@@ -2,6 +2,7 @@ package syntax
 
 import (
 	"fmt"
+
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
 
@@ -30,18 +31,6 @@ func GetObjectLiteral(ctx IObjectLiteralContext) *lang.ObjectLiteralExpr {
 	return nil
 }
 
-func GetDictionaryLiteral(ctx IObjectLiteralContext) *lang.DictionaryLiteralExpr {
-	if ctx != nil {
-		visitor := NewObjectLiteralVisitor()
-		if expr, ok := ctx.Accept(visitor).(*lang.Expression); ok {
-			return expr.GetDictionaryLiteralExpr()
-		} else {
-			fmt.Print("===> error")
-		}
-	}
-	return nil
-}
-
 func (e *ObjectLiteralVisitor) VisitObjectLiteral(ctx *ObjectLiteralContext) interface{} {
 	if ctx != nil {
 		context := ctx.ObjectLiteralItems()
@@ -62,38 +51,42 @@ func (e *ObjectLiteralVisitor) VisitObjectLiteralItems(ctx *ObjectLiteralItemsCo
 	}
 
 	//TODO need to be check the validation of the object expression
-	if len(e.Expression.Fields) > 0 {
-		fieldName := e.Expression.Fields[0].Name
-		_, err := fieldName.EvalIdentifier()
-		if err != nil { // NOT IDENTIFIER, change to dictionary
-			dictionary := &lang.DictionaryLiteralExpr{
-				StartPosition: e.Expression.StartPosition,
-				EndPosition:   e.Expression.EndPosition,
-				Kind:          e.Expression.Kind,
-				Implicit:      e.Expression.Implicit,
-			}
+	//if len(e.Expression.Fields) > 0 {
+	//	fieldName := e.Expression.Fields[0].Name
+	//	_, err := fieldName.EvalIdentifier()
+	//	if err != nil { // NOT IDENTIFIER, change to map
+	//		map := &lang.MapLiteralExpr{
+	//			StartPosition: e.Expression.StartPosition,
+	//			EndPosition:   e.Expression.EndPosition,
+	//			Kind:          e.Expression.Kind,
+	//			Implicit:      e.Expression.Implicit,
+	//		}
+	//
+	//		for _, field := range e.Expression.Fields {
+	//			entry := &lang.MapLiteralExpr_Entry{
+	//				Key:   field.Name,
+	//				Value: field.Value,
+	//			}
+	//			map.Entries = append(map.Entries, entry)
+	//		}
+	//
+	//		return lang.NewMapLiteralExpr(map)
+	//	}
+	//}
 
-			for _, field := range e.Expression.Fields {
-				entry := &lang.DictionaryLiteralExpr_Entry{
-					Key:   field.Name,
-					Value: field.Value,
-				}
-				dictionary.Entries = append(dictionary.Entries, entry)
-			}
-
-			return lang.NewDictionaryLiteralExpr(dictionary)
-		}
-	}
-
-	return lang.NewObjectLiteralExpr(e.Expression)
+	return lang.NewObjectLiteralExpression(e.Expression)
 }
 
 func (e *ObjectLiteralVisitor) VisitObjectLiteralItem(ctx *ObjectLiteralItemContext) interface{} {
-	field := &lang.ObjectLiteralExpr_Field{
-		Name:  GetExpression(ctx.Expression(0)),
-		Value: GetExpression(ctx.Expression(1)),
+	key := GetPathIdentifier(ctx.PathIdentifier())
+	if len(key) > 0 {
+		field := &lang.ObjectLiteralExpr_Field{
+			//FIXME deal with the multi path segments situation
+			Name:  key[0],
+			Value: GetExpression(ctx.Expression()),
+		}
+		e.Expression.Fields = append(e.Expression.Fields, field)
 	}
 
-	e.Expression.Fields = append(e.Expression.Fields, field)
 	return nil
 }

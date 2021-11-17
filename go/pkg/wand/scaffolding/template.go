@@ -3,10 +3,11 @@ package scaffolding
 import (
 	"bytes"
 	_ "embed"
-	"github.com/iancoleman/strcase"
-	"github.com/pkg/errors"
 	"strings"
 	"text/template"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/pkg/errors"
 )
 
 //go:embed template/.gitignore.tmpl
@@ -35,11 +36,11 @@ func ApplyTemplate(name string, tmpl string, executor interface{}, funcMap templ
 // FuncMap contains a series of utility functions to be passed into
 // templates and used within those templates.
 var FuncMap = template.FuncMap{
-	"ToLower":         strings.ToLower,
-	"ToUpper":         strings.ToUpper,
-	"GoName":          strcase.ToCamel,
-	"ToSnake":         strcase.ToSnake,
-	"ToKebab":         strcase.ToKebab,
-	"ToCamel":         strcase.ToCamel,
-	"ToLowerCamel":    strcase.ToLowerCamel,
+	"ToLower":      strings.ToLower,
+	"ToUpper":      strings.ToUpper,
+	"GoName":       strcase.ToCamel,
+	"ToSnake":      strcase.ToSnake,
+	"ToKebab":      strcase.ToKebab,
+	"ToCamel":      strcase.ToCamel,
+	"ToLowerCamel": strcase.ToLowerCamel,
 }

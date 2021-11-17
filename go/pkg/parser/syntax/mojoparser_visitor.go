@@ -244,26 +244,26 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#pattern.
 	VisitPattern(ctx *PatternContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#wildcard_pattern.
-	VisitWildcard_pattern(ctx *Wildcard_patternContext) interface{}
+	// Visit a parse tree produced by MojoParser#wildcardPattern.
+	VisitWildcardPattern(ctx *WildcardPatternContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#identifierPattern.
 	VisitIdentifierPattern(ctx *IdentifierPatternContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#tuple_pattern.
-	VisitTuple_pattern(ctx *Tuple_patternContext) interface{}
+	// Visit a parse tree produced by MojoParser#tuplePattern.
+	VisitTuplePattern(ctx *TuplePatternContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#tuple_pattern_element_list.
-	VisitTuple_pattern_element_list(ctx *Tuple_pattern_element_listContext) interface{}
+	// Visit a parse tree produced by MojoParser#tuplePatternElementList.
+	VisitTuplePatternElementList(ctx *TuplePatternElementListContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#tuple_pattern_element.
-	VisitTuple_pattern_element(ctx *Tuple_pattern_elementContext) interface{}
+	// Visit a parse tree produced by MojoParser#tuplePatternElement.
+	VisitTuplePatternElement(ctx *TuplePatternElementContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#optional_pattern.
-	VisitOptional_pattern(ctx *Optional_patternContext) interface{}
+	// Visit a parse tree produced by MojoParser#optionalPattern.
+	VisitOptionalPattern(ctx *OptionalPatternContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#expression_pattern.
-	VisitExpression_pattern(ctx *Expression_patternContext) interface{}
+	// Visit a parse tree produced by MojoParser#expressionPattern.
+	VisitExpressionPattern(ctx *ExpressionPatternContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#attribute.
 	VisitAttribute(ctx *AttributeContext) interface{}
@@ -295,17 +295,29 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#binaryExpressions.
 	VisitBinaryExpressions(ctx *BinaryExpressionsContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#conditional_operator.
-	VisitConditional_operator(ctx *Conditional_operatorContext) interface{}
+	// Visit a parse tree produced by MojoParser#conditionalOperator.
+	VisitConditionalOperator(ctx *ConditionalOperatorContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#type_casting_operator.
-	VisitType_casting_operator(ctx *Type_casting_operatorContext) interface{}
+	// Visit a parse tree produced by MojoParser#typeCastingOperator.
+	VisitTypeCastingOperator(ctx *TypeCastingOperatorContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#primaryExpression.
 	VisitPrimaryExpression(ctx *PrimaryExpressionContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#literalExpression.
 	VisitLiteralExpression(ctx *LiteralExpressionContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#numericOperatorLiteral.
+	VisitNumericOperatorLiteral(ctx *NumericOperatorLiteralContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#stringOperatorLiteral.
+	VisitStringOperatorLiteral(ctx *StringOperatorLiteralContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#postfixLiteralOperator.
+	VisitPostfixLiteralOperator(ctx *PostfixLiteralOperatorContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#prefixLiteralOperator.
+	VisitPrefixLiteralOperator(ctx *PrefixLiteralOperatorContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#arrayLiteral.
 	VisitArrayLiteral(ctx *ArrayLiteralContext) interface{}
@@ -316,6 +328,15 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#arrayLiteralItem.
 	VisitArrayLiteralItem(ctx *ArrayLiteralItemContext) interface{}
 
+	// Visit a parse tree produced by MojoParser#mapLiteral.
+	VisitMapLiteral(ctx *MapLiteralContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#mapLiteralItems.
+	VisitMapLiteralItems(ctx *MapLiteralItemsContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#mapLiteralItem.
+	VisitMapLiteralItem(ctx *MapLiteralItemContext) interface{}
+
 	// Visit a parse tree produced by MojoParser#objectLiteral.
 	VisitObjectLiteral(ctx *ObjectLiteralContext) interface{}
 
@@ -324,6 +345,21 @@ type MojoParserVisitor interface {
 
 	// Visit a parse tree produced by MojoParser#objectLiteralItem.
 	VisitObjectLiteralItem(ctx *ObjectLiteralItemContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#structLiteral.
+	VisitStructLiteral(ctx *StructLiteralContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#structConstructionExpression.
+	VisitStructConstructionExpression(ctx *StructConstructionExpressionContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#closureExpression.
+	VisitClosureExpression(ctx *ClosureExpressionContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#closureParameters.
+	VisitClosureParameters(ctx *ClosureParametersContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#closureParameter.
+	VisitClosureParameter(ctx *ClosureParameterContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#implicitMemberExpression.
 	VisitImplicitMemberExpression(ctx *ImplicitMemberExpressionContext) interface{}
@@ -340,44 +376,44 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#wildcardExpression.
 	VisitWildcardExpression(ctx *WildcardExpressionContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#explicitMemberExpression1.
-	VisitExplicitMemberExpression1(ctx *ExplicitMemberExpression1Context) interface{}
+	// Visit a parse tree produced by MojoParser#postfixExpression.
+	VisitPostfixExpression(ctx *PostfixExpressionContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#postfixOperation.
-	VisitPostfixOperation(ctx *PostfixOperationContext) interface{}
+	// Visit a parse tree produced by MojoParser#suffixExpression.
+	VisitSuffixExpression(ctx *SuffixExpressionContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#explicitMemberExpression4.
-	VisitExplicitMemberExpression4(ctx *ExplicitMemberExpression4Context) interface{}
+	// Visit a parse tree produced by MojoParser#explicitMemberSuffix.
+	VisitExplicitMemberSuffix(ctx *ExplicitMemberSuffixContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#subscriptExpression.
-	VisitSubscriptExpression(ctx *SubscriptExpressionContext) interface{}
+	// Visit a parse tree produced by MojoParser#subscriptSuffix.
+	VisitSubscriptSuffix(ctx *SubscriptSuffixContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#explicitMemberExpression3.
-	VisitExplicitMemberExpression3(ctx *ExplicitMemberExpression3Context) interface{}
-
-	// Visit a parse tree produced by MojoParser#explicitMemberExpression2.
-	VisitExplicitMemberExpression2(ctx *ExplicitMemberExpression2Context) interface{}
-
-	// Visit a parse tree produced by MojoParser#functionCallExpression.
-	VisitFunctionCallExpression(ctx *FunctionCallExpressionContext) interface{}
-
-	// Visit a parse tree produced by MojoParser#primary.
-	VisitPrimary(ctx *PrimaryContext) interface{}
+	// Visit a parse tree produced by MojoParser#functionCallSuffix.
+	VisitFunctionCallSuffix(ctx *FunctionCallSuffixContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#functionCallArgumentClause.
 	VisitFunctionCallArgumentClause(ctx *FunctionCallArgumentClauseContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#function_call_argument_list.
-	VisitFunction_call_argument_list(ctx *Function_call_argument_listContext) interface{}
+	// Visit a parse tree produced by MojoParser#functionCallArguments.
+	VisitFunctionCallArguments(ctx *FunctionCallArgumentsContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#function_call_argument.
-	VisitFunction_call_argument(ctx *Function_call_argumentContext) interface{}
+	// Visit a parse tree produced by MojoParser#functionCallArgument.
+	VisitFunctionCallArgument(ctx *FunctionCallArgumentContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#argumentNameList.
-	VisitArgumentNameList(ctx *ArgumentNameListContext) interface{}
+	// Visit a parse tree produced by MojoParser#trailingClosures.
+	VisitTrailingClosures(ctx *TrailingClosuresContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#argument_name.
-	VisitArgument_name(ctx *Argument_nameContext) interface{}
+	// Visit a parse tree produced by MojoParser#labeledTrailingClosures.
+	VisitLabeledTrailingClosures(ctx *LabeledTrailingClosuresContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#labeledTrailingClosure.
+	VisitLabeledTrailingClosure(ctx *LabeledTrailingClosureContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#argumentNames.
+	VisitArgumentNames(ctx *ArgumentNamesContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#argumentName.
+	VisitArgumentName(ctx *ArgumentNameContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#type_.
 	VisitType_(ctx *Type_Context) interface{}
@@ -418,20 +454,11 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#functionType.
 	VisitFunctionType(ctx *FunctionTypeContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#functionTypeArgumentClause.
-	VisitFunctionTypeArgumentClause(ctx *FunctionTypeArgumentClauseContext) interface{}
-
-	// Visit a parse tree produced by MojoParser#functionTypeArguments.
-	VisitFunctionTypeArguments(ctx *FunctionTypeArgumentsContext) interface{}
-
-	// Visit a parse tree produced by MojoParser#functionTypeArgument.
-	VisitFunctionTypeArgument(ctx *FunctionTypeArgumentContext) interface{}
-
 	// Visit a parse tree produced by MojoParser#arrayType.
 	VisitArrayType(ctx *ArrayTypeContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#dictionaryType.
-	VisitDictionaryType(ctx *DictionaryTypeContext) interface{}
+	// Visit a parse tree produced by MojoParser#mapType.
+	VisitMapType(ctx *MapTypeContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#typeInheritanceClause.
 	VisitTypeInheritanceClause(ctx *TypeInheritanceClauseContext) interface{}
@@ -448,17 +475,17 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#labelIdentifier.
 	VisitLabelIdentifier(ctx *LabelIdentifierContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#path_identifier.
-	VisitPath_identifier(ctx *Path_identifierContext) interface{}
+	// Visit a parse tree produced by MojoParser#pathIdentifier.
+	VisitPathIdentifier(ctx *PathIdentifierContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#identifier.
 	VisitIdentifier(ctx *IdentifierContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#keyword_as_identifier_in_declarations.
-	VisitKeyword_as_identifier_in_declarations(ctx *Keyword_as_identifier_in_declarationsContext) interface{}
+	// Visit a parse tree produced by MojoParser#keywordAsIdentifierInDeclarations.
+	VisitKeywordAsIdentifierInDeclarations(ctx *KeywordAsIdentifierInDeclarationsContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#keyword_as_identifier_in_labels.
-	VisitKeyword_as_identifier_in_labels(ctx *Keyword_as_identifier_in_labelsContext) interface{}
+	// Visit a parse tree produced by MojoParser#keywordAsIdentifierInLabels.
+	VisitKeywordAsIdentifierInLabels(ctx *KeywordAsIdentifierInLabelsContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#document.
 	VisitDocument(ctx *DocumentContext) interface{}
@@ -472,26 +499,14 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#negatePrefixOperator.
 	VisitNegatePrefixOperator(ctx *NegatePrefixOperatorContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#compilation_condition_AND.
-	VisitCompilation_condition_AND(ctx *Compilation_condition_ANDContext) interface{}
-
-	// Visit a parse tree produced by MojoParser#compilation_condition_OR.
-	VisitCompilation_condition_OR(ctx *Compilation_condition_ORContext) interface{}
-
-	// Visit a parse tree produced by MojoParser#compilation_condition_GE.
-	VisitCompilation_condition_GE(ctx *Compilation_condition_GEContext) interface{}
-
 	// Visit a parse tree produced by MojoParser#arrowOperator.
 	VisitArrowOperator(ctx *ArrowOperatorContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#range_operator.
-	VisitRange_operator(ctx *Range_operatorContext) interface{}
+	// Visit a parse tree produced by MojoParser#rangeOperator.
+	VisitRangeOperator(ctx *RangeOperatorContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#half_open_range_operator.
-	VisitHalf_open_range_operator(ctx *Half_open_range_operatorContext) interface{}
-
-	// Visit a parse tree produced by MojoParser#same_type_equals.
-	VisitSame_type_equals(ctx *Same_type_equalsContext) interface{}
+	// Visit a parse tree produced by MojoParser#halfOpenRangeOperator.
+	VisitHalfOpenRangeOperator(ctx *HalfOpenRangeOperatorContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#binaryOperator.
 	VisitBinaryOperator(ctx *BinaryOperatorContext) interface{}
@@ -504,6 +519,9 @@ type MojoParserVisitor interface {
 
 	// Visit a parse tree produced by MojoParser#operator.
 	VisitOperator(ctx *OperatorContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#operator_characters.
+	VisitOperator_characters(ctx *Operator_charactersContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#operator_character.
 	VisitOperator_character(ctx *Operator_characterContext) interface{}

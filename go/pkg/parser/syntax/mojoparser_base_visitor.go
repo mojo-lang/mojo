@@ -323,7 +323,7 @@ func (v *BaseMojoParserVisitor) VisitPattern(ctx *PatternContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitWildcard_pattern(ctx *Wildcard_patternContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitWildcardPattern(ctx *WildcardPatternContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -331,23 +331,23 @@ func (v *BaseMojoParserVisitor) VisitIdentifierPattern(ctx *IdentifierPatternCon
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitTuple_pattern(ctx *Tuple_patternContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitTuplePattern(ctx *TuplePatternContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitTuple_pattern_element_list(ctx *Tuple_pattern_element_listContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitTuplePatternElementList(ctx *TuplePatternElementListContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitTuple_pattern_element(ctx *Tuple_pattern_elementContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitTuplePatternElement(ctx *TuplePatternElementContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitOptional_pattern(ctx *Optional_patternContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitOptionalPattern(ctx *OptionalPatternContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitExpression_pattern(ctx *Expression_patternContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitExpressionPattern(ctx *ExpressionPatternContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -391,11 +391,11 @@ func (v *BaseMojoParserVisitor) VisitBinaryExpressions(ctx *BinaryExpressionsCon
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitConditional_operator(ctx *Conditional_operatorContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitConditionalOperator(ctx *ConditionalOperatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitType_casting_operator(ctx *Type_casting_operatorContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitTypeCastingOperator(ctx *TypeCastingOperatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -404,6 +404,22 @@ func (v *BaseMojoParserVisitor) VisitPrimaryExpression(ctx *PrimaryExpressionCon
 }
 
 func (v *BaseMojoParserVisitor) VisitLiteralExpression(ctx *LiteralExpressionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitNumericOperatorLiteral(ctx *NumericOperatorLiteralContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitStringOperatorLiteral(ctx *StringOperatorLiteralContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitPostfixLiteralOperator(ctx *PostfixLiteralOperatorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitPrefixLiteralOperator(ctx *PrefixLiteralOperatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -419,6 +435,18 @@ func (v *BaseMojoParserVisitor) VisitArrayLiteralItem(ctx *ArrayLiteralItemConte
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitMapLiteral(ctx *MapLiteralContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitMapLiteralItems(ctx *MapLiteralItemsContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitMapLiteralItem(ctx *MapLiteralItemContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitObjectLiteral(ctx *ObjectLiteralContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -428,6 +456,26 @@ func (v *BaseMojoParserVisitor) VisitObjectLiteralItems(ctx *ObjectLiteralItemsC
 }
 
 func (v *BaseMojoParserVisitor) VisitObjectLiteralItem(ctx *ObjectLiteralItemContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitStructLiteral(ctx *StructLiteralContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitStructConstructionExpression(ctx *StructConstructionExpressionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitClosureExpression(ctx *ClosureExpressionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitClosureParameters(ctx *ClosureParametersContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitClosureParameter(ctx *ClosureParameterContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -451,35 +499,23 @@ func (v *BaseMojoParserVisitor) VisitWildcardExpression(ctx *WildcardExpressionC
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitExplicitMemberExpression1(ctx *ExplicitMemberExpression1Context) interface{} {
+func (v *BaseMojoParserVisitor) VisitPostfixExpression(ctx *PostfixExpressionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitPostfixOperation(ctx *PostfixOperationContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitSuffixExpression(ctx *SuffixExpressionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitExplicitMemberExpression4(ctx *ExplicitMemberExpression4Context) interface{} {
+func (v *BaseMojoParserVisitor) VisitExplicitMemberSuffix(ctx *ExplicitMemberSuffixContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitSubscriptExpression(ctx *SubscriptExpressionContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitSubscriptSuffix(ctx *SubscriptSuffixContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitExplicitMemberExpression3(ctx *ExplicitMemberExpression3Context) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMojoParserVisitor) VisitExplicitMemberExpression2(ctx *ExplicitMemberExpression2Context) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMojoParserVisitor) VisitFunctionCallExpression(ctx *FunctionCallExpressionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMojoParserVisitor) VisitPrimary(ctx *PrimaryContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitFunctionCallSuffix(ctx *FunctionCallSuffixContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -487,19 +523,31 @@ func (v *BaseMojoParserVisitor) VisitFunctionCallArgumentClause(ctx *FunctionCal
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitFunction_call_argument_list(ctx *Function_call_argument_listContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitFunctionCallArguments(ctx *FunctionCallArgumentsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitFunction_call_argument(ctx *Function_call_argumentContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitFunctionCallArgument(ctx *FunctionCallArgumentContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitArgumentNameList(ctx *ArgumentNameListContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitTrailingClosures(ctx *TrailingClosuresContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitArgument_name(ctx *Argument_nameContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitLabeledTrailingClosures(ctx *LabeledTrailingClosuresContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitLabeledTrailingClosure(ctx *LabeledTrailingClosureContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitArgumentNames(ctx *ArgumentNamesContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitArgumentName(ctx *ArgumentNameContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -555,23 +603,11 @@ func (v *BaseMojoParserVisitor) VisitFunctionType(ctx *FunctionTypeContext) inte
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitFunctionTypeArgumentClause(ctx *FunctionTypeArgumentClauseContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMojoParserVisitor) VisitFunctionTypeArguments(ctx *FunctionTypeArgumentsContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMojoParserVisitor) VisitFunctionTypeArgument(ctx *FunctionTypeArgumentContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseMojoParserVisitor) VisitArrayType(ctx *ArrayTypeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitDictionaryType(ctx *DictionaryTypeContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -595,7 +631,7 @@ func (v *BaseMojoParserVisitor) VisitLabelIdentifier(ctx *LabelIdentifierContext
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitPath_identifier(ctx *Path_identifierContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitPathIdentifier(ctx *PathIdentifierContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -603,11 +639,11 @@ func (v *BaseMojoParserVisitor) VisitIdentifier(ctx *IdentifierContext) interfac
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitKeyword_as_identifier_in_declarations(ctx *Keyword_as_identifier_in_declarationsContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitKeywordAsIdentifierInDeclarations(ctx *KeywordAsIdentifierInDeclarationsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitKeyword_as_identifier_in_labels(ctx *Keyword_as_identifier_in_labelsContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitKeywordAsIdentifierInLabels(ctx *KeywordAsIdentifierInLabelsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -627,31 +663,15 @@ func (v *BaseMojoParserVisitor) VisitNegatePrefixOperator(ctx *NegatePrefixOpera
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitCompilation_condition_AND(ctx *Compilation_condition_ANDContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMojoParserVisitor) VisitCompilation_condition_OR(ctx *Compilation_condition_ORContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMojoParserVisitor) VisitCompilation_condition_GE(ctx *Compilation_condition_GEContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseMojoParserVisitor) VisitArrowOperator(ctx *ArrowOperatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitRange_operator(ctx *Range_operatorContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitRangeOperator(ctx *RangeOperatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitHalf_open_range_operator(ctx *Half_open_range_operatorContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMojoParserVisitor) VisitSame_type_equals(ctx *Same_type_equalsContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitHalfOpenRangeOperator(ctx *HalfOpenRangeOperatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -668,6 +688,10 @@ func (v *BaseMojoParserVisitor) VisitPostfixOperator(ctx *PostfixOperatorContext
 }
 
 func (v *BaseMojoParserVisitor) VisitOperator(ctx *OperatorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitOperator_characters(ctx *Operator_charactersContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

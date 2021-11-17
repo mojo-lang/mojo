@@ -105,6 +105,16 @@ func (c *Context) GetSourceFile() *lang.SourceFile {
 	return nil
 }
 
+func (c *Context) IsEnclosed() bool {
+	previous := c.PreviousValue(1)
+	switch previous.(type) {
+	case *lang.StructDecl, *lang.InterfaceDecl:
+		return true
+	default:
+		return false
+	}
+}
+
 func (c *Context) PreviousValue(index int) interface{} {
 	if len(c.Values) == 0 {
 		return nil

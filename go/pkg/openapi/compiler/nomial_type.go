@@ -44,8 +44,7 @@ func (n *NominalTypeCompiler) GetSchema(s *openapi.ReferenceableSchema) *openapi
 }
 
 func compileNominalType(ctx *Context, nominalType *lang.NominalType) (*openapi.ReferenceableSchema, error) {
-	schema := &openapi.Schema{
-	}
+	schema := &openapi.Schema{}
 
 	attribute := lang.GetAttribute(nominalType.Attributes, "type_format")
 	if attribute != nil && len(attribute.GenericArguments) > 0 {
@@ -82,9 +81,9 @@ func compileNominalType(ctx *Context, nominalType *lang.NominalType) (*openapi.R
 
 		schema.Type = openapi.Schema_TYPE_ARRAY
 		schema.Items = s
-	case core.DictionaryTypeName:
+	case core.MapTypeName:
 		schema.Type = openapi.Schema_TYPE_OBJECT
-		s, err := compileNominalType(ctx, nominalType.GenericArguments[0])
+		s, err := compileNominalType(ctx, nominalType.GenericArguments[1])
 		if err != nil {
 			return nil, err
 		}

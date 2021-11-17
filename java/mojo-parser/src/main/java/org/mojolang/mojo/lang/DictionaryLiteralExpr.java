@@ -5,21 +5,21 @@ package org.mojolang.mojo.lang;
 
 /**
  * <pre>
- *&#47; &#92;brief A dictionary literal expression {a : x, b : y, c : z}.
+ *&#47; &#92;brief A map literal expression {a : x, b : y, c : z}.
  * </pre>
  *
- * Protobuf type {@code mojo.lang.DictionaryLiteralExpr}
+ * Protobuf type {@code mojo.lang.MapLiteralExpr}
  */
-public  final class DictionaryLiteralExpr extends
+public  final class MapLiteralExpr extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:mojo.lang.DictionaryLiteralExpr)
-    DictionaryLiteralExprOrBuilder {
+    // @@protoc_insertion_point(message_implements:mojo.lang.MapLiteralExpr)
+    MapLiteralExprOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use DictionaryLiteralExpr.newBuilder() to construct.
-  private DictionaryLiteralExpr(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use MapLiteralExpr.newBuilder() to construct.
+  private MapLiteralExpr(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private DictionaryLiteralExpr() {
+  private MapLiteralExpr() {
     kind_ = 0;
     implicit_ = false;
   }
@@ -29,7 +29,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private DictionaryLiteralExpr(
+  private MapLiteralExpr(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -118,7 +118,7 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_DictionaryLiteralExpr_descriptor;
+    return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_MapLiteralExpr_descriptor;
   }
 
   @SuppressWarnings({"rawtypes"})
@@ -136,9 +136,9 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_DictionaryLiteralExpr_fieldAccessorTable
+    return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_MapLiteralExpr_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            org.mojolang.mojo.lang.DictionaryLiteralExpr.class, org.mojolang.mojo.lang.DictionaryLiteralExpr.Builder.class);
+            org.mojolang.mojo.lang.MapLiteralExpr.class, org.mojolang.mojo.lang.MapLiteralExpr.Builder.class);
   }
 
   private int bitField0_;
@@ -241,7 +241,7 @@ private static final long serialVersionUID = 0L;
         java.lang.String, java.lang.String> defaultEntry =
             com.google.protobuf.MapEntry
             .<java.lang.String, java.lang.String>newDefaultInstance(
-                org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_DictionaryLiteralExpr_ValueEntry_descriptor, 
+                org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_MapLiteralExpr_ValueEntry_descriptor, 
                 com.google.protobuf.WireFormat.FieldType.STRING,
                 "",
                 com.google.protobuf.WireFormat.FieldType.STRING,
@@ -388,10 +388,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof org.mojolang.mojo.lang.DictionaryLiteralExpr)) {
+    if (!(obj instanceof org.mojolang.mojo.lang.MapLiteralExpr)) {
       return super.equals(obj);
     }
-    org.mojolang.mojo.lang.DictionaryLiteralExpr other = (org.mojolang.mojo.lang.DictionaryLiteralExpr) obj;
+    org.mojolang.mojo.lang.MapLiteralExpr other = (org.mojolang.mojo.lang.MapLiteralExpr) obj;
 
     boolean result = true;
     result = result && (hasStartPosition() == other.hasStartPosition());
@@ -443,69 +443,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(byte[] data)
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(java.io.InputStream input)
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseDelimitedFrom(java.io.InputStream input)
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseDelimitedFrom(
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr parseFrom(
+  public static org.mojolang.mojo.lang.MapLiteralExpr parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -518,7 +518,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(org.mojolang.mojo.lang.DictionaryLiteralExpr prototype) {
+  public static Builder newBuilder(org.mojolang.mojo.lang.MapLiteralExpr prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -535,18 +535,18 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   *&#47; &#92;brief A dictionary literal expression {a : x, b : y, c : z}.
+   *&#47; &#92;brief A map literal expression {a : x, b : y, c : z}.
    * </pre>
    *
-   * Protobuf type {@code mojo.lang.DictionaryLiteralExpr}
+   * Protobuf type {@code mojo.lang.MapLiteralExpr}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:mojo.lang.DictionaryLiteralExpr)
-      org.mojolang.mojo.lang.DictionaryLiteralExprOrBuilder {
+      // @@protoc_insertion_point(builder_implements:mojo.lang.MapLiteralExpr)
+      org.mojolang.mojo.lang.MapLiteralExprOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_DictionaryLiteralExpr_descriptor;
+      return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_MapLiteralExpr_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -574,12 +574,12 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_DictionaryLiteralExpr_fieldAccessorTable
+      return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_MapLiteralExpr_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.mojolang.mojo.lang.DictionaryLiteralExpr.class, org.mojolang.mojo.lang.DictionaryLiteralExpr.Builder.class);
+              org.mojolang.mojo.lang.MapLiteralExpr.class, org.mojolang.mojo.lang.MapLiteralExpr.Builder.class);
     }
 
-    // Construct using org.mojolang.mojo.lang.DictionaryLiteralExpr.newBuilder()
+    // Construct using org.mojolang.mojo.lang.MapLiteralExpr.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -620,17 +620,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_DictionaryLiteralExpr_descriptor;
+      return org.mojolang.mojo.lang.ExpressionProto.internal_static_mojo_lang_MapLiteralExpr_descriptor;
     }
 
     @java.lang.Override
-    public org.mojolang.mojo.lang.DictionaryLiteralExpr getDefaultInstanceForType() {
-      return org.mojolang.mojo.lang.DictionaryLiteralExpr.getDefaultInstance();
+    public org.mojolang.mojo.lang.MapLiteralExpr getDefaultInstanceForType() {
+      return org.mojolang.mojo.lang.MapLiteralExpr.getDefaultInstance();
     }
 
     @java.lang.Override
-    public org.mojolang.mojo.lang.DictionaryLiteralExpr build() {
-      org.mojolang.mojo.lang.DictionaryLiteralExpr result = buildPartial();
+    public org.mojolang.mojo.lang.MapLiteralExpr build() {
+      org.mojolang.mojo.lang.MapLiteralExpr result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -638,8 +638,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public org.mojolang.mojo.lang.DictionaryLiteralExpr buildPartial() {
-      org.mojolang.mojo.lang.DictionaryLiteralExpr result = new org.mojolang.mojo.lang.DictionaryLiteralExpr(this);
+    public org.mojolang.mojo.lang.MapLiteralExpr buildPartial() {
+      org.mojolang.mojo.lang.MapLiteralExpr result = new org.mojolang.mojo.lang.MapLiteralExpr(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       if (startPositionBuilder_ == null) {
@@ -695,16 +695,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.mojolang.mojo.lang.DictionaryLiteralExpr) {
-        return mergeFrom((org.mojolang.mojo.lang.DictionaryLiteralExpr)other);
+      if (other instanceof org.mojolang.mojo.lang.MapLiteralExpr) {
+        return mergeFrom((org.mojolang.mojo.lang.MapLiteralExpr)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(org.mojolang.mojo.lang.DictionaryLiteralExpr other) {
-      if (other == org.mojolang.mojo.lang.DictionaryLiteralExpr.getDefaultInstance()) return this;
+    public Builder mergeFrom(org.mojolang.mojo.lang.MapLiteralExpr other) {
+      if (other == org.mojolang.mojo.lang.MapLiteralExpr.getDefaultInstance()) return this;
       if (other.hasStartPosition()) {
         mergeStartPosition(other.getStartPosition());
       }
@@ -734,11 +734,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      org.mojolang.mojo.lang.DictionaryLiteralExpr parsedMessage = null;
+      org.mojolang.mojo.lang.MapLiteralExpr parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.mojolang.mojo.lang.DictionaryLiteralExpr) e.getUnfinishedMessage();
+        parsedMessage = (org.mojolang.mojo.lang.MapLiteralExpr) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1269,41 +1269,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:mojo.lang.DictionaryLiteralExpr)
+    // @@protoc_insertion_point(builder_scope:mojo.lang.MapLiteralExpr)
   }
 
-  // @@protoc_insertion_point(class_scope:mojo.lang.DictionaryLiteralExpr)
-  private static final org.mojolang.mojo.lang.DictionaryLiteralExpr DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:mojo.lang.MapLiteralExpr)
+  private static final org.mojolang.mojo.lang.MapLiteralExpr DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new org.mojolang.mojo.lang.DictionaryLiteralExpr();
+    DEFAULT_INSTANCE = new org.mojolang.mojo.lang.MapLiteralExpr();
   }
 
-  public static org.mojolang.mojo.lang.DictionaryLiteralExpr getDefaultInstance() {
+  public static org.mojolang.mojo.lang.MapLiteralExpr getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<DictionaryLiteralExpr>
-      PARSER = new com.google.protobuf.AbstractParser<DictionaryLiteralExpr>() {
+  private static final com.google.protobuf.Parser<MapLiteralExpr>
+      PARSER = new com.google.protobuf.AbstractParser<MapLiteralExpr>() {
     @java.lang.Override
-    public DictionaryLiteralExpr parsePartialFrom(
+    public MapLiteralExpr parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new DictionaryLiteralExpr(input, extensionRegistry);
+      return new MapLiteralExpr(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<DictionaryLiteralExpr> parser() {
+  public static com.google.protobuf.Parser<MapLiteralExpr> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<DictionaryLiteralExpr> getParserForType() {
+  public com.google.protobuf.Parser<MapLiteralExpr> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public org.mojolang.mojo.lang.DictionaryLiteralExpr getDefaultInstanceForType() {
+  public org.mojolang.mojo.lang.MapLiteralExpr getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

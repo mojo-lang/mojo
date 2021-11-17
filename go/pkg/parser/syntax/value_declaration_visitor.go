@@ -17,8 +17,7 @@ func NewValueDeclarationVisitor() *ValueDeclarationVisitor {
 func (v *ValueDeclarationVisitor) VisitStructMemberDeclaration(ctx *StructMemberDeclarationContext) interface{} {
 	v.ValueDecl.Name = GetDeclarationIdentifier(ctx.DeclarationIdentifier())
 
-	initializerCtx := ctx.Initializer()
-	if initializerCtx != nil {
+	if initializerCtx := ctx.Initializer(); initializerCtx != nil {
 		initializerCtx.Accept(v)
 	}
 
@@ -86,14 +85,15 @@ func (v *ValueDeclarationVisitor) VisitIdentifierPattern(ctx *IdentifierPatternC
 
 func (v *ValueDeclarationVisitor) VisitEnumMember(ctx *EnumMemberContext) interface{} {
 	v.ValueDecl.Name = ctx.DeclarationIdentifier().GetText()
-	v.visitDocuments(ctx.Document(), nil)
+	v.ValueDecl.Document = GetDocument(ctx.Document())
 
-	initializerCtx := ctx.Initializer()
-	if initializerCtx != nil {
+	if initializerCtx := ctx.Initializer(); initializerCtx != nil {
 		initializerCtx.Accept(v)
 	}
 
-	//v.ValueDecl.Attributes = GetAttributes(ctx.Attributes())
+	for _, attributesCtx := range ctx.AllAttributes() {
+		v.ValueDecl.Attributes = append(v.ValueDecl.Attributes, GetAttributes(attributesCtx)...)
+	}
 
 	return v.ValueDecl
 }
@@ -118,17 +118,3 @@ func (v *ValueDeclarationVisitor) VisitInitializer(ctx *InitializerContext) inte
 	return false
 }
 
-func (v *ValueDeclarationVisitor) visitDocuments(doc IDocumentContext, fdoc IFollowingDocumentContext) {
-	if doc != nil {
-		visitor := NewDocumentVisitor()
-		v.ValueDecl.Document = doc.Accept(visitor).(*lang.Document)
-	}
-
-	if fdoc != nil {
-		visitor := NewDocumentVisitor()
-		document := fdoc.Accept(visitor).(*lang.Document)
-		d := &lang.Document{}
-		d.Lines = append(d.Lines, document.Lines...)
-		v.ValueDecl.Document = d
-	}
-}

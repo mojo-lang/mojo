@@ -11,8 +11,8 @@ import (
 )
 
 type Parser struct {
-	Path string
-	Package string
+	Path     string
+	Package  string
 	FileName string
 }
 
@@ -39,12 +39,17 @@ func (p Parser) ParseStream(input *antlr.InputStream) (*lang.SourceFile, error) 
 	tree := parser.MojoFile()
 	visitor := NewMojoFileVisitor()
 	result := visitor.Visit(tree).(bool)
-	if result {
+	if result && errorListener.Error == nil {
 		return visitor.SourceFile, nil
 	}
 
-	logs.Errorw("parse file failed", "file", p.FileName, "path", p.Path, "package", p.Package)
-	return nil, errors.New("parse file failed")
+	if errorListener.Error != nil {
+		return nil, errorListener.Error
+	} else {
+		const msg = "failed to parse mojo file"
+		logs.Errorw(msg, "file", p.FileName, "path", p.Path, "package", p.Package)
+		return nil, errors.New(msg)
+	}
 }
 
 func (p Parser) ParseFile(filename string) (*lang.SourceFile, error) {

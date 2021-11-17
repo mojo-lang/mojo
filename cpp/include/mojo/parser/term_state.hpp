@@ -45,16 +45,16 @@ struct array_term_state : term_state {
     }
 };
 
-struct dictionary_term_state : term_state {
+struct map_term_state : term_state {
     TermPtr key;
-    TermPtr dictionary;
+    TermPtr map;
     std::string pair_name = "field";
 
-    dictionary_term_state() = default;
-    dictionary_term_state(const std::string& name) : dictionary(make_term(name)) {
+    map_term_state() = default;
+    map_term_state(const std::string& name) : map(make_term(name)) {
     }
-    dictionary_term_state(const std::string& name, const std::string& pair_name)
-        : dictionary(make_term(name)), pair_name(pair_name) {
+    map_term_state(const std::string& name, const std::string& pair_name)
+        : map(make_term(name)), pair_name(pair_name) {
     }
 
     void add_key() {
@@ -66,7 +66,7 @@ struct dictionary_term_state : term_state {
         field->terms.push_back(std::move(key));
         field->terms.push_back(std::move(term));
 
-        dictionary->terms.push_back(std::move(field));
+        map->terms.push_back(std::move(field));
 
         key.reset();
         term.reset();
@@ -77,7 +77,7 @@ struct dictionary_term_state : term_state {
             set_value();
         }
 
-        in.term = std::move(dictionary);
+        in.term = std::move(map);
     }
 };
 

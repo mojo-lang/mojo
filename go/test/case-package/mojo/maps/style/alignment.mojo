@@ -1,9 +1,9 @@
 
 ///
 enum Alignment {
+    auto
+
     map
 
     viewport
-    
-    auto
 }

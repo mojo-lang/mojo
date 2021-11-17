@@ -3,12 +3,13 @@ package compiler
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
-	"github.com/iancoleman/strcase"
 	"github.com/mojo-lang/core/go/pkg/mojo"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
-	"strings"
 )
 
 type Plugin interface {
@@ -22,7 +23,7 @@ var plugins = make(map[string][]Plugin)
 func CompileNominalType(ctx *Context, t *lang.NominalType) (string, string, error) { // type, typeName, error
 	pkg := ctx.GetPackage()
 	getName := func() string {
-		if pkg != nil && pkg.FullName == t.Package {
+		if pkg != nil && pkg.FullName == t.PackageName {
 			return t.Name
 		} else {
 			return t.GetFullName()
@@ -83,7 +84,7 @@ func CompileEnum(ctx *Context, decl *lang.EnumDecl, enumDescriptor *desc.EnumDes
 
 		number, err := lang.GetIntegerAttribute(e.Attributes, "number")
 		if err == nil {
-			if number <= 0 {
+			if number < 0 {
 				return errors.New("number attribute value must be positive")
 			}
 			n := int32(number)
@@ -146,7 +147,7 @@ func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.M
 		if decl.IsBoxedType() {
 			valueType := decl.Type.Inherits[0]
 			valueName := "value"
-			if fullName := valueType.GetFullName(); fullName == "mojo.core.Array" || fullName == "mojo.core.Dictionary" {
+			if fullName := valueType.GetFullName(); fullName == "mojo.core.Array" || fullName == "mojo.core.Map" {
 				valueName = "values"
 			}
 			valueDecl := &lang.ValueDecl{
@@ -174,7 +175,7 @@ func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.M
 		}
 	}
 
-	if *structDescriptor.Name == "Strings" || *structDescriptor.Name == "Integers" || *structDescriptor.Name == "Doubles" {
+	if *structDescriptor.Name == "Strings" || *structDescriptor.Name == "StringValues" || *structDescriptor.Name == "IntegerValues" || *structDescriptor.Name == "DoubleValues" {
 		if file != nil && !strings.HasPrefix(*file.Name, "mojo/core/boxed") {
 			file.Dependency = append(file.Dependency, "mojo/core/boxed.proto")
 			return nil
@@ -226,7 +227,7 @@ func compileStructInherit(ctx *Context, inherit *lang.NominalType, descriptor *d
 	//sourceFiles[unifyFileName(decl.SourceFileName)] = true
 
 	for _, dependency := range decl.ResolvedIdentifiers {
-		fileName := unifyFileName(dependency.SourceFile)
+		fileName := unifyFileName(dependency.SourceFileName)
 		if file != nil && !IsSystemFile(fileName) && fileName != *file.Name /*&& !sourceFiles[fileName]*/ {
 			file.Dependency = append(file.Dependency, fileName)
 		}

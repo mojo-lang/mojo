@@ -19,7 +19,6 @@ package {{.GoPackageName}}
 
 import (
 	jsoniter "github.com/json-iterator/go"
-	"strconv"
 	"unsafe"
 )
 
@@ -33,10 +32,15 @@ type {{CompactFullName .FullName}}Codec struct {
 
 func (codec *{{CompactFullName .FullName}}Codec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
 	any := iter.ReadAny()
-	e := (*{{EnclosingName}}_{{EnumName}})(ptr)
+	e := (*{{.FullName}})(ptr)
 	if any.ValueType() == jsoniter.StringValue {
 		e.Parse(any.ToString())
-	}
+	} else if any.ValueType() == jsoniter.NumberValue {
+        value := any.ToInt32()
+        if _, ok := {{CompactFullName .FullName}}Names[value]; ok {
+            *e = {{.FullName}}(value)
+        }
+    }
 }
 
 func (codec *{{CompactFullName .FullName}}Codec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {

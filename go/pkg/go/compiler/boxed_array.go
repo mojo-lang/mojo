@@ -30,3 +30,11 @@ func (b *BoxedArray) Compile(decl *lang.StructDecl) error {
 	b.FieldName = strcase.ToCamel(decl.Type.Fields[0].Name)
 	return nil
 }
+
+func (b *BoxedArray) GetPackageName() string {
+	return b.PackageName
+}
+
+func (b *BoxedArray) GetFullName() string  {
+	return b.FullName
+}

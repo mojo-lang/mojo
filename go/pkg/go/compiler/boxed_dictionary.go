@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type BoxedDictionary struct {
+type BoxedMap struct {
 	PackageName   string
 	GoPackageName string
 	Name          string
@@ -15,7 +15,7 @@ type BoxedDictionary struct {
 	FieldName     string
 }
 
-func (b *BoxedDictionary) Compile(decl *lang.StructDecl) error {
+func (b *BoxedMap) Compile(decl *lang.StructDecl) error {
 	b.PackageName = decl.GetPackageName()
 	b.GoPackageName = GetGoPackage(decl.GetPackageName())
 	b.Name = decl.Name
@@ -23,4 +23,12 @@ func (b *BoxedDictionary) Compile(decl *lang.StructDecl) error {
 	b.FullName = GetFullName(b.EnclosingName, b.Name)
 	b.FieldName = strcase.ToCamel(decl.Type.Fields[0].Name)
 	return nil
+}
+
+func (b *BoxedMap) GetPackageName() string {
+	return b.PackageName
+}
+
+func (b *BoxedMap) GetFullName() string {
+	return b.FullName
 }

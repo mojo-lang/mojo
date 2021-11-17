@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 	path2 "path"
+	"strings"
 )
 
 // generate the following files:
@@ -17,15 +18,17 @@ import (
 type Generator struct {
 	*OpenAPIs
 
-	Files map[string][]byte
+	Package *lang.Package
+	Files   map[string][]byte
 }
 
-func NewGenerator(apis map[string]*openapi.OpenAPI, components *openapi.Components) *Generator {
+func NewGenerator(pkg *lang.Package, apis map[string]*openapi.OpenAPI, components *openapi.Components) *Generator {
 	return &Generator{
 		OpenAPIs: &OpenAPIs{
 			APIs:       apis,
 			Components: components,
 		},
+		Package: pkg,
 		Files: make(map[string][]byte),
 	}
 }
@@ -63,6 +66,10 @@ func toSchemaFileName(name string) string {
 
 func (g *Generator) generateSchema() error {
 	for name, schema := range g.Components.Schemas {
+		if !strings.HasPrefix(name, g.Package.FullName) {
+			continue
+		}
+
 		j, err := jsoniter.Marshal(schema)
 		if err != nil {
 			return err

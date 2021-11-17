@@ -61,8 +61,8 @@ func (r *Resolver) parsePackage(ctx *plugin.Context, pkg *lang.Package) error {
 		}
 
 		for _, dependency := range file.ResolvedIdentifiers {
-			if dependency.Package == pkg.FullName {
-				node.dependencies = append(node.dependencies, dependency.SourceFile)
+			if dependency.PackageName == pkg.FullName {
+				node.dependencies = append(node.dependencies, dependency.SourceFileName)
 			}
 		}
 		node.dependencies = removeDuplicated(node.dependencies)

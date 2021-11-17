@@ -2,14 +2,15 @@ package render
 
 import (
 	"bytes"
-	"github.com/iancoleman/strcase"
+	"io"
+	"strings"
+	"text/template"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/httptransport"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
 	"github.com/pkg/errors"
-	"io"
-	"strings"
-	"text/template"
 )
 
 // Data is passed to templates as the executing struct; its fields
@@ -70,7 +71,7 @@ func NewData(sd *types.Service, conf Config) (*Data, error) {
 		AllInterfaceNames:      sd.AllInterfaceNames,
 		ExternalMessageImports: unifyStringArray(sd.ImportPaths),
 		ExternalStructs:        unifyStringArray(sd.ImportStructs),
-		ExternalEnums: 			unifyStringArray(sd.ImportEnums),
+		ExternalEnums:          unifyStringArray(sd.ImportEnums),
 		ClientArgs:             types.NewClientArguments(sd.Interface),
 		HTTPHelper:             httptransport.NewHelper(sd.Interface),
 		FuncMap:                FuncMap,

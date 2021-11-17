@@ -112,7 +112,7 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, api *openapi.OpenAPI
 			return "", nil
 		}
 
-		if attribute.Package == "http" {
+		if attribute.PackageName == "http" {
 			switch attribute.Name {
 			case "get", "post", "put", "patch", "delete", "options", "head", "trace":
 				path, err := setOperation(op, attribute.Name)

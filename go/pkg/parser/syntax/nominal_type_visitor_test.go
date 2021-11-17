@@ -31,7 +31,7 @@ func TestNominalTypeVisitor_VisitArrayType2(t *testing.T) {
 	assert.NotNil(t, nominalType)
 	assert.Equal(t, "Array", nominalType.Name)
 	assert.Equal(t, 1, len(nominalType.GenericArguments))
-	assert.Equal(t, "mojo.lang", nominalType.GenericArguments[0].Package)
+	assert.Equal(t, "mojo.lang", nominalType.GenericArguments[0].PackageName)
 	assert.Equal(t, "StructType", nominalType.GenericArguments[0].Name)
 }
 
@@ -45,7 +45,7 @@ func TestNominalTypeVisitor_VisitPrimeType_PackageName(t *testing.T) {
 	nominalType := getNominalType(file)
 	assert.NotNil(t, nominalType)
 	assert.Equal(t, "Int", nominalType.Name)
-	assert.Equal(t, "mojo.core", nominalType.Package)
+	assert.Equal(t, "mojo.core", nominalType.PackageName)
 }
 
 func TestNominalTypeVisitor_VisitType_EnclosingName(t *testing.T) {
@@ -59,10 +59,10 @@ func TestNominalTypeVisitor_VisitType_EnclosingName(t *testing.T) {
 	assert.NotNil(t, nominalType)
 	assert.Equal(t, "Path", nominalType.Name)
 	assert.Equal(t, "Url", nominalType.EnclosingType.Name)
-	assert.Equal(t, "mojo.core", nominalType.Package)
+	assert.Equal(t, "mojo.core", nominalType.PackageName)
 }
 
-func TestNominalTypeVisitor_VisitDictionaryType(t *testing.T) {
+func TestNominalTypeVisitor_VisitMapType(t *testing.T) {
 	const dictType = `type Val{ val: {String: Int} }`
 
 	parser := &Parser{}
@@ -71,7 +71,7 @@ func TestNominalTypeVisitor_VisitDictionaryType(t *testing.T) {
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
 	assert.NotNil(t, nominalType)
-	assert.Equal(t, "Dictionary", nominalType.Name)
+	assert.Equal(t, "Map", nominalType.Name)
 	assert.Equal(t, 2, len(nominalType.GenericArguments))
 	assert.Equal(t, "String", nominalType.GenericArguments[0].Name)
 	assert.Equal(t, "Int", nominalType.GenericArguments[1].Name)
@@ -127,6 +127,34 @@ func TestNominalTypeVisitor_VisitTupleTypeWithLabel(t *testing.T) {
 
 	label, _ = lang.GetStringAttribute(nominalType.GenericArguments[1].Attributes, "label")
 	assert.Equal(t, "integer", label)
+}
+
+func TestNominalTypeVisitor_VisitQuestionType(t *testing.T) {
+	const questionType = `type Val{ val: Int? }`
+
+	parser := &Parser{}
+	file, err := parser.ParseString(questionType)
+
+	assert.NoError(t, err)
+	nominalType := getNominalType(file)
+	assert.NotNil(t, nominalType)
+	assert.Equal(t, "Int", nominalType.Name)
+	v, _ := lang.GetBoolAttribute(nominalType.Attributes, "optional")
+	assert.True(t, v)
+}
+
+func TestNominalTypeVisitor_VisitBangType(t *testing.T) {
+	const bangType = `type Val{ val: Int! }`
+
+	parser := &Parser{}
+	file, err := parser.ParseString(bangType)
+
+	assert.NoError(t, err)
+	nominalType := getNominalType(file)
+	assert.NotNil(t, nominalType)
+	assert.Equal(t, "Int", nominalType.Name)
+	v, _ := lang.GetBoolAttribute(nominalType.Attributes, "required")
+	assert.True(t, v)
 }
 
 func getNominalType(file *lang.SourceFile) *lang.NominalType {

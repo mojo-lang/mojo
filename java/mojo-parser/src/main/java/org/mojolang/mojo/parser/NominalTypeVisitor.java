@@ -42,8 +42,8 @@ public class NominalTypeVisitor extends MojoBaseVisitor<com.google.protobuf.Gene
             builder_.addGenericArguments(argumentBuilder);
         }
 
-        MojoParser.Dictionary_typeContext dictionaryCtx = ctx.dictionary_type();
-        if (dictionaryCtx != null) {
+        MojoParser.Map_typeContext mapCtx = ctx.map_type();
+        if (mapCtx != null) {
         }
 
         MojoParser.Function_typeContext functionCtx = ctx.function_type();

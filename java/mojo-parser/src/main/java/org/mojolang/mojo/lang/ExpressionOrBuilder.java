@@ -86,17 +86,17 @@ public interface ExpressionOrBuilder extends
   org.mojolang.mojo.lang.ArrayLiteralExprOrBuilder getArrayLiteralExprOrBuilder();
 
   /**
-   * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+   * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
    */
-  boolean hasDictionaryLiteralExpr();
+  boolean hasMapLiteralExpr();
   /**
-   * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+   * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
    */
-  org.mojolang.mojo.lang.DictionaryLiteralExpr getDictionaryLiteralExpr();
+  org.mojolang.mojo.lang.MapLiteralExpr getMapLiteralExpr();
   /**
-   * <code>.mojo.lang.DictionaryLiteralExpr dictionary_literal_expr = 7;</code>
+   * <code>.mojo.lang.MapLiteralExpr map_literal_expr = 7;</code>
    */
-  org.mojolang.mojo.lang.DictionaryLiteralExprOrBuilder getDictionaryLiteralExprOrBuilder();
+  org.mojolang.mojo.lang.MapLiteralExprOrBuilder getMapLiteralExprOrBuilder();
 
   /**
    * <code>.mojo.lang.ObjectLiteralExpr object_literal_expr = 8;</code>

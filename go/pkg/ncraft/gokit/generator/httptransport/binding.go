@@ -2,13 +2,14 @@ package httptransport
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+
 	gogen "github.com/golang/protobuf/protoc-gen-go/generator"
-	"github.com/iancoleman/strcase"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/httptransport/templates"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
-	"strconv"
-	"strings"
 )
 
 // Binding contains the distillation of information within an

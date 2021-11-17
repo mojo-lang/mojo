@@ -29,7 +29,7 @@ func (s *StructDeclarationVisitor) VisitStructDeclaration(ctx *StructDeclaration
 
 			enclosingType := &lang.NominalType{
 				Name: name,
-				//TypeDeclaration: lang.NewStructTypeDeclaration(decl), // may cause reference circle
+				TypeDeclaration: lang.NewStructTypeDeclaration(decl), // may cause reference circle
 			}
 
 			structType := ctx.StructType()
@@ -46,6 +46,16 @@ func (s *StructDeclarationVisitor) VisitStructDeclaration(ctx *StructDeclaration
 						}
 						for _, structDecl := range decl.StructDecls {
 							structDecl.EnclosingType = enclosingType
+
+							for _, eDecl := range structDecl.EnumDecls {
+								eDecl.EnclosingType.EnclosingType = enclosingType
+							}
+							for _, sDecl := range structDecl.StructDecls {
+								sDecl.EnclosingType.EnclosingType = enclosingType
+							}
+							for _, aDecl := range structDecl.TypeAliasDecls {
+								aDecl.EnclosingType.EnclosingType = enclosingType
+							}
 						}
 						for _, typeAliasDecl := range decl.TypeAliasDecls {
 							typeAliasDecl.EnclosingType = enclosingType

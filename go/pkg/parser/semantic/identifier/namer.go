@@ -28,7 +28,7 @@ func (p *Namer) Parse(ctx *plugin.Context, pkg *lang.Package, options map[string
 			for key, value := range scope.Identifiers {
 				ctx.CurrentScope().Identifiers[pkg.Name+"."+key] = value
 
-				if value.Package == "mojo.core" {
+				if value.PackageName == "mojo.core" {
 					ctx.CurrentScope().Identifiers[key] = value
 				}
 			}
@@ -79,7 +79,7 @@ func (p *Namer) ParserSourceFile(ctx *plugin.Context, file *lang.SourceFile) err
 
 			identifier := ctx.Declare(decl)
 			if identifier != nil {
-				identifier.SourceFile = file.FullName
+				identifier.SourceFileName = file.FullName
 			}
 
 			switch decl.Declaration.(type) {
@@ -122,7 +122,7 @@ func (p *Namer) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error {
 		declaration.SourceFileName = file.FullName
 
 		identifier := ctx.Declare(lang.NewStructDeclaration(declaration))
-		identifier.SourceFile = file.FullName
+		identifier.SourceFileName = file.FullName
 		p.ParseStruct(ctx, declaration)
 	}
 
@@ -131,7 +131,7 @@ func (p *Namer) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error {
 		declaration.SourceFileName = file.FullName
 
 		identifier := ctx.Declare(lang.NewEnumDeclaration(declaration))
-		identifier.SourceFile = file.FullName
+		identifier.SourceFileName = file.FullName
 		p.ParseEnum(ctx, declaration)
 	}
 
@@ -140,13 +140,13 @@ func (p *Namer) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error {
 		declaration.SourceFileName = file.FullName
 
 		identifier := ctx.Declare(lang.NewTypeAliasDeclaration(declaration))
-		identifier.SourceFile = file.FullName
+		identifier.SourceFileName = file.FullName
 		p.ParseTypeAlias(ctx, declaration)
 	}
 
 	for _, parameter := range decl.GenericParameters {
 		identifier := ctx.Declare(lang.NewGenericParameterDeclaration(parameter))
-		identifier.SourceFile = file.FullName
+		identifier.SourceFileName = file.FullName
 	}
 
 	scope := ctx.CurrentScope()
@@ -177,7 +177,7 @@ func (p *Namer) ParseTypeAlias(ctx *plugin.Context, decl *lang.TypeAliasDecl) er
 
 	for _, parameter := range decl.GenericParameters {
 		identifier := ctx.Declare(lang.NewGenericParameterDeclaration(parameter))
-		identifier.SourceFile = file.FullName
+		identifier.SourceFileName = file.FullName
 	}
 
 	ctx.Close()
