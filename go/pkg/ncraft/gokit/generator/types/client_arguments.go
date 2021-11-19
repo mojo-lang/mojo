@@ -11,7 +11,7 @@ import (
 	"strings"
 	"unicode"
 
-	gogen "github.com/golang/protobuf/protoc-gen-go/generator"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/pkg/errors"
 )
 
@@ -184,7 +184,7 @@ func newClientArgument(methName string, field *Field) *ClientArgument {
 	}
 
 	newArg.FlagName = fmt.Sprintf("%s", strings.ToLower(field.Name))
-	newArg.FlagArg = fmt.Sprintf("flag%s%s", gogen.CamelCase(field.Name), gogen.CamelCase(methName))
+	newArg.FlagArg = fmt.Sprintf("flag%s%s", strcase.ToCamel(field.Name), strcase.ToCamel(methName))
 
 	if field.Type.Enum != nil {
 		newArg.Enum = true
@@ -205,7 +205,7 @@ func newClientArgument(methName string, field *Field) *ClientArgument {
 	newArg.FlagType = ft
 	newArg.FlagConvertFunc = createFlagConvertFunc(newArg, methName)
 
-	newArg.GoArg = fmt.Sprintf("%s%s", gogen.CamelCase(newArg.Name), gogen.CamelCase(methName))
+	newArg.GoArg = fmt.Sprintf("%s%s", strcase.ToCamel(newArg.Name), strcase.ToCamel(methName))
 	// For types outside the base types, treat them as strings
 	if newArg.IsBaseType {
 		//newArg.GoType = ProtoToGoTypeMap[field.Type.GetName()]
@@ -313,7 +313,7 @@ func applyTemplate(name string, tmpl string, executor interface{}, fncs template
 // lowCamelName returns a CamelCased string, but with the first letter
 // lowercased. "example_name" becomes "exampleName".
 func lowCamelName(s string) string {
-	s = gogen.CamelCase(s)
+	s = strcase.ToCamel(s)
 	new := []rune(s)
 	if len(new) < 1 {
 		return s

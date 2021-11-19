@@ -4,7 +4,6 @@ import (
 	"strings"
 	"text/template"
 
-	gogen "github.com/golang/protobuf/protoc-gen-go/generator"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 )
@@ -19,7 +18,7 @@ var TemplateFunctions = template.FuncMap{
 	"ToCamel":                  strcase.ToCamel,
 	"ToLowerCamel":             strcase.ToLowerCamel,
 	"Title":                    strings.Title,
-	"GoName":                   gogen.CamelCase,
+	"GoName":                   strcase.ToCamel,
 	"Contains":                 strings.Contains,
 	"PackageName":              compiler.GetPackageName,
 	"FieldArrayElementType":    FieldArrayElementType,

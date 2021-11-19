@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	gogen "github.com/golang/protobuf/protoc-gen-go/generator"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/httptransport/templates"
@@ -238,11 +237,11 @@ func (b *Binding) PathSections() []string {
 		if len(part) > 2 && part[0] == '{' && part[len(part)-1] == '}' {
 			name := RemoveBraces(part)
 			if _, ok := isEnum[strcase.ToCamel(name)]; ok {
-				convert := fmt.Sprintf("fmt.Sprintf(\"%%d\", req.%v)", gogen.CamelCase(name))
+				convert := fmt.Sprintf("fmt.Sprintf(\"%%d\", req.%v)", strcase.ToCamel(name))
 				rv = append(rv, convert)
 				continue
 			}
-			convert := fmt.Sprintf("fmt.Sprint(req.%v)", gogen.CamelCase(name))
+			convert := fmt.Sprintf("fmt.Sprint(req.%v)", strcase.ToCamel(name))
 			rv = append(rv, convert)
 		} else {
 			// Add quotes around things which'll be embeded as string literals,
