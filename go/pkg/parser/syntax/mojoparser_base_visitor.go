@@ -183,6 +183,10 @@ func (v *BaseMojoParserVisitor) VisitPatternInitializers(ctx *PatternInitializer
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitDocumentedPatternInitializer(ctx *DocumentedPatternInitializerContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitPatternInitializer(ctx *PatternInitializerContext) interface{} {
 	return v.VisitChildren(ctx)
 }

@@ -139,6 +139,9 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#patternInitializers.
 	VisitPatternInitializers(ctx *PatternInitializersContext) interface{}
 
+	// Visit a parse tree produced by MojoParser#documentedPatternInitializer.
+	VisitDocumentedPatternInitializer(ctx *DocumentedPatternInitializerContext) interface{}
+
 	// Visit a parse tree produced by MojoParser#patternInitializer.
 	VisitPatternInitializer(ctx *PatternInitializerContext) interface{}
 

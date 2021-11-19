@@ -200,9 +200,11 @@ constantDeclaration
   : KEYWORD_CONST patternInitializers
   ;
 patternInitializers
-  : patternInitializer (COMMA patternInitializer)*
-  | LCURLY EOL* patternInitializer (COMMA patternInitializer)* EOL* RCURLY
+  : patternInitializer (eov EOL*  patternInitializer)*
+  | LCURLY EOL* documentedPatternInitializer (eov EOL* documentedPatternInitializer)* eov? EOL* RCURLY
   ;
+
+documentedPatternInitializer : document? (attributes EOL)? patternInitializer;
 
 /** rule is ambiguous. can match "var x = 1" with x as pattern
  *  OR with x as expression_pattern.

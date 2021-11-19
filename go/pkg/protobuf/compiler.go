@@ -174,7 +174,7 @@ func getOrganizationPrefix(pkg *lang.Package) string {
 		if strings.HasPrefix(pkg.FullName, "mojo.") {
 			organization = "mojolang.org"
 		} else {
-			logs.Warnw("you should add organization to wand.mojo file, for build java files from protobuf", "package", pkg.FullName)
+			logs.Warnw("you should add organization to package.mojo file, for build java files from protobuf", "package", pkg.FullName)
 			return ""
 		}
 	}
