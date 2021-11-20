@@ -10,6 +10,8 @@ type HandlerTemplate struct {
 
 type Config struct {
 	Repository    string // the repository for the generated gokit service
+	MixedInAPI    bool
+	ApiRepository string
 	Version       string
 	VersionDate   string
 	Output        string

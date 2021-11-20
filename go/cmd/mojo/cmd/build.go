@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/commander"
 	"github.com/urfave/cli/v2"
 	"os"
+	"strings"
 )
 
 type BuildCmd struct {
@@ -90,9 +92,15 @@ func (b *BuildCmd) Build() {
 func (b *BuildCmd) Execute(ctx *cli.Context) error {
 	if ctx.NArg() > 0 {
 		b.Path = ctx.Args().Get(0)
+		if strings.HasPrefix(b.Path, "--") {
+			return fmt.Errorf("failed to parse path from commandline, path: %s", b.Path)
+		}
 	}
 	if ctx.NArg() > 1 {
 		b.Output = ctx.Args().Get(1)
+		if strings.HasPrefix(b.Path, "--") {
+			return fmt.Errorf("failed to parse output from commandline, output: %s", b.Output)
+		}
 	}
 	return b.Builder.Execute()
 }

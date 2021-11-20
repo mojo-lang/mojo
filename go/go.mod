@@ -2,13 +2,18 @@ module github.com/mojo-lang/mojo/go
 
 go 1.16
 
+replace (
+	github.com/mojo-lang/core/go => ../../core/go
+	github.com/mojo-lang/lang/go => ../../lang/go
+	github.com/mojo-lang/openapi/go => ../../openapi/go
+)
+
 require (
 	github.com/antlr/antlr4 v0.0.0-20211106181442-e4c1a74c66bd
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211106181442-e4c1a74c66bd // indirect
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/gogo/protobuf v1.3.2
-	github.com/golang/protobuf v1.5.1
 	github.com/iancoleman/strcase v0.2.0
 	github.com/json-iterator/go v1.1.12
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect

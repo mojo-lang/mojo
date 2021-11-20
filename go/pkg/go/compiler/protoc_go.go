@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"bytes"
 	"errors"
 	_ "github.com/gogo/protobuf/protoc-gen-gogo/grpc"
 	plugin "github.com/gogo/protobuf/protoc-gen-gogo/plugin"
@@ -62,11 +63,12 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 		for _, file := range group {
 			fileCmd.Args = append(fileCmd.Args, *file.Name)
 		}
+
+		var stderr bytes.Buffer
+		fileCmd.Stderr = &stderr
 		out, err := fileCmd.Output()
-		cmdstr := fileCmd.String()
-		println(cmdstr)
 		if err != nil {
-			logs.Errorw("failed to run protoc cmd", "error", string(out), "cmd", fileCmd.String())
+			logs.Errorw("failed to run protoc cmd", "error", stderr.String(), "cmd", fileCmd.String())
 			return nil, err
 		}
 

@@ -17,7 +17,9 @@ import (
 // and methods are used to modify the template
 type Data struct {
 	// repository path for the directory containing the definition service files
-	RepositoryPath string
+	RepositoryPath    string
+	MixedInAPI        bool
+	ApiRepositoryPath string
 
 	// import path for .pb.go files containing service structs
 	ApiImportPath string
@@ -62,8 +64,10 @@ func unifyStringArray(array []string) []string {
 }
 
 func NewData(sd *types.Service, conf Config) (*Data, error) {
-	return &Data{
+	data := &Data{
 		RepositoryPath:         conf.Repository,
+		MixedInAPI:             conf.MixedInAPI,
+		ApiRepositoryPath:      conf.ApiRepository,
 		ApiImportPath:          sd.ApiImportPath,
 		PackageName:            sd.PkgName,
 		FullPackageName:        sd.FullPkgName,
@@ -78,7 +82,9 @@ func NewData(sd *types.Service, conf Config) (*Data, error) {
 		Extension:              conf.ExtensionData,
 		Version:                conf.Version,
 		VersionDate:            conf.VersionDate,
-	}, nil
+	}
+
+	return data, nil
 }
 
 // ApplyTemplate applies the passed template with the Data

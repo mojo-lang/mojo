@@ -7,6 +7,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/builder"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/pkg/errors"
 	"io"
 	"os"
@@ -33,9 +34,29 @@ func getPackageImport(pkg *lang.Package) string {
 }
 
 func (b Builder) Build() error {
-	logs.Infow("begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
+	logs.Infow("gokit begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
+
+	if len(b.Output) == 0 {
+		if b.APIEnabled {
+			b.Output = b.Path
+		} else {
+			b.Output = path2.Join(b.Path, "../")
+		}
+	}
+
+	setDefaultRepository := func(ncraftType string) {
+		if len(b.Repository) == 0 {
+			if b.APIEnabled {
+				b.Repository = path2.Join(b.Package.Repository.FormatWithoutSchema(), ncraftType)
+			} else {
+				b.Repository = b.Package.Repository.FormatWithoutSchema() + "-" + ncraftType
+			}
+		}
+	}
 
 	if b.Type == "client" {
+		setDefaultRepository("client")
+		b.Output = path2.Join(b.Output, path2.Base(b.Repository))
 		cb := &ClientBuilder{
 			Builder:    b.Builder,
 			Output:     b.Output,
@@ -43,6 +64,8 @@ func (b Builder) Build() error {
 		}
 		return cb.Build()
 	} else if b.Type == "sidecar" {
+		setDefaultRepository("sidecar")
+		b.Output = path2.Join(b.Output, path2.Base(b.Repository))
 		sb := &SidecarBuilder{
 			Builder:    b.Builder,
 			Output:     b.Output,
@@ -67,33 +90,38 @@ func (b Builder) Build() error {
 	}
 
 	services := compiler.Services
+	setDefaultRepository("service-go")
+	b.Output = path2.Join(b.Output, path2.Base(b.Repository))
 	conf := render.Config{
 		Repository:    b.Repository,
+		ApiRepository: path2.Join(b.Package.Repository.FormatWithoutSchema(), "go"),
 		Output:        b.Output,
+		MixedInAPI:    b.APIEnabled,
 		PreviousFiles: make(map[string]io.Reader),
 	}
 
-	root := path2.Join(b.Output, path2.Base(b.Repository))
 	prefixPath := b.Output
 	if !strings.HasSuffix(prefixPath, "/") {
 		prefixPath += "/"
 	}
-	err = filepath.Walk(root, func(path string, f os.FileInfo, err error) error {
-		if f == nil {
-			return err
-		}
+	if util.IsExist(b.Output) {
+		err = filepath.Walk(b.Output, func(path string, f os.FileInfo, err error) error {
+			if f == nil {
+				return err
+			}
 
-		if f.IsDir() {
+			if f.IsDir() {
+				return nil
+			}
+
+			reader, err := os.Open(path)
+			name := strings.TrimPrefix(path, prefixPath)
+			conf.PreviousFiles[name] = reader
 			return nil
+		})
+		if err != nil {
+			return errors.Wrap(err, "filepath.Walk() failed")
 		}
-
-		reader, err := os.Open(path)
-		name := strings.TrimPrefix(path, prefixPath)
-		conf.PreviousFiles[name] = reader
-		return nil
-	})
-	if err != nil {
-		return errors.Wrap(err, "filepath.Walk() failed")
 	}
 
 	for _, s := range services {

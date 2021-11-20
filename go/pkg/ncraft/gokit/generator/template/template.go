@@ -2,23 +2,24 @@ package template
 
 import (
 	"embed"
+	service_go "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/template/service-go"
 	"io"
 	"io/fs"
 )
 
-//go:embed PKGNAME/*
-var services embed.FS
+////go:embed PKGNAME/*
+//var services embed.FS
 
 //go:embed NAME-client/*
 var clients embed.FS
 
-//go:embed PKGNAME-sidecar/*
+//go:embed sidecar/*
 var sidecars embed.FS
 
 type FileGetter = func(path string) ([]byte, error)
 
 func Service(path string) ([]byte, error) {
-	return fileContent(services, path)
+	return fileContent(service_go.Services, path)
 }
 
 func Client(path string) ([]byte, error) {
@@ -30,7 +31,7 @@ func Sidecar(path string) ([]byte, error) {
 }
 
 func ServiceNames() []string {
-	return fileNames(services)
+	return fileNames(service_go.Services)
 }
 
 func ClientNames() []string {

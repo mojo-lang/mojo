@@ -11,7 +11,9 @@ import (
     "github.com/ncraft-io/ncraft-go/pkg/logs"
 
     nserver "github.com/ncraft-io/ncraft-go/pkg/server"
-    "{{.RepositoryPath -}}/pkg/server"
+
+	// This Service
+	"{{.RepositoryPath -}}/internal/{{ToKebab .Interface.Name}}-server"
 )
 
 func main() {
@@ -24,6 +26,6 @@ func main() {
 	    logs.Warnw("failed to get the server config", "error", err.Error())
 	}
 
-    logs.Info("starting {{.PackageName}}UnifiedServer")
+    logs.Info("starting {{.Interface.Name}}Server")
 	server.Run(conf)
 }

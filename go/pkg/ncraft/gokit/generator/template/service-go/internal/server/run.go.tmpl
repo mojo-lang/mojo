@@ -28,7 +28,7 @@ import (
 
 	// Services
 	{{range $i := .AllInterfaceNames}}
-	{{ToSnake $i}} "{{$.RepositoryPath}}/pkg/{{ToKebab $i}}-service/svc/server"
+	{{ToSnake $i}} "{{$.RepositoryPath}}/internal/{{ToKebab $i}}-server"
 	{{- end}}
 )
 

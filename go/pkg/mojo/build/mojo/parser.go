@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/build/builder"
 	pkg2 "github.com/mojo-lang/mojo/go/pkg/mojo/pkg"
 	"github.com/mojo-lang/mojo/go/pkg/parser"
 	path2 "path"
@@ -41,9 +42,7 @@ func (p *Parser) parseDependency(path string, dependent *lang.Package) error {
 		return err
 	}
 
-	if !path2.IsAbs(path) {
-		path = path2.Join(p.WorkingDir, path)
-	}
+	path = builder.GetAbsolutePath(p.WorkingDir, path)
 	pkg.SetExtraString("path", path)
 
 	if dependent == nil {
@@ -59,10 +58,7 @@ func (p *Parser) parseDependency(path string, dependent *lang.Package) error {
 	// parse the dependency
 	for _, d := range pkg.Dependencies {
 		///TODO: resolve the requirement and download the package if needed
-		depPath := d.Path
-		if !path2.IsAbs(depPath) {
-			depPath = path2.Join(path, d.Path)
-		}
+		depPath := builder.GetAbsolutePath(path, d.Path)
 		err = p.parseDependency(depPath, pkg)
 		if err != nil {
 			return err

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const HookPath = "PKGNAME/pkg/NAME-service/handlers/hooks.go.tmpl"
+const HookPath = "pkg/NAME-service/handlers/hooks.go.tmpl"
 
 // NewHook returns a new HookRender
 func NewHook(prev io.Reader) render.Renderable {

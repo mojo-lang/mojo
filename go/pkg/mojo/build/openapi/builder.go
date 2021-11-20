@@ -29,7 +29,7 @@ func (b Builder) Build() (*OpenAPIs, error) {
 		return compiler.OpenAPIs, nil
 	}
 
-	output := path2.Join(b.Path, "openapi")
+	output := path2.Join(b.GetAbsolutePath(), "openapi")
 	if len(b.Output) > 0 {
 		output = b.Output
 	}

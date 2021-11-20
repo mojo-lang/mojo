@@ -35,7 +35,7 @@ func (b Builder) protocJava() error {
 		cmd.Args = append(cmd.Args, "--proto_path="+path2.Join(path, "protobuf"))
 	}
 
-	cmd.Dir = path2.Join(b.PWD, b.Path, "protobuf")
+	cmd.Dir = path2.Join(b.GetAbsolutePath(), "protobuf")
 
 	//cmd.Args = append(cmd.Args, "--go_out=.")
 	cmd.Args = append(cmd.Args, "--java_out=.")
@@ -54,7 +54,7 @@ func (b Builder) protocJava() error {
 	}
 
 	// move the generated files to destinations
-	destDir := path2.Join(b.PWD, b.Path, "java/src/main/java")
+	destDir := path2.Join(b.GetAbsolutePath(), "java/src/main/java")
 	if !util.IsExist(destDir) {
 		util.CreateDir(destDir)
 	}
@@ -62,7 +62,7 @@ func (b Builder) protocJava() error {
 	util.ClearFiles(destDir, ".pb.java")
 
 	for _, domain := range []string{"ai", "com", "net", "org", "io"} {
-		srcDir := path2.Join(b.PWD, b.Path, "protobuf", domain)
+		srcDir := path2.Join(b.GetAbsolutePath(), "protobuf", domain)
 		_, err := ioutil.ReadDir(srcDir)
 		if err == nil {
 			err = copy.Copy(srcDir, path2.Join(destDir, domain))

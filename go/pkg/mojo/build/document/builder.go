@@ -22,14 +22,14 @@ func (b Builder) Build() error {
 
 	logs.Infow("begin to build document.", "pwd", b.PWD, "path", b.Path)
 
-	compiler := document.NewCompiler(path2.Join(b.PWD, b.Path), b.Package, b.OpenAPIs)
+	compiler := document.NewCompiler(b.GetAbsolutePath(), b.Package, b.OpenAPIs)
 	documents, err := compiler.Compile()
 	if err != nil {
 		logs.Errorw("failed to compile document", "package", b.Package.FullName, "error", err.Error())
 		return err
 	}
 
-	output := path2.Join(b.Path, "document")
+	output := path2.Join(b.GetAbsolutePath(), "document")
 	if len(b.Output) > 0 {
 		output = b.Output
 	}

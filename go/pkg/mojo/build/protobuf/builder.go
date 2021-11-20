@@ -28,7 +28,7 @@ func (b Builder) Build() ([]*descriptor.FileDescriptor, error) {
 		return compiler.Files, nil
 	}
 
-	output := path2.Join(b.Path, "protobuf")
+	output := path2.Join(b.GetAbsolutePath(), "protobuf")
 	if len(b.Output) > 0 {
 		output = b.Output
 	}

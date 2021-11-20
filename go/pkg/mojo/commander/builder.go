@@ -193,9 +193,10 @@ func (b *Builder) buildDocument() error {
 func (b *Builder) buildGokit(ncraftType string) error {
 	return gokit.Builder{
 		Builder: builder.Builder{
-			PWD:     b.Pwd,
-			Path:    b.Path,
-			Package: b.Package,
+			PWD:        b.Pwd,
+			Path:       b.Path,
+			Package:    b.Package,
+			APIEnabled: b.APIEnabled,
 		},
 		Type:       ncraftType,
 		Output:     b.Output,

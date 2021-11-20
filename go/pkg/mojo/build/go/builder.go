@@ -22,14 +22,15 @@ func (b Builder) Build() error {
 
 	logs.Infow("begin to build go.", "pwd", b.PWD, "path", b.Path)
 
-	compiler := _go.NewCompiler(path2.Join(b.PWD, b.Path), b.Package, b.Files)
+
+	compiler := _go.NewCompiler(b.GetAbsolutePath(), b.Package, b.Files)
 	files, err := compiler.Compile()
 	if err != nil {
 		logs.Errorw("failed to compile go", "package", b.Package.FullName, "error", err.Error())
 		return err
 	}
 
-	output := path2.Join(b.Path, "go")
+	output := path2.Join(b.GetAbsolutePath(), "go")
 	if len(b.Output) > 0 {
 		output = b.Output
 	}

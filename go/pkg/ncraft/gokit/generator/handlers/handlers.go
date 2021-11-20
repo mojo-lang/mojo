@@ -23,7 +23,7 @@ import (
 const ignoredFunc = "NewService"
 
 // ServerHandlerPath is the relative path to the server handler template file
-const ServerHandlerPath = "PKGNAME/pkg/NAME-service/handlers/handlers.go.tmpl"
+const ServerHandlerPath = "pkg/NAME-service/handlers/handlers.go.tmpl"
 
 var (
 	handlerInterface = templates.HandlerInterface
