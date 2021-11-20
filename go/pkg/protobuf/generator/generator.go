@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"github.com/gogo/protobuf/proto"
 	plugin "github.com/gogo/protobuf/protoc-gen-gogo/plugin"
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"io/ioutil"
 	"log"
 	"os"
 	path2 "path"
@@ -282,26 +282,41 @@ func (g *Generator) removeGeneratedDir(dir string) {
 		if len(rootPath) == 0 || !strings.HasPrefix(path, rootPath) {
 			rootPath = path
 			if util.IsExist(rootPath) {
-				os.RemoveAll(rootPath)
+				util.ClearFiles(rootPath, ".proto")
 			}
 		}
 	}
 }
 
-func (g *Generator) WriteAllFiles(dir string) {
+func (g *Generator) WriteAllFiles(dir string) error {
 	if g.Response == nil {
-		return
+		return nil
 	}
 
-	g.removeGeneratedDir(dir)
+	var files util.GeneratedFiles
 	for _, file := range g.Response.File {
 		if file.Name != nil && file.Content != nil {
-			name := path2.Join(dir, *file.Name)
-			path := path2.Dir(name)
-			util.CreateDir(path)
-			ioutil.WriteFile(name, []byte(*file.Content), 0666)
+			files = append(files, &util.GeneratedFile{
+				Name:              *file.Name,
+				Content:           *file.Content,
+				SkipNoneGenerated: true,
+			})
+		} else {
+			logs.Warn("meet an empty file!")
 		}
 	}
+	guard := &util.PathGuard{
+		OnlyClearGenerated: true,
+		Suffixes:           []string{".proto"},
+	}
+
+	for _, file := range files {
+		if err := file.WriteTo(dir, guard); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // GenerateAllFiles generates the output for all the files we're outputting.

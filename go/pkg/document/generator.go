@@ -3,21 +3,16 @@ package document
 import (
 	"github.com/mojo-lang/document/go/pkg/markdown"
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"io/ioutil"
-	"os"
-	path2 "path"
 )
 
 type Generator struct {
 	Documents Documents
-
-	Files map[string][]byte
+	Files     []*util.GeneratedFile
 }
 
 func NewGenerator(documents Documents) *Generator {
 	return &Generator{
 		Documents: documents,
-		Files:     make(map[string][]byte),
 	}
 }
 
@@ -40,25 +35,24 @@ func (g *Generator) generateMarkdown() error {
 		if err != nil {
 			return err
 		}
-		g.Files[name+".md"] = []byte(m)
+		g.Files = append(g.Files, &util.GeneratedFile{
+			Name:    name + ".md",
+			Content: m,
+		})
 	}
-	return nil
-}
-
-func (g *Generator) cleanFiles() error {
 	return nil
 }
 
 func (g *Generator) writeFiles(dir string) error {
-	if util.IsExist(dir) {
-		os.RemoveAll(dir)
+	guard := &util.PathGuard{
+		Suffixes: []string{".md"},
 	}
 
-	for name, file := range g.Files {
-		name = path2.Join(dir, name)
-		path := path2.Dir(name)
-		util.CreateDir(path)
-		ioutil.WriteFile(name, file, 0666)
+	for _, file := range g.Files {
+		if err := file.WriteTo(dir, guard); err != nil {
+			return err
+		}
 	}
+
 	return nil
 }

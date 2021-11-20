@@ -12,7 +12,7 @@ type Generator struct {
 }
 
 func (g *Generator) Generate(data *Data, output string) error {
-	var files []*util.CodeGeneratedFile
+	var files []*util.GeneratedFile
 
 	applyTemplate := func(name string, tmpl string, tmplData interface{}, filename string) error {
 		if tmplData == nil {
@@ -23,7 +23,7 @@ func (g *Generator) Generate(data *Data, output string) error {
 		if err != nil {
 			return err
 		}
-		files = append(files, &util.CodeGeneratedFile{
+		files = append(files, &util.GeneratedFile{
 			Name:    path2.Join(output, data.Package.Name, filename),
 			Content: str,
 		})

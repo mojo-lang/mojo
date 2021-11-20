@@ -4,16 +4,14 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/go/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator"
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"io/ioutil"
-	path2 "path"
 )
 
 type Generator struct {
 	Data  *compiler.Data
-	Files util.CodeGeneratedFiles
+	Files util.GeneratedFiles
 }
 
-func NewGenerator(files util.CodeGeneratedFiles, data *compiler.Data) *Generator {
+func NewGenerator(files util.GeneratedFiles, data *compiler.Data) *Generator {
 	return &Generator{
 		Files: files,
 		Data:  data,
@@ -28,27 +26,15 @@ func (g *Generator) Generate(output string) error {
 	}
 	g.Files = append(g.Files, generator.Files...)
 
-	guard := &util.PathGuard{}
+	guard := &util.PathGuard{
+		OnlyClearGenerated: true,
+		Suffixes:           []string{".go"},
+	}
+
 	for _, f := range g.Files {
-		if len(f.Name) > 0 && len(f.Content) > 0 {
-			name := path2.Join(output, f.Name)
-			path := path2.Dir(name)
-
-			if err = guard.Check(path); err != nil {
-				return err
-			}
-
-			if util.IsExist(name) {
-				if f.SkipIfExist {
-					continue
-				}
-
-				if !util.IsGeneratedFile(name) {
-					continue
-				}
-			}
-
-			ioutil.WriteFile(name, []byte(f.Content), 0666)
+		f.SkipNoneGenerated = true
+		if err = f.WriteTo(output, guard); err != nil {
+			return err
 		}
 	}
 	return nil

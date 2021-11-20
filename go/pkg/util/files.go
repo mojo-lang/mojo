@@ -12,16 +12,48 @@ import (
 	"strings"
 )
 
-func ClearGeneratedFiles(path string) error {
+func ClearGeneratedFiles(path string, suffixes ...string) error {
+	return clearGeneratedFiles(path, false, suffixes...)
+}
+
+func DeepClearGeneratedFiles(path string, suffixes ...string) error {
+	return clearGeneratedFiles(path, true, suffixes...)
+}
+
+func clearGeneratedFiles(path string, recursive bool, suffixes ...string) error {
 	return clearFiles(path, false, func(file string) bool {
-		return IsGeneratedFile(file)
+		matchedSuffix := false
+		for _, suffix := range suffixes {
+			if strings.HasSuffix(file, suffix) {
+				matchedSuffix = true
+			}
+		}
+		if len(suffixes) == 0 || matchedSuffix {
+			return IsGeneratedFile(file)
+		}
+		return false
 	})
 }
 
-func ClearFiles(path string, suffix string) error {
-	return clearFiles(path, true, func(file string) bool {
-		return strings.HasSuffix(file, suffix)
+func ClearFiles(path string, suffixes ...string) error {
+	return clearFiles(path, false, func(file string) bool {
+		return hasSuffix(file, suffixes...)
 	})
+}
+
+func DeepClearFiles(path string, suffixes ...string) error {
+	return clearFiles(path, true, func(file string) bool {
+		return hasSuffix(file, suffixes...)
+	})
+}
+
+func hasSuffix(file string, suffixes ...string) bool {
+	for _, suffix := range suffixes {
+		if strings.HasSuffix(file, suffix) {
+			return true
+		}
+	}
+	return false
 }
 
 //调用os.MkdirAll递归创建文件夹

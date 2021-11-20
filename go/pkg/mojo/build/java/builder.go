@@ -59,7 +59,7 @@ func (b Builder) protocJava() error {
 		util.CreateDir(destDir)
 	}
 
-	util.ClearFiles(destDir, ".pb.java")
+	util.DeepClearFiles(destDir, ".pb.java")
 
 	for _, domain := range []string{"ai", "com", "net", "org", "io"} {
 		srcDir := path2.Join(b.GetAbsolutePath(), "protobuf", domain)

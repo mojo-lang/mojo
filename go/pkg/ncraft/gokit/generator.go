@@ -13,7 +13,6 @@ import (
 	"go/format"
 	"io"
 	"io/ioutil"
-	path2 "path"
 	"strings"
 )
 
@@ -46,7 +45,7 @@ func GenerateTemplatedService(sd *types.Service, conf render.Config, tmplPaths [
 		}
 	}
 
-	codeGenFiles := make(map[string]io.Reader)
+	var codeGenFiles util.GeneratedFiles
 
 	// Remove the suffix "-service" since it's added back in by templatePathToActual
 	svcName := strcase.ToKebab(sd.Interface.Name)
@@ -60,22 +59,22 @@ func GenerateTemplatedService(sd *types.Service, conf render.Config, tmplPaths [
 			return errors.Wrap(err, "cannot render template")
 		}
 
-		codeGenFiles[actualPath] = file
+		codeGenFiles = append(codeGenFiles, &util.GeneratedFile{
+			Name:              actualPath,
+			Reader:            file,
+			SkipIfExist:       false,
+			SkipNoneGenerated: false,
+		})
 	}
 
-	for name, file := range codeGenFiles {
-		//if util.IsExist(dir) {
-		//	os.RemoveAll(dir)
-		//}
-
-		name := path2.Join(conf.Output, name)
-		path := path2.Dir(name)
-		util.CreateDir(path)
-
-		if bytes, err := io.ReadAll(file); err != nil {
+	guard := &util.PathGuard{
+		OnlyClearGenerated: true,
+		Suffixes:           []string{".go", ".mod", ".md", ".sh", ".yaml"},
+	}
+	for _, file := range codeGenFiles {
+		file.SkipNoneGenerated = true
+		if err = file.WriteTo(conf.Output, guard); err != nil {
 			return err
-		} else {
-			ioutil.WriteFile(name, bytes, 0666)
 		}
 	}
 
@@ -138,6 +137,8 @@ func generateTemplateFile(tmplPath string, data *render.Data, prevFile io.Reader
 // disk
 func templatePathToActual(tmplPath, pkgName string, svcName string) string {
 	// Switch "NAME" in path with svcName.
+	pkgName = strcase.ToKebab(pkgName)
+
 	// i.e. for svcName = addsvc; /NAME-server -> /addsvc-service/addsvc-server
 	actual := strings.Replace(tmplPath, "PKGNAME", pkgName, -1)
 	actual = strings.Replace(actual, "NAME", svcName, -1)

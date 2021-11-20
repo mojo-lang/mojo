@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor) (util.CodeGeneratedFiles, error) {
+func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor) (util.GeneratedFiles, error) {
 	if pkg == nil {
 		return nil, errors.New("")
 	}
@@ -36,7 +36,7 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 	//cmd.Args = append(cmd.Args, "--gogo_out=plugins=grpc:.")
 	cmd.Args = append(cmd.Args, "--descriptor_set_out=/dev/stdout")
 
-	var outFiles util.CodeGeneratedFiles
+	var outFiles util.GeneratedFiles
 
 	/// gogoproto will clean the plugin after the first run `command.Generate(req)`
 	/// make sure the service files will use the grpc plugin
@@ -107,7 +107,7 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 					pos := strings.Index(*f.Name, goPath)
 					if pos >= 0 {
 						name := (*f.Name)[pos:]
-						outFiles = append(outFiles, &util.CodeGeneratedFile{
+						outFiles = append(outFiles, &util.GeneratedFile{
 							Name:    name,
 							Content: *f.Content,
 						})

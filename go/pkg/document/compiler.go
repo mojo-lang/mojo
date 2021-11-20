@@ -36,7 +36,7 @@ func (c *Compiler) Compile() (Documents, error) {
 		if err != nil {
 			return nil, err
 		}
-		c.Documents[name] = document
+		c.Documents[lang.TypeNameToFileName(name)] = document
 	}
 
 	schemaCompiler := &compiler.SchemaCompiler{

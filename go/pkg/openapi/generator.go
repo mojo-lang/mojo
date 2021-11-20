@@ -6,9 +6,6 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"github.com/mojo-lang/yaml/go/pkg/yaml"
-	"io/ioutil"
-	"os"
-	path2 "path"
 	"strings"
 )
 
@@ -19,7 +16,7 @@ type Generator struct {
 	*OpenAPIs
 
 	Package *lang.Package
-	Files   map[string][]byte
+	Files   []*util.GeneratedFile
 }
 
 func NewGenerator(pkg *lang.Package, apis map[string]*openapi.OpenAPI, components *openapi.Components) *Generator {
@@ -29,7 +26,6 @@ func NewGenerator(pkg *lang.Package, apis map[string]*openapi.OpenAPI, component
 			Components: components,
 		},
 		Package: pkg,
-		Files: make(map[string][]byte),
 	}
 }
 
@@ -55,7 +51,11 @@ func (g *Generator) generateApi() error {
 		if err != nil {
 			return err
 		}
-		g.Files[name+".yaml"] = y
+
+		g.Files = append(g.Files, &util.GeneratedFile{
+			Name:    lang.TypeNameToFileName(name) + ".yaml",
+			Content: string(y),
+		})
 	}
 	return nil
 }
@@ -74,7 +74,11 @@ func (g *Generator) generateSchema() error {
 		if err != nil {
 			return err
 		}
-		g.Files[toSchemaFileName(name)] = j
+
+		g.Files = append(g.Files, &util.GeneratedFile{
+			Name:    toSchemaFileName(name),
+			Content: string(j),
+		})
 	}
 	return nil
 }
@@ -84,15 +88,14 @@ func (g *Generator) cleanFiles() error {
 }
 
 func (g *Generator) writeFiles(dir string) error {
-	if util.IsExist(dir) {
-		os.RemoveAll(dir)
+	guard := &util.PathGuard{
+		Suffixes: []string{".yaml", ".schema.json"},
 	}
 
-	for name, file := range g.Files {
-		name = path2.Join(dir, name)
-		path := path2.Dir(name)
-		util.CreateDir(path)
-		ioutil.WriteFile(name, file, 0666)
+	for _, file := range g.Files {
+		if err := file.WriteTo(dir, guard); err != nil {
+			return err
+		}
 	}
 	return nil
 }

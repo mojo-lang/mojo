@@ -144,7 +144,7 @@ func (c *Compiler) compileInterface(ctx *compiler.Context, decl *lang.InterfaceD
 	}
 
 	api.Components = ctx.Components
-	key := lang.TypeNameToFileName(decl.GetFullName())
-	c.APIs[key] = api
+	//key := lang.TypeNameToFileName(decl.GetFullName())
+	c.APIs[decl.GetFullName()] = api
 	return nil
 }

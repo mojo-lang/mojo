@@ -5,7 +5,10 @@ import (
 )
 
 type PathGuard struct {
-	Paths []string
+	OnlyClearGenerated bool
+	Suffixes           []string
+
+	paths []string
 }
 
 func (g *PathGuard) Check(path string) error {
@@ -22,18 +25,23 @@ func (g *PathGuard) Check(path string) error {
 
 func (g *PathGuard) Clear(path string) error {
 	if !g.cleared(path) {
-		err := ClearGeneratedFiles(path)
+		var err error
+		if g.OnlyClearGenerated {
+			err = ClearGeneratedFiles(path, g.Suffixes...)
+		} else {
+			err = ClearFiles(path, g.Suffixes...)
+		}
 		if err != nil {
 			return err
 		}
 
-		g.Paths = append(g.Paths, path)
+		g.paths = append(g.paths, path)
 	}
 	return nil
 }
 
 func (g *PathGuard) cleared(path string) bool {
-	for _, p := range g.Paths {
+	for _, p := range g.paths {
 		if strings.HasPrefix(path, p) {
 			return true
 		}

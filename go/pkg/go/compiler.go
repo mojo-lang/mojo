@@ -29,8 +29,8 @@ func NewCompiler(path string, pkg *lang.Package, files []*descriptor.FileDescrip
 	}
 }
 
-func (c *Compiler) Compile() (util.CodeGeneratedFiles, error) {
-	var files util.CodeGeneratedFiles
+func (c *Compiler) Compile() (util.GeneratedFiles, error) {
+	var files util.GeneratedFiles
 
 	fs, err := compiler.ProtocGo(c.Path, c.Package, c.Files)
 	if err != nil {

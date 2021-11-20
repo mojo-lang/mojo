@@ -10,11 +10,11 @@ import (
 )
 
 type Generator struct {
-	Files util.CodeGeneratedFiles
+	Files util.GeneratedFiles
 }
 
 func packageToPath(pkg string) string {
-	return path2.Join("pkg", strings.ReplaceAll(pkg, ".", "/"))
+	return path2.Join("pkg", strings.ReplaceAll(strcase.ToKebabWithIgnore(pkg, "."), ".", "/"))
 }
 
 func (g *Generator) generateDecl(decl compiler.Decl, extTemplate string, fmtTemplate string, jsonTemplate string) error {
@@ -23,7 +23,7 @@ func (g *Generator) generateDecl(decl compiler.Decl, extTemplate string, fmtTemp
 		if err != nil {
 			return err
 		}
-		g.Files = append(g.Files, &util.CodeGeneratedFile{
+		g.Files = append(g.Files, &util.GeneratedFile{
 			Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+".ext.go"),
 			Content: FormatCode(str),
 		})
@@ -34,7 +34,7 @@ func (g *Generator) generateDecl(decl compiler.Decl, extTemplate string, fmtTemp
 		if err != nil {
 			return err
 		}
-		g.Files = append(g.Files, &util.CodeGeneratedFile{
+		g.Files = append(g.Files, &util.GeneratedFile{
 			Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+".fmt.go"),
 			Content: FormatCode(str),
 		})
@@ -45,7 +45,7 @@ func (g *Generator) generateDecl(decl compiler.Decl, extTemplate string, fmtTemp
 		if err != nil {
 			return err
 		}
-		g.Files = append(g.Files, &util.CodeGeneratedFile{
+		g.Files = append(g.Files, &util.GeneratedFile{
 			Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+".json.go"),
 			Content: FormatCode(str),
 		})
@@ -71,7 +71,7 @@ func (g *Generator) Generate(data *compiler.Data) error {
 		if err != nil {
 			return err
 		}
-		g.Files = append(g.Files, &util.CodeGeneratedFile{
+		g.Files = append(g.Files, &util.GeneratedFile{
 			Name:        "go.mod",
 			Content:     str,
 			SkipIfExist: true,
