@@ -93,6 +93,11 @@ func parseRequirement(obj *lang.ObjectLiteralExpr) *lang.Package_Requirement {
 			if value := field.Value.GetStringLiteralExpr(); value != nil {
 				requirement.Version = lang.NewPackageRequirementVersion(value.Value)
 			}
+		case "repository":
+			if value := field.Value.GetStringLiteralExpr(); value != nil {
+				url, _ := core.ParseUrl(value.Value)
+				requirement.Repository = url
+			}
 		}
 	}
 	return requirement

@@ -56,9 +56,16 @@ func (p *Parser) parseDependency(path string, dependent *lang.Package) error {
 	}
 
 	// parse the dependency
-	for _, d := range pkg.Dependencies {
-		///TODO: resolve the requirement and download the package if needed
-		depPath := builder.GetAbsolutePath(path, d.Path)
+	for name, d := range pkg.Dependencies {
+		depPath := d.Path
+		if len(depPath) == 0 {
+			depPath, err = pkg2.GetPackageCenter().Get(name, d)
+			if err != nil {
+				return err
+			}
+		}
+
+		depPath = builder.GetAbsolutePath(path, depPath)
 		err = p.parseDependency(depPath, pkg)
 		if err != nil {
 			return err
