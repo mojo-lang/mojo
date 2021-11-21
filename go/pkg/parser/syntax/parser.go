@@ -85,10 +85,10 @@ func (p Parser) ParsePackage(path string, pkg string) (map[string]*lang.Package,
 func (p Parser) parsePackage(path string, pkg string) (map[string]*lang.Package, error) {
 	packages := make(map[string]*lang.Package)
 
-	currentPath := path2.Join(path, strings.ReplaceAll(pkg, ".", "/"))
+	currentPath := path2.Join(path, lang.PackageNameToPath(pkg))
 	files, err := ioutil.ReadDir(currentPath)
 	if err != nil {
-		logs.Error("failed to read source directory", "path", currentPath, "error", err.Error())
+		logs.Errorw("failed to read source directory", "path", currentPath, "error", err.Error())
 		return nil, err
 	}
 
@@ -124,7 +124,7 @@ func (p Parser) parsePackage(path string, pkg string) (map[string]*lang.Package,
 			}
 
 			sourceFile.PackageName = currentPkgName
-			sourceFile.FullName = strings.ReplaceAll(currentPkgName, ".", "/") + "/" + sourceFile.Name
+			sourceFile.FullName = path2.Join(lang.PackageNameToPath(currentPkgName), sourceFile.Name)
 			packages[currentPkgName].SourceFiles = append(packages[currentPkgName].SourceFiles, sourceFile)
 			packages[currentPkgName].Name = path2.Base(currentPath)
 			packages[currentPkgName].FullName = currentPkgName

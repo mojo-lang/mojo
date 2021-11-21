@@ -19,6 +19,12 @@ var readmeFile string
 //go:embed template/package.mojo.tmpl
 var packageFile string
 
+//go:embed template/hello-world/v1/echo.mojo
+var helloWorldEcho string
+
+//go:embed template/hello-world/v1/hello_world.mojo
+var helloWorldService string
+
 // ApplyTemplate applies a template with a given name, executor context, and
 // function map. Returns the output of the template on success, returns an
 // error if template failed to execute.

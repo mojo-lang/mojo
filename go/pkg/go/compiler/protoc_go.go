@@ -40,14 +40,27 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 
 	/// gogoproto will clean the plugin after the first run `command.Generate(req)`
 	/// make sure the service files will use the grpc plugin
-	fileGroups := make([][]*descriptor.FileDescriptor, 2, 2)
+	fileGroups := make(map[string][]*descriptor.FileDescriptor)
+
+	packageGroups := make(map[string]bool)
 	for _, file := range files {
 		if file.HasService() {
-			fileGroups[0] = append(fileGroups[0], file)
-		} else {
-			fileGroups[1] = append(fileGroups[1], file)
+			packageGroups[*file.Package] = true
+			fileGroups[*file.Package] = append(fileGroups[*file.Package], file)
 		}
 	}
+	for _, file := range files {
+		if file.HasService() {
+			continue
+		}
+
+		if in, ok := packageGroups[*file.Package]; ok && in {
+			fileGroups[*file.Package] = append(fileGroups[*file.Package], file)
+		} else {
+			fileGroups["-others-"] = append(fileGroups["-others-"], file)
+		}
+	}
+
 
 	for _, group := range fileGroups {
 		if len(group) == 0 {
@@ -71,6 +84,7 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 			logs.Errorw("failed to run protoc cmd", "error", stderr.String(), "cmd", fileCmd.String())
 			return nil, err
 		}
+		logs.Debugw("finish to run protoc cmd", "cmd", fileCmd.String())
 
 		fs, err := descriptor.UnmarshalFiles(out)
 		if err != nil {
@@ -103,7 +117,7 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 		for _, f := range resp.File {
 			if f.Name != nil && f.Content != nil {
 				for _, file := range group {
-					goPath := "pkg/" + strings.ReplaceAll(*file.Package, ".", "/")
+					goPath := "pkg/" + lang.PackageNameToPath(*file.Package)
 					pos := strings.Index(*f.Name, goPath)
 					if pos >= 0 {
 						name := (*f.Name)[pos:]

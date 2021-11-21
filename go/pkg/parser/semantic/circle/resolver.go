@@ -3,7 +3,7 @@ package circle
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/plugin"
-	"strings"
+	path2 "path"
 )
 
 func init() {
@@ -94,5 +94,5 @@ func (r *Resolver) parsePackage(ctx *plugin.Context, pkg *lang.Package) error {
 
 func (r *Resolver) generateCircleName(ctx *plugin.Context, pkg *lang.Package) string {
 	_ = ctx
-	return strings.ReplaceAll(pkg.FullName, ".", "/") + "/" + pkg.Name + ".mojo"
+	return path2.Join(lang.PackageNameToPath(pkg.FullName), pkg.Name + ".mojo")
 }

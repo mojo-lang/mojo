@@ -1,12 +1,11 @@
 package generator
 
 import (
-	path2 "path"
-	"strings"
-
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/go/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/util"
+	path2 "path"
 )
 
 type Generator struct {
@@ -14,7 +13,7 @@ type Generator struct {
 }
 
 func packageToPath(pkg string) string {
-	return path2.Join("pkg", strings.ReplaceAll(strcase.ToKebabWithIgnore(pkg, "."), ".", "/"))
+	return path2.Join("pkg", lang.PackageNameToPath(pkg))
 }
 
 func (g *Generator) generateDecl(decl compiler.Decl, extTemplate string, fmtTemplate string, jsonTemplate string) error {

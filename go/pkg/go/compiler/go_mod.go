@@ -30,6 +30,7 @@ func (g *GoMod) Compile(pkg *lang.Package) error {
 			dep.Version = "v0.0.0-00010101000000-000000000000"
 			dep.Path = path2.Join(d.Path, "go")
 		} else {
+			dep.Version = "v0.0.0"
 		}
 
 		g.Dependencies = append(g.Dependencies, dep)

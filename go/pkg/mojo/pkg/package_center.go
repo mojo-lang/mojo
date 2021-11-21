@@ -58,11 +58,14 @@ func (p *PackageCenter) Install(name string, requirement *lang.Package_Requireme
 	cmd.Dir = path2.Dir(repoPath)
 
 	util.CreateDir(cmd.Dir)
+
+	logs.Debugw("begin to install mojo package", "package", name, "cmd", cmd.String())
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		logs.Errorw("failed to run git cmd", "error", string(out), "cmd", cmd.String())
 		return "", err
 	}
+	logs.Debugw("finish to install mojo package", "package", name, "cmd", cmd.String())
 
 	p.Cache[name] = &lang.Package{
 		Name:       lang.GetPackageName(name),
@@ -78,13 +81,16 @@ func (p *PackageCenter) Install(name string, requirement *lang.Package_Requireme
 func (p *PackageCenter) Update(name string, requirement *lang.Package_Requirement) (string, error) {
 	repoPath := p.getPkgPath(requirement)
 
-	cmd := exec.Command("git", "pull")
-	cmd.Dir = repoPath
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		logs.Errorw("failed to run git cmd", "error", string(out), "cmd", cmd.String())
-		return "", err
-	}
+	//cmd := exec.Command("git", "pull")
+	//cmd.Dir = repoPath
+	//
+	//logs.Debugw("begin to update mojo package", "package", name, "cmd", cmd.String())
+	//out, err := cmd.CombinedOutput()
+	//if err != nil {
+	//	logs.Errorw("failed to run git cmd", "error", string(out), "cmd", cmd.String())
+	//	return "", err
+	//}
+	//logs.Debugw("finish to update mojo package", "package", name, "cmd", cmd.String())
 
 	p.Cache[name] = &lang.Package{
 		Name:       lang.GetPackageName(name),

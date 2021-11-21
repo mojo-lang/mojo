@@ -27,7 +27,7 @@ type Builder struct {
 func getPackageImport(pkg *lang.Package) string {
 	repository := pkg.Repository
 	if repository != nil {
-		goPackageFullName := strings.ReplaceAll(pkg.FullName, ".", "/")
+		goPackageFullName := lang.PackageNameToPath(pkg.FullName)
 		return fmt.Sprintf("%s%s/go/pkg/%s", repository.Authority.Host, repository.Path, goPackageFullName)
 	}
 	return ""
