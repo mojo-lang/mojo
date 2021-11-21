@@ -19,7 +19,12 @@ func (g *PathGuard) Check(path string) error {
 		}
 		return nil
 	} else {
-		return CreateDir(path)
+		err := CreateDir(path)
+		if err != nil {
+			return err
+		}
+		g.paths = append(g.paths, path)
+		return nil
 	}
 }
 

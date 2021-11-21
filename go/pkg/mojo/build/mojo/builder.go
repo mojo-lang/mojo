@@ -13,7 +13,7 @@ type Builder struct {
 func (b Builder) Build() (*lang.Package, error) {
 	logs.Infow("begin to parse mojo package.", "pwd", b.PWD, "path", b.Path)
 	parser := NewParser(b.PWD)
-	err := parser.Parse(b.Path)
+	err := parser.Parse(builder.GetAbsolutePath(b.PWD, b.Path))
 	if err != nil {
 		return nil, err
 	}

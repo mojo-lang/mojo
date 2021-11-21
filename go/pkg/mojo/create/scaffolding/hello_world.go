@@ -10,7 +10,17 @@ const HelloWorldPackageName = "hello_world"
 const HelloWorldOrg = "mojo-lang.org"
 const HelloWorldRepo = "git.company.com/examples/hello-world"
 
-func GenerateFiles(output string) error {
+const HandlerMethod = `
+func (s helloWorld) GetEcho(ctx context.Context, in *pb.GetEchoRequest) (*pb.Echo, error) {
+	resp := pb.Echo{
+		Name:    in.Name,
+		Message: "Hello, " + in.Name + "!",
+	}
+	return &resp, nil
+}
+`
+
+func GenerateHelloWorldFiles(output string) error {
 	files := []*util.GeneratedFile{{
 		Name:    path2.Join(output, "hello-world/mojo/hello-world/v1/echo.mojo"),
 		Content: helloWorldEcho,
@@ -31,6 +41,3 @@ func GenerateFiles(output string) error {
 	return nil
 }
 
-func CompileHelloWorld(output string) error {
-	return nil
-}

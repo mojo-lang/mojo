@@ -5,6 +5,7 @@ import (
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/builder"
+	_go "github.com/mojo-lang/mojo/go/pkg/mojo/build/go"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
 	"github.com/mojo-lang/mojo/go/pkg/util"
@@ -38,9 +39,9 @@ func (b Builder) Build() error {
 
 	if len(b.Output) == 0 {
 		if b.APIEnabled {
-			b.Output = b.Path
+			b.Output = builder.GetAbsolutePath(b.PWD, b.Path)
 		} else {
-			b.Output = path2.Join(b.Path, "../")
+			b.Output = builder.GetAbsolutePath(b.PWD, path2.Join(b.Path, "../"))
 		}
 	}
 
@@ -132,5 +133,6 @@ func (b Builder) Build() error {
 		}
 	}
 
+	_go.GoModTidy(b.Output)
 	return nil
 }

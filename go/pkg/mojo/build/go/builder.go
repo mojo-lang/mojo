@@ -5,6 +5,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/go"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/builder"
 	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"os/exec"
 	path2 "path"
 )
 
@@ -22,7 +23,6 @@ func (b Builder) Build() error {
 
 	logs.Infow("begin to build go.", "pwd", b.PWD, "path", b.Path)
 
-
 	compiler := _go.NewCompiler(b.GetAbsolutePath(), b.Package, b.Files)
 	files, err := compiler.Compile()
 	if err != nil {
@@ -32,7 +32,7 @@ func (b Builder) Build() error {
 
 	output := path2.Join(b.GetAbsolutePath(), "go")
 	if len(b.Output) > 0 {
-		output = b.Output
+		output = builder.GetAbsolutePath(b.PWD, b.Output)
 	}
 	generator := _go.NewGenerator(files, compiler.Data)
 	err = generator.Generate(output)
@@ -40,6 +40,22 @@ func (b Builder) Build() error {
 		logs.Errorw("generate go failed", "pwd", b.PWD, "path", b.Path, "package", b.Package.FullName, "error", err.Error())
 		return err
 	}
+
+	GoModTidy(output)
+	return nil
+}
+
+func GoModTidy(pwd string) error {
+	cmd := exec.Command("go", "mod", "tidy")
+	cmd.Dir = pwd
+
+	logs.Debug("begin to running go mod tidy")
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		logs.Errorw("failed to run go mod tidy", "error", string(out))
+		return err
+	}
+	logs.Debug("finish to run go mod tidy")
 
 	return nil
 }

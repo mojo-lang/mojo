@@ -10,12 +10,16 @@ import (
 	path2 "path"
 )
 
+func GetPackageDirName(data *Data) string {
+	return strcase.ToKebab(data.Package.Name)
+}
+
 type Generator struct {
 }
 
 func (g *Generator) Generate(data *Data, output string) error {
 	var files []*util.GeneratedFile
-	pkgDirName := strcase.ToKebab(data.Package.Name)
+	pkgDirName := GetPackageDirName(data)
 
 	if len(data.Package.Version) == 0 {
 		data.Package.Version = "0.1.0"
