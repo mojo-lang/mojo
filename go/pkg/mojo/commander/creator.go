@@ -1,11 +1,14 @@
 package commander
 
 import (
+	"fmt"
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/builder"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/create/scaffolding"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/create/scaffolding/types"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers"
+	"os/exec"
 	path2 "path"
 )
 
@@ -24,6 +27,7 @@ type Creator struct {
 	Pwd string
 
 	HelloWorldMode bool
+	RunImmediately bool
 }
 
 func (c *Creator) Execute() error {
@@ -36,6 +40,10 @@ func (c *Creator) Execute() error {
 		helloWorldRoot := path2.Join(output, scaffolding.GetPackageDirName(c.Data))
 		if err := c.CompileHelloWorld(helloWorldRoot); err != nil {
 			return err
+		}
+
+		if c.RunImmediately {
+			c.RunHelloWorld(path2.Join(helloWorldRoot, "service-go"))
 		}
 	}
 
@@ -79,4 +87,33 @@ func (c *Creator) CompileHelloWorld(root string) error {
 
 	handlers.ResetHandlerMethods(scaffolding.HandlerMethod)
 	return builder.Execute()
+}
+
+func (c *Creator) RunHelloWorld(root string) error {
+	cmd := exec.Command("go", "run", "cmd/hello-world-server/main.go")
+	cmd.Dir = root
+
+	logs.Debug("begin to running go run")
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return err
+	}
+	cmd.Stderr = cmd.Stdout
+	if err = cmd.Start(); err != nil {
+		return err
+	}
+
+	for {
+		output := make([]byte, 1024)
+		_, err = stdout.Read(output)
+		fmt.Print(string(output))
+		if err != nil {
+			break
+		}
+	}
+
+	if err = cmd.Wait(); err != nil {
+		return err
+	}
+	return nil
 }

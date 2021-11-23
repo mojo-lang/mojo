@@ -86,6 +86,12 @@ func (b *CreateCmd) Build() {
 			Destination: &b.Organization,
 			DefaultText: "YOUR ORGANIZATION (like: mojolang.org)",
 		},
+		&cli.BoolFlag{
+			Name:        "run",
+			Aliases:     []string{},
+			Usage:       "run the hello world server immediately",
+			Destination: &b.RunImmediately,
+		},
 	}
 
 	b.BaseCmd.Command.Action = b.Execute
