@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/gorilla/mux"
-	"github.com/heptiolabs/healthcheck"
+	"github.com/etherlabsio/healthcheck/v2"
 	"github.com/ncraft-io/ncraft-go/pkg/logs"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/cors"
@@ -54,9 +54,17 @@ func Run(cfg nserver.Config) {
 
         m.Handle("/metrics", promhttp.Handler())
 
-        health := healthcheck.NewHandler()
-        health.AddLivenessCheck("http service", healthcheck.TCPDialCheck(cfg.HttpAddr, time.Second))
-        m.Handle("/health", http.HandlerFunc(health.LiveEndpoint))
+        m.Handle("/health", healthcheck.Handler(
+            // WithTimeout allows you to set a max overall timeout.
+            healthcheck.WithTimeout(5*time.Second),
+            healthcheck.WithChecker("alive", healthcheck.CheckerFunc(func(ctx context.Context) error {
+                conn, err := net.DialTimeout("tcp", cfg.HttpAddr, time.Second)
+                if err != nil {
+                    return err
+                }
+                return conn.Close()
+            })),
+        ))
 
 		errc <- http.ListenAndServe(cfg.DebugAddr, m)
 	}()

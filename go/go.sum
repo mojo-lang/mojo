@@ -191,6 +191,7 @@ github.com/mojo-lang/core/go v0.0.0-20211117011141-4ab29472fc29/go.mod h1:SbUGVb
 github.com/mojo-lang/core/go v0.0.0-20211120065101-babc9d06048a/go.mod h1:SbUGVbcq9wVDkQrM2HKwI2mrp3xOsfs2tODfoIVukpE=
 github.com/mojo-lang/core/go v0.0.0-20211121055316-dc6cb21cb918 h1:66kArgQdu6RbAHzyHtDl9Ip1Z30uQ5+tp6tvQlvdAto=
 github.com/mojo-lang/core/go v0.0.0-20211121055316-dc6cb21cb918/go.mod h1:SbUGVbcq9wVDkQrM2HKwI2mrp3xOsfs2tODfoIVukpE=
+github.com/mojo-lang/core/go v0.0.0-20211123010202-03f9f6e22fd2 h1:XoRJjPEP6UetGefGKDdicYxxdX2MBSCNanCLZ6q6lM8=
 github.com/mojo-lang/core/go v0.0.0-20211123010202-03f9f6e22fd2/go.mod h1:wxoQGiRDiWUOr780A65MRvGpgRvOMswKGMzHFtgVGI8=
 github.com/mojo-lang/document/go v0.0.0-20211117011435-ec994bc588a8/go.mod h1:UvN11oZksSczoJcxCR8CSsEhxt/rNbTtWq89Qlh6oMM=
 github.com/mojo-lang/document/go v0.0.0-20211120065328-ad33b3c38ee1 h1:oASH/ffbS2Xgnu2Dhc4MXhPloWLzOWrPiTSr/bLP65c=
