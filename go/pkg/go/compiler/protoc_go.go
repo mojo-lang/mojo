@@ -84,7 +84,7 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 			logs.Errorw("failed to run protoc cmd", "error", stderr.String(), "cmd", fileCmd.String())
 			return nil, err
 		}
-		logs.Debugw("finish to run protoc cmd", "cmd", fileCmd.String())
+		logs.Debugw("finish to run protoc cmd", "warning", stderr.String(), "cmd", fileCmd.String())
 
 		fs, err := descriptor.UnmarshalFiles(out)
 		if err != nil {

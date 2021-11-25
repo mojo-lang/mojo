@@ -11,6 +11,8 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/openapi"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/protobuf"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/go/pkg/util"
+	"path"
 	"strings"
 )
 
@@ -46,6 +48,10 @@ func (b *Builder) Execute() error {
 	}
 	if len(b.Targets) == 0 {
 		b.Targets = "api"
+
+		if util.IsExist(path.Join(b.Path, "service-go")) {
+			b.Targets = "api,service"
+		}
 	}
 
 	targets := strings.Split(b.Targets, ",")
