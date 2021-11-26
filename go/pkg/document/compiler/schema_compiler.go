@@ -37,6 +37,9 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 
 		ctx := &Context{}
 		fieldNames := decl.GetStructDecl().FieldNames()
+		if decl == nil {
+			fieldNames = schema.FieldNames(s.Components.Schemas)
+		}
 		s.compileFields(ctx, fieldNames, schema, table)
 
 		doc.AppendTable(table)

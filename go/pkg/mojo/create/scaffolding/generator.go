@@ -25,6 +25,15 @@ func (g *Generator) Generate(data *Data, output string) error {
 		data.Package.Version = "0.1.0"
 	}
 
+	if data.IsMojoPackage() {
+		if len(data.Package.Repository) == 0 {
+			data.Package.Repository = "https://github.com/mojo-lang/" + pkgDirName
+		}
+		if len(data.Package.Organization) == 0 {
+			data.Package.Organization = "mojo-lang.org"
+		}
+	}
+
 	applyTemplate := func(name string, tmpl string, tmplData interface{}, filename string) error {
 		if tmplData == nil {
 			return errors.New("the input template data is nil")
@@ -68,8 +77,10 @@ func (g *Generator) Generate(data *Data, output string) error {
 	}
 
 	// mkdir mojo folders
-	mojoPath := path2.Join(output, pkgDirName, "mojo", lang.PackageNameToPath(data.Package.FullName))
-	util.CreateDir(mojoPath)
-
-	return nil
+	mojoPath := lang.PackageNameToPath(data.Package.FullName)
+	mojoFullPath := path2.Join(output, pkgDirName, "mojo", mojoPath)
+	if data.IsMojoPackage() {
+		mojoFullPath = path2.Join(output, pkgDirName, mojoPath)
+	}
+	return util.CreateDir(mojoFullPath)
 }
