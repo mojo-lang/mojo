@@ -120,10 +120,10 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, api *openapi.OpenAPI
 					return err
 				}
 				item.SetOperation(attribute.Name, op)
-				if i, ok := api.Paths.Values[path]; ok {
-					api.Paths.Values[path] = i.Merge(item)
+				if i, ok := api.Paths.Vals[path]; ok {
+					api.Paths.Vals[path] = i.Merge(item)
 				} else {
-					api.Paths.Values[path] = item
+					api.Paths.Vals[path] = item
 				}
 			case "resource":
 				resource, _ := lang.GetStringAttribute(method.Attributes, "http.resource")
@@ -294,7 +294,7 @@ func compileRequestBody(ctx *Context, method *lang.FunctionDecl) *openapi.Refere
 }
 
 func compileResponses(ctx *Context, method *lang.FunctionDecl) *openapi.Responses {
-	responses := &openapi.Responses{Values: map[string]*openapi.ReferenceableResponse{
+	responses := &openapi.Responses{Vals: map[string]*openapi.ReferenceableResponse{
 		"200": openapi.NewReferenceableResponse(&openapi.Response{
 			Description: "OK",
 			Headers:     nil,
@@ -307,7 +307,7 @@ func compileResponses(ctx *Context, method *lang.FunctionDecl) *openapi.Response
 		if err != nil {
 			return nil
 		}
-		responses.Values["200"].GetResponse().Content = map[string]*openapi.MediaType{
+		responses.Vals["200"].GetResponse().Content = map[string]*openapi.MediaType{
 			core.ApplicationJson: {Schema: schema},
 		}
 	}

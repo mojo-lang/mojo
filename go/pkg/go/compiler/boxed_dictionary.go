@@ -1,7 +1,7 @@
 package compiler
 
 import (
-	"github.com/iancoleman/strcase"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"strings"
 )

@@ -22,7 +22,7 @@ func (a *ApiCompiler) Compile(pkg *lang.Package, api *openapi.OpenAPI) (*documen
 	a.Package = pkg
 	a.compileHeader(ctx, api, doc)
 
-	err := openapi.OrderedPathItemIterator(api.Paths.Values, func(path string, item *openapi.PathItem) error {
+	err := openapi.OrderedPathItemIterator(api.Paths.Vals, func(path string, item *openapi.PathItem) error {
 		d, err := a.compilePathItem(ctx, path, item)
 		if err != nil {
 			return err

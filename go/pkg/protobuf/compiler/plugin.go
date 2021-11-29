@@ -146,9 +146,9 @@ func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.M
 	if decl.Type != nil {
 		if decl.IsBoxedType() {
 			valueType := decl.Type.Inherits[0]
-			valueName := "value"
+			valueName := "val"
 			if fullName := valueType.GetFullName(); fullName == "mojo.core.Array" || fullName == "mojo.core.Map" {
-				valueName = "values"
+				valueName = "vals"
 			}
 			valueDecl := &lang.ValueDecl{
 				Implicit: true,

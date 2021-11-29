@@ -19,20 +19,20 @@ package {{.GoPackageName}}
 
 func (m *{{.FullName}}) Len() int {
     if m != nil {
-        return len(m.Values)
+        return len(m.Vals)
     }
     return 0
 }
 
 func (m *{{.FullName}}) IsEmpty() int {
     if m != nil {
-        return len(m.Values) == 0
+        return len(m.Vals) == 0
     }
     return true
 }
 
 func (m *{{.FullName}}) Append(value {{.Value}}) {
     if m != nil {
-        m.Values = append(m.Values, value)
+        m.Vals = append(m.Vals, value)
     }
 }

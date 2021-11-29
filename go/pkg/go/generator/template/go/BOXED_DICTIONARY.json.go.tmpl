@@ -34,20 +34,20 @@ func (codec *{{CompactFullName .FullName}}Codec) Decode(ptr unsafe.Pointer, iter
 	any := iter.ReadAny()
     {{ToLowerCamel .Name}} := (*{{.FullName}})(ptr)
     if any.ValueType() == jsoniter.ObjectValue {
-        any.ToVal(&{{ToLowerCamel .Name}}.Values)
+        any.ToVal(&{{ToLowerCamel .Name}}.Vals)
     }
 }
 
 func (codec *{{CompactFullName .FullName}}Codec) IsEmpty(ptr unsafe.Pointer) bool {
 	{{ToLowerCamel .Name}} := (*{{.FullName}})(ptr)
-	return {{ToLowerCamel .Name}} == nil || len({{ToLowerCamel .Name}}.Values) == 0
+	return {{ToLowerCamel .Name}} == nil || len({{ToLowerCamel .Name}}.Vals) == 0
 }
 
 func (codec *{{CompactFullName .FullName}}Codec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
 	{{ToLowerCamel .Name}} := (*{{.FullName}})(ptr)
 
     stream.WriteObjectStart()
-    for k, v := range {{ToLowerCamel .Name}}.Values {
+    for k, v := range {{ToLowerCamel .Name}}.Vals {
         if i > 0 {
             stream.WriteMore()
         }

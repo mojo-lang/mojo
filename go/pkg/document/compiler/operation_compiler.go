@@ -82,7 +82,7 @@ func (o *OperationCompiler) Compile(operation *openapi.Operation) (*document.Doc
 	}
 
 	doc.AppendHeaderFromText(3, "返回值")
-	if resp, ok := operation.Responses.Values["200"]; ok {
+	if resp, ok := operation.Responses.Vals["200"]; ok {
 		response := resp.GetResponse()
 		doc.AppendHeaderFromText(4, "返回对象")
 		if len(response.Content) == 0 {
@@ -108,15 +108,15 @@ func (o *OperationCompiler) compilePathParameters(ctx *Context, parameters []*op
 	for _, parameter := range parameters {
 		row := &document.Table_Row{}
 
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(parameter.Name)))
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(parameter.Name)))
 
 		typeName := parameter.Schema.GetTypeName(o.Components.Schemas)
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeName)))
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
 		typeFormat := parameter.Schema.GetFormat(o.Components.Schemas)
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeFormat))) // 格式类型
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // 格式类型
 
-		row.Values = append(row.Values, document.NewTextTableCell(parameter.Description))
+		row.Vals = append(row.Vals, document.NewTextTableCell(parameter.Description))
 
 		table.Rows = append(table.Rows, row)
 	}
@@ -135,23 +135,23 @@ func (o *OperationCompiler) compileQueryParameters(ctx *Context, parameters []*o
 	for _, parameter := range parameters {
 		row := &document.Table_Row{}
 
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(parameter.Name)))
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(parameter.Name)))
 
 		typeName := parameter.Schema.GetTypeName(o.Components.Schemas)
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeName)))
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
 		typeFormat := parameter.Schema.GetFormat(o.Components.Schemas)
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeFormat))) // 格式类型
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // 格式类型
 
 		required := "否"
 		if parameter.Required {
 			required = "是"
 		}
-		row.Values = append(row.Values, document.NewTextTableCell(required)) // 是否必须
+		row.Vals = append(row.Vals, document.NewTextTableCell(required)) // 是否必须
 
-		row.Values = append(row.Values, document.NewTextTableCell("")) // 默认值
+		row.Vals = append(row.Vals, document.NewTextTableCell("")) // 默认值
 
-		row.Values = append(row.Values, document.NewTextTableCell(parameter.Description))
+		row.Vals = append(row.Vals, document.NewTextTableCell(parameter.Description))
 
 		table.Rows = append(table.Rows, row)
 	}

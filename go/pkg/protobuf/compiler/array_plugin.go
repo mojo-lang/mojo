@@ -3,7 +3,7 @@ package compiler
 import (
 	"errors"
 	"fmt"
-	"github.com/iancoleman/strcase"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
@@ -37,7 +37,7 @@ func CompileArrayToStruct(t *lang.NominalType) (*lang.StructDecl, error) {
 	s := &lang.StructDecl{}
 	s.Type = &lang.StructType{
 		Fields: []*lang.ValueDecl{{
-			Name: "values",
+			Name: "vals",
 			Type: t,
 		}},
 	}

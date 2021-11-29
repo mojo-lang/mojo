@@ -1,8 +1,8 @@
 package compiler
 
 import (
-	"github.com/iancoleman/strcase"
 	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/document/go/pkg/mojo/document"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
@@ -51,15 +51,15 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 		}
 		row := &document.Table_Row{}
 
-		row.Values = append(row.Values, document.NewTextTableCell(""))
+		row.Vals = append(row.Vals, document.NewTextTableCell(""))
 
 		typeName := schema.GetTypeName(s.Components.Schemas)
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeName)))
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
 		// 说明
 		d := schema.Items.GetDescription(s.Components)
 		if d != nil {
-			row.Values = append(row.Values, &document.Table_Cell{Values: doc.Blocks})
+			row.Vals = append(row.Vals, &document.Table_Cell{Vals: doc.Blocks})
 		}
 
 		table.Rows = append(table.Rows, row)
@@ -75,11 +75,11 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 			row := &document.Table_Row{}
 
 			typeName := item.GetTypeName(s.Components.Schemas)
-			row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeName)))
+			row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
 			// 说明
 			summary := item.GetSummary(s.Components)
-			row.Values = append(row.Values, document.NewTextTableCell(summary))
+			row.Vals = append(row.Vals, document.NewTextTableCell(summary))
 
 			table.Rows = append(table.Rows, row)
 		}
@@ -120,26 +120,26 @@ func (s *SchemaCompiler) compileFields(ctx *Context, fieldNames []string, schema
 		}
 
 		row := &document.Table_Row{}
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(fieldName)))
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(fieldName)))
 
 		typeName := property.GetTypeName(s.Components.Schemas)
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeName)))
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
 		typeFormat := property.GetFormat(s.Components.Schemas)
-		row.Values = append(row.Values, document.NewTableCell(wrapCodeToBlock(typeFormat))) // 格式类型
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // 格式类型
 
 		required := "否"
 		if schema.IsPropertyRequired(fieldName) {
 			required = "是"
 		}
-		row.Values = append(row.Values, document.NewTextTableCell(required)) // 是否必须
+		row.Vals = append(row.Vals, document.NewTextTableCell(required)) // 是否必须
 
-		row.Values = append(row.Values, document.NewTextTableCell("")) // 默认值
+		row.Vals = append(row.Vals, document.NewTextTableCell("")) // 默认值
 
 		// 说明
 		doc := property.GetDescription(s.Components)
 		if doc != nil {
-			row.Values = append(row.Values, &document.Table_Cell{Values: doc.Blocks})
+			row.Vals = append(row.Vals, &document.Table_Cell{Vals: doc.Blocks})
 		}
 
 		table.Rows = append(table.Rows, row)

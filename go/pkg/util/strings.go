@@ -16,6 +16,6 @@ func UniqueStringSlice(strings []string) []string {
 
 func UniqueStrings(strings *core.Strings) {
 	if strings != nil {
-		strings.Values = UniqueStringSlice(strings.Values)
+		strings.Vals = UniqueStringSlice(strings.Vals)
 	}
 }

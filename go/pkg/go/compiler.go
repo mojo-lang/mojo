@@ -1,7 +1,7 @@
 package _go
 
 import (
-	"github.com/iancoleman/strcase"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/context"
@@ -122,7 +122,7 @@ func (c *Compiler) compileFile(ctx *context.Context, file *lang.SourceFile) erro
 }
 
 var whiteList = map[string]bool{
-	"Strings":  true,
+	"Strings":       true,
 	"StringValues":  true,
 	"IntegerValues": true,
 	"DoubleValues":  true,
@@ -163,9 +163,9 @@ func (c *Compiler) compileStruct(ctx *context.Context, decl *lang.StructDecl) er
 	if decl.Type != nil {
 		if decl.IsBoxedType() {
 			valueType := decl.Type.Inherits[0]
-			valueName := "value"
+			valueName := "val"
 			if fullName := valueType.GetFullName(); fullName == "mojo.core.Array" || fullName == "mojo.core.Map" {
-				valueName = "values"
+				valueName = "vals"
 			}
 			valueDecl := &lang.ValueDecl{
 				Implicit: true,
@@ -310,7 +310,7 @@ func (c *Compiler) compileNominalType(ctx *context.Context, t *lang.NominalType)
 		}
 		s.Type = &lang.StructType{
 			Fields: []*lang.ValueDecl{{
-				Name: "values",
+				Name: "vals",
 				Type: t,
 			}},
 		}
@@ -343,7 +343,7 @@ func (c *Compiler) compileNominalType(ctx *context.Context, t *lang.NominalType)
 		s.PackageName = pkg.GetFullName()
 		s.Type = &lang.StructType{
 			Fields: []*lang.ValueDecl{{
-				Name: "values",
+				Name: "vals",
 				Type: t,
 			}},
 		}

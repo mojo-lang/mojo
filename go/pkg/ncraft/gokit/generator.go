@@ -3,7 +3,7 @@ package gokit
 
 import (
 	"bytes"
-	"github.com/iancoleman/strcase"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/template"

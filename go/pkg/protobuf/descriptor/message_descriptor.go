@@ -4,8 +4,8 @@ import (
 	"github.com/gogo/protobuf/gogoproto"
 	"github.com/gogo/protobuf/proto"
 	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
-	"github.com/iancoleman/strcase"
 	"github.com/mojo-lang/core/go/pkg/mojo"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 )
 
 // MessageDescriptor represents a protocol buffer message.
