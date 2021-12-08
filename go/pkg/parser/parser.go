@@ -5,6 +5,7 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/parser/semantic"
 	"github.com/mojo-lang/mojo/go/pkg/parser/syntax"
+	"io/fs"
 )
 
 type Parser struct {
@@ -15,9 +16,8 @@ func New() *Parser {
 	return &Parser{}
 }
 
-func (p Parser) ParseFile(filename string) (*lang.SourceFile, error) {
-	parser := syntax.Parser{}
-	return parser.ParseFile(filename)
+func (p Parser) ParseFile(filename string, fileSys fs.FS) (*lang.SourceFile, error) {
+	return syntax.Parser{}.ParseFile(filename, fileSys)
 }
 
 func hasRootPackage(packages map[string]*lang.Package, rootName string) bool {
@@ -29,9 +29,9 @@ func hasRootPackage(packages map[string]*lang.Package, rootName string) bool {
 	return false
 }
 
-func (p Parser) ParsePackage(path string, pkgName string) (map[string]*lang.Package, error) {
+func (p Parser) ParsePackage(path string, pkgName string, fileSys fs.FS) (map[string]*lang.Package, error) {
 	syntaxParser := syntax.Parser{}
-	pkgs, err := syntaxParser.ParsePackage(path, pkgName)
+	pkgs, err := syntaxParser.ParsePackage(path, pkgName, fileSys)
 	if err != nil {
 		logs.Errorw("failed to parse package", "package", pkgName, "error", err.Error())
 		return nil, err

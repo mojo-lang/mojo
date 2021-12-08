@@ -1,11 +1,8 @@
 package descriptor
 
 import (
-	"github.com/gogo/protobuf/gogoproto"
-	"github.com/gogo/protobuf/proto"
-	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
-	"github.com/mojo-lang/core/go/pkg/mojo"
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
 // MessageDescriptor represents a protocol buffer message.
@@ -161,28 +158,6 @@ func GetFieldTypeName(field *descriptor.FieldDescriptorProto) string {
 		return t
 	} else {
 		return field.GetTypeName()
-	}
-}
-
-func JsonTagLowerCamelCase(field *descriptor.FieldDescriptorProto) {
-	//if field.IsRepeated() || field.IsMessage() {
-	//	return
-	//}
-	//if field.DefaultValue != nil {
-	//	return
-	//}
-
-	value := strcase.ToLowerCamel(*field.Name)
-	value += ",omitempty"
-
-	CompileAliasFieldOptions(field)
-	SetStringFieldOption(gogoproto.E_Jsontag, value)(field)
-}
-
-func CompileAliasFieldOptions(field *descriptor.FieldDescriptorProto) {
-	value := GetStringFieldOption(field, mojo.E_Alias)
-	if len(value) > 0 {
-		SetStringFieldOption(gogoproto.E_Jsontag, value+",omitempty")(field)
 	}
 }
 

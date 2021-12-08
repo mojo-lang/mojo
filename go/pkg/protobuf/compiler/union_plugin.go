@@ -3,11 +3,12 @@ package compiler
 import (
 	"errors"
 	"fmt"
-	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
 	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"strings"
 )
 
 type UnionPlugin struct {
@@ -53,6 +54,11 @@ func ConstructBoxedUnion(t *lang.NominalType) *lang.StructDecl {
 	if err != nil { // directly union declaration
 		return nil
 	} else {
+		if strings.Contains(originName, "<") {
+			nominalType, _ := lang.ParseNominalTypeFullName(originName)
+			originName = transformer.GenericTypeNamer{}.Name(nominalType)
+		}
+
 		labelFormat, _ := lang.GetStringAttribute(t.Attributes, "label_format")
 
 		// generate the message

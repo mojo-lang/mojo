@@ -8,25 +8,35 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/builder"
 	pkg2 "github.com/mojo-lang/mojo/go/pkg/mojo/pkg"
 	"github.com/mojo-lang/mojo/go/pkg/parser"
+	"io/fs"
+	"os"
 	path2 "path"
 	"sort"
 	"strings"
 )
 
 type Parser struct {
-	Root       *lang.Package
-	WorkingDir string
+	Root         *lang.Package
+	WorkingDir   string
+	Fs           fs.FS
+	DependencyFs map[string]fs.FS
 }
 
-func NewParser(pwd string) *Parser {
-	return &Parser{
-		WorkingDir: pwd,
+func NewParser(pwd string, fileSys fs.FS) *Parser {
+	parser := &Parser{
+		WorkingDir:   pwd,
+		Fs:           fileSys,
+		DependencyFs: make(map[string]fs.FS),
 	}
+	if parser.Fs == nil {
+		parser.Fs = os.DirFS(parser.WorkingDir)
+	}
+	return parser
 }
 
 func (p *Parser) ParseDependency(path string) error {
 	// parse the mojo package
-	err := p.parseDependency(path, nil)
+	err := p.parseDependency(p.WorkingDir, path, nil, p.Fs)
 	if err != nil {
 		return err
 	}
@@ -35,16 +45,19 @@ func (p *Parser) ParseDependency(path string) error {
 	return tree.Resolve()
 }
 
-func (p *Parser) parseDependency(path string, dependent *lang.Package) error {
+func (p *Parser) parseDependency(pwd string, path string, dependent *lang.Package, fileSys fs.FS) error {
 	// parse the mojo package
-	pkg, err := pkg2.ParsePackageFile(path)
+	pkg, err := pkg2.ParsePackageFile(path, fileSys)
 	if err != nil {
 		return err
 	}
 
-	path = builder.GetAbsolutePath(p.WorkingDir, path)
-	pkg.SetExtraString("path", path)
+	if _, ok := p.DependencyFs[pkg.FullName]; !ok {
+		p.DependencyFs[pkg.FullName] = fileSys
+	}
 
+	pkg.SetExtraString("pwd", pwd)
+	pkg.SetExtraString("path", path)
 	if dependent == nil {
 		p.Root = pkg
 	} else {
@@ -65,8 +78,9 @@ func (p *Parser) parseDependency(path string, dependent *lang.Package) error {
 			}
 		}
 
-		depPath = builder.GetAbsolutePath(path, depPath)
-		err = p.parseDependency(depPath, pkg)
+		depPath = builder.GetAbsolutePath(path2.Join(p.WorkingDir, path), depPath)
+		depPwd := path2.Dir(depPath)
+		err = p.parseDependency(depPwd, path2.Base(depPath), pkg, os.DirFS(depPwd))
 		if err != nil {
 			return err
 		}
@@ -76,6 +90,10 @@ func (p *Parser) parseDependency(path string, dependent *lang.Package) error {
 }
 
 func (p *Parser) Parse(path string) error {
+	if strings.HasPrefix(path, p.WorkingDir) {
+		path = strings.TrimPrefix(path, p.WorkingDir)
+	}
+
 	err := p.ParseDependency(path)
 	if err != nil {
 		return err
@@ -102,7 +120,7 @@ func (p *Parser) parse(pkg *lang.Package) error {
 	if !strings.HasPrefix(pkg.FullName, "mojo.") {
 		path = path2.Join(path, "mojo")
 	}
-	packages, err := parser.ParsePackage(path, pkg.FullName)
+	packages, err := parser.ParsePackage(path, pkg.FullName, p.DependencyFs[pkg.FullName])
 	if err != nil {
 		return err
 	}
@@ -123,6 +141,11 @@ func (p *Parser) parse(pkg *lang.Package) error {
 	pkg.Scope = root.Scope
 	pkg.SourceFiles = root.SourceFiles
 	pkg.SetExtraBool("parsed", true)
+
+	logs.Infow("begin to compile mojo package.", "name", pkg.Name, "pwd", p.WorkingDir, "path", path)
+	if err = NewCompiler().Compile(pkg); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -182,5 +205,3 @@ func (p *Parser) TreePackages(packages map[string]*lang.Package) (*lang.Package,
 
 	return packages[names[0]], nil
 }
-
-

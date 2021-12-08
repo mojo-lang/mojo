@@ -12,8 +12,8 @@ type Builder struct {
 
 func (b Builder) Build() (*lang.Package, error) {
 	logs.Infow("begin to parse mojo package.", "pwd", b.PWD, "path", b.Path)
-	parser := NewParser(b.PWD)
-	err := parser.Parse(builder.GetAbsolutePath(b.PWD, b.Path))
+	parser := NewParser(b.PWD, nil)
+	err := parser.Parse(b.Path)
 	if err != nil {
 		return nil, err
 	}
@@ -21,10 +21,10 @@ func (b Builder) Build() (*lang.Package, error) {
 	b.Package = parser.Root
 
 	// compile all the package
-	logs.Infow("begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
-	if err := NewCompiler().Compile(b.Package); err != nil {
-		return nil, err
-	}
+	//logs.Infow("begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
+	//if err := NewCompiler().Compile(b.Package); err != nil {
+	//	return nil, err
+	//}
 
 	return b.Package, nil
 }

@@ -45,7 +45,7 @@ func (t *TypeInheritancesVisitor) VisitTypeInheritances(ctx *TypeInheritancesCon
 }
 
 func (t *TypeInheritancesVisitor) VisitTypeInheritance(ctx *TypeInheritanceContext) interface{} {
-	inheritance := GetPrimeType(ctx.PrimeType())
+	inheritance := GetBasicType(ctx.BasicType())
 
 	attributesCtx := ctx.Attributes()
 	if attributesCtx != nil {

@@ -5,7 +5,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"io/ioutil"
+	"io/fs"
 	path2 "path"
 	"strings"
 )
@@ -52,29 +52,32 @@ func (p Parser) ParseStream(input *antlr.InputStream) (*lang.SourceFile, error) 
 	}
 }
 
-func (p Parser) ParseFile(filename string) (*lang.SourceFile, error) {
-	input, err := antlr.NewFileStream(filename)
+func (p Parser) ParseFile(filename string, fileSys fs.FS) (*lang.SourceFile, error) {
+	if bytes, err := fs.ReadFile(fileSys, filename); err != nil {
+		return nil, err
+	} else {
+		return p.parseFile(filename, antlr.NewInputStream(string(bytes)))
+	}
+}
+
+func (p Parser) parseFile(name string, input *antlr.InputStream) (*lang.SourceFile, error) {
+	p.FileName = name
+	sourceFile, err := p.ParseStream(input)
 	if err != nil {
 		return nil, err
 	}
 
-	p.FileName = filename
-	sourceFile, err := p.ParseStream(input.InputStream)
-	if err != nil {
-		return nil, err
-	}
-
-	sourceFile.Name = path2.Base(filename)
-	sourceFile.FullName = filename
+	sourceFile.Name = path2.Base(name)
+	sourceFile.FullName = name
 	return sourceFile, nil
 }
 
 /// path: root path for the package
-func (p Parser) ParsePackage(path string, pkg string) (map[string]*lang.Package, error) {
+func (p Parser) ParsePackage(path string, pkg string, fileSys fs.FS) (map[string]*lang.Package, error) {
 	p.Path = path
 	p.Package = pkg
 
-	packages, err := p.parsePackage(path, pkg)
+	packages, err := p.parsePackage(path, pkg, fileSys)
 	if err != nil {
 		return nil, err
 	}
@@ -82,11 +85,11 @@ func (p Parser) ParsePackage(path string, pkg string) (map[string]*lang.Package,
 	return packages, nil
 }
 
-func (p Parser) parsePackage(path string, pkg string) (map[string]*lang.Package, error) {
+func (p Parser) parsePackage(path string, pkg string, fileSys fs.FS) (map[string]*lang.Package, error) {
 	packages := make(map[string]*lang.Package)
 
 	currentPath := path2.Join(path, lang.PackageNameToPath(pkg))
-	files, err := ioutil.ReadDir(currentPath)
+	files, err := fs.ReadDir(fileSys, currentPath)
 	if err != nil {
 		logs.Errorw("failed to read source directory", "path", currentPath, "error", err.Error())
 		return nil, err
@@ -101,7 +104,7 @@ func (p Parser) parsePackage(path string, pkg string) (map[string]*lang.Package,
 			} else {
 				pkgName = currentPkgName + "." + f.Name()
 			}
-			pkgs, err := p.parsePackage(path, pkgName)
+			pkgs, err := p.parsePackage(path, pkgName, fileSys)
 			if err != nil {
 				return nil, err
 			}
@@ -114,7 +117,7 @@ func (p Parser) parsePackage(path string, pkg string) (map[string]*lang.Package,
 				continue
 			}
 
-			sourceFile, err := p.ParseFile(path2.Join(currentPath, f.Name()))
+			sourceFile, err := p.ParseFile(path2.Join(currentPath, f.Name()), fileSys)
 			if err != nil {
 				return nil, err
 			}

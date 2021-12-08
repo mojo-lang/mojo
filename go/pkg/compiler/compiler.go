@@ -45,6 +45,11 @@ func (c *Compiler) compilePackage(ctx *context.Context, pkg *lang.Package) error
 		return err
 	}
 
+	genericNaming := NewGenericRenamingCompiler()
+	if err := genericNaming.Compile(ctx, pkg); err != nil {
+		return err
+	}
+
 	if err := typeAlias.Compile(ctx, pkg); err != nil {
 		return err
 	}

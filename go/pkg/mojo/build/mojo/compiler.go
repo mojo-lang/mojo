@@ -13,6 +13,10 @@ func NewCompiler() *Compiler {
 }
 
 func (c *Compiler) Compile(pkg *lang.Package) error {
+	if pkg.GetExtraBool("compiled") {
+		return nil
+	}
+
 	for _, dependency := range pkg.ResolvedDependencies {
 		if dependency.GetExtraBool("compiled") {
 			continue

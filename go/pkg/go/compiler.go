@@ -161,7 +161,7 @@ func (c *Compiler) compileStruct(ctx *context.Context, decl *lang.StructDecl) er
 	}
 
 	if decl.Type != nil {
-		if decl.IsBoxedType() {
+		if decl.IsBoxed() {
 			valueType := decl.Type.Inherits[0]
 			valueName := "val"
 			if fullName := valueType.GetFullName(); fullName == "mojo.core.Array" || fullName == "mojo.core.Map" {

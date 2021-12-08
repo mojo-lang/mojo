@@ -1005,7 +1005,7 @@ var parserATN = []uint16{
 	2032, 3, 2, 2, 2, 2031, 2022, 3, 2, 2, 2, 2032, 2035, 3, 2, 2, 2, 2033,
 	2031, 3, 2, 2, 2, 2033, 2034, 3, 2, 2, 2, 2034, 2037, 3, 2, 2, 2, 2035,
 	2033, 3, 2, 2, 2, 2036, 2038, 5, 370, 186, 2, 2037, 2036, 3, 2, 2, 2, 2037,
-	2038, 3, 2, 2, 2, 2038, 305, 3, 2, 2, 2, 2039, 2041, 5, 280, 141, 2, 2040,
+	2038, 3, 2, 2, 2, 2038, 305, 3, 2, 2, 2, 2039, 2041, 5, 278, 140, 2, 2040,
 	2042, 5, 184, 93, 2, 2041, 2040, 3, 2, 2, 2, 2041, 2042, 3, 2, 2, 2, 2042,
 	307, 3, 2, 2, 2, 2043, 2046, 7, 76, 2, 2, 2044, 2046, 5, 316, 159, 2, 2045,
 	2043, 3, 2, 2, 2, 2045, 2044, 3, 2, 2, 2, 2046, 309, 3, 2, 2, 2, 2047,
@@ -24297,14 +24297,14 @@ func NewTypeInheritanceContext(parser antlr.Parser, parent antlr.ParserRuleConte
 
 func (s *TypeInheritanceContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *TypeInheritanceContext) PrimeType() IPrimeTypeContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IPrimeTypeContext)(nil)).Elem(), 0)
+func (s *TypeInheritanceContext) BasicType() IBasicTypeContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IBasicTypeContext)(nil)).Elem(), 0)
 
 	if t == nil {
 		return nil
 	}
 
-	return t.(IPrimeTypeContext)
+	return t.(IBasicTypeContext)
 }
 
 func (s *TypeInheritanceContext) Attributes() IAttributesContext {
@@ -24359,7 +24359,7 @@ func (p *MojoParser) TypeInheritance() (localctx ITypeInheritanceContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2037)
-		p.PrimeType()
+		p.basicType(0)
 	}
 	p.SetState(2039)
 	p.GetErrorHandler().Sync(p)

@@ -64,6 +64,10 @@ func (c *Compiler) compilePackage(ctx *compiler.Context, pkg *lang.Package) erro
 }
 
 func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) error {
+	if file.IsGenericInstantiated() {
+		return nil
+	}
+
 	ctx.Open(file)
 	defer func() {
 		ctx.Close()

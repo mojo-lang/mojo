@@ -2,7 +2,10 @@ package mojo
 
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/test"
 	"github.com/stretchr/testify/assert"
+	"os"
+	"path"
 	"testing"
 )
 
@@ -15,7 +18,7 @@ func TestParser_TreePackages(t *testing.T) {
 		"foo.bar.car.dir.far": {FullName: "foo.bar.car.dir.far"},
 	}
 
-	parser := NewParser("")
+	parser := NewParser("", nil)
 	root, err := parser.TreePackages(packages)
 	assert.NoError(t, err)
 	assert.Equal(t, "foo", root.FullName)
@@ -35,7 +38,7 @@ func TestParser_TreePackages2(t *testing.T) {
 		"foo.car.car.eir.far": {FullName: "foo.bar.car.eir.far"},
 	}
 
-	parser := NewParser("")
+	parser := NewParser("", nil)
 	root, err := parser.TreePackages(packages)
 	assert.NoError(t, err)
 	assert.Equal(t, "foo", root.FullName)
@@ -51,7 +54,14 @@ func TestParser_TreePackagesError(t *testing.T) {
 		"bar": {FullName: "bar"},
 	}
 
-	parser := NewParser("")
+	parser := NewParser("", nil)
 	_, err := parser.TreePackages(packages)
 	assert.Error(t, err)
+}
+
+func TestParser_Parse_CaseAlias(t *testing.T) {
+	wd, _ := os.Getwd()
+	parser := NewParser(path.Join(wd, "../../../../test/case-alias"), test.AliasCaseFiles)
+	err := parser.Parse("case-alias")
+	assert.NoError(t, err)
 }

@@ -1,6 +1,6 @@
 package descriptor
 
-import "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
+import "github.com/golang/protobuf/protoc-gen-go/descriptor"
 
 // ServiceDescriptor describes an service.
 type ServiceDescriptor struct {

@@ -1,6 +1,119 @@
 package context
 
-import "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+import (
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+)
+//
+//const TypeKey = "@type"
+//const PackageKey = "@type/Package"
+//const SourceFileKey = "@type/SourceFile"
+//const InterfaceKey = "@type/Interface"
+//const StructKey = "@type/Struct"
+//const EnumKey = "@type/Enum"
+//const TypeAliasKey = "@type/TypeAlias"
+//
+//type valuesContext struct {
+//	context.Context
+//	Options
+//}
+//
+//func (*valuesContext) Deadline() (deadline time.Time, ok bool) {
+//	return
+//}
+//
+//func (*valuesContext) Done() <-chan struct{} {
+//	return nil
+//}
+//
+//func (*valuesContext) Err() error {
+//	return nil
+//}
+//
+//func (c *valuesContext) Value(key interface{}) interface{} {
+//	if v, ok := c.Options[key.(string)]; ok {
+//		return v
+//	}
+//	return c.Context.Value(key)
+//}
+//
+//func WithOptions(ctx context.Context, options Options) context.Context {
+//	return &valuesContext{
+//		Context: ctx,
+//		Options: options,
+//	}
+//}
+//
+//func WithValues(ctx context.Context, kvs ...interface{}) context.Context {
+//	options := make(Options)
+//	for i := 0; i < len(kvs)-1; i += 2 {
+//		options[kvs[i].(string)] = kvs[i+1]
+//	}
+//	return WithOptions(ctx, options)
+//}
+//
+//func WithTypeValue(ctx context.Context, value interface{}) context.Context {
+//	key := ""
+//	switch value.(type) {
+//	case *lang.Package:
+//		key = PackageKey
+//	case *lang.SourceFile:
+//		key = SourceFileKey
+//	case *lang.StructDecl:
+//		key = StructKey
+//	case *lang.EnumDecl:
+//		key = EnumKey
+//	case *lang.TypeAliasDecl:
+//		key = TypeAliasKey
+//	case *lang.InterfaceDecl:
+//		key = InterfaceKey
+//	}
+//	return WithValues(ctx, TypeKey, value, key, value)
+//}
+//
+//func Package(ctx context.Context) *lang.Package {
+//	return ctx.Value(PackageKey).(*lang.Package)
+//}
+//
+//func Values(ctx context.Context, key string) []interface{} {
+//	var values []interface{}
+//	if c, ok := ctx.(*valuesContext); ok {
+//		if v, o := c.Options[key]; o {
+//			values = append(values, v)
+//		}
+//
+//		values = append(values, Values(c.Context, key)...)
+//	}
+//	return values
+//}
+//
+//func PreviousValue(ctx context.Context, key string, index int) interface{} {
+//	values := Values(ctx, key)
+//	if index < 0 || index >= len(values) {
+//		return nil
+//	}
+//	return values[index]
+//}
+//
+//func TypeValues(ctx context.Context) []interface{} {
+//	return Values(ctx, TypeKey)
+//}
+//
+//func TypeValue(ctx context.Context) interface{} {
+//	return ctx.Value(TypeKey)
+//}
+//
+//func TypePreviousValue(ctx context.Context, index int) interface{} {
+//	return PreviousValue(ctx, TypeKey, index)
+//}
+//
+//func IsTypeEnclosed(ctx context.Context) bool {
+//	_, ok := TypePreviousValue(ctx, 1).(EnclosingTypeDecl)
+//	return ok
+//}
+//
+//type EnclosingTypeDecl interface {
+//	EnclosingTypeDecl()
+//}
 
 type Context struct {
 	Options []map[string]interface{}

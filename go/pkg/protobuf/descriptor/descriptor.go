@@ -1,6 +1,6 @@
 package descriptor
 
-import "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
+import "github.com/golang/protobuf/protoc-gen-go/descriptor"
 
 // Each type we import as a protocol buffer (other than FileDescriptorProto) needs
 // a pointer to the FileDescriptorProto that represents it.  These types achieve that

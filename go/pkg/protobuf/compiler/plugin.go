@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/mojo-lang/core/go/pkg/mojo"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -144,7 +144,7 @@ func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.M
 	ctx.DeleteOption("register_struct")
 
 	if decl.Type != nil {
-		if decl.IsBoxedType() {
+		if decl.IsBoxed() {
 			valueType := decl.Type.Inherits[0]
 			valueName := "val"
 			if fullName := valueType.GetFullName(); fullName == "mojo.core.Array" || fullName == "mojo.core.Map" {
@@ -283,6 +283,20 @@ func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *
 			///TODO GenericArguments == 1
 			// TODO 如果number标号在Union类型上，则需要将该Union转换成message；如果不是则使用oneof
 			if len(field.Type.GenericArguments) > 0 {
+				if _, err := field.GetIntegerAttribute("number"); err == nil {
+					t, name, err := CompileNominalType(ctx, field.Type)
+					if err != nil {
+						close()
+						return errors.New(
+							fmt.Sprintf("failed to compile the type %s: %s", field.Type.Name, err.Error()))
+					}
+
+					pType, pName := protoType(t, name)
+					member.Type = &pType
+					member.TypeName = &pName
+					break
+				}
+
 				msgDescriptor.OneofDecl = append(msgDescriptor.OneofDecl, &descriptor.OneofDescriptorProto{
 					Name: &field.Name,
 				})

@@ -50,6 +50,18 @@ func GetPrimeType(ctx IPrimeTypeContext) *lang.NominalType {
 	return nil
 }
 
+func GetBasicType(ctx IBasicTypeContext) *lang.NominalType {
+	if ctx != nil {
+		visitor := NewNominalTypeVisitor()
+		if t, ok := ctx.Accept(visitor).(*lang.NominalType); ok {
+			return t
+		} else {
+			fmt.Print("===> error")
+		}
+	}
+	return nil
+}
+
 func (n *NominalTypeVisitor) VisitTypeAnnotation(ctx *TypeAnnotationContext) interface{} {
 	typeCtx := ctx.Type_()
 	if typeCtx != nil {

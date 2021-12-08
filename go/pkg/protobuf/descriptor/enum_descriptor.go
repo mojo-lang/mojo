@@ -1,6 +1,6 @@
 package descriptor
 
-import "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
+import "github.com/golang/protobuf/protoc-gen-go/descriptor"
 
 // EnumDescriptor describes an enum. If it's at top level, its Parent will be nil.
 // Otherwise it will be the descriptor of the message in which it is defined.

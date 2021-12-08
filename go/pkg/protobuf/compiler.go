@@ -3,7 +3,7 @@ package protobuf
 import (
 	"errors"
 	"fmt"
-	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -62,13 +62,18 @@ func (c *Compiler) compilePackage(ctx *compiler.Context, pkg *lang.Package) erro
 		if err != nil {
 			return err
 		}
-		//c.Context.File.Package = &pkg.FullName
-		c.Files = append(c.Files, descriptor)
+		if descriptor != nil {
+			c.Files = append(c.Files, descriptor)
+		}
 	}
 	return nil
 }
 
 func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) (*desc.FileDescriptor, error) {
+	if file.IsGenericInstantiated() {
+		return nil, nil
+	}
+
 	fileDescriptor := desc.NewFileDescriptor()
 	ctx.Open(file, fileDescriptor)
 	defer func() {
@@ -189,6 +194,10 @@ func getOrganizationPrefix(pkg *lang.Package) string {
 
 func (c *Compiler) compileImport(file *lang.SourceFile, descriptor *desc.FileDescriptor) error {
 	for _, dependency := range file.ResolvedIdentifiers {
+		if dependency.IsGenericInstantiated() {
+			continue
+		}
+
 		fileName := dependency.SourceFileName
 		if strings.HasSuffix(fileName, ".mojo") {
 			fileName = strings.TrimSuffix(fileName, "mojo") + "proto"

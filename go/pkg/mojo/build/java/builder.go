@@ -31,8 +31,9 @@ func (b Builder) protocJava() error {
 
 	cmd := exec.Command("protoc", "-I.")
 	for _, dep := range b.Package.ResolvedDependencies {
+		wd := dep.GetExtraString("pwd")
 		path := dep.GetExtraString("path")
-		cmd.Args = append(cmd.Args, "--proto_path="+path2.Join(path, "protobuf"))
+		cmd.Args = append(cmd.Args, "--proto_path="+path2.Join(wd, path, "protobuf"))
 	}
 
 	cmd.Dir = path2.Join(b.GetAbsolutePath(), "protobuf")

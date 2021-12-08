@@ -11,6 +11,7 @@ type Generator struct {
 	Files util.GeneratedFiles
 }
 
+
 func NewGenerator(files util.GeneratedFiles, data *compiler.Data) *Generator {
 	return &Generator{
 		Files: files,

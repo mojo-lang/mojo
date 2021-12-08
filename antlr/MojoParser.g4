@@ -650,7 +650,7 @@ mapType : LCURLY type_ attributes? COLON type_  attributes? RCURLY ;
 
 typeInheritanceClause : COLON EOL* typeInheritances ;
 typeInheritances : typeInheritance (eovWithDocument EOL* typeInheritance)* eovWithDocument? ;
-typeInheritance : primeType attributes? ;
+typeInheritance : basicType attributes? ;
 
 
 // ---------- Lexical Structure -----------

@@ -2,13 +2,13 @@ package compiler
 
 import (
 	"errors"
-	path2 "path"
-	"strings"
-
-	"github.com/gogo/protobuf/proto"
+	"fmt"
+	"github.com/golang/protobuf/proto"
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/context"
+	path2 "path"
 )
 
 // compile the Generic Type to Nominal type except the Array, Map, Tuple, Union, Intersection
@@ -16,6 +16,8 @@ type GenericCompiler struct {
 	Options  map[string]interface{}
 	NewFiles []*lang.SourceFile
 }
+
+type IdentifierIndex map[string]*lang.Identifier
 
 func NewGenericCompiler(options map[string]interface{}) *GenericCompiler {
 	compiler := &GenericCompiler{
@@ -112,8 +114,6 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 
 	identifiers := make(map[string]*lang.Identifier)
 	for _, structDecl := range decl.StructDecls {
-		/// TODO
-		/// if the struct only have an inherit and the has the same name, should be replace the current struct
 		ids, err := c.CompileStruct(ctx, structDecl)
 		if err != nil {
 			return nil, err
@@ -143,100 +143,35 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 	decl.TypeAliasDecls = typeAliasDecls
 
 	if decl.Type != nil {
-		identifierIndex := make(map[string]*lang.Identifier)
 		for _, id := range decl.ResolvedIdentifiers {
-			identifierIndex[id.FullName] = id
-		}
-
-		compileType := func(nominalType *lang.NominalType) (*lang.NominalType, error) {
-			id, err := c.compileGenericNominalType(ctx, nominalType)
-			if err != nil {
-				return nil, err
+			if structDecl := id.Declaration.GetStructDecl(); structDecl.IsGeneric() && structDecl.IsOpacity() {
+				continue
 			}
-
-			if id != nil {
-				identifiers[id.FullName] = id
-				return &lang.NominalType{
-					PackageName:     id.PackageName,
-					Name:            id.Name,
-					TypeDeclaration: lang.NewTypeDeclarationFromDeclaration(id.Declaration),
-					Attributes:      nominalType.Attributes,
-				}, nil
-			} else {
-				fullName := nominalType.GetFullName()
-				identifier := identifierIndex[fullName]
-				if identifier != nil {
-					identifiers[fullName] = identifier
-				}
-
-				for _, argument := range nominalType.GenericArguments {
-					fullName = argument.GetFullName()
-					identifier = identifierIndex[fullName]
-					if identifier != nil {
-						identifiers[fullName] = identifier
-					}
-				}
-				return nil, nil
-			}
+			identifiers[id.FullName] = id
 		}
 
 		var inherits []*lang.NominalType
 		for _, inherit := range decl.Type.Inherits {
-			t, err := compileType(inherit)
+			t, err := c.compileNominalType(ctx, inherit, identifiers)
 			if err != nil {
 				return nil, err
 			}
 			if t != nil {
 				inherits = append(inherits, t)
 			} else {
-				if exceptionalTypes[inherit.GetFullName()] {
-					for i, argument := range inherit.GenericArguments {
-						id, err := c.compileGenericNominalType(ctx, argument)
-						if err != nil {
-							return nil, err
-						}
-						if id != nil {
-							inherit.GenericArguments[i] = &lang.NominalType{
-								PackageName:     id.PackageName,
-								Name:            id.Name,
-								TypeDeclaration: lang.NewTypeDeclarationFromDeclaration(id.Declaration),
-								Attributes:      argument.Attributes,
-							}
-							identifiers[id.FullName] = id
-						}
-					}
-				}
-
 				inherits = append(inherits, inherit)
 			}
 		}
 		decl.Type.Inherits = inherits
 
 		for _, field := range decl.Type.Fields {
-			t, err := compileType(field.Type)
+
+			t, err := c.compileNominalType(ctx, field.Type, identifiers)
 			if err != nil {
 				return nil, err
 			}
 			if t != nil {
 				field.Type = t
-			} else {
-				if exceptionalTypes[field.Type.GetFullName()] {
-					for i, argument := range field.Type.GenericArguments {
-						id, err := c.compileGenericNominalType(ctx, argument)
-						if err != nil {
-							return nil, err
-						}
-						if id != nil {
-							field.Type.GenericArguments[i] = &lang.NominalType{
-								PackageName:     id.PackageName,
-								Name:            id.Name,
-								TypeDeclaration: lang.NewTypeDeclarationFromDeclaration(id.Declaration),
-								Attributes:      argument.Attributes,
-							}
-							identifiers[id.FullName] = id
-						}
-					}
-				}
 			}
 		}
 	}
@@ -260,320 +195,223 @@ func (c *GenericCompiler) CompileTypeAlias(ctx *context.Context, decl *lang.Type
 		ctx.Close()
 	}()
 
+	identifierIndex := make(IdentifierIndex)
 	decl.Type.Attributes = append(decl.Type.Attributes, decl.Attributes...)
-	id, err := c.compileGenericNominalType(ctx, decl.Type)
-	if err != nil || id == nil {
+	decl.Type.Attributes = lang.SetStringAttribute(decl.Type.Attributes, lang.OriginalTypeAliasName, decl.Name)
+
+	newType, err := c.compileNominalType(ctx, decl.Type, identifierIndex)
+	if err != nil || newType == nil {
 		return decl.ResolvedIdentifiers, nil, err
 	}
 
-	if id.Name == decl.Name {
-		if structDecl := id.Declaration.GetStructDecl(); structDecl != nil {
+	if newType.Name == decl.Name {
+		if structDecl := newType.GetTypeDeclaration().GetStructDecl(); structDecl != nil {
 			return structDecl.ResolvedIdentifiers, structDecl, nil
-		} else if aliasDecl := id.Declaration.GetTypeAliasDecl(); aliasDecl != nil {
-			decl.Type = aliasDecl.Type
-			decl.ResolvedIdentifiers = aliasDecl.ResolvedIdentifiers
-			return aliasDecl.ResolvedIdentifiers, nil, err
 		}
+		return decl.ResolvedIdentifiers, nil, nil
 	} else {
-		decl.Type = &lang.NominalType{
-			PackageName:     id.PackageName,
-			Name:            id.Name,
-			Attributes:      decl.Type.Attributes,
-			TypeDeclaration: lang.NewTypeDeclarationFromDeclaration(id.Declaration),
-		}
-
-		return []*lang.Identifier{id}, nil, nil
+		decl.Type = newType
+		return []*lang.Identifier{newType.NewIdentifier()}, nil, nil
 	}
 
 	return nil, nil, err
 }
 
-/// TODO support configure
-var exceptionalTypes = map[string]bool{
-	"mojo.core.Array":        true,
-	"mojo.core.Map":          true,
-	"mojo.core.Tuple":        true,
-	"mojo.core.Union":        true,
-	"mojo.core.Intersection": true,
-}
-
-func (c *GenericCompiler) compileGenericNominalType(ctx *context.Context, nominalType *lang.NominalType) (*lang.Identifier, error) {
+func (c *GenericCompiler) compileNominalType(ctx *context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {
 	if len(nominalType.GenericArguments) == 0 {
-		return nil, nil
-	}
-
-	if exceptionalTypes[nominalType.GetFullName()] {
-		return nil, nil
+		return nominalType, nil
 	}
 
 	// skip it, if all the arguments can't be instantiated
-	for _, argument := range nominalType.GenericArguments {
-		if argument.IsGenericParameter() {
-			return nil, nil
+	if !nominalType.IsInstantiatedGeneric() {
+		return nil, fmt.Errorf("the nominal type (%s) is not instantiated", nominalType.GetGenericFullName())
+	}
+
+	for i, argument := range nominalType.GenericArguments {
+		a, err := c.compileNominalType(ctx, argument, index)
+		if err != nil {
+			return nil, err
 		}
+
+		// add nominal to index
+
+		nominalType.GenericArguments[i] = a
 	}
 
-	switch nominalType.TypeDeclaration.TypeDeclaration.(type) {
-	case *lang.TypeDeclaration_TypeAliasDecl:
-		return c.compileGenericTypeAlias(ctx, nominalType)
-	case *lang.TypeDeclaration_StructDecl:
-		return c.compileGenericStructType(ctx, nominalType)
-	}
-
-	return nil, nil
-}
-
-/// TODO support configure
-// typename: typename template
-// "Cached": "Cached{T}"
-func newTypeName(t *lang.NominalType) string {
-	name := t.Name
-	if strings.HasSuffix(name, "ed") || strings.HasSuffix(name, "able") {
-		for _, argument := range t.GenericArguments {
-			name += argument.Name
+	typeDecl := nominalType.GetTypeDeclaration()
+	if decl := typeDecl.GetStructDecl(); decl != nil {
+		if decl.IsOpacity() { // like Array<String>
+			return nominalType, nil
 		}
-	} else {
-		argumentName := ""
-		for _, argument := range t.GenericArguments {
-			argumentName += argument.Name
-		}
-		name = argumentName + name
-	}
-	return name
-}
-
-func (c *GenericCompiler) isCircleDependency(ctx *context.Context, nominalType *lang.NominalType) bool {
-	values := ctx.OrderlyValues()
-	for _, value := range values {
-		scope := lang.GetScope(value)
-		if scope != nil {
-			for _, id := range scope.Identifiers {
-				for _, argument := range nominalType.GenericArguments {
-					if id.Name == argument.Name {
-						return true
-					}
-				}
-			}
-		}
-	}
-	return false
-}
-
-func (c *GenericCompiler) instantiateTypeAlias(ctx *context.Context, nominalType *lang.NominalType) (*lang.NominalType, error) {
-	aliasDecl := nominalType.TypeDeclaration.GetTypeAliasDecl()
-
-	genericIndex := make(map[string]*lang.NominalType)
-	for i, parameter := range aliasDecl.GenericParameters {
-		genericIndex[parameter.Name] = nominalType.GenericArguments[i]
-	}
-	aliasType := &lang.NominalType{
-		StartPosition:   aliasDecl.Type.StartPosition,
-		EndPosition:     aliasDecl.Type.EndPosition,
-		PackageName:     aliasDecl.Type.PackageName,
-		Name:            aliasDecl.Type.Name,
-		TypeDeclaration: aliasDecl.Type.TypeDeclaration,
-		Attributes:      aliasDecl.Type.Attributes,
-		EnclosingType:   aliasDecl.Type.EnclosingType,
-	}
-	for _, argument := range aliasDecl.Type.GenericArguments {
-		generic := genericIndex[argument.Name]
-		if generic != nil {
-			for _, attribute := range argument.Attributes {
-				generic.Attributes = append(generic.Attributes, attribute)
-			}
-			aliasType.GenericArguments = append(aliasType.GenericArguments, generic)
+		if newType, err := c.compileStructType(ctx, nominalType, index); err != nil {
+			return nil, err
 		} else {
-			aliasType.GenericArguments = append(aliasType.GenericArguments, argument)
+			newType.Attributes = nominalType.Attributes
+			return newType, nil
 		}
 	}
 
-	for _, attribute := range nominalType.Attributes {
-		aliasType.Attributes = append(aliasType.Attributes, attribute)
-	}
-	for _, attribute := range aliasDecl.Attributes {
-		aliasType.Attributes = append(aliasType.Attributes, attribute)
-	}
-
-	// set or transmit the original type alias name to the end
-	aliasName, err := lang.GetStringAttribute(nominalType.Attributes, lang.OriginalTypeAliasName)
-	if err != nil {
-		aliasName = nominalType.Name
-	}
-	aliasType.Attributes = lang.SetStringAttribute(aliasType.Attributes, lang.OriginalTypeAliasName, aliasName)
-
-	if aliasType.IsTypeAlias() {
-		return c.instantiateTypeAlias(ctx, aliasType)
+	if decl := typeDecl.GetTypeAliasDecl(); decl != nil {
+		if newType, err := c.compileTypeAlias(ctx, nominalType, index); err != nil {
+			return nil, err
+		} else {
+			newType.Attributes = lang.MergeAttributes(newType.Attributes, nominalType.Attributes)
+			return newType, nil
+		}
 	}
 
-	return aliasType, nil
+	return nominalType, nil
 }
 
-func (c *GenericCompiler) compileGenericTypeAlias(ctx *context.Context, nominalType *lang.NominalType) (*lang.Identifier, error) {
-	aliasDecl := nominalType.TypeDeclaration.GetTypeAliasDecl()
-	if aliasDecl == nil {
-		return nil, nil
+func (c *GenericCompiler) instantiateNominalType(ctx *context.Context, nominalType *lang.NominalType, instantiates map[string]*lang.NominalType) *lang.NominalType {
+	if instantiate, ok := instantiates[nominalType.Name]; ok {
+		return &lang.NominalType{
+			Name:            instantiate.Name,
+			PackageName:     instantiate.PackageName,
+			TypeDeclaration: instantiate.TypeDeclaration,
+			Attributes:      nominalType.Attributes,
+			EnclosingType:   instantiate.EnclosingType,
+		}
 	}
 
-	if len(nominalType.GenericArguments) != len(aliasDecl.GenericParameters) {
-		return nil, errors.New("the generic arguments is NOT equals to generic parameters")
+	newType := &lang.NominalType{
+		Name:            nominalType.Name,
+		PackageName:     nominalType.PackageName,
+		TypeDeclaration: nominalType.TypeDeclaration,
+		Attributes:      nominalType.Attributes,
+		EnclosingType:   nominalType.EnclosingType,
 	}
 
-	// new Type Name
-	aliasType, err := c.instantiateTypeAlias(ctx, nominalType)
-	if err != nil {
-		return nil, err
+	for _, argument := range nominalType.GenericArguments {
+		a := c.instantiateNominalType(ctx, argument, instantiates)
+		newType.GenericArguments = append(newType.GenericArguments, a)
+	}
+
+	return newType
+}
+
+func (c *GenericCompiler) compileStructType(ctx *context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {
+	structDecl := nominalType.GetTypeDeclaration().GetStructDecl()
+	if structDecl == nil {
+		return nominalType, nil
+	}
+	if len(structDecl.GenericParameters) != len(nominalType.GenericArguments) {
+		return nil, errors.New("the count of generic argument not equal to parameter")
+	}
+	if structDecl.Type == nil {
+		return nil, errors.New("opacity struct type declaration can't be compiled")
 	}
 
 	// generate the new type name
-	typeName := newTypeName(nominalType)
-	ctxFile := ctx.GetSourceFile()
+	typeName := nominalType.GetGenericName()
 
 	// create the new file or just the current file
-	var file *lang.SourceFile
-	var scope *lang.Scope
-
-	nameConflict := false
-	for _, value := range ctx.OrderlyValues() {
-		if scope = lang.GetScope(value); scope != nil {
-			for name, i := range scope.Identifiers {
-				if name == typeName {
-					if i.Declaration.GetTypeAliasDecl() == nil { // only process the duplication with type alias
-						///TODO logs error here
-						return nil, nil
-					}
-					nameConflict = true
-					file = ctxFile
-					break
-				}
-			}
-		}
-
-		if nameConflict {
-			break
-		}
-
-		if _, ok := value.(*lang.SourceFile); ok {
-			break
-		}
+	file, l, err := c.generateSourceFile(ctx, typeName, index)
+	if err != nil {
+		return nil, err
+	}
+	if l != nil {
+		return l, nil
 	}
 
-	if file == nil {
-		fileName := strcase.ToSnake(typeName) + ".mojo"
-		fileFullName := path2.Join(path2.Dir(ctxFile.FullName), fileName)
-		file = ctx.GetPackage().GetSourceFile(fileFullName)
-		if file == nil {
-			for _, f := range c.NewFiles {
-				if f.FullName == fileFullName {
-					if f.Scope != nil && f.Scope.Identifiers != nil && f.Scope.Identifiers[typeName] != nil {
-						return f.Scope.Identifiers[typeName], nil
-					}
-					file = f
-					break
-				}
-			}
-
-			if file == nil {
-				file = &lang.SourceFile{
-					Name:        fileName,
-					FullName:    fileFullName,
-					PackageName: ctxFile.PackageName,
-				}
-				c.NewFiles = append(c.NewFiles, file)
-			}
-		}
-
-		if file.Scope != nil {
-			for name, i := range file.Scope.Identifiers {
-				if name == typeName {
-					if i.Declaration.GetTypeAliasDecl() == nil { // only process the duplication with type alias
-						///TODO logs error here
-						return nil, nil
-					}
-					nameConflict = true
-					break
-				}
-			}
-		}
-	}
-
-	compiledDecl := &lang.TypeAliasDecl{
-		Document:       aliasDecl.Document,
+	compiledDecl := &lang.StructDecl{
+		Document:       structDecl.Document,
+		Attributes:     nominalType.Attributes,
 		PackageName:    file.PackageName,
 		SourceFileName: file.FullName,
 		Implicit:       true,
 		Name:           typeName,
-		Type:           aliasType,
+		Type:           &lang.StructType{},
 	}
 
-	findIdentifier := func(t *lang.NominalType) *lang.Identifier {
-		for _, id := range ctxFile.ResolvedIdentifiers {
-			if id.FullName == t.GetFullName() {
-				return id
-			}
-		}
-		for name, id := range ctxFile.Scope.GetIdentifiers() {
-			if name == t.Name {
-				return id
-			}
+	instantiates := make(map[string]*lang.NominalType)
+	for i, parameter := range structDecl.GenericParameters {
+		instantiates[parameter.Name] = nominalType.GenericArguments[i]
+	}
+
+	// identifier index for the struct declaration
+	identifierIndex := make(IdentifierIndex)
+
+	// compile fields
+	for _, f := range structDecl.Type.Fields {
+		field := &lang.ValueDecl{
+			StartPosition: f.StartPosition,
+			EndPosition:   f.EndPosition,
+			Document:      f.Document,
+			Implicit:      true,
+			Name:          f.Name,
+			Attributes:    f.Attributes,
+			Type:          nil,
+			InitialValue:  proto.Clone(f.InitialValue).(*lang.Expression),
 		}
 
-		return nil
+		var err error
+		field.Type = c.instantiateNominalType(ctx, f.Type, instantiates)
+		field.Type, err = c.compileNominalType(ctx, field.Type, identifierIndex)
+		if err != nil {
+			return nil, err
+		}
+
+		compiledDecl.Type.Fields = append(compiledDecl.Type.Fields, field)
 	}
+
+	// compile inherits
+	for _, inherit := range structDecl.Type.Inherits {
+		var err error
+		newType := c.instantiateNominalType(ctx, inherit, instantiates)
+		newType, err = c.compileNominalType(ctx, newType, identifierIndex)
+		if err != nil {
+			return nil, err
+		}
+		compiledDecl.Type.Inherits = append(compiledDecl.Type.Inherits, newType)
+	}
+
 	var resolvedIdentifiers []*lang.Identifier
-	for _, argument := range nominalType.GenericArguments {
-		if id := findIdentifier(argument); id != nil {
-			resolvedIdentifiers = append(resolvedIdentifiers, id)
-		}
-
-		//resolvedIdentifiers = append(resolvedIdentifiers, &lang.Identifier{
-		//	Package:     argument.Package,
-		//	SourceFile:  argument.TypeDeclaration.GetSourceFileName(),
-		//	Kind:        "",
-		//	Name:        argument.Name,
-		//	FullName:    argument.GetFullName(),
-		//	Declaration: lang.NewDeclarationFromTypeDeclaration(argument.TypeDeclaration),
-		//})
-	}
-	for _, id := range aliasDecl.ResolvedIdentifiers {
+	for _, id := range structDecl.ResolvedIdentifiers {
 		if id.Kind == lang.Identifier_KIND_GENERIC_PARAMETER {
 			continue
 		}
-
 		resolvedIdentifiers = append(resolvedIdentifiers, id)
 	}
-	compiledDecl.ResolvedIdentifiers = resolvedIdentifiers
+	ctxPkg := ctx.GetPackage()
+	for _, argument := range nominalType.GenericArguments {
+		id := ctxPkg.GetResolvedIdentifier(argument.GetFullName())
+		if id == nil {
+			id = argument.NewIdentifier()
+			logs.Warnw("failed to found the resolved identifier in the file","compiledType", compiledDecl.GetFullName(), "argument", argument.GetFullName())
+		}
+		resolvedIdentifiers = append(resolvedIdentifiers, id)
+	}
+	for _, id := range identifierIndex {
+		resolvedIdentifiers = append(resolvedIdentifiers, id)
+	}
 
+	compiledDecl.ResolvedIdentifiers = lang.MergeDependencies(resolvedIdentifiers)
+
+	// update the identifiers in the current scope
+	statement := lang.NewStructDeclStatement(compiledDecl)
+	file.Statements = append(file.Statements, statement)
+
+	id := c.updateStructIdentifier(compiledDecl, file, typeName, index)
+	return id.ToNominalType(), nil
+}
+
+func (c *GenericCompiler) updateStructIdentifier(compiledDecl *lang.StructDecl, file *lang.SourceFile, typeName string, index IdentifierIndex) *lang.Identifier {
 	id := &lang.Identifier{
 		PackageName:    compiledDecl.PackageName,
 		Name:           compiledDecl.Name,
 		FullName:       lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
 		SourceFileName: file.FullName,
-		Declaration:    lang.NewTypeAliasDeclaration(compiledDecl),
+		Kind:           lang.Identifier_KIND_STRUCT,
+		Declaration:    lang.NewStructDeclaration(compiledDecl),
 	}
 
-	// update the identifiers in the current scope
-	if nameConflict {
-		// update the identifier in scope, may be in the file or the struct scope
-		identifier := scope.Identifiers[aliasDecl.Name]
-		if identifier == nil {
-			identifier = scope.Identifiers[typeName]
-		}
-
-		if identifier != nil {
-			identifier.Declaration = lang.NewTypeAliasDeclaration(compiledDecl)
-			id = identifier
+	if file.Scope == nil || file.Scope.Identifiers == nil {
+		file.Scope = &lang.Scope{
+			Identifiers: map[string]*lang.Identifier{typeName: id},
 		}
 	} else {
-		statement := lang.NewTypeAliasDeclStatement(compiledDecl)
-		file.Statements = append(file.Statements, statement)
-
-		if file.Scope == nil || file.Scope.Identifiers == nil {
-			file.Scope = &lang.Scope{
-				Identifiers: map[string]*lang.Identifier{typeName: id},
-			}
-		} else {
-			file.Scope.Identifiers[typeName] = id
-		}
+		file.Scope.Identifiers[typeName] = id
 	}
 
 	// update the resolved identifiers in file
@@ -584,38 +422,24 @@ func (c *GenericCompiler) compileGenericTypeAlias(ctx *context.Context, nominalT
 		file.ResolvedIdentifiers = lang.MergeDependencies(file.ResolvedIdentifiers)
 	}
 
-	return id, nil
+	index[id.FullName] = id
+	return id
 }
 
-func (c *GenericCompiler) compileGenericStructType(ctx *context.Context, nominalType *lang.NominalType) (*lang.Identifier, error) {
-	structDecl := nominalType.TypeDeclaration.GetStructDecl()
-	if structDecl == nil {
-		return nil, nil
-	}
-
-	if len(structDecl.GenericParameters) != len(nominalType.GenericArguments) {
-		return nil, errors.New("the count of generic argument not equal to parameter")
-	}
-	if structDecl.Type == nil {
-		return nil, errors.New("opacity struct type declaration can't be compiled")
-	}
-
-	var compiledDecl *lang.StructDecl
-
-	// generate the new type name
-	typeName := newTypeName(nominalType)
-	ctxFile := ctx.GetSourceFile()
-
-	// create the new file or just the current file
+func (c *GenericCompiler) generateSourceFile(ctx *context.Context, typeName string, index IdentifierIndex) (*lang.SourceFile, *lang.NominalType, error) {
 	var file *lang.SourceFile
+	ctxFile := ctx.GetSourceFile()
 	fileName := strcase.ToSnake(typeName) + ".mojo"
 	fileFullName := path2.Join(path2.Dir(ctxFile.FullName), fileName)
 	file = ctx.GetPackage().GetSourceFile(fileFullName)
 	if file == nil {
 		for _, f := range c.NewFiles {
 			if f.FullName == fileFullName {
-				if f.Scope != nil && f.Scope.Identifiers != nil && f.Scope.Identifiers[typeName] != nil {
-					return f.Scope.Identifiers[typeName], nil
+				if f.Scope != nil && f.Scope.Identifiers != nil {
+					if id := f.Scope.Identifiers[typeName]; id != nil {
+						index[id.FullName] = id
+						return nil, id.ToNominalType(), nil
+					}
 				}
 				file = f
 				break
@@ -631,153 +455,113 @@ func (c *GenericCompiler) compileGenericStructType(ctx *context.Context, nominal
 			c.NewFiles = append(c.NewFiles, file)
 		}
 	}
+	return file, nil, nil
+}
 
-	nameConflict := false
-	var scope *lang.Scope
-	for i := 1; i < len(ctx.Values)-1; i++ {
-		value := ctx.PreviousValue(i)
-		switch t := value.(type) {
-		case *lang.StructDecl:
-			scope = t.Scope
-			break
-		case *lang.InterfaceDecl:
-			scope = t.Scope
-			break
-		case *lang.SourceFile:
-			scope = t.Scope
-			break
-		}
+func (c *GenericCompiler) compileTypeAlias(ctx *context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {
+	aliasDecl := nominalType.GetTypeDeclaration().GetTypeAliasDecl()
+	if aliasDecl == nil {
+		return nil, fmt.Errorf("the nominal type (%s) do NOT have the resolved declaration", nominalType.GetFullName())
 	}
 
-	if scope != nil {
-		for name, i := range scope.Identifiers {
-			if name == typeName {
-				if i.Declaration.GetTypeAliasDecl() == nil { // only process the duplication with type alias
-					return nil, nil
-				}
-				nameConflict = true
-				break
-			}
-		}
+	if len(nominalType.GenericArguments) != len(aliasDecl.GenericParameters) {
+		return nil, errors.New("the generic arguments is NOT equals to generic parameters")
 	}
 
-	compiledDecl = &lang.StructDecl{
-		Document:       structDecl.Document,
-		PackageName:    file.PackageName,
-		SourceFileName: file.FullName,
-		Implicit:       true,
-		Name:           typeName,
-		Type:           &lang.StructType{},
+	instantiates := make(map[string]*lang.NominalType)
+	for i, parameter := range aliasDecl.GenericParameters {
+		instantiates[parameter.Name] = nominalType.GenericArguments[i]
 	}
 
-	replaces := make(map[string]*lang.NominalType)
-	for i, parameter := range structDecl.GenericParameters {
-		replaces[parameter.Name] = nominalType.GenericArguments[i]
+	aliasType := c.instantiateNominalType(ctx, aliasDecl.Type, instantiates)
+	for _, attribute := range nominalType.Attributes {
+		aliasType.Attributes = append(aliasType.Attributes, attribute)
+	}
+	for _, attribute := range aliasDecl.Attributes {
+		aliasType.Attributes = append(aliasType.Attributes, attribute)
 	}
 
-	for _, f := range structDecl.Type.Fields {
-		field := &lang.ValueDecl{
-			Document:     f.Document,
-			Implicit:     true,
-			Name:         f.Name,
-			Attributes:   f.Attributes,
-			Type:         nil,
-			InitialValue: proto.Clone(f.InitialValue).(*lang.Expression),
-		}
-		replaced := replaces[f.Type.Name]
-		if replaced != nil {
-			field.Type = &lang.NominalType{
-				Name:            replaced.Name,
-				PackageName:     replaced.PackageName,
-				TypeDeclaration: replaced.TypeDeclaration,
-				Attributes:      f.Type.Attributes,
-				EnclosingType:   replaced.EnclosingType,
-			}
+	// set or transmit the original type alias name to the end
+	aliasName, err := lang.GetStringAttribute(nominalType.Attributes, lang.OriginalTypeAliasName)
+	if err != nil {
+		if nominalType.IsGeneric() {
+			aliasName = nominalType.GetGenericName()
 		} else {
-			field.Type = &lang.NominalType{
-				Name:            f.Type.Name,
-				PackageName:     f.Type.PackageName,
-				TypeDeclaration: f.Type.TypeDeclaration,
-				Attributes:      f.Type.Attributes,
-				EnclosingType:   f.Type.EnclosingType,
+			aliasName = nominalType.Name
+		}
+	}
+	aliasType.Attributes = lang.SetStringAttribute(aliasType.Attributes, lang.OriginalTypeAliasName, aliasName)
+
+	compiledType, err := c.compileNominalType(ctx, aliasType, index)
+	if err != nil {
+		return nil, err
+	}
+
+	if lang.IsGenericTypeName(aliasName) {
+		// create the new file or just the current file
+		file, l, err := c.generateSourceFile(ctx, aliasName, index)
+		if err != nil {
+			return nil, err
+		}
+		if l != nil {
+			return l, nil
+		}
+
+		compiledDecl := &lang.TypeAliasDecl{
+			Document:       nil,
+			Attributes:     nil,
+			PackageName:    file.PackageName,
+			SourceFileName: file.FullName,
+			Implicit:       true,
+			Name:           aliasName,
+			Type:           compiledType,
+			Scope:          lang.NewScope(),
+		}
+
+		var resolvedIdentifiers []*lang.Identifier
+		ctxPkg := ctx.GetPackage()
+		for _, argument := range compiledType.GenericArguments {
+			id := ctxPkg.GetResolvedIdentifier(argument.GetFullName())
+			if id == nil {
+				id = argument.NewIdentifier()
+				logs.Warnw("failed to found the resolved identifier in the file","compiledType", compiledDecl.GetFullName(), "argument", argument.GetFullName())
 			}
-			for i, argument := range f.Type.GenericArguments {
-				replaced = replaces[argument.Name]
-				if replaced != nil {
-					field.Type.GenericArguments = append(field.Type.GenericArguments, &lang.NominalType{
-						Name:            replaced.Name,
-						PackageName:     replaced.PackageName,
-						TypeDeclaration: replaced.TypeDeclaration,
-						Attributes:      field.Type.GenericArguments[i].Attributes,
-						EnclosingType:   replaced.EnclosingType,
-					})
-				} else {
-					field.Type.GenericArguments = append(field.Type.GenericArguments, argument)
-				}
-			}
-			/// TODO 循环编译内嵌的字段类型
+			resolvedIdentifiers = append(resolvedIdentifiers, id)
 		}
+		compiledDecl.ResolvedIdentifiers = lang.MergeDependencies(resolvedIdentifiers)
 
-		compiledDecl.Type.Fields = append(compiledDecl.Type.Fields, field)
-	}
-
-	///TODO add inherits to compile
-
-	var resolvedIdentifiers []*lang.Identifier
-	for _, id := range structDecl.ResolvedIdentifiers {
-		if id.Kind == lang.Identifier_KIND_GENERIC_PARAMETER {
-			continue
-		}
-		resolvedIdentifiers = append(resolvedIdentifiers, id)
-	}
-	for _, argument := range nominalType.GenericArguments {
-		resolvedIdentifiers = append(resolvedIdentifiers, &lang.Identifier{
-			PackageName:        argument.PackageName,
-			SourceFileName:     argument.TypeDeclaration.GetSourceFileName(),
-			EnclosingTypeNames: nil,
-			Name:               argument.Name,
-			FullName:           argument.GetFullName(),
-			Declaration:        lang.NewDeclarationFromTypeDeclaration(argument.TypeDeclaration),
-		})
-	}
-	compiledDecl.ResolvedIdentifiers = lang.MergeDependencies(resolvedIdentifiers)
-
-	id := &lang.Identifier{
-		PackageName:    compiledDecl.PackageName,
-		Name:           compiledDecl.Name,
-		FullName:       lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
-		SourceFileName: file.FullName,
-		Declaration:    lang.NewStructDeclaration(compiledDecl),
-	}
-
-	// update the identifiers in the current scope
-	if nameConflict {
-		// update the identifier in scope, may be in the file or the struct scope
-		identifier := scope.Identifiers[typeName]
-		if identifier != nil {
-			identifier.Declaration = lang.NewStructDeclaration(compiledDecl)
-			id = identifier
-		}
-	} else {
-		statement := lang.NewStructDeclStatement(compiledDecl)
+		statement := lang.NewTypeAliasDeclStatement(compiledDecl)
 		file.Statements = append(file.Statements, statement)
+
+		// update the identifiers in the current scope
+		id := &lang.Identifier{
+			PackageName:    compiledDecl.PackageName,
+			Name:           compiledDecl.Name,
+			FullName:       lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
+			SourceFileName: file.FullName,
+			Kind:           lang.Identifier_KIND_TYPE_ALIAS,
+			Declaration:    lang.NewTypeAliasDeclaration(compiledDecl),
+		}
 
 		if file.Scope == nil || file.Scope.Identifiers == nil {
 			file.Scope = &lang.Scope{
-				Identifiers: map[string]*lang.Identifier{typeName: id},
+				Identifiers: map[string]*lang.Identifier{aliasName: id},
 			}
 		} else {
-			file.Scope.Identifiers[typeName] = id
+			file.Scope.Identifiers[aliasName] = id
 		}
+
+		// update the resolved identifiers in file
+		if file.ResolvedIdentifiers == nil {
+			file.ResolvedIdentifiers = compiledDecl.ResolvedIdentifiers
+		} else {
+			file.ResolvedIdentifiers = append(file.ResolvedIdentifiers, compiledDecl.ResolvedIdentifiers...)
+			file.ResolvedIdentifiers = lang.MergeDependencies(file.ResolvedIdentifiers)
+		}
+
+		index[id.FullName] = id
+		return id.ToNominalType(), nil
 	}
 
-	// update the resolved identifiers in file
-	if file.ResolvedIdentifiers == nil {
-		file.ResolvedIdentifiers = compiledDecl.ResolvedIdentifiers
-	} else {
-		file.ResolvedIdentifiers = append(file.ResolvedIdentifiers, compiledDecl.ResolvedIdentifiers...)
-		file.ResolvedIdentifiers = lang.MergeDependencies(file.ResolvedIdentifiers)
-	}
-
-	return id, nil
+	return compiledType, nil
 }

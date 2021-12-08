@@ -7,6 +7,7 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"strings"
 )
 
 type ArrayPlugin struct {
@@ -45,7 +46,12 @@ func CompileArrayToStruct(t *lang.NominalType) (*lang.StructDecl, error) {
 	val := t.GenericArguments[0]
 
 	if name, _ := lang.GetStringAttribute(t.Attributes, lang.OriginalTypeAliasName); len(name) > 0 {
-		s.Name = name
+		if strings.Contains(name, "<") {
+			nominalType, _ := lang.ParseNominalTypeFullName(name)
+			s.Name = transformer.GenericTypeNamer{}.Name(nominalType)
+		} else {
+			s.Name = name
+		}
 	} else {
 		s.Name = transformer.Plural(strcase.ToCamel(val.Name))
 	}

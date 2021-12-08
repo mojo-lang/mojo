@@ -3,7 +3,7 @@ package compiler
 import (
 	"errors"
 	"fmt"
-	"github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"

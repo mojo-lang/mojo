@@ -18,16 +18,16 @@ type Mailbox{}`
 	expr := getExpression(file)
 	assert.NotNil(t, expr)
 
-	map := make(map[string]string)
+	dictionary := make(map[string]string)
 	expr.EvalStringMapLiteral(func(key string, value *lang.Expression) error {
 		v, err := value.EvalStringLiteral()
 		if err != nil {
 			return err
 		}
-		map[key] = v
+		dictionary[key] = v
 		return nil
 	})
 
-	assert.NotEmpty(t, map)
-	assert.Equal(t, "value", map["key"])
+	assert.NotEmpty(t, dictionary)
+	assert.Equal(t, "value", dictionary["key"])
 }

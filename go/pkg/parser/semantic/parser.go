@@ -24,7 +24,10 @@ func ParsePackages(packages lang.Packages, options map[string]interface{}) error
 	plugin.SortPlugins()
 	for _, p := range plugin.Plugins {
 		ctx := plugin.NewContext()
-		p.Parse(ctx, global, options)
+		err := p.Parse(ctx, global, options)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

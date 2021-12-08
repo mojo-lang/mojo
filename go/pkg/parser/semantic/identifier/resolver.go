@@ -2,6 +2,8 @@ package identifier
 
 import (
 	"errors"
+	"fmt"
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/plugin"
 )
@@ -28,6 +30,14 @@ func (p *Resolver) Parse(ctx *plugin.Context, pkg *lang.Package, options map[str
 		for _, file := range pkg.SourceFiles {
 			if err := p.ParserSourceFile(ctx, file); err != nil {
 				return err
+			}
+
+			if len(file.UnresolvedIdentifiers) > 0 {
+				for _, identifier := range file.UnresolvedIdentifiers {
+					logs.Errorw("unresolved identifier", "name", identifier.Name, "package", pkg.FullName, "file", file.Name)
+				}
+
+				return fmt.Errorf("there are unresolved identifiers in the file (%s)", file.Name)
 			}
 		}
 	}

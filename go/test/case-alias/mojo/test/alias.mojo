@@ -23,4 +23,6 @@ type Foo {
     rv: R<V> @3
 
     arrays: [IntArray] @4
+
+    u: U<String, Int32> @5
 }

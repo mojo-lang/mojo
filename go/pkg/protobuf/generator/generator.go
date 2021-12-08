@@ -3,8 +3,8 @@ package generator
 import (
 	"bytes"
 	"fmt"
-	"github.com/gogo/protobuf/proto"
-	plugin "github.com/gogo/protobuf/protoc-gen-gogo/plugin"
+	"github.com/golang/protobuf/proto"
+	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
