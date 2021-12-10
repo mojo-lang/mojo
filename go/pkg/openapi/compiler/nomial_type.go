@@ -18,32 +18,34 @@ func init() {
 }
 
 type NominalTypeCompiler struct {
-	Context *Context
+	Context context.Context
 }
 
 func (n *NominalTypeCompiler) Compile(nominalType *lang.NominalType) (*openapi.Schema, error) {
 	if n.Context == nil {
-		n.Context = &Context{Context: &context.Context{}}
+		n.Context = context.WithComponents(context.Empty(), openapi.NewComponents())
 	}
 	schema, err := compileNominalType(n.Context, nominalType)
 	if err != nil {
 		return nil, err
 	}
 
-	if n.Context.Components == nil {
+	components := context.Components(n.Context)
+	if components == nil || len(components.Schemas) == 0 {
 		return schema.GetSchema(), err
 	}
-	return schema.GetSchemaOf(n.Context.Components.Schemas), nil
+	return schema.GetSchemaOf(components.Schemas), nil
 }
 
 func (n *NominalTypeCompiler) GetSchema(s *openapi.ReferenceableSchema) *openapi.Schema {
 	if s != nil {
-		return s.GetSchemaOf(n.Context.Components.Schemas)
+		components := context.Components(n.Context)
+		return s.GetSchemaOf(components.Schemas)
 	}
 	return nil
 }
 
-func compileNominalType(ctx *Context, nominalType *lang.NominalType) (*openapi.ReferenceableSchema, error) {
+func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*openapi.ReferenceableSchema, error) {
 	schema := &openapi.Schema{}
 
 	attribute := lang.GetAttribute(nominalType.Attributes, "type_format")

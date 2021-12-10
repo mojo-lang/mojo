@@ -3,26 +3,24 @@ package gokit
 import (
 	"errors"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
 )
 
 type Compiler struct {
-	Context *compiler.Context
-
 	Services map[string]*types.Service
 }
 
 func NewCompiler() *Compiler {
 	return &Compiler{
-		Context:  compiler.NewContext(),
 		Services: make(map[string]*types.Service),
 	}
 }
 
-func (c *Compiler) Compile(packages map[string]*lang.Package) error {
+func (c *Compiler) Compile(ctx context.Context, packages map[string]*lang.Package) error {
 	for _, pkg := range packages {
-		err := c.compilePackage(c.Context, pkg)
+		err := c.compilePackage(ctx, pkg)
 		if err != nil {
 			return err
 		}
@@ -42,22 +40,19 @@ func (c *Compiler) Compile(packages map[string]*lang.Package) error {
 	return nil
 }
 
-func (c *Compiler) CompilePackage(pkg *lang.Package) error {
-	return c.compilePackage(c.Context, pkg)
+func (c *Compiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
+	return c.compilePackage(ctx, pkg)
 }
 
-func (c *Compiler) CompileFile(file *lang.SourceFile) error {
-	return c.compileFile(c.Context, file)
+func (c *Compiler) CompileFile(ctx context.Context, file *lang.SourceFile) error {
+	return c.compileFile(ctx, file)
 }
 
-func (c *Compiler) compilePackage(ctx *compiler.Context, pkg *lang.Package) error {
-	ctx.Open(pkg)
-	defer func() {
-		ctx.Close()
-	}()
+func (c *Compiler) compilePackage(ctx context.Context, pkg *lang.Package) error {
+	thisCtx := context.WithType(ctx, pkg)
 
 	for _, sourceFile := range pkg.SourceFiles {
-		err := c.compileFile(ctx, sourceFile)
+		err := c.compileFile(thisCtx, sourceFile)
 		if err != nil {
 			return err
 		}
@@ -65,11 +60,8 @@ func (c *Compiler) compilePackage(ctx *compiler.Context, pkg *lang.Package) erro
 	return nil
 }
 
-func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) error {
-	ctx.Open(file)
-	defer func() {
-		ctx.Close()
-	}()
+func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) error {
+	thisCtx := context.WithType(ctx, file)
 
 	// compile statements
 	for _, statement := range file.Statements {
@@ -82,7 +74,7 @@ func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) err
 
 			switch decl.Declaration.(type) {
 			case *lang.Declaration_InterfaceDecl:
-				err := c.compileInterface(ctx, decl.GetInterfaceDecl())
+				err := c.compileInterface(thisCtx, decl.GetInterfaceDecl())
 				if err != nil {
 					return err
 				}
@@ -93,17 +85,13 @@ func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) err
 	return nil
 }
 
-func (c *Compiler) compileInterface(ctx *compiler.Context, decl *lang.InterfaceDecl) error {
+func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
 	if len(decl.GenericParameters) > 0 {
 		return nil
 	}
 
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
-
-	service, err := compiler.CompileInterface(ctx, decl)
+	thisCtx := context.WithType(ctx, decl)
+	service, err := compiler.CompileInterface(thisCtx, decl)
 	if err != nil {
 		return err
 	}

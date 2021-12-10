@@ -3,6 +3,7 @@ package mojo
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 type Compiler struct {
@@ -28,12 +29,12 @@ func (c *Compiler) Compile(pkg *lang.Package) error {
 	}
 
 	compiler := compiler.New()
-	if err := compiler.CompilePackage(pkg); err != nil {
+	if err := compiler.CompilePackage(context.Empty(), pkg); err != nil {
 		return err
 	}
 
 	for _, p := range pkg.Children {
-		if err := compiler.CompilePackage(p); err != nil {
+		if err := compiler.CompilePackage(context.Empty(), p); err != nil {
 			return err
 		}
 	}

@@ -6,7 +6,8 @@ import (
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
 type MapPlugin struct {
@@ -22,7 +23,7 @@ func init() {
 	plugins["mojo.core.Map"] = p
 }
 
-func (p *MapPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
+func (p *MapPlugin) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) {
 	if t.Name != "Map" {
 		return "", "", errors.New("")
 	}
@@ -33,7 +34,7 @@ func (p *MapPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, 
 
 	s := &lang.StructDecl{}
 	fieldName := ""
-	if decl, ok := ctx.GetCurrent().(*lang.ValueDecl); ok {
+	if decl := context.ValueDecl(ctx); decl != nil {
 		fieldName = decl.Name
 	}
 	s.Name = strcase.ToCamel(fieldName) + "Entry"
@@ -45,10 +46,8 @@ func (p *MapPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, 
 	valType.Attributes = lang.SetIntegerAttribute(valType.Attributes, "number", 2)
 
 	if len(valType.GenericArguments) > 0 {
-		ctx.SetOption("register_struct", true)
-		_, name, err := CompileNominalType(ctx, valType)
-		ctx.DeleteOption("register_struct")
-
+		structCtx := context.WithValues(ctx, "register_struct", true)
+		_, name, err := CompileNominalType(structCtx, valType)
 		if err != nil {
 			return "", "", err
 		}
@@ -65,7 +64,7 @@ func (p *MapPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, 
 		}},
 	}
 
-	msgDescriptor := desc.NewMessageDescriptor(ctx.GetFileDescriptor())
+	msgDescriptor := desc.NewMessageDescriptor(context.FileDescriptor(ctx))
 	err := CompileStruct(ctx, s, msgDescriptor)
 	if err != nil {
 		return "", "", errors.New(fmt.Sprintf("failed to compile the map field entry in %s.%s: %s",
@@ -79,7 +78,7 @@ func (p *MapPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, 
 		MapEntry: &mapEntry,
 	}
 
-	message := ctx.GetParentMessageDescriptor()
+	message := context.MessageDescriptor(ctx)
 	if message != nil {
 		message.AddInnerMessage(msgDescriptor)
 	}

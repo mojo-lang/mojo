@@ -15,7 +15,7 @@ type ApiCompiler struct {
 }
 
 func (a *ApiCompiler) Compile(pkg *lang.Package, api *openapi.OpenAPI) (*document.Document, error) {
-	ctx := &Context{Context: &context.Context{}}
+	ctx := context.Empty()
 	doc := &document.Document{}
 
 	a.Api = api
@@ -80,7 +80,7 @@ const ErrorCodes = `
 |500|服务器内部错误|
 `
 
-func (a *ApiCompiler) compileHeader(ctx *Context, api *openapi.OpenAPI, doc *document.Document) error {
+func (a *ApiCompiler) compileHeader(ctx context.Context, api *openapi.OpenAPI, doc *document.Document) error {
 	doc.AppendHeaderFromText(1, api.GetInfo().GetTitle())
 
 	description := api.GetInfo().GetDescription().GetDocument()
@@ -111,7 +111,7 @@ func (a *ApiCompiler) compileHeader(ctx *Context, api *openapi.OpenAPI, doc *doc
 	return nil
 }
 
-func (a *ApiCompiler) compilePathItem(ctx *Context, path string, item *openapi.PathItem) (*document.Document, error) {
+func (a *ApiCompiler) compilePathItem(ctx context.Context, path string, item *openapi.PathItem) (*document.Document, error) {
 	doc := &document.Document{}
 
 	compile := func(d *document.Document, e error) error {
@@ -159,7 +159,7 @@ func (a *ApiCompiler) compilePathItem(ctx *Context, path string, item *openapi.P
 //```http
 //{{.HttpMethod}} {{.HttpPath}}
 //```
-func (a *ApiCompiler) compileMethod(ctx *Context, path string, method string, operation *openapi.Operation) (*document.Document, error) {
+func (a *ApiCompiler) compileMethod(ctx context.Context, path string, method string, operation *openapi.Operation) (*document.Document, error) {
 	if operation == nil {
 		return nil, nil
 	}

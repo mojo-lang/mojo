@@ -7,6 +7,7 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 )
 
@@ -31,41 +32,40 @@ var PrimeTypes = map[string]bool{
 	core.UnionTypeName:   true,
 }
 
-func CompileStructDecl(ctx *Context, decl *lang.StructDecl) error {
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
+func CompileStructDecl(ctx context.Context, decl *lang.StructDecl) error {
+	thisCtx := context.WithType(ctx, decl)
 
 	if PrimeTypes[decl.GetFullName()] {
 		return nil
 	}
 
 	for _, s := range decl.StructDecls {
-		err := CompileStructDecl(ctx, s)
+		err := CompileStructDecl(thisCtx, s)
 		if err != nil {
 			return errors.New(fmt.Sprintf("failed to parse the inner struct decl %s in %s: %s", s.Name, decl.Name, err.Error()))
 		}
 	}
 
+	components := context.Components(thisCtx)
+
 	// add an dummy schema first for recursion reference
-	ctx.Components.Schemas[decl.GetFullName()] = &openapi.Schema{
+	components.Schemas[decl.GetFullName()] = &openapi.Schema{
 		Title: "DUMMY",
 		Type:  0,
 	}
 
-	schema, err := compileStructDecl(ctx, decl)
+	schema, err := compileStructDecl(thisCtx, decl)
 	if err != nil {
 		return err
 	}
 
-	ctx.Components.Schemas[decl.GetFullName()] = schema.GetSchema()
+	components.Schemas[decl.GetFullName()] = schema.GetSchema()
 	return nil
 }
 
-func compileStructDecl(ctx *Context, decl *lang.StructDecl) (*openapi.ReferenceableSchema, error) {
+func compileStructDecl(ctx context.Context, decl *lang.StructDecl) (*openapi.ReferenceableSchema, error) {
 	if decl.Type == nil {
-		logs.Warnw("compile an empty object because of the struct has no type", ctx.GetNamesForLogs()...)
+		logs.Warnw("compile an empty object because of the struct has no type"/*, ctx.GetNamesForLogs()...*/)
 		return openapi.NewReferenceableSchema(&openapi.Schema{
 			Title: decl.GetFullName(),
 			Type:  openapi.Schema_TYPE_OBJECT,

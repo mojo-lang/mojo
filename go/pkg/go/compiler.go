@@ -7,8 +7,8 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/go/compiler"
 	protocompiler "github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"github.com/pkg/errors"
 )
 
@@ -40,19 +40,19 @@ func (c *Compiler) Compile() (util.GeneratedFiles, error) {
 	files = append(files, fs...)
 
 	// other compilers
-	err = c.compilePackage(&context.Context{}, c.Package)
+	err = c.compilePackage(context.Empty(), c.Package)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, pkg := range c.Package.Children {
-		err = c.compilePackage(&context.Context{}, pkg)
+		err = c.compilePackage(context.Empty(), pkg)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	err = c.compileGoMod(&context.Context{}, c.Package)
+	err = c.compileGoMod(context.Empty(), c.Package)
 	if err != nil {
 		return nil, err
 	}
@@ -60,17 +60,14 @@ func (c *Compiler) Compile() (util.GeneratedFiles, error) {
 	return files, nil
 }
 
-func (c *Compiler) compileGoMod(ctx *context.Context, pkg *lang.Package) error {
+func (c *Compiler) compileGoMod(ctx context.Context, pkg *lang.Package) error {
 	_ = ctx
 	c.Data.GoMod = &compiler.GoMod{}
 	return c.Data.GoMod.Compile(pkg)
 }
 
-func (c *Compiler) compilePackage(ctx *context.Context, pkg *lang.Package) error {
-	ctx.Open(pkg)
-	defer func() {
-		ctx.Close()
-	}()
+func (c *Compiler) compilePackage(ctx context.Context, pkg *lang.Package) error {
+	thisCtx := context.WithType(ctx, pkg)
 
 	cmp := &compiler.Compiler{Data: c.Data}
 	err := cmp.Compile(pkg)
@@ -79,7 +76,7 @@ func (c *Compiler) compilePackage(ctx *context.Context, pkg *lang.Package) error
 	}
 
 	for _, sourceFile := range pkg.SourceFiles {
-		err = c.compileFile(ctx, sourceFile)
+		err = c.compileFile(thisCtx, sourceFile)
 		if err != nil {
 			return err
 		}
@@ -87,11 +84,8 @@ func (c *Compiler) compilePackage(ctx *context.Context, pkg *lang.Package) error
 	return nil
 }
 
-func (c *Compiler) compileFile(ctx *context.Context, file *lang.SourceFile) error {
-	ctx.Open(file)
-	defer func() {
-		ctx.Close()
-	}()
+func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) error {
+	thisCtx := context.WithType(ctx, file)
 
 	// compile statements
 	for _, statement := range file.Statements {
@@ -105,11 +99,11 @@ func (c *Compiler) compileFile(ctx *context.Context, file *lang.SourceFile) erro
 			var err error
 			switch decl.Declaration.(type) {
 			case *lang.Declaration_StructDecl:
-				err = c.compileStruct(ctx, decl.GetStructDecl())
+				err = c.compileStruct(thisCtx, decl.GetStructDecl())
 			case *lang.Declaration_EnumDecl:
-				err = c.compileEnum(ctx, decl.GetEnumDecl())
+				err = c.compileEnum(thisCtx, decl.GetEnumDecl())
 			case *lang.Declaration_InterfaceDecl:
-				err = c.compileInterface(ctx, decl.GetInterfaceDecl())
+				err = c.compileInterface(thisCtx, decl.GetInterfaceDecl())
 			}
 
 			if err != nil {
@@ -128,15 +122,12 @@ var whiteList = map[string]bool{
 	"DoubleValues":  true,
 }
 
-func (c *Compiler) compileStruct(ctx *context.Context, decl *lang.StructDecl) error {
+func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl) error {
 	if len(decl.GenericParameters) > 0 {
 		return nil
 	}
 
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
+	thisCtx := context.WithType(ctx, decl)
 
 	if whiteList[decl.Name] {
 		return nil
@@ -148,13 +139,13 @@ func (c *Compiler) compileStruct(ctx *context.Context, decl *lang.StructDecl) er
 	}
 
 	for _, s := range decl.StructDecls {
-		err := c.compileStruct(ctx, s)
+		err := c.compileStruct(thisCtx, s)
 		if err != nil {
 			return errors.Wrapf(err, "failed to parse the inner struct decl %s in %s", s.Name, decl.Name)
 		}
 	}
 	for _, e := range decl.EnumDecls {
-		err := c.compileEnum(ctx, e)
+		err := c.compileEnum(thisCtx, e)
 		if err != nil {
 			return errors.Wrapf(err, "failed to parse the inner enum decl %s in %s", e.Name, decl.Name)
 		}
@@ -173,7 +164,7 @@ func (c *Compiler) compileStruct(ctx *context.Context, decl *lang.StructDecl) er
 				Type:     valueType,
 			}
 			valueType.Attributes = lang.SetIntegerAttribute(valueType.Attributes, "number", 1)
-			if err := c.compileStructFields(ctx, []*lang.ValueDecl{valueDecl}); err != nil {
+			if err := c.compileStructFields(thisCtx, []*lang.ValueDecl{valueDecl}); err != nil {
 				return err
 			}
 
@@ -188,9 +179,9 @@ func (c *Compiler) compileStruct(ctx *context.Context, decl *lang.StructDecl) er
 				},
 			}
 			boxedStruct.Attributes = lang.SetBoolAttribute(boxedStruct.Attributes, "boxed", true)
-			return c.compileStruct(ctx, boxedStruct)
+			return c.compileStruct(thisCtx, boxedStruct)
 		} else {
-			if err := c.compileStructFields(ctx, decl.Type.Fields); err != nil {
+			if err := c.compileStructFields(thisCtx, decl.Type.Fields); err != nil {
 				return err
 			}
 		}
@@ -199,27 +190,20 @@ func (c *Compiler) compileStruct(ctx *context.Context, decl *lang.StructDecl) er
 	return nil
 }
 
-func (c *Compiler) compileEnum(ctx *context.Context, decl *lang.EnumDecl) error {
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
-
+func (c *Compiler) compileEnum(ctx context.Context, decl *lang.EnumDecl) error {
+	//thisCtx := context.WithType(ctx, decl)
 	cmp := &compiler.Compiler{Data: c.Data}
 	return cmp.Compile(decl)
 }
 
-func (c *Compiler) compileStructField(ctx *context.Context, field *lang.ValueDecl) error {
-	ctx.Open(field)
-	defer func() {
-		ctx.Close()
-	}()
+func (c *Compiler) compileStructField(ctx context.Context, field *lang.ValueDecl) error {
+	thisCtx := context.WithType(ctx, field)
 
 	switch field.Type.Name {
 	case "Array":
 		if len(field.Type.GenericArguments) > 0 {
 			argument := field.Type.GenericArguments[0]
-			_, err := c.compileNominalType(ctx, argument)
+			_, err := c.compileNominalType(thisCtx, argument)
 			if err != nil {
 				return errors.Wrapf(err, "failed to compile the type %s", argument.Name)
 			}
@@ -229,16 +213,11 @@ func (c *Compiler) compileStructField(ctx *context.Context, field *lang.ValueDec
 		}
 	case "Union":
 		///TODO GenericArguments == 1
-		// TODO 如果number标号在Union类型上，则需要将该Union转换成message；如果不是则使用oneof
 		if len(field.Type.GenericArguments) > 0 {
-			for i, argument := range field.Type.GenericArguments {
-				_, err := c.compileNominalType(ctx, argument)
+			for _, argument := range field.Type.GenericArguments {
+				_, err := c.compileNominalType(thisCtx, argument)
 				if err != nil {
-					return errors.Wrapf(err, "failed to compile the type %s: %s", argument.Name)
-				}
-
-				if i < len(field.Type.GenericArguments)-1 {
-					ctx.Open(field)
+					return errors.Wrapf(err, "failed to compile the type %s", argument.Name)
 				}
 			}
 		}
@@ -252,9 +231,10 @@ func (c *Compiler) compileStructField(ctx *context.Context, field *lang.ValueDec
 	return nil
 }
 
-func (c *Compiler) compileStructFields(ctx *context.Context, fields []*lang.ValueDecl) error {
+func (c *Compiler) compileStructFields(ctx context.Context, fields []*lang.ValueDecl) error {
 	for _, field := range fields {
-		err := c.compileStructField(ctx, field)
+		thisCtx := context.WithType(ctx, field)
+		err := c.compileStructField(thisCtx, field)
 		if err != nil {
 			return err
 		}
@@ -262,16 +242,13 @@ func (c *Compiler) compileStructFields(ctx *context.Context, fields []*lang.Valu
 	return nil
 }
 
-func (c *Compiler) compileInterface(ctx *context.Context, decl *lang.InterfaceDecl) error {
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
+func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
+	thisCtx := context.WithType(ctx, decl)
 
 	for _, method := range decl.Type.Methods {
 		result := method.Signature.Result
 		if result != nil {
-			_, err := c.compileNominalType(ctx, result)
+			_, err := c.compileNominalType(thisCtx, result)
 			if err != nil {
 				return errors.Errorf("failed to compile the type %s: %s", result.Name, err.Error())
 			}
@@ -283,8 +260,8 @@ func (c *Compiler) compileInterface(ctx *context.Context, decl *lang.InterfaceDe
 
 // 处理protobuf不支持的类型，将其box成struct类型
 // auto_generate struct
-func (c *Compiler) compileNominalType(ctx *context.Context, t *lang.NominalType) (string, error) { // typeName, error
-	pkg := ctx.GetPackage()
+func (c *Compiler) compileNominalType(ctx context.Context, t *lang.NominalType) (string, error) { // typeName, error
+	pkg := context.Package(ctx)
 	if t.IsScalar() {
 		return "", nil
 	}

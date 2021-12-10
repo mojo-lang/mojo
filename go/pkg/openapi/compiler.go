@@ -10,29 +10,25 @@ import (
 
 type Compiler struct {
 	*OpenAPIs
-
-	Context *compiler.Context
 }
 
 func NewCompiler() *Compiler {
 	c := &Compiler{
-		OpenAPIs: &OpenAPIs{},
+		OpenAPIs: &OpenAPIs{
+			APIs: make(map[string]*openapi.OpenAPI),
+			Components: openapi.NewComponents(),
+		},
 	}
-
-	c.Components = &openapi.Components{
-		Schemas: make(map[string]*openapi.Schema),
-	}
-	c.Context = &compiler.Context{
-		Context:    &context.Context{},
-		Components: c.Components,
-	}
-	c.APIs = make(map[string]*openapi.OpenAPI)
 	return c
+}
+
+func (c *Compiler) NewContext() context.Context {
+	return context.WithComponents(context.Empty(), c.Components)
 }
 
 func (c *Compiler) CompilePackages(packages map[string]*lang.Package) error {
 	for _, pkg := range packages {
-		err := c.compilePackage(c.Context, pkg)
+		err := c.compilePackage(c.NewContext(), pkg)
 		if err != nil {
 			return err
 		}
@@ -41,21 +37,17 @@ func (c *Compiler) CompilePackages(packages map[string]*lang.Package) error {
 }
 
 func (c *Compiler) CompilePackage(pkg *lang.Package) error {
-	return c.compilePackage(c.Context, pkg)
+	return c.compilePackage(c.NewContext(), pkg)
 }
 
 func (c *Compiler) CompileFile(file *lang.SourceFile) error {
-	return c.compileFile(c.Context, file)
+	return c.compileFile(c.NewContext(), file)
 }
 
-func (c *Compiler) compilePackage(ctx *compiler.Context, pkg *lang.Package) error {
-	ctx.Open(pkg)
-	defer func() {
-		ctx.Close()
-	}()
-
+func (c *Compiler) compilePackage(ctx context.Context, pkg *lang.Package) error {
+	thisCtx := context.WithType(ctx, pkg)
 	for _, sourceFile := range pkg.SourceFiles {
-		err := c.compileFile(ctx, sourceFile)
+		err := c.compileFile(thisCtx, sourceFile)
 		if err != nil {
 			return err
 		}
@@ -63,15 +55,12 @@ func (c *Compiler) compilePackage(ctx *compiler.Context, pkg *lang.Package) erro
 	return nil
 }
 
-func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) error {
+func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) error {
 	if file.IsGenericInstantiated() {
 		return nil
 	}
 
-	ctx.Open(file)
-	defer func() {
-		ctx.Close()
-	}()
+	thisCtx := context.WithType(ctx, file)
 
 	// compile statements
 	for _, statement := range file.Statements {
@@ -84,17 +73,17 @@ func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) err
 
 			switch decl.Declaration.(type) {
 			case *lang.Declaration_TypeAliasDecl:
-				err := c.compileTypeAlias(ctx, decl.GetTypeAliasDecl())
+				err := c.compileTypeAlias(thisCtx, decl.GetTypeAliasDecl())
 				if err != nil {
 					return err
 				}
 			case *lang.Declaration_StructDecl:
-				err := c.compileStruct(ctx, decl.GetStructDecl())
+				err := c.compileStruct(thisCtx, decl.GetStructDecl())
 				if err != nil {
 					return err
 				}
 			case *lang.Declaration_InterfaceDecl:
-				err := c.compileInterface(ctx, decl.GetInterfaceDecl())
+				err := c.compileInterface(thisCtx, decl.GetInterfaceDecl())
 				if err != nil {
 					return err
 				}
@@ -105,49 +94,33 @@ func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) err
 	return nil
 }
 
-func (c *Compiler) compileTypeAlias(ctx *compiler.Context, decl *lang.TypeAliasDecl) error {
+func (c *Compiler) compileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) error {
 	if len(decl.GenericParameters) > 0 {
 		return nil
 	}
-
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
-
-	_, err := compiler.CompileTypeAliasDecl(ctx, decl)
+	_, err := compiler.CompileTypeAliasDecl(context.WithType(ctx, decl), decl)
 	return err
 }
 
-func (c *Compiler) compileStruct(ctx *compiler.Context, decl *lang.StructDecl) error {
+func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl) error {
 	if len(decl.GenericParameters) > 0 {
 		return nil
 	}
-
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
-
-	return compiler.CompileStructDecl(ctx, decl)
+	return compiler.CompileStructDecl(context.WithType(ctx, decl), decl)
 }
 
-func (c *Compiler) compileInterface(ctx *compiler.Context, decl *lang.InterfaceDecl) error {
+func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
 	if len(decl.GenericParameters) > 0 {
 		return nil
 	}
 
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
-
-	api, err := compiler.CompileInterface(ctx, decl)
+	thisCtx := context.WithType(ctx, decl)
+	api, err := compiler.CompileInterface(thisCtx, decl)
 	if err != nil {
 		return err
 	}
 
-	api.Components = ctx.Components
+	api.Components = context.Components(thisCtx)
 	//key := lang.TypeNameToFileName(decl.GetFullName())
 	c.APIs[decl.GetFullName()] = api
 	return nil

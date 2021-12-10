@@ -3,11 +3,12 @@ package compiler
 import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"strings"
 )
 
-func compileEnumDecl(ctx *Context, decl *lang.EnumDecl) (*openapi.ReferenceableSchema, error) {
+func compileEnumDecl(ctx context.Context, decl *lang.EnumDecl) (*openapi.ReferenceableSchema, error) {
 	_ = ctx
 
 	schema := &openapi.Schema{
@@ -24,7 +25,7 @@ func compileEnumDecl(ctx *Context, decl *lang.EnumDecl) (*openapi.ReferenceableS
 		if strings.ToLower(e.Name) == "unspecified" {
 			continue
 		}
-		
+
 		enumName := e.Name
 
 		if style != nil {

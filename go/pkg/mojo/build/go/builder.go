@@ -4,7 +4,7 @@ import (
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/mojo/go/pkg/go"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/builder"
-	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"os/exec"
 	path2 "path"
 )

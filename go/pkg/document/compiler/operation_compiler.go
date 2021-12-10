@@ -4,6 +4,7 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/document/go/pkg/mojo/document"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 )
 
@@ -52,7 +53,7 @@ type OperationCompiler struct {
 
 func (o *OperationCompiler) Compile(operation *openapi.Operation) (*document.Document, error) {
 	doc := &document.Document{}
-	ctx := &Context{}
+	ctx := context.Empty()
 
 	doc.AppendHeaderFromText(3, "请求参数")
 
@@ -98,7 +99,7 @@ func (o *OperationCompiler) Compile(operation *openapi.Operation) (*document.Doc
 	return doc, nil
 }
 
-func (o *OperationCompiler) compilePathParameters(ctx *Context, parameters []*openapi.Parameter, doc *document.Document) error {
+func (o *OperationCompiler) compilePathParameters(ctx context.Context, parameters []*openapi.Parameter, doc *document.Document) error {
 	table := &document.Table{
 		Caption:   nil,
 		Alignment: 0,
@@ -125,7 +126,7 @@ func (o *OperationCompiler) compilePathParameters(ctx *Context, parameters []*op
 	return nil
 }
 
-func (o *OperationCompiler) compileQueryParameters(ctx *Context, parameters []*openapi.Parameter, doc *document.Document) error {
+func (o *OperationCompiler) compileQueryParameters(ctx context.Context, parameters []*openapi.Parameter, doc *document.Document) error {
 	table := &document.Table{
 		Caption:   nil,
 		Alignment: 0,
@@ -160,7 +161,7 @@ func (o *OperationCompiler) compileQueryParameters(ctx *Context, parameters []*o
 	return nil
 }
 
-func (o *OperationCompiler) compileRequestBody(ctx *Context, body *openapi.RequestBody, doc *document.Document) error {
+func (o *OperationCompiler) compileRequestBody(ctx context.Context, body *openapi.RequestBody, doc *document.Document) error {
 	if body == nil || doc == nil {
 		return nil
 	}
@@ -195,7 +196,7 @@ func (o *OperationCompiler) compileMediaType(mediaType *openapi.MediaType, doc *
 	return nil
 }
 
-func (o *OperationCompiler) compileResponse(ctx *Context, response *openapi.Response, doc *document.Document) error {
+func (o *OperationCompiler) compileResponse(ctx context.Context, response *openapi.Response, doc *document.Document) error {
 	if response == nil || doc == nil {
 		return nil
 	}
@@ -207,5 +208,5 @@ func (o *OperationCompiler) compileResponse(ctx *Context, response *openapi.Resp
 	return nil
 }
 
-func (o *OperationCompiler) compileErrorResponse(ctx *Context) {
+func (o *OperationCompiler) compileErrorResponse(ctx context.Context) {
 }

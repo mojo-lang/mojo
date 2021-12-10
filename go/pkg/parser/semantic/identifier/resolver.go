@@ -5,45 +5,41 @@ import (
 	"fmt"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 func init() {
 	resolver := &Resolver{}
-	plugin.AddPlugin("identifier-resolver", 3, resolver)
+	plugin.AddParserPlugin("identifier-resolver", 3, resolver)
 }
 
 type Resolver struct {
 }
 
-func (p *Resolver) Parse(ctx *plugin.Context, pkg *lang.Package, options map[string]interface{}) error {
-	ctx.Open(pkg)
-	if len(options) > 0 {
-		ctx.SetOptions(options)
+func (p *Resolver) Parse(ctx context.Context, pkg *lang.Package) error {
+	if pkg.GetExtraBool("parsed") {
+		return nil
 	}
 
-	defer func() {
-		ctx.Close()
-	}()
+	thisCtx := context.WithScopeType(ctx, pkg)
 
-	if disabled, ok := ctx.GetOption(pkg.FullName + ".disable").(bool); !ok || !disabled {
-		for _, file := range pkg.SourceFiles {
-			if err := p.ParserSourceFile(ctx, file); err != nil {
-				return err
+	for _, file := range pkg.SourceFiles {
+		if err := p.ParserSourceFile(thisCtx, file); err != nil {
+			return err
+		}
+
+		if len(file.UnresolvedIdentifiers) > 0 {
+			for _, identifier := range file.UnresolvedIdentifiers {
+				logs.Errorw("unresolved identifier", "name", identifier.Name, "package", pkg.FullName, "file", file.Name)
 			}
 
-			if len(file.UnresolvedIdentifiers) > 0 {
-				for _, identifier := range file.UnresolvedIdentifiers {
-					logs.Errorw("unresolved identifier", "name", identifier.Name, "package", pkg.FullName, "file", file.Name)
-				}
-
-				return fmt.Errorf("there are unresolved identifiers in the file (%s)", file.Name)
-			}
+			return fmt.Errorf("there are unresolved identifiers in the file (%s)", file.Name)
 		}
 	}
 
 	for _, child := range pkg.Children {
-		if err := p.Parse(ctx, child, nil); err != nil {
+		if err := p.Parse(thisCtx, child); err != nil {
 			return err
 		}
 	}
@@ -51,8 +47,8 @@ func (p *Resolver) Parse(ctx *plugin.Context, pkg *lang.Package, options map[str
 	return nil
 }
 
-func (p *Resolver) ParserSourceFile(ctx *plugin.Context, file *lang.SourceFile) error {
-	ctx.Open(file)
+func (p *Resolver) ParserSourceFile(ctx context.Context, file *lang.SourceFile) error {
+	thisCtx := context.WithScopeType(ctx, file)
 
 	defer func() {
 		resolveds := lang.MergeDependencies(file.ResolvedIdentifiers)
@@ -84,22 +80,22 @@ func (p *Resolver) ParserSourceFile(ctx *plugin.Context, file *lang.SourceFile) 
 
 			switch decl.Declaration.(type) {
 			case *lang.Declaration_StructDecl:
-				err := p.ParseStruct(ctx, decl.GetStructDecl())
+				err := p.ParseStruct(thisCtx, decl.GetStructDecl())
 				if err != nil {
 					return err
 				}
 			case *lang.Declaration_EnumDecl:
-				err := p.ParseEnum(ctx, decl.GetEnumDecl())
+				err := p.ParseEnum(thisCtx, decl.GetEnumDecl())
 				if err != nil {
 					return err
 				}
 			case *lang.Declaration_InterfaceDecl:
-				err := p.ParseInterface(ctx, decl.GetInterfaceDecl())
+				err := p.ParseInterface(thisCtx, decl.GetInterfaceDecl())
 				if err != nil {
 					return err
 				}
 			case *lang.Declaration_TypeAliasDecl:
-				err := p.ParseTypeAlias(ctx, decl.GetTypeAliasDecl())
+				err := p.ParseTypeAlias(thisCtx, decl.GetTypeAliasDecl())
 				if err != nil {
 					return err
 				}
@@ -112,11 +108,11 @@ func (p *Resolver) ParserSourceFile(ctx *plugin.Context, file *lang.SourceFile) 
 	return nil
 }
 
-func (p *Resolver) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error {
+func (p *Resolver) ParseStruct(ctx context.Context, decl *lang.StructDecl) error {
+	thisCtx := context.WithScopeType(ctx, decl)
 	var resolveds []*lang.Identifier
 	var unresolveds []*lang.Identifier
 
-	ctx.Open(decl)
 	defer func() {
 		resolveds = append(resolveds, decl.ResolvedIdentifiers...)
 		resolveds = lang.MergeDependencies(resolveds)
@@ -126,10 +122,8 @@ func (p *Resolver) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error
 		unresolveds = lang.MergeUnresolvedIdentifiers(unresolveds)
 		decl.UnresolvedIdentifiers = unresolveds
 
-		ctx.Close()
-
 		// push to parent
-		switch value := ctx.CurrentValue().(type) {
+		switch value := context.TypeValue(ctx).(type) {
 		case *lang.StructDecl:
 			value.ResolvedIdentifiers = append(value.ResolvedIdentifiers, resolveds...)
 			value.UnresolvedIdentifiers = append(value.UnresolvedIdentifiers, unresolveds...)
@@ -143,32 +137,32 @@ func (p *Resolver) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error
 	t := decl.Type
 	if t != nil {
 		for _, field := range t.Fields {
-			rs, urs := resolveNominalType(ctx, field.Type)
+			rs, urs := resolveNominalType(thisCtx, field.Type)
 			resolveds = append(resolveds, rs...)
 			unresolveds = append(unresolveds, urs...)
 		}
 
 		for _, inherited := range t.Inherits {
-			rs, urs := resolveNominalType(ctx, inherited)
+			rs, urs := resolveNominalType(thisCtx, inherited)
 			resolveds = append(resolveds, rs...)
 			unresolveds = append(unresolveds, urs...)
 		}
 	}
 
 	for _, structDecl := range decl.StructDecls {
-		if err := p.ParseStruct(ctx, structDecl); err != nil {
+		if err := p.ParseStruct(thisCtx, structDecl); err != nil {
 			return err
 		}
 	}
 
 	for _, enumDecl := range decl.EnumDecls {
-		if err := p.ParseEnum(ctx, enumDecl); err != nil {
+		if err := p.ParseEnum(thisCtx, enumDecl); err != nil {
 			return err
 		}
 	}
 
 	for _, aliasDecl := range decl.TypeAliasDecls {
-		if err := p.ParseTypeAlias(ctx, aliasDecl); err != nil {
+		if err := p.ParseTypeAlias(thisCtx, aliasDecl); err != nil {
 			return err
 		}
 	}
@@ -176,11 +170,11 @@ func (p *Resolver) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error
 	return nil
 }
 
-func (p *Resolver) ParseEnum(ctx *plugin.Context, decl *lang.EnumDecl) error {
+func (p *Resolver) ParseEnum(ctx context.Context, decl *lang.EnumDecl) error {
 	var resolveds []*lang.Identifier
 	var unresolveds []*lang.Identifier
+	thisCtx := context.WithScopeType(ctx, decl)
 
-	ctx.Open(decl)
 	defer func() {
 		resolveds = append(resolveds, decl.ResolvedIdentifiers...)
 		resolveds = lang.MergeDependencies(resolveds)
@@ -190,10 +184,8 @@ func (p *Resolver) ParseEnum(ctx *plugin.Context, decl *lang.EnumDecl) error {
 		unresolveds = lang.MergeUnresolvedIdentifiers(unresolveds)
 		decl.UnresolvedIdentifiers = unresolveds
 
-		ctx.Close()
-
 		// push to parent
-		switch value := ctx.CurrentValue().(type) {
+		switch value := context.TypeValue(ctx).(type) {
 		case *lang.StructDecl:
 			value.ResolvedIdentifiers = append(value.ResolvedIdentifiers, resolveds...)
 			value.UnresolvedIdentifiers = append(value.UnresolvedIdentifiers, unresolveds...)
@@ -204,17 +196,17 @@ func (p *Resolver) ParseEnum(ctx *plugin.Context, decl *lang.EnumDecl) error {
 	}()
 
 	if decl.Type.UnderlyingType != nil {
-		resolveds, unresolveds = resolveNominalType(ctx, decl.Type.UnderlyingType)
+		resolveds, unresolveds = resolveNominalType(thisCtx, decl.Type.UnderlyingType)
 	}
 
 	return nil
 }
 
-func (p *Resolver) ParseInterface(ctx *plugin.Context, decl *lang.InterfaceDecl) error {
+func (p *Resolver) ParseInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
 	var resolveds []*lang.Identifier
 	var unresolveds []*lang.Identifier
+	thisCtx := context.WithScopeType(ctx, decl)
 
-	ctx.Open(decl)
 	defer func() {
 		resolveds = append(resolveds, decl.ResolvedIdentifiers...)
 		resolveds = lang.MergeDependencies(resolveds)
@@ -224,10 +216,8 @@ func (p *Resolver) ParseInterface(ctx *plugin.Context, decl *lang.InterfaceDecl)
 		unresolveds = lang.MergeUnresolvedIdentifiers(unresolveds)
 		decl.UnresolvedIdentifiers = unresolveds
 
-		ctx.Close()
-
 		// push to parent
-		switch value := ctx.CurrentValue().(type) {
+		switch value := context.TypeValue(ctx).(type) {
 		case *lang.SourceFile:
 			value.ResolvedIdentifiers = append(value.ResolvedIdentifiers, resolveds...)
 			value.UnresolvedIdentifiers = append(value.UnresolvedIdentifiers, unresolveds...)
@@ -237,31 +227,31 @@ func (p *Resolver) ParseInterface(ctx *plugin.Context, decl *lang.InterfaceDecl)
 	for _, method := range decl.Type.Methods {
 		signature := method.Signature
 		for _, parameter := range signature.Parameters {
-			rs, urs := resolveNominalType(ctx, parameter.Type)
+			rs, urs := resolveNominalType(thisCtx, parameter.Type)
 			resolveds = append(resolveds, rs...)
 			unresolveds = append(unresolveds, urs...)
 		}
 
 		if signature.Result != nil {
-			rs, urs := resolveNominalType(ctx, signature.Result)
+			rs, urs := resolveNominalType(thisCtx, signature.Result)
 			resolveds = append(resolveds, rs...)
 			unresolveds = append(unresolveds, urs...)
 		}
 	}
 
 	for _, inherited := range decl.Type.Inherits {
-		rs, urs := resolveNominalType(ctx, inherited)
+		rs, urs := resolveNominalType(thisCtx, inherited)
 		resolveds = append(resolveds, rs...)
 		unresolveds = append(unresolveds, urs...)
 	}
 
 	//for _, aliasDecl := range decl.TypeAliasDecls {
-	//	if err := resolveNominalType(ctx, aliasDecl.Type); err != nil {
+	//	if err := resolveNominalType(thisCtx, aliasDecl.Type); err != nil {
 	//		return err
 	//	}
 	//
 	//	for _, argument := range aliasDecl.Type.GenericArguments {
-	//		if err := resolveNominalType(ctx, argument); err != nil {
+	//		if err := resolveNominalType(thisCtx, argument); err != nil {
 	//			return err
 	//		}
 	//	}
@@ -270,11 +260,10 @@ func (p *Resolver) ParseInterface(ctx *plugin.Context, decl *lang.InterfaceDecl)
 	return nil
 }
 
-func (p *Resolver) ParseTypeAlias(ctx *plugin.Context, decl *lang.TypeAliasDecl) error {
+func (p *Resolver) ParseTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) error {
 	var resolveds []*lang.Identifier
 	var unresolveds []*lang.Identifier
-
-	ctx.Open(decl)
+	thisCtx := context.WithScopeType(ctx, decl)
 	defer func() {
 		resolveds = lang.MergeDependencies(resolveds)
 		decl.ResolvedIdentifiers = resolveds
@@ -282,10 +271,8 @@ func (p *Resolver) ParseTypeAlias(ctx *plugin.Context, decl *lang.TypeAliasDecl)
 		unresolveds = lang.MergeUnresolvedIdentifiers(unresolveds)
 		decl.UnresolvedIdentifiers = unresolveds
 
-		ctx.Close()
-
 		// push to parent
-		switch value := ctx.CurrentValue().(type) {
+		switch value := context.TypeValue(ctx).(type) {
 		case *lang.StructDecl:
 			value.ResolvedIdentifiers = append(value.ResolvedIdentifiers, resolveds...)
 			value.UnresolvedIdentifiers = append(value.UnresolvedIdentifiers, unresolveds...)
@@ -298,25 +285,25 @@ func (p *Resolver) ParseTypeAlias(ctx *plugin.Context, decl *lang.TypeAliasDecl)
 		}
 	}()
 
-	resolveds, unresolveds = resolveNominalType(ctx, decl.Type)
+	resolveds, unresolveds = resolveNominalType(thisCtx, decl.Type)
 	return nil
 }
 
-func (p *Resolver) ParseImport(ctx *plugin.Context, decl *lang.ImportDecl) error {
+func (p *Resolver) ParseImport(ctx context.Context, decl *lang.ImportDecl) error {
 	return nil
 }
 
-func resolveNominalType(ctx *plugin.Context, t *lang.NominalType) ([]*lang.Identifier, []*lang.Identifier) {
+func resolveNominalType(ctx context.Context, t *lang.NominalType) ([]*lang.Identifier, []*lang.Identifier) {
 	fullName := t.Name
 	enclosingNames := lang.GetEnclosingNames(t.EnclosingType)
 	var identifier *lang.Identifier
 	if len(t.PackageName) > 0 {
 		fullName = lang.GetFullName(t.PackageName, enclosingNames, t.Name)
-		identifier = ctx.Lookup(fullName)
+		identifier = context.LookupIdentifier(ctx, fullName)
 	} else {
-		identifier = ctx.Lookup(t.Name)
+		identifier = context.LookupIdentifier(ctx, t.Name)
 		if identifier == nil && len(enclosingNames) > 0 {
-			identifier = ctx.Lookup(lang.GetFullName("", enclosingNames, t.Name))
+			identifier = context.LookupIdentifier(ctx, lang.GetFullName("", enclosingNames, t.Name))
 		}
 	}
 

@@ -2,8 +2,11 @@ package gokit
 
 import (
 	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/builder"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit"
+	kitcompiler "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
 )
 
@@ -80,14 +83,16 @@ func (b SidecarBuilder) Build() error {
 
 	compiler := gokit.NewCompiler()
 	pkgs := b.Package.GetAllPackage()
+
+	options := make(core.Options)
 	for _, pkg := range pkgs {
-		compiler.Context.GoPackageImports[pkg.FullName] = getPackageImport(pkg)
+		options[pkg.FullName] = getPackageImport(pkg)
 	}
 	for _, pkg := range b.Package.ResolvedDependencies {
-		compiler.Context.GoPackageImports[pkg.FullName] = getPackageImport(pkg)
+		options[pkg.FullName] = getPackageImport(pkg)
 	}
 
-	err := compiler.Compile(pkgs)
+	err := compiler.Compile(kitcompiler.WithGoPackageImports(context.Empty(), options), pkgs)
 	if err != nil {
 		logs.Errorw("failed to compile ncraft gokit", "package", b.Package.FullName, "error", err.Error())
 		return err

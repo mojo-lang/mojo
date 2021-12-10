@@ -2,12 +2,13 @@ package circle
 
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 	path2 "path"
 )
 
 func init() {
-	plugin.AddPlugin("circle-resolver", 5, &Resolver{})
+	plugin.AddParserPlugin("circle-resolver", 5, &Resolver{})
 }
 
 const DependencyCircle = "dependency_circle"
@@ -15,23 +16,20 @@ const DependencyCircle = "dependency_circle"
 type Resolver struct {
 }
 
-func (r *Resolver) Parse(ctx *plugin.Context, pkg *lang.Package, options map[string]interface{}) error {
-	ctx.Open(pkg)
-	if len(options) > 0 {
-		ctx.SetOptions(options)
+func (r *Resolver) Parse(ctx context.Context, pkg *lang.Package) error {
+	if pkg.GetExtraBool("parsed") {
+		return nil
 	}
 
-	defer func() {
-		ctx.Close()
-	}()
+	thisCtx := context.WithType(ctx, pkg)
 
 	for _, child := range pkg.Children {
-		if err := r.Parse(ctx, child, nil); err != nil {
+		if err := r.Parse(thisCtx, child); err != nil {
 			return err
 		}
 	}
 
-	if err := r.parsePackage(ctx, pkg); err != nil {
+	if err := r.parsePackage(thisCtx, pkg); err != nil {
 		return err
 	}
 
@@ -51,7 +49,7 @@ func removeDuplicated(values []string) []string {
 	return values
 }
 
-func (r *Resolver) parsePackage(ctx *plugin.Context, pkg *lang.Package) error {
+func (r *Resolver) parsePackage(ctx context.Context, pkg *lang.Package) error {
 	// generated all the file node
 	_ = ctx
 	files := make(map[string]*fileNode)
@@ -92,7 +90,7 @@ func (r *Resolver) parsePackage(ctx *plugin.Context, pkg *lang.Package) error {
 	return nil
 }
 
-func (r *Resolver) generateCircleName(ctx *plugin.Context, pkg *lang.Package) string {
+func (r *Resolver) generateCircleName(ctx context.Context, pkg *lang.Package) string {
 	_ = ctx
-	return path2.Join(lang.PackageNameToPath(pkg.FullName), pkg.Name + ".mojo")
+	return path2.Join(lang.PackageNameToPath(pkg.FullName), pkg.Name+".mojo")
 }

@@ -25,6 +25,26 @@ func (p Parser) ParseString(mojo string) (*lang.SourceFile, error) {
 	return p.ParseStream(input)
 }
 
+func (p Parser) ParseFile(filename string, fileSys fs.FS) (*lang.SourceFile, error) {
+	if bytes, err := fs.ReadFile(fileSys, filename); err != nil {
+		return nil, err
+	} else {
+		return p.parseFile(filename, antlr.NewInputStream(string(bytes)))
+	}
+}
+
+func (p Parser) parseFile(name string, input *antlr.InputStream) (*lang.SourceFile, error) {
+	p.FileName = name
+	sourceFile, err := p.ParseStream(input)
+	if err != nil {
+		return nil, err
+	}
+
+	sourceFile.Name = path2.Base(name)
+	sourceFile.FullName = name
+	return sourceFile, nil
+}
+
 func (p Parser) ParseStream(input *antlr.InputStream) (*lang.SourceFile, error) {
 	lexer := NewMojoLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
@@ -50,26 +70,6 @@ func (p Parser) ParseStream(input *antlr.InputStream) (*lang.SourceFile, error) 
 		logs.Errorw(msg, "file", p.FileName, "path", p.Path, "package", p.Package)
 		return nil, errors.New(msg)
 	}
-}
-
-func (p Parser) ParseFile(filename string, fileSys fs.FS) (*lang.SourceFile, error) {
-	if bytes, err := fs.ReadFile(fileSys, filename); err != nil {
-		return nil, err
-	} else {
-		return p.parseFile(filename, antlr.NewInputStream(string(bytes)))
-	}
-}
-
-func (p Parser) parseFile(name string, input *antlr.InputStream) (*lang.SourceFile, error) {
-	p.FileName = name
-	sourceFile, err := p.ParseStream(input)
-	if err != nil {
-		return nil, err
-	}
-
-	sourceFile.Name = path2.Base(name)
-	sourceFile.FullName = name
-	return sourceFile, nil
 }
 
 /// path: root path for the package

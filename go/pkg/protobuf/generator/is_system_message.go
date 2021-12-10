@@ -1,6 +1,6 @@
 package generator
 
-import "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+import "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 
 var systemMessages = map[string]bool{
 	"Bool":    true,

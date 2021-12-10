@@ -9,27 +9,18 @@ import (
 )
 
 type Parser struct {
-	Dependencies map[string]*lang.Package
+	Global *lang.Package
 }
 
 func New() *Parser {
 	return &Parser{}
 }
 
-func (p Parser) ParseFile(filename string, fileSys fs.FS) (*lang.SourceFile, error) {
+func (p *Parser) ParseFile(filename string, fileSys fs.FS) (*lang.SourceFile, error) {
 	return syntax.Parser{}.ParseFile(filename, fileSys)
 }
 
-func hasRootPackage(packages map[string]*lang.Package, rootName string) bool {
-	for k, _ := range packages {
-		if k == rootName {
-			return true
-		}
-	}
-	return false
-}
-
-func (p Parser) ParsePackage(path string, pkgName string, fileSys fs.FS) (map[string]*lang.Package, error) {
+func (p *Parser) ParsePackage(path string, pkgName string, fileSys fs.FS) (map[string]*lang.Package, error) {
 	syntaxParser := syntax.Parser{}
 	pkgs, err := syntaxParser.ParsePackage(path, pkgName, fileSys)
 	if err != nil {
@@ -42,10 +33,6 @@ func (p Parser) ParsePackage(path string, pkgName string, fileSys fs.FS) (map[st
 	for _, pkg := range pkgs {
 		packages = append(packages, pkg)
 	}
-	for key, pkg := range p.Dependencies {
-		packages = append(packages, pkg)
-		options[key+".disable"] = true
-	}
 
 	if !hasRootPackage(pkgs, pkgName) {
 		pkgs[pkgName] = &lang.Package{
@@ -55,10 +42,19 @@ func (p Parser) ParsePackage(path string, pkgName string, fileSys fs.FS) (map[st
 		packages = append(packages, pkgs[pkgName])
 	}
 
-	err = semantic.ParsePackages(packages, options)
+	p.Global, err = semantic.ParsePackages(packages, p.Global, options)
 	if err != nil {
 		return nil, err
 	}
 
 	return pkgs, err
+}
+
+func hasRootPackage(packages map[string]*lang.Package, rootName string) bool {
+	for k, _ := range packages {
+		if k == rootName {
+			return true
+		}
+	}
+	return false
 }

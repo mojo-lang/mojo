@@ -3,10 +3,13 @@ package gokit
 import (
 	"fmt"
 	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/builder"
 	_go "github.com/mojo-lang/mojo/go/pkg/mojo/build/go"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit"
+	kitcompiler "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/pkg/errors"
@@ -77,14 +80,15 @@ func (b Builder) Build() error {
 
 	compiler := gokit.NewCompiler()
 	pkgs := b.Package.GetAllPackage()
+	options := make(core.Options)
 	for _, pkg := range pkgs {
-		compiler.Context.GoPackageImports[pkg.FullName] = getPackageImport(pkg)
+		options[pkg.FullName] = getPackageImport(pkg)
 	}
 	for _, pkg := range b.Package.ResolvedDependencies {
-		compiler.Context.GoPackageImports[pkg.FullName] = getPackageImport(pkg)
+		options[pkg.FullName] = getPackageImport(pkg)
 	}
 
-	err := compiler.Compile(pkgs)
+	err := compiler.Compile(kitcompiler.WithGoPackageImports(context.Empty(), options), pkgs)
 	if err != nil {
 		logs.Errorw("failed to compile ncraft gokit", "package", b.Package.FullName, "error", err.Error())
 		return err

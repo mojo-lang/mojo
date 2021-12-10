@@ -6,18 +6,15 @@ import (
 )
 
 type Compiler struct {
-	Context *context.Context
 }
 
 func New() *Compiler {
-	return &Compiler{
-		Context: &context.Context{},
-	}
+	return &Compiler{}
 }
 
 func (c *Compiler) CompilePackages(packages map[string]*lang.Package) error {
 	for _, pkg := range packages {
-		err := c.compilePackage(c.Context, pkg)
+		err := c.compilePackage(context.Empty(), pkg)
 		if err != nil {
 			return err
 		}
@@ -25,32 +22,27 @@ func (c *Compiler) CompilePackages(packages map[string]*lang.Package) error {
 	return nil
 }
 
-func (c *Compiler) CompilePackage(pkg *lang.Package) error {
-	return c.compilePackage(c.Context, pkg)
+func (c *Compiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
+	return c.compilePackage(ctx, pkg)
 }
 
-func (c *Compiler) compilePackage(ctx *context.Context, pkg *lang.Package) error {
-	ctx.Open(pkg)
-	defer func() {
-		ctx.Close()
-	}()
-
+func (c *Compiler) compilePackage(ctx context.Context, pkg *lang.Package) error {
 	typeAlias := &TypeAliasCompiler{}
-	if err := typeAlias.Compile(ctx, pkg); err != nil {
+	if err := typeAlias.CompilePackage(ctx, pkg); err != nil {
 		return err
 	}
 
 	generic := &GenericCompiler{}
-	if err := generic.Compile(ctx, pkg); err != nil {
+	if err := generic.CompilePackage(ctx, pkg); err != nil {
 		return err
 	}
 
 	genericNaming := NewGenericRenamingCompiler()
-	if err := genericNaming.Compile(ctx, pkg); err != nil {
+	if err := genericNaming.CompilePackage(ctx, pkg); err != nil {
 		return err
 	}
 
-	if err := typeAlias.Compile(ctx, pkg); err != nil {
+	if err := typeAlias.CompilePackage(ctx, pkg); err != nil {
 		return err
 	}
 
@@ -60,7 +52,7 @@ func (c *Compiler) compilePackage(ctx *context.Context, pkg *lang.Package) error
 	}
 
 	goPkg := &GoPackageNameCompiler{}
-	if err := goPkg.Compile(ctx, pkg); err != nil {
+	if err := goPkg.CompilePackage(ctx, pkg); err != nil {
 		return err
 	}
 

@@ -7,8 +7,9 @@ import (
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"log"
 	"os"
 	path2 "path"
@@ -515,20 +516,20 @@ func (g *Generator) generateMessage(message *descriptor.MessageDescriptor) {
 
 	printField := func(field *descriptor.FieldDescriptorProto) {
 		g.WriteString(g.indent)
-		if *field.Type == descriptor.FIELD_TYPE_MESSAGE {
+		if *field.Type == descriptor.FieldTypeMessage {
 			desc := message.GetInnerMessage(field.GetTypeName())
 			if desc != nil && desc.GetOptions() != nil && desc.GetOptions().GetMapEntry() {
 				keyType := descriptor.GetFieldTypeName(desc.Field[0])
 				valType := descriptor.GetFieldTypeName(desc.Field[1])
 				g.S("map<", keyType, ", ", valType, "> ", field.Name, " = ", field.Number)
 			} else {
-				if field.Label != nil && field.GetLabel() == descriptor.FIELD_LABEL_REPEATED {
+				if field.Label != nil && field.GetLabel() == descriptor.FieldLabelRepeated {
 					g.S("repeated ", descriptor.GetFieldTypeName(field), " ", field.GetName(), " = ", field.Number)
 				} else {
 					g.S(descriptor.GetFieldTypeName(field), " ", field.GetName(), " = ", field.Number)
 				}
 			}
-		} else if field.Label != nil && field.GetLabel() == descriptor.FIELD_LABEL_REPEATED {
+		} else if field.Label != nil && field.GetLabel() == descriptor.FieldLabelRepeated {
 			g.S("repeated ", descriptor.GetFieldTypeName(field), " ", field.GetName(), " = ", field.Number)
 		} else {
 			g.S(descriptor.GetFieldTypeName(field), " ", field.GetName(), " = ", field.Number)
@@ -536,8 +537,37 @@ func (g *Generator) generateMessage(message *descriptor.MessageDescriptor) {
 
 		if field.Options != nil {
 			g.S(" [")
-			if alias := descriptor.GetStringFieldOption(field, mojo.E_Alias); len(alias) > 0 {
-				g.S("(", mojo.E_Alias.Name, ")=", "\"", alias, "\"")
+			fieldOptions := mojo.FieldOptionsExtensions()
+			for i, option := range fieldOptions {
+				switch option.TypeDescriptor().Kind() {
+				case protoreflect.BoolKind:
+					if v := descriptor.GetBoolFieldOption(field, option); v != nil {
+						if i > 0 {
+							g.S(", ")
+						}
+						if *v {
+							g.S("(", mojo.GetOptionFullName(option), ")=true")
+						} else {
+							g.S("(", mojo.GetOptionFullName(option), ")=false")
+						}
+					}
+				case protoreflect.Int32Kind, protoreflect.Int64Kind,
+					protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind,
+					protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
+					if v := descriptor.GetInt64FieldOption(field, option); v != nil {
+						if i > 0 {
+							g.S(", ")
+						}
+						g.S("(", mojo.GetOptionFullName(option), ")=", *v)
+					}
+				case protoreflect.StringKind:
+					if v := descriptor.GetStringFieldOption(field, option); len(v) > 0 {
+						if i > 0 {
+							g.S(", ")
+						}
+						g.S("(", mojo.GetOptionFullName(option), ")=", "\"", v, "\"")
+					}
+				}
 			}
 			g.S("];\n")
 		} else {

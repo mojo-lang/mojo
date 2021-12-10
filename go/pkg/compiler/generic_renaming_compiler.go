@@ -35,7 +35,9 @@ func NewGenericRenamingCompiler() *GenericRenamingCompiler {
 	}
 }
 
-func (c *GenericRenamingCompiler) Compile(ctx *context.Context, pkg *lang.Package) error {
+func (c *GenericRenamingCompiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
+	thisCtx := context.WithType(ctx, pkg)
+
 	for _, sourceFile := range pkg.SourceFiles {
 		if sourceFile.IsGenericInstantiated() {
 			addRef := func(key string) {
@@ -64,24 +66,21 @@ func (c *GenericRenamingCompiler) Compile(ctx *context.Context, pkg *lang.Packag
 		if sourceFile.IsGenericInstantiated() {
 			continue
 		}
-
-		ctx.Open(sourceFile)
+		fileCtx := context.WithType(thisCtx, sourceFile)
 		for _, statement := range sourceFile.Statements {
 			if decl := statement.GetDeclaration(); decl != nil {
 				switch decl.Declaration.(type) {
 				case *lang.Declaration_StructDecl:
 					if structDecl := decl.GetStructDecl(); structDecl != nil {
-						err := c.CompileStruct(ctx, structDecl)
+						err := c.CompileStruct(fileCtx, structDecl)
 						if err != nil {
-							ctx.Close()
 							return err
 						}
 					}
 				case *lang.Declaration_TypeAliasDecl:
 					if typeAliasDecl := decl.GetTypeAliasDecl(); typeAliasDecl != nil {
-						err := c.CompileTypeAlias(ctx, typeAliasDecl)
+						err := c.CompileTypeAlias(fileCtx, typeAliasDecl)
 						if err != nil {
-							ctx.Close()
 							return err
 						}
 					}
@@ -94,20 +93,21 @@ func (c *GenericRenamingCompiler) Compile(ctx *context.Context, pkg *lang.Packag
 				}
 			}
 		}
-		ctx.Close()
 	}
 
 	return c.Renaming()
 }
 
-func (c *GenericRenamingCompiler) CompileStruct(ctx *context.Context, decl *lang.StructDecl) error {
+func (c *GenericRenamingCompiler) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
+	thisCtx := context.WithType(ctx, decl)
+
 	for _, d := range decl.StructDecls {
-		if err := c.CompileStruct(ctx, d); err != nil {
+		if err := c.CompileStruct(thisCtx, d); err != nil {
 			return err
 		}
 	}
 	for _, d := range decl.TypeAliasDecls {
-		if err := c.CompileTypeAlias(ctx, d); err != nil {
+		if err := c.CompileTypeAlias(thisCtx, d); err != nil {
 			return err
 		}
 	}
@@ -117,11 +117,12 @@ func (c *GenericRenamingCompiler) CompileStruct(ctx *context.Context, decl *lang
 	}
 
 	for _, i := range decl.Type.Inherits {
-		c.compileNominalType(ctx, i, LocationInherit)
+		c.compileNominalType(thisCtx, i, LocationInherit)
 	}
 
 	for _, f := range decl.Type.Fields {
-		c.compileNominalType(ctx, f.Type, LocationField)
+		fieldCtx := context.WithType(thisCtx, f)
+		c.compileNominalType(fieldCtx, f.Type, LocationField)
 	}
 
 	for _, id := range decl.Scope.Identifiers {
@@ -139,7 +140,7 @@ func (c *GenericRenamingCompiler) CompileStruct(ctx *context.Context, decl *lang
 	return nil
 }
 
-func (c *GenericRenamingCompiler) compileNominalType(ctx *context.Context, t *lang.NominalType, location LocationType) error {
+func (c *GenericRenamingCompiler) compileNominalType(ctx context.Context, t *lang.NominalType, location LocationType) error {
 	if r, ok := c.References[t.GetFullName()]; ok {
 		r.Types[location] = append(r.Types[location], t)
 	} else {
@@ -152,13 +153,15 @@ func (c *GenericRenamingCompiler) compileNominalType(ctx *context.Context, t *la
 	return nil
 }
 
-func (c *GenericRenamingCompiler) CompileTypeAlias(ctx *context.Context, decl *lang.TypeAliasDecl) error {
-	if err := c.compileNominalType(ctx, decl.Type, LocationTypeAlias); err != nil {
+func (c *GenericRenamingCompiler) CompileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) error {
+	thisCtx := context.WithType(ctx, decl)
+
+	if err := c.compileNominalType(thisCtx, decl.Type, LocationTypeAlias); err != nil {
 		return err
 	}
 
 	if r, ok := c.References[decl.Type.GetFullName()]; ok {
-		r.AliasFiles[decl.GetFullName()] = ctx.GetSourceFile()
+		r.AliasFiles[decl.GetFullName()] = context.SourceFile(thisCtx)
 	}
 
 	for _, id := range decl.Scope.Identifiers {

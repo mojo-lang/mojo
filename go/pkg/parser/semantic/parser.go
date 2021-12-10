@@ -2,10 +2,12 @@ package semantic
 
 import (
 	"errors"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/circle"
 	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/identifier"
-	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 	"sort"
 )
 
@@ -13,29 +15,26 @@ var _ = identifier.Namer{}
 var _ = identifier.Resolver{}
 var _ = circle.Resolver{}
 
-func ParsePackages(packages lang.Packages, options map[string]interface{}) error {
+func ParsePackages(packages lang.Packages, global *lang.Package, options core.Options) (*lang.Package, error) {
 	if len(packages) == 0 {
-		return errors.New("empty packages to parse")
+		return nil, errors.New("empty packages to parse")
 	}
-
-	global := treePackages(packages)
+	global = treePackages(packages, global)
 
 	// sort plugin by priority from higher to lower
-	plugin.SortPlugins()
-	for _, p := range plugin.Plugins {
-		ctx := plugin.NewContext()
-		err := p.Parse(ctx, global, options)
+	plugin.Sort(plugin.ParserPlugins)
+	for _, p := range plugin.ParserPlugins {
+		err := plugin.ParsePackage(p, context.WithOptions(context.Empty(), options), global)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
 
-	return nil
+	return global, nil
 }
 
-func treePackages(packages lang.Packages) *lang.Package {
+func treePackages(packages lang.Packages, global *lang.Package) *lang.Package {
 	var names []string
-	var global *lang.Package
 	for _, pkg := range packages {
 		if pkg.IsGlobal() {
 			global = pkg
@@ -44,10 +43,18 @@ func treePackages(packages lang.Packages) *lang.Package {
 	}
 	sort.Strings(names)
 
+	var existPackages map[string]*lang.Package
+
 	if global == nil {
 		// add an empty package as the global package for maintain the global scope
 		global = lang.NewGlobalPackage()
+		existPackages = make(map[string]*lang.Package)
 		packages = append(packages, global)
+	} else {
+		existPackages = global.GetAllPackage()
+		for _, pkg := range existPackages {
+			packages = append(packages, pkg)
+		}
 	}
 
 	newPkgs := make(map[string]bool)
@@ -56,8 +63,8 @@ func treePackages(packages lang.Packages) *lang.Package {
 		if len(parent) == 0 {
 			continue
 		}
-
-		for (i == 0 || (parent != names[i-1])) && len(parent) > 0 && !newPkgs[parent] {
+		_, exist := existPackages[parent]
+		for (i == 0 || (parent != names[i-1])) && len(parent) > 0 && !newPkgs[parent] && !exist {
 			p := &lang.Package{
 				Name:     lang.GetPackageName(parent),
 				FullName: parent,
@@ -73,6 +80,7 @@ func treePackages(packages lang.Packages) *lang.Package {
 	sort.Sort(packages)
 
 	for i, pkg := range packages {
+		pkg.Children = nil
 		for j := i + 1; j < len(packages); j++ {
 			parent := lang.GetPackageParentName(packages[j].FullName)
 			if pkg.FullName == parent {

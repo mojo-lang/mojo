@@ -10,8 +10,8 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/ncraft/gokit"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/openapi"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/build/protobuf"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"path"
 	"strings"
 )

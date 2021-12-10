@@ -8,9 +8,10 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	langcompiler "github.com/mojo-lang/mojo/go/pkg/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
-	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 	"github.com/mojo-lang/mojo/go/pkg/util"
+	desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"sort"
 	"strings"
 )
@@ -21,20 +22,18 @@ var _ = compiler.TuplePlugin{}
 var _ = compiler.UnionPlugin{}
 
 type Compiler struct {
-	Context *compiler.Context
 	Files   []*desc.FileDescriptor
 }
 
 func NewCompiler() *Compiler {
 	c := &Compiler{}
-	c.Context = &compiler.Context{}
 	c.Files = make([]*desc.FileDescriptor, 0)
 	return c
 }
 
 func (c *Compiler) CompilePackages(packages map[string]*lang.Package) error {
 	for _, pkg := range packages {
-		err := c.compilePackage(c.Context, pkg)
+		err := c.compilePackage(context.Empty(), pkg)
 		if err != nil {
 			return err
 		}
@@ -43,22 +42,19 @@ func (c *Compiler) CompilePackages(packages map[string]*lang.Package) error {
 }
 
 func (c *Compiler) CompilePackage(pkg *lang.Package) error {
-	return c.compilePackage(c.Context, pkg)
+	return c.compilePackage(context.Empty(), pkg)
 }
 
 func (c *Compiler) CompileFile(file *lang.SourceFile) error {
-	_, err := c.compileFile(c.Context, file)
+	_, err := c.compileFile(context.Empty(), file)
 	return err
 }
 
-func (c *Compiler) compilePackage(ctx *compiler.Context, pkg *lang.Package) error {
-	ctx.Open(pkg, nil)
-	defer func() {
-		ctx.Close()
-	}()
+func (c *Compiler) compilePackage(ctx context.Context, pkg *lang.Package) error {
+	thisCtx := context.WithType(ctx, pkg)
 
 	for _, sourceFile := range pkg.SourceFiles {
-		descriptor, err := c.compileFile(ctx, sourceFile)
+		descriptor, err := c.compileFile(thisCtx, sourceFile)
 		if err != nil {
 			return err
 		}
@@ -69,17 +65,13 @@ func (c *Compiler) compilePackage(ctx *compiler.Context, pkg *lang.Package) erro
 	return nil
 }
 
-func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) (*desc.FileDescriptor, error) {
+func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) (*desc.FileDescriptor, error) {
 	if file.IsGenericInstantiated() {
 		return nil, nil
 	}
 
 	fileDescriptor := desc.NewFileDescriptor()
-	ctx.Open(file, fileDescriptor)
-	defer func() {
-		ctx.Close()
-	}()
-
+	thisCtx := context.WithDescriptor(context.WithType(ctx, file), fileDescriptor)
 	fileDescriptor.Proto3 = true
 
 	name := strings.TrimSuffix(file.FullName, ".mojo") + ".proto"
@@ -90,7 +82,7 @@ func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) (*d
 		return nil, err
 	}
 
-	if err := c.compileFileOptions(ctx, file, fileDescriptor); err != nil {
+	if err := c.compileFileOptions(thisCtx, file, fileDescriptor); err != nil {
 		return nil, err
 	}
 
@@ -105,22 +97,22 @@ func (c *Compiler) compileFile(ctx *compiler.Context, file *lang.SourceFile) (*d
 
 			switch decl.Declaration.(type) {
 			case *lang.Declaration_TypeAliasDecl:
-				err := c.compileTypeAlias(ctx, decl.GetTypeAliasDecl(), desc.NewMessageDescriptor(fileDescriptor))
+				err := c.compileTypeAlias(thisCtx, decl.GetTypeAliasDecl(), desc.NewMessageDescriptor(fileDescriptor))
 				if err != nil {
 					return nil, err
 				}
 			case *lang.Declaration_StructDecl:
-				err := c.compileStruct(ctx, decl.GetStructDecl(), desc.NewMessageDescriptor(fileDescriptor))
+				err := c.compileStruct(thisCtx, decl.GetStructDecl(), desc.NewMessageDescriptor(fileDescriptor))
 				if err != nil {
 					return nil, err
 				}
 			case *lang.Declaration_EnumDecl:
-				err := c.compileEnum(ctx, decl.GetEnumDecl(), desc.NewEnumDescriptor(fileDescriptor))
+				err := c.compileEnum(thisCtx, decl.GetEnumDecl(), desc.NewEnumDescriptor(fileDescriptor))
 				if err != nil {
 					return nil, err
 				}
 			case *lang.Declaration_InterfaceDecl:
-				err := c.compileInterface(ctx, decl.GetInterfaceDecl(), desc.NewServiceDescriptor(fileDescriptor))
+				err := c.compileInterface(thisCtx, decl.GetInterfaceDecl(), desc.NewServiceDescriptor(fileDescriptor))
 				if err != nil {
 					return nil, err
 				}
@@ -143,8 +135,8 @@ func (c *Compiler) compilePackageDecl(file *lang.SourceFile, descriptor *desc.Fi
 	return nil
 }
 
-func (c *Compiler) compileFileOptions(ctx *compiler.Context, file *lang.SourceFile, fileDescriptor *desc.FileDescriptor) error {
-	pkg := ctx.GetPackage()
+func (c *Compiler) compileFileOptions(ctx context.Context, file *lang.SourceFile, fileDescriptor *desc.FileDescriptor) error {
+	pkg := context.Package(ctx)
 	if pkg == nil {
 		return errors.New("has no package found")
 	}
@@ -215,11 +207,11 @@ func (c *Compiler) compileImport(file *lang.SourceFile, descriptor *desc.FileDes
 	return nil
 }
 
-func (c *Compiler) compileEnum(ctx *compiler.Context, decl *lang.EnumDecl, descriptor *desc.EnumDescriptor) error {
+func (c *Compiler) compileEnum(ctx context.Context, decl *lang.EnumDecl, descriptor *desc.EnumDescriptor) error {
 	return compiler.CompileEnum(ctx, decl, descriptor)
 }
 
-func (c *Compiler) compileTypeAlias(ctx *compiler.Context, decl *lang.TypeAliasDecl, descriptor *desc.MessageDescriptor) error {
+func (c *Compiler) compileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl, descriptor *desc.MessageDescriptor) error {
 	if len(decl.GenericParameters) > 0 {
 		return nil
 	}
@@ -229,7 +221,7 @@ func (c *Compiler) compileTypeAlias(ctx *compiler.Context, decl *lang.TypeAliasD
 	return err
 }
 
-func (c *Compiler) compileStruct(ctx *compiler.Context, decl *lang.StructDecl, descriptor *desc.MessageDescriptor) error {
+func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl, descriptor *desc.MessageDescriptor) error {
 	if len(decl.GenericParameters) > 0 {
 		return nil
 	}
@@ -237,12 +229,8 @@ func (c *Compiler) compileStruct(ctx *compiler.Context, decl *lang.StructDecl, d
 	return compiler.CompileStruct(ctx, decl, descriptor)
 }
 
-func (c *Compiler) compileInterface(ctx *compiler.Context, decl *lang.InterfaceDecl, serviceDescriptor *desc.ServiceDescriptor) error {
-	ctx.Open(decl, serviceDescriptor)
-	defer func() {
-		ctx.Close()
-	}()
-
+func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDecl, serviceDescriptor *desc.ServiceDescriptor) error {
+	thisCtx := context.WithDescriptor(context.WithType(ctx, decl), serviceDescriptor)
 	serviceDescriptor.Name = &decl.Name
 
 	//if i.Document != nil {
@@ -252,20 +240,20 @@ func (c *Compiler) compileInterface(ctx *compiler.Context, decl *lang.InterfaceD
 	//}
 
 	for _, method := range decl.Type.Methods {
-		err := c.compileMethod(ctx, method, serviceDescriptor)
+		err := c.compileMethod(thisCtx, method, serviceDescriptor)
 		if err != nil {
 			return err
 		}
 	}
 
-	file := ctx.GetFileDescriptor()
+	file := context.FileDescriptor(ctx)
 	if file != nil {
 		file.Services = append(file.Services, serviceDescriptor)
 	}
 	return nil
 }
 
-func (c *Compiler) compileMethod(ctx *compiler.Context, method *lang.FunctionDecl, serviceDescriptor *desc.ServiceDescriptor) error {
+func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl, serviceDescriptor *desc.ServiceDescriptor) error {
 	m := &descriptor.MethodDescriptorProto{
 		Name:       &method.Name,
 		InputType:  nil,
@@ -290,7 +278,8 @@ func (c *Compiler) compileMethod(ctx *compiler.Context, method *lang.FunctionDec
 		s.Type.Fields = append(s.Type.Fields, langcompiler.GeneratePaginationParameters()...)
 	}
 
-	c.compileStruct(ctx, s, desc.NewMessageDescriptor(ctx.GetFileDescriptor()))
+	file := context.FileDescriptor(ctx)
+	c.compileStruct(ctx, s, desc.NewMessageDescriptor(file))
 
 	m.InputType = &s.Name
 
@@ -300,7 +289,6 @@ func (c *Compiler) compileMethod(ctx *compiler.Context, method *lang.FunctionDec
 	if result == nil {
 		m.OutputType = &nullTypeName
 
-		file := ctx.GetFileDescriptor()
 		if file != nil {
 			file.Dependency = append(file.Dependency, "mojo/core/null.proto")
 		}

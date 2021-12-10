@@ -15,8 +15,8 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
 	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"os/exec"
 	path2 "path"
 	"strings"
@@ -87,7 +87,7 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 		fileCmd.Stderr = &stderr
 		out, err := fileCmd.Output()
 		if err != nil {
-			logs.Errorw(fmt.Sprintf("failed to run protoc cmd %s", stderr.String()),"cmd", fileCmd.String())
+			logs.Errorw(fmt.Sprintf("failed to run protoc cmd %s", stderr.String()), "cmd", fileCmd.String())
 			return nil, err
 		}
 		logs.Debugw("finish to run protoc cmd", "warning", stderr.String(), "cmd", fileCmd.String())
@@ -147,7 +147,6 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 
 	return outFiles, nil
 }
-
 
 func JsonTagLowerCamelCase(field *ggdescriptor.FieldDescriptorProto) {
 	//if field.IsRepeated() || field.IsMessage() {

@@ -5,6 +5,7 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
 	apicompiler "github.com/mojo-lang/mojo/go/pkg/openapi/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
@@ -12,11 +13,8 @@ import (
 	"strings"
 )
 
-func CompileInterface(ctx *Context, decl *lang.InterfaceDecl) (*types.Service, error) {
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
+func CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) (*types.Service, error) {
+	thisCtx := context.WithType(ctx, decl)
 
 	pkgName := ""
 	pkgNames := strings.Split(decl.PackageName, ".")
@@ -40,12 +38,12 @@ func CompileInterface(ctx *Context, decl *lang.InterfaceDecl) (*types.Service, e
 		},
 	}
 
-	if path, ok := ctx.GoPackageImports[decl.PackageName]; ok {
+	if path, ok := GoPackageImport(ctx, decl.PackageName).(string); ok {
 		service.ApiImportPath = path
 	}
 
 	for _, method := range decl.Type.Methods {
-		err := compileMethod(ctx, method, service)
+		err := compileMethod(thisCtx, method, service)
 		if err != nil {
 			return nil, err
 		}
@@ -53,7 +51,7 @@ func CompileInterface(ctx *Context, decl *lang.InterfaceDecl) (*types.Service, e
 	return service, nil
 }
 
-func compileMessage(ctx *Context, decl *lang.StructDecl) (*types.Message, error) {
+func compileMessage(ctx context.Context, decl *lang.StructDecl) (*types.Message, error) {
 	msg := &types.Message{
 		Name: decl.Name,
 	}
@@ -82,7 +80,9 @@ func compileMessage(ctx *Context, decl *lang.StructDecl) (*types.Message, error)
 	return msg, nil
 }
 
-func compileMethod(ctx *Context, method *lang.FunctionDecl, service *types.Service) error {
+func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *types.Service) error {
+	thisCtx := context.WithType(ctx, method)
+
 	m := &types.InterfaceMethod{
 		Name:      method.Name,
 		CamelName: strcase.ToCamel(method.Name),
@@ -112,7 +112,7 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, service *types.Servi
 					service.ImportStructs = append(service.ImportStructs, t.Name)
 				}
 
-				if path, ok := ctx.GoPackageImports[t.PackageName]; ok {
+				if path, ok := GoPackageImport(ctx, t.PackageName).(string); ok {
 					service.ImportPaths = append(service.ImportPaths, path)
 				}
 			}
@@ -154,7 +154,7 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, service *types.Servi
 		}
 	}
 
-	m.ResponseType, err = compileMessage(ctx, decl)
+	m.ResponseType, err = compileMessage(thisCtx, decl)
 	if err != nil {
 		return err
 	}
@@ -196,7 +196,7 @@ func compileMethod(ctx *Context, method *lang.FunctionDecl, service *types.Servi
 			}
 			service.ImportStructs = append(service.ImportStructs, decl.Name)
 
-			if path, ok := ctx.GoPackageImports[decl.PackageName]; ok {
+			if path, ok := GoPackageImport(ctx, decl.PackageName).(string); ok {
 				service.ImportPaths = append(service.ImportPaths, path)
 			}
 		}
@@ -271,7 +271,7 @@ func compileBindingParameter(decl *lang.ValueDecl, pathParams map[string]bool, e
 	}
 
 	param := &types.HTTPParameter{
-		Field: compileBindingField(schema, compiler.Context.Components.GetSchemas()),
+		Field: compileBindingField(schema, context.Components(compiler.Context).GetSchemas()),
 	}
 
 	if param.Field == nil {

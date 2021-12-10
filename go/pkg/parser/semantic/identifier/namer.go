@@ -3,48 +3,48 @@ package identifier
 import (
 	"errors"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 func init() {
 	parser := &Namer{}
-	plugin.AddPlugin("identifier-namer", 1, parser)
+	plugin.AddParserPlugin("identifier-namer", 1, parser)
 }
 
 type Namer struct {
 }
 
-func (p *Namer) Parse(ctx *plugin.Context, pkg *lang.Package, options map[string]interface{}) error {
-	ctx.Open(pkg)
-	if len(options) > 0 {
-		ctx.SetOptions(options)
+func (p *Namer) Parse(ctx context.Context, pkg *lang.Package) error {
+	if pkg.GetExtraBool("parsed") {
+		return nil
 	}
 
-	defer func() {
-		scope := ctx.CurrentScope()
-		ctx.Close()
+	thisCtx := context.WithScope(context.WithType(ctx, pkg))
+	thisScope := context.Scope(thisCtx)
 
-		if ctx.CurrentScope() != nil { // not global
-			for key, value := range scope.Identifiers {
-				ctx.CurrentScope().Identifiers[pkg.Name+"."+key] = value
+	defer func() {
+		pkg.Scope = thisScope
+		scope := context.Scope(ctx)
+		if scope != nil { // not global
+			for key, value := range thisScope.Identifiers {
+				scope.Identifiers[pkg.Name+"."+key] = value
 
 				if value.PackageName == "mojo.core" {
-					ctx.CurrentScope().Identifiers[key] = value
+					scope.Identifiers[key] = value
 				}
 			}
 		}
 	}()
 
-	if disabled, ok := ctx.GetOption(pkg.FullName + ".disable").(bool); !ok || !disabled {
-		for _, file := range pkg.SourceFiles {
-			if err := p.ParserSourceFile(ctx, file); err != nil {
-				return err
-			}
+	for _, file := range pkg.SourceFiles {
+		if err := p.ParserSourceFile(thisCtx, file); err != nil {
+			return err
 		}
 	}
 
 	for _, child := range pkg.Children {
-		if err := p.Parse(ctx, child, nil); err != nil {
+		if err := p.Parse(thisCtx, child); err != nil {
 			return err
 		}
 	}
@@ -52,19 +52,19 @@ func (p *Namer) Parse(ctx *plugin.Context, pkg *lang.Package, options map[string
 	return nil
 }
 
-func (p *Namer) ParserSourceFile(ctx *plugin.Context, file *lang.SourceFile) error {
-	ctx.Open(file)
-	defer func() {
-		scope := ctx.CurrentScope()
-		ctx.Close()
+func (p *Namer) ParserSourceFile(ctx context.Context, file *lang.SourceFile) error {
+	thisCtx := context.WithScope(context.WithType(ctx, file))
+	thisScope := context.Scope(thisCtx)
 
-		for key, value := range scope.Identifiers {
-			ctx.CurrentScope().Identifiers[key] = value
+	defer func() {
+		file.Scope = thisScope
+		scope := context.Scope(ctx)
+		for key, value := range thisScope.Identifiers {
+			scope.Identifiers[key] = value
 		}
 	}()
 
-	pkg := ctx.GetPackage()
-
+	pkg := context.Package(ctx)
 	for _, statement := range file.Statements {
 		switch statement.Statement.(type) {
 		case *lang.Statement_Declaration:
@@ -77,29 +77,29 @@ func (p *Namer) ParserSourceFile(ctx *plugin.Context, file *lang.SourceFile) err
 				decl.SetPackageName(pkg.FullName)
 			}
 
-			identifier := ctx.Declare(decl)
+			identifier := thisScope.Declare(decl)
 			if identifier != nil {
 				identifier.SourceFileName = file.FullName
 			}
 
 			switch decl.Declaration.(type) {
 			case *lang.Declaration_TypeAliasDecl:
-				err := p.ParseTypeAlias(ctx, decl.GetTypeAliasDecl())
+				err := p.ParseTypeAlias(thisCtx, decl.GetTypeAliasDecl())
 				if err != nil {
 					return err
 				}
 			case *lang.Declaration_StructDecl:
-				err := p.ParseStruct(ctx, decl.GetStructDecl())
+				err := p.ParseStruct(thisCtx, decl.GetStructDecl())
 				if err != nil {
 					return err
 				}
 			case *lang.Declaration_EnumDecl:
-				err := p.ParseEnum(ctx, decl.GetEnumDecl())
+				err := p.ParseEnum(thisCtx, decl.GetEnumDecl())
 				if err != nil {
 					return err
 				}
 			case *lang.Declaration_InterfaceDecl:
-				err := p.ParseInterface(ctx, decl.GetInterfaceDecl())
+				err := p.ParseInterface(thisCtx, decl.GetInterfaceDecl())
 				if err != nil {
 					return err
 				}
@@ -111,9 +111,11 @@ func (p *Namer) ParserSourceFile(ctx *plugin.Context, file *lang.SourceFile) err
 	return nil
 }
 
-func (p *Namer) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error {
-	ctx.Open(decl)
-	file := ctx.GetSourceFile()
+func (p *Namer) ParseStruct(ctx context.Context, decl *lang.StructDecl) error {
+	thisCtx := context.WithScope(context.WithType(ctx, decl))
+	thisScope := context.Scope(thisCtx)
+
+	file := context.SourceFile(ctx)
 	decl.SourceFileName = file.FullName
 	decl.PackageName = file.PackageName
 
@@ -121,72 +123,73 @@ func (p *Namer) ParseStruct(ctx *plugin.Context, decl *lang.StructDecl) error {
 		declaration.PackageName = file.PackageName
 		declaration.SourceFileName = file.FullName
 
-		identifier := ctx.Declare(lang.NewStructDeclaration(declaration))
+		identifier := thisScope.Declare(lang.NewStructDeclaration(declaration))
 		identifier.SourceFileName = file.FullName
-		p.ParseStruct(ctx, declaration)
+		p.ParseStruct(thisCtx, declaration)
 	}
 
 	for _, declaration := range decl.EnumDecls {
 		declaration.PackageName = file.PackageName
 		declaration.SourceFileName = file.FullName
 
-		identifier := ctx.Declare(lang.NewEnumDeclaration(declaration))
+		identifier := thisScope.Declare(lang.NewEnumDeclaration(declaration))
 		identifier.SourceFileName = file.FullName
-		p.ParseEnum(ctx, declaration)
+		p.ParseEnum(thisCtx, declaration)
 	}
 
 	for _, declaration := range decl.TypeAliasDecls {
 		declaration.PackageName = file.PackageName
 		declaration.SourceFileName = file.FullName
 
-		identifier := ctx.Declare(lang.NewTypeAliasDeclaration(declaration))
+		identifier := thisScope.Declare(lang.NewTypeAliasDeclaration(declaration))
 		identifier.SourceFileName = file.FullName
-		p.ParseTypeAlias(ctx, declaration)
+		p.ParseTypeAlias(thisCtx, declaration)
 	}
 
 	for _, parameter := range decl.GenericParameters {
-		identifier := ctx.Declare(lang.NewGenericParameterDeclaration(parameter))
+		identifier := thisScope.Declare(lang.NewGenericParameterDeclaration(parameter))
 		identifier.SourceFileName = file.FullName
 	}
 
-	scope := ctx.CurrentScope()
-	ctx.Close()
-
-	for key, value := range scope.Identifiers {
+	decl.Scope = thisScope
+	for key, value := range thisScope.Identifiers {
 		if value.Kind != lang.Identifier_KIND_GENERIC_PARAMETER {
-			ctx.CurrentScope().Identifiers[decl.Name+"."+key] = value
+			context.Scope(ctx).Identifiers[decl.Name+"."+key] = value
 		}
 	}
 
 	return nil
 }
 
-func (p *Namer) ParseEnum(ctx *plugin.Context, decl *lang.EnumDecl) error {
-	file := ctx.GetSourceFile()
+func (p *Namer) ParseEnum(ctx context.Context, decl *lang.EnumDecl) error {
+	file := context.SourceFile(ctx)
 	decl.SourceFileName = file.FullName
 	decl.PackageName = file.PackageName
 	return nil
 }
 
-func (p *Namer) ParseTypeAlias(ctx *plugin.Context, decl *lang.TypeAliasDecl) error {
-	ctx.Open(decl)
+func (p *Namer) ParseTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) error {
+	thisCtx := context.WithScope(context.WithType(ctx, decl))
+	thisScope := context.Scope(thisCtx)
 
-	file := ctx.GetSourceFile()
+	file := context.SourceFile(ctx)
 	decl.SourceFileName = file.FullName
 	decl.PackageName = file.PackageName
 
 	for _, parameter := range decl.GenericParameters {
-		identifier := ctx.Declare(lang.NewGenericParameterDeclaration(parameter))
+		identifier := thisScope.Declare(lang.NewGenericParameterDeclaration(parameter))
 		identifier.SourceFileName = file.FullName
 	}
 
-	ctx.Close()
+	decl.Scope = thisScope
 	return nil
 }
 
-func (p *Namer) ParseInterface(ctx *plugin.Context, decl *lang.InterfaceDecl) error {
-	ctx.Open(decl)
-	file := ctx.GetSourceFile()
+func (p *Namer) ParseInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
+	thisCtx := context.WithScope(context.WithType(ctx, decl))
+	thisScope := context.Scope(thisCtx)
+
+	file := context.SourceFile(ctx)
 	decl.SourceFileName = file.FullName
 	decl.PackageName = file.PackageName
 
@@ -197,16 +200,14 @@ func (p *Namer) ParseInterface(ctx *plugin.Context, decl *lang.InterfaceDecl) er
 	//	p.ParseTypeAlias(ctx, declaration)
 	//}
 
-	innerScope := ctx.CurrentScope()
-	ctx.Close()
-
-	for key, value := range innerScope.Identifiers {
-		ctx.CurrentScope().Identifiers[decl.Name+"."+key] = value
+	decl.Scope = thisScope
+	for key, value := range thisScope.Identifiers {
+		context.Scope(ctx).Identifiers[decl.Name+"."+key] = value
 	}
 
 	return nil
 }
 
-func (p *Namer) ParseImport(ctx *plugin.Context, decl *lang.ImportDecl) error {
+func (p *Namer) ParseImport(ctx context.Context, decl *lang.ImportDecl) error {
 	return nil
 }

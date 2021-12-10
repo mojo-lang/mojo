@@ -5,14 +5,13 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/circle"
-	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/plugin"
 	path2 "path"
 )
 
 type CircleCompiler struct {
 }
 
-func (c *CircleCompiler) Compile(ctx *context.Context, pkg *lang.Package) error {
+func (c *CircleCompiler) Compile(ctx context.Context, pkg *lang.Package) error {
 	polluted, err := c.compile(ctx, pkg)
 	if err != nil {
 		return err
@@ -35,7 +34,7 @@ func (c *CircleCompiler) Compile(ctx *context.Context, pkg *lang.Package) error 
 	return nil
 }
 
-func (c *CircleCompiler) reParse(ctx *context.Context, pkg *lang.Package) error {
+func (c *CircleCompiler) reParse(ctx context.Context, pkg *lang.Package) error {
 	_ = ctx
 
 	for _, f := range pkg.SourceFiles {
@@ -43,10 +42,16 @@ func (c *CircleCompiler) reParse(ctx *context.Context, pkg *lang.Package) error 
 	}
 
 	resolver := &circle.Resolver{}
-	return resolver.Parse(plugin.NewContext(), pkg, nil)
+	if pkg.GetExtraBool("parsed") {
+		pkg.SetExtraBool("parsed", false)
+		defer func() {
+			pkg.SetExtraBool("parsed", true)
+		}()
+	}
+	return resolver.Parse(context.Empty(), pkg)
 }
 
-func (c *CircleCompiler) compile(ctx *context.Context, pkg *lang.Package) (polluted bool, err error) {
+func (c *CircleCompiler) compile(ctx context.Context, pkg *lang.Package) (polluted bool, err error) {
 	if err = c.reParse(ctx, pkg); err != nil {
 		return false, err
 	}

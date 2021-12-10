@@ -16,6 +16,7 @@ import (
 )
 
 type Parser struct {
+	*parser.Parser
 	Root         *lang.Package
 	WorkingDir   string
 	Fs           fs.FS
@@ -24,6 +25,7 @@ type Parser struct {
 
 func NewParser(pwd string, fileSys fs.FS) *Parser {
 	parser := &Parser{
+		Parser:       parser.New(),
 		WorkingDir:   pwd,
 		Fs:           fileSys,
 		DependencyFs: make(map[string]fs.FS),
@@ -112,15 +114,12 @@ func (p *Parser) parse(pkg *lang.Package) error {
 		}
 	}
 
-	parser := parser.New()
-	parser.Dependencies = pkg.ResolvedDependencies
-
 	path := pkg.GetExtraString("path")
 
 	if !strings.HasPrefix(pkg.FullName, "mojo.") {
 		path = path2.Join(path, "mojo")
 	}
-	packages, err := parser.ParsePackage(path, pkg.FullName, p.DependencyFs[pkg.FullName])
+	packages, err := p.Parser.ParsePackage(path, pkg.FullName, p.DependencyFs[pkg.FullName])
 	if err != nil {
 		return err
 	}

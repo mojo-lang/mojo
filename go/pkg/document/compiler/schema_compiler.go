@@ -5,6 +5,7 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/document/go/pkg/mojo/document"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 )
 
@@ -35,12 +36,11 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 			Header:    document.NewTextTableHeader("字段", "类型", "格式类型", "是否必须", "默认值", "说明"),
 		}
 
-		ctx := &Context{}
 		fieldNames := decl.GetStructDecl().FieldNames()
 		if decl == nil {
 			fieldNames = schema.FieldNames(s.Components.Schemas)
 		}
-		s.compileFields(ctx, fieldNames, schema, table)
+		s.compileFields(context.Empty(), fieldNames, schema, table)
 
 		doc.AppendTable(table)
 	} else if schema.Type == openapi.Schema_TYPE_ARRAY {
@@ -90,7 +90,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 	return doc, nil
 }
 
-func (s *SchemaCompiler) compileFields(ctx *Context, fieldNames []string, schema *openapi.Schema, table *document.Table) {
+func (s *SchemaCompiler) compileFields(ctx context.Context, fieldNames []string, schema *openapi.Schema, table *document.Table) {
 	if len(schema.AllOf) > 0 {
 		for _, sch := range schema.AllOf {
 			url := sch.GetReferenceUrl()

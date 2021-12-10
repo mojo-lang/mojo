@@ -2,7 +2,7 @@ package identifier
 
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/parser/semantic/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 // global identifier index
@@ -34,6 +34,6 @@ func AddIdentifier(key string, identifier *lang.Identifier) {
 	getIdentifierIndex().Add(key, identifier)
 }
 
-func FindIdentifier(ctx *plugin.Context, key string) (*lang.Identifier, error) {
+func FindIdentifier(ctx context.Context, key string) (*lang.Identifier, error) {
 	return getIdentifierIndex().Find(key)
 }

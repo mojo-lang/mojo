@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/context"
@@ -13,19 +14,19 @@ import (
 
 // compile the Generic Type to Nominal type except the Array, Map, Tuple, Union, Intersection
 type GenericCompiler struct {
-	Options  map[string]interface{}
+	core.Options
 	NewFiles []*lang.SourceFile
 }
 
 type IdentifierIndex map[string]*lang.Identifier
 
-func NewGenericCompiler(options map[string]interface{}) *GenericCompiler {
+func NewGenericCompiler(options core.Options) *GenericCompiler {
 	compiler := &GenericCompiler{
 		Options: options,
 	}
 
 	if compiler.Options == nil {
-		compiler.Options = make(map[string]interface{})
+		compiler.Options = make(core.Options)
 	}
 
 	return compiler
@@ -37,10 +38,12 @@ func addIdentifiers(dest map[string]*lang.Identifier, identifiers []*lang.Identi
 	}
 }
 
-func (c *GenericCompiler) Compile(ctx *context.Context, pkg *lang.Package) error {
+func (c *GenericCompiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
+	thisCtx := context.WithType(context.WithOptions(ctx, c.Options), pkg)
+
 	c.NewFiles = nil
 	for _, sourceFile := range pkg.SourceFiles {
-		ctx.Open(sourceFile)
+		fileCtx := context.WithType(thisCtx, sourceFile)
 		identifiers := make(map[string]*lang.Identifier)
 		for i, statement := range sourceFile.Statements {
 			if decl := statement.GetDeclaration(); decl != nil {
@@ -48,9 +51,8 @@ func (c *GenericCompiler) Compile(ctx *context.Context, pkg *lang.Package) error
 				case *lang.Declaration_StructDecl:
 					structDecl := decl.GetStructDecl()
 					if structDecl != nil {
-						ids, err := c.CompileStruct(ctx, structDecl)
+						ids, err := c.CompileStruct(fileCtx, structDecl)
 						if err != nil {
-							ctx.Close()
 							return err
 						}
 						addIdentifiers(identifiers, ids)
@@ -58,9 +60,8 @@ func (c *GenericCompiler) Compile(ctx *context.Context, pkg *lang.Package) error
 				case *lang.Declaration_TypeAliasDecl:
 					typeAliasDecl := decl.GetTypeAliasDecl()
 					if typeAliasDecl != nil {
-						ids, structDecl, err := c.CompileTypeAlias(ctx, typeAliasDecl)
+						ids, structDecl, err := c.CompileTypeAlias(fileCtx, typeAliasDecl)
 						if err != nil {
-							ctx.Close()
 							return err
 						}
 						addIdentifiers(identifiers, ids)
@@ -91,8 +92,6 @@ func (c *GenericCompiler) Compile(ctx *context.Context, pkg *lang.Package) error
 			}
 			sourceFile.ResolvedIdentifiers = append(sourceFile.ResolvedIdentifiers, id)
 		}
-
-		ctx.Close()
 	}
 
 	for _, file := range c.NewFiles {
@@ -101,20 +100,17 @@ func (c *GenericCompiler) Compile(ctx *context.Context, pkg *lang.Package) error
 	return nil
 }
 
-func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructDecl) ([]*lang.Identifier, error) {
+func (c *GenericCompiler) CompileStruct(ctx context.Context, decl *lang.StructDecl) ([]*lang.Identifier, error) {
 	// generic struct will not be compiled
 	if len(decl.GenericParameters) > 0 {
 		return decl.ResolvedIdentifiers, nil
 	}
 
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
+	thisCtx := context.WithType(ctx, decl)
 
 	identifiers := make(map[string]*lang.Identifier)
 	for _, structDecl := range decl.StructDecls {
-		ids, err := c.CompileStruct(ctx, structDecl)
+		ids, err := c.CompileStruct(thisCtx, structDecl)
 		if err != nil {
 			return nil, err
 		}
@@ -123,7 +119,7 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 
 	typeAliasDecls := make([]*lang.TypeAliasDecl, 0, len(decl.TypeAliasDecls))
 	for _, typeAliasDecl := range decl.TypeAliasDecls {
-		ids, structDecl, err := c.CompileTypeAlias(ctx, typeAliasDecl)
+		ids, structDecl, err := c.CompileTypeAlias(thisCtx, typeAliasDecl)
 		if err != nil {
 			return nil, err
 		}
@@ -152,7 +148,7 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 
 		var inherits []*lang.NominalType
 		for _, inherit := range decl.Type.Inherits {
-			t, err := c.compileNominalType(ctx, inherit, identifiers)
+			t, err := c.compileNominalType(thisCtx, inherit, identifiers)
 			if err != nil {
 				return nil, err
 			}
@@ -165,8 +161,8 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 		decl.Type.Inherits = inherits
 
 		for _, field := range decl.Type.Fields {
-
-			t, err := c.compileNominalType(ctx, field.Type, identifiers)
+			fieldCtx := context.WithType(thisCtx, field)
+			t, err := c.compileNominalType(fieldCtx, field.Type, identifiers)
 			if err != nil {
 				return nil, err
 			}
@@ -184,22 +180,18 @@ func (c *GenericCompiler) CompileStruct(ctx *context.Context, decl *lang.StructD
 	return decl.ResolvedIdentifiers, nil
 }
 
-func (c *GenericCompiler) CompileTypeAlias(ctx *context.Context, decl *lang.TypeAliasDecl) ([]*lang.Identifier, *lang.StructDecl, error) {
+func (c *GenericCompiler) CompileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) ([]*lang.Identifier, *lang.StructDecl, error) {
 	// generic type alias will not be compiled
 	if len(decl.GenericParameters) > 0 {
 		return decl.ResolvedIdentifiers, nil, nil
 	}
-
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
+	thisCtx := context.WithType(ctx, decl)
 
 	identifierIndex := make(IdentifierIndex)
 	decl.Type.Attributes = append(decl.Type.Attributes, decl.Attributes...)
 	decl.Type.Attributes = lang.SetStringAttribute(decl.Type.Attributes, lang.OriginalTypeAliasName, decl.Name)
 
-	newType, err := c.compileNominalType(ctx, decl.Type, identifierIndex)
+	newType, err := c.compileNominalType(thisCtx, decl.Type, identifierIndex)
 	if err != nil || newType == nil {
 		return decl.ResolvedIdentifiers, nil, err
 	}
@@ -217,7 +209,7 @@ func (c *GenericCompiler) CompileTypeAlias(ctx *context.Context, decl *lang.Type
 	return nil, nil, err
 }
 
-func (c *GenericCompiler) compileNominalType(ctx *context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {
+func (c *GenericCompiler) compileNominalType(ctx context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {
 	if len(nominalType.GenericArguments) == 0 {
 		return nominalType, nil
 	}
@@ -227,8 +219,9 @@ func (c *GenericCompiler) compileNominalType(ctx *context.Context, nominalType *
 		return nil, fmt.Errorf("the nominal type (%s) is not instantiated", nominalType.GetGenericFullName())
 	}
 
+	thisCtx := context.WithType(ctx, nominalType)
 	for i, argument := range nominalType.GenericArguments {
-		a, err := c.compileNominalType(ctx, argument, index)
+		a, err := c.compileNominalType(thisCtx, argument, index)
 		if err != nil {
 			return nil, err
 		}
@@ -243,7 +236,7 @@ func (c *GenericCompiler) compileNominalType(ctx *context.Context, nominalType *
 		if decl.IsOpacity() { // like Array<String>
 			return nominalType, nil
 		}
-		if newType, err := c.compileStructType(ctx, nominalType, index); err != nil {
+		if newType, err := c.compileStructType(thisCtx, nominalType, index); err != nil {
 			return nil, err
 		} else {
 			newType.Attributes = nominalType.Attributes
@@ -252,7 +245,7 @@ func (c *GenericCompiler) compileNominalType(ctx *context.Context, nominalType *
 	}
 
 	if decl := typeDecl.GetTypeAliasDecl(); decl != nil {
-		if newType, err := c.compileTypeAlias(ctx, nominalType, index); err != nil {
+		if newType, err := c.compileTypeAlias(thisCtx, nominalType, index); err != nil {
 			return nil, err
 		} else {
 			newType.Attributes = lang.MergeAttributes(newType.Attributes, nominalType.Attributes)
@@ -263,7 +256,7 @@ func (c *GenericCompiler) compileNominalType(ctx *context.Context, nominalType *
 	return nominalType, nil
 }
 
-func (c *GenericCompiler) instantiateNominalType(ctx *context.Context, nominalType *lang.NominalType, instantiates map[string]*lang.NominalType) *lang.NominalType {
+func (c *GenericCompiler) instantiateNominalType(ctx context.Context, nominalType *lang.NominalType, instantiates map[string]*lang.NominalType) *lang.NominalType {
 	if instantiate, ok := instantiates[nominalType.Name]; ok {
 		return &lang.NominalType{
 			Name:            instantiate.Name,
@@ -290,7 +283,7 @@ func (c *GenericCompiler) instantiateNominalType(ctx *context.Context, nominalTy
 	return newType
 }
 
-func (c *GenericCompiler) compileStructType(ctx *context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {
+func (c *GenericCompiler) compileStructType(ctx context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {
 	structDecl := nominalType.GetTypeDeclaration().GetStructDecl()
 	if structDecl == nil {
 		return nominalType, nil
@@ -373,12 +366,13 @@ func (c *GenericCompiler) compileStructType(ctx *context.Context, nominalType *l
 		}
 		resolvedIdentifiers = append(resolvedIdentifiers, id)
 	}
-	ctxPkg := ctx.GetPackage()
+
+	ctxPkg :=  context.Package(ctx)
 	for _, argument := range nominalType.GenericArguments {
 		id := ctxPkg.GetResolvedIdentifier(argument.GetFullName())
 		if id == nil {
 			id = argument.NewIdentifier()
-			logs.Warnw("failed to found the resolved identifier in the file","compiledType", compiledDecl.GetFullName(), "argument", argument.GetFullName())
+			logs.Warnw("failed to found the resolved identifier in the file", "compiledType", compiledDecl.GetFullName(), "argument", argument.GetFullName())
 		}
 		resolvedIdentifiers = append(resolvedIdentifiers, id)
 	}
@@ -426,12 +420,12 @@ func (c *GenericCompiler) updateStructIdentifier(compiledDecl *lang.StructDecl, 
 	return id
 }
 
-func (c *GenericCompiler) generateSourceFile(ctx *context.Context, typeName string, index IdentifierIndex) (*lang.SourceFile, *lang.NominalType, error) {
+func (c *GenericCompiler) generateSourceFile(ctx context.Context, typeName string, index IdentifierIndex) (*lang.SourceFile, *lang.NominalType, error) {
 	var file *lang.SourceFile
-	ctxFile := ctx.GetSourceFile()
+	ctxFile := context.SourceFile(ctx)
 	fileName := strcase.ToSnake(typeName) + ".mojo"
 	fileFullName := path2.Join(path2.Dir(ctxFile.FullName), fileName)
-	file = ctx.GetPackage().GetSourceFile(fileFullName)
+	file = context.Package(ctx).GetSourceFile(fileFullName)
 	if file == nil {
 		for _, f := range c.NewFiles {
 			if f.FullName == fileFullName {
@@ -458,7 +452,7 @@ func (c *GenericCompiler) generateSourceFile(ctx *context.Context, typeName stri
 	return file, nil, nil
 }
 
-func (c *GenericCompiler) compileTypeAlias(ctx *context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {
+func (c *GenericCompiler) compileTypeAlias(ctx context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {
 	aliasDecl := nominalType.GetTypeDeclaration().GetTypeAliasDecl()
 	if aliasDecl == nil {
 		return nil, fmt.Errorf("the nominal type (%s) do NOT have the resolved declaration", nominalType.GetFullName())
@@ -519,12 +513,12 @@ func (c *GenericCompiler) compileTypeAlias(ctx *context.Context, nominalType *la
 		}
 
 		var resolvedIdentifiers []*lang.Identifier
-		ctxPkg := ctx.GetPackage()
+		ctxPkg := context.Package(ctx)
 		for _, argument := range compiledType.GenericArguments {
 			id := ctxPkg.GetResolvedIdentifier(argument.GetFullName())
 			if id == nil {
 				id = argument.NewIdentifier()
-				logs.Warnw("failed to found the resolved identifier in the file","compiledType", compiledDecl.GetFullName(), "argument", argument.GetFullName())
+				logs.Warnw("failed to found the resolved identifier in the file", "compiledType", compiledDecl.GetFullName(), "argument", argument.GetFullName())
 			}
 			resolvedIdentifiers = append(resolvedIdentifiers, id)
 		}

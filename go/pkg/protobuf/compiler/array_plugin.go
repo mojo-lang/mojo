@@ -6,7 +6,8 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"strings"
 )
 
@@ -59,13 +60,13 @@ func CompileArrayToStruct(t *lang.NominalType) (*lang.StructDecl, error) {
 	return s, nil
 }
 
-func (p *ArrayPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
+func (p *ArrayPlugin) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) {
 	s, err := CompileArrayToStruct(t)
 	if err != nil {
 		return "", "", err
 	}
 
-	err = CompileStruct(ctx, s, descriptor.NewMessageDescriptor(ctx.GetFileDescriptor()))
+	err = CompileStruct(ctx, s, descriptor.NewMessageDescriptor(context.FileDescriptor(ctx)))
 	if err != nil {
 		return "", "", errors.New(fmt.Sprintf("failed to compile the arry field in %s.%s: %s",
 			"", //ctx.Message.Name,

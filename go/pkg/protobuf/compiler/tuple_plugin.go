@@ -4,7 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
 type TuplePlugin struct {
@@ -20,7 +21,7 @@ func init() {
 	plugins["mojo.core.Tuple"] = p
 }
 
-func (p *TuplePlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
+func (p *TuplePlugin) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) {
 	if t.Name != "Tuple" {
 		return "", "", errors.New(fmt.Sprintf("type invalid, need Tuple, but is %s", t.Name))
 	}
@@ -53,7 +54,7 @@ func (p *TuplePlugin) Compile(ctx *Context, t *lang.NominalType) (string, string
 		})
 	}
 
-	file := ctx.GetFileDescriptor()
+	file := context.FileDescriptor(ctx)
 	descriptor := descriptor.NewMessageDescriptor(file)
 	err = CompileStruct(ctx, s, descriptor)
 	if err != nil {

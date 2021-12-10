@@ -8,14 +8,15 @@ import (
 type GoPackageNameCompiler struct {
 }
 
-func (g *GoPackageNameCompiler) Compile(ctx *context.Context, pkg *lang.Package) error {
+func (g *GoPackageNameCompiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
 	goPkgName := pkg.GoPackageName()
 	if goPkgName == pkg.Name {
 		return nil
 	}
 
+	//thisCtx := context.WithType(ctx, pkg)
 	for _, sourceFile := range pkg.SourceFiles {
-		ctx.Open(sourceFile)
+		//fileCtx := context.WithType(ctx, thisCtx)
 		for _, statement := range sourceFile.Statements {
 			if decl := statement.GetDeclaration(); decl != nil {
 				switch decl.Declaration.(type) {
@@ -29,7 +30,6 @@ func (g *GoPackageNameCompiler) Compile(ctx *context.Context, pkg *lang.Package)
 				}
 			}
 		}
-		ctx.Close()
 	}
 	return nil
 }

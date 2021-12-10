@@ -7,22 +7,20 @@ import (
 
 // nominal type alias process except the Generic Type
 type TypeAliasCompiler struct {
-	Options map[string]interface{}
 }
 
-func (c *TypeAliasCompiler) Compile(ctx *context.Context, pkg *lang.Package) error {
+func (c *TypeAliasCompiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
+	thisCtx := context.WithType(ctx, pkg)
 	for _, sourceFile := range pkg.SourceFiles {
-		ctx.Open(sourceFile)
+		fileCtx := context.WithType(thisCtx, sourceFile)
 		identifiers := make(map[string]*lang.Identifier)
 		for _, statement := range sourceFile.Statements {
 			if decl := statement.GetDeclaration(); decl != nil {
 				switch decl.Declaration.(type) {
 				case *lang.Declaration_StructDecl:
-					structDecl := decl.GetStructDecl()
-					if structDecl != nil {
-						ids, err := c.CompileStruct(ctx, structDecl)
+					if structDecl := decl.GetStructDecl(); structDecl != nil {
+						ids, err := c.CompileStruct(fileCtx, structDecl)
 						if err != nil {
-							ctx.Close()
 							return err
 						}
 						addIdentifiers(identifiers, ids)
@@ -52,21 +50,16 @@ func (c *TypeAliasCompiler) Compile(ctx *context.Context, pkg *lang.Package) err
 			}
 			sourceFile.ResolvedIdentifiers = append(sourceFile.ResolvedIdentifiers, id)
 		}
-
-		ctx.Close()
 	}
 	return nil
 }
 
-func (c *TypeAliasCompiler) CompileStruct(ctx *context.Context, decl *lang.StructDecl) ([]*lang.Identifier, error) {
-	ctx.Open(decl)
-	defer func() {
-		ctx.Close()
-	}()
+func (c *TypeAliasCompiler) CompileStruct(ctx context.Context, decl *lang.StructDecl) ([]*lang.Identifier, error) {
+	thisCtx := context.WithType(ctx, decl)
 
 	identifiers := make(map[string]*lang.Identifier)
 	for _, structDecl := range decl.StructDecls {
-		ids, err := c.CompileStruct(ctx, structDecl)
+		ids, err := c.CompileStruct(thisCtx, structDecl)
 		if err != nil {
 			return nil, err
 		}
@@ -162,7 +155,7 @@ func (c *TypeAliasCompiler) CompileStruct(ctx *context.Context, decl *lang.Struc
 	return decl.ResolvedIdentifiers, nil
 }
 
-func (c *TypeAliasCompiler) compileNominalType(ctx *context.Context, nominalType *lang.NominalType) ([]*lang.Identifier, *lang.NominalType, error) {
+func (c *TypeAliasCompiler) compileNominalType(ctx context.Context, nominalType *lang.NominalType) ([]*lang.Identifier, *lang.NominalType, error) {
 	_ = ctx
 	if nominalType == nil || nominalType.TypeDeclaration == nil {
 		return nil, nil, nil

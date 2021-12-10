@@ -7,7 +7,8 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
-	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"strings"
 )
 
@@ -24,10 +25,10 @@ func init() {
 	plugins["mojo.core.Union"] = p
 }
 
-func (p *UnionPlugin) Compile(ctx *Context, t *lang.NominalType) (string, string, error) {
+func (p *UnionPlugin) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) {
 	s := ConstructBoxedUnion(t)
 	if s != nil {
-		file := ctx.GetFileDescriptor()
+		file := context.FileDescriptor(ctx)
 		msgDescriptor := desc.NewMessageDescriptor(file)
 		err := CompileStruct(ctx, s, msgDescriptor)
 		if err != nil {

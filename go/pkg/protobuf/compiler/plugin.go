@@ -9,19 +9,20 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	desc "github.com/mojo-lang/mojo/go/pkg/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
 type Plugin interface {
-	Compile(ctx *Context, t *lang.NominalType) (string, string, error)
+	Compile(ctx context.Context, t *lang.NominalType) (string, string, error)
 }
 
 var plugins = make(map[string][]Plugin)
 
 // type alias transform
 // type: Scalar, Enum, Struct
-func CompileNominalType(ctx *Context, t *lang.NominalType) (string, string, error) { // type, typeName, error
-	pkg := ctx.GetPackage()
+func CompileNominalType(ctx context.Context, t *lang.NominalType) (string, string, error) { // type, typeName, error
+	pkg := context.Package(ctx)
 	getName := func() string {
 		if pkg != nil && pkg.FullName == t.PackageName {
 			return t.Name
@@ -65,12 +66,8 @@ func CompileNominalType(ctx *Context, t *lang.NominalType) (string, string, erro
 	return tp, getName(), nil
 }
 
-func CompileEnum(ctx *Context, decl *lang.EnumDecl, enumDescriptor *desc.EnumDescriptor) error {
-	ctx.Open(decl, enumDescriptor)
-	defer func() {
-		ctx.Close()
-	}()
-
+func CompileEnum(ctx context.Context, decl *lang.EnumDecl, enumDescriptor *desc.EnumDescriptor) error {
+	thisCtx := context.WithDescriptor(context.WithType(ctx, decl), enumDescriptor)
 	enumDescriptor.Name = &decl.Name
 
 	for i, e := range decl.Type.Enumerators {
@@ -97,10 +94,10 @@ func CompileEnum(ctx *Context, decl *lang.EnumDecl, enumDescriptor *desc.EnumDes
 		enumDescriptor.Value = append(enumDescriptor.Value, value)
 	}
 
-	message := ctx.GetParentMessageDescriptor()
-	file := ctx.GetFileDescriptor()
+	message := context.MessageDescriptor(thisCtx)
+	file := context.FileDescriptor(thisCtx)
 	if message == nil && file != nil {
-		if register, ok := ctx.GetOption("register_enum").(bool); !ok || register {
+		if register, ok := ctx.Value("register_enum").(bool); !ok || register {
 			file.Enums = append(file.Enums, enumDescriptor)
 		}
 	}
@@ -110,38 +107,36 @@ func CompileEnum(ctx *Context, decl *lang.EnumDecl, enumDescriptor *desc.EnumDes
 
 const inheritSourceFileKey = "inherit-source-file"
 
-func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.MessageDescriptor) error {
-	ctx.Open(decl, structDescriptor)
-	defer func() {
-		ctx.Close()
-	}()
+func CompileStruct(ctx context.Context, decl *lang.StructDecl, structDescriptor *desc.MessageDescriptor) error {
+	thisCtx := context.WithDescriptor(context.WithType(ctx, decl), structDescriptor)
 
-	file := ctx.GetFileDescriptor()
+	file := context.FileDescriptor(ctx)
 	structDescriptor.Name = &decl.Name
 
-	ctx.SetOption("register_enum", false)
-	for _, e := range decl.EnumDecls {
-		enum := desc.NewEnumDescriptor(file)
-		err := CompileEnum(ctx, e, enum)
-		if err != nil {
-			return errors.New(fmt.Sprintf("failed to parse the inner enum decl %s in %s: %s", e.Name, decl.Name, err.Error()))
+	{
+		enumCtx := context.WithValues(thisCtx, "register_enum", false)
+		for _, e := range decl.EnumDecls {
+			enum := desc.NewEnumDescriptor(file)
+			err := CompileEnum(enumCtx, e, enum)
+			if err != nil {
+				return errors.New(fmt.Sprintf("failed to parse the inner enum decl %s in %s: %s", e.Name, decl.Name, err.Error()))
+			}
+			structDescriptor.AddInnerEnum(enum)
 		}
-
-		structDescriptor.AddInnerEnum(enum)
 	}
-	ctx.DeleteOption("register_enum")
 
-	ctx.SetOption("register_struct", false)
-	for _, s := range decl.StructDecls {
-		msg := desc.NewMessageDescriptor(file)
-		err := CompileStruct(ctx, s, msg)
-		if err != nil {
-			return errors.New(fmt.Sprintf("failed to parse the inner struct decl %s in %s: %s", s.Name, decl.Name, err.Error()))
+	{
+		structCtx := context.WithValues(thisCtx, "register_struct", false)
+		for _, s := range decl.StructDecls {
+			msg := desc.NewMessageDescriptor(file)
+			err := CompileStruct(structCtx, s, msg)
+			if err != nil {
+				return errors.New(fmt.Sprintf("failed to parse the inner struct decl %s in %s: %s", s.Name, decl.Name, err.Error()))
+			}
+
+			structDescriptor.AddInnerMessage(msg)
 		}
-
-		structDescriptor.AddInnerMessage(msg)
 	}
-	ctx.DeleteOption("register_struct")
 
 	if decl.Type != nil {
 		if decl.IsBoxed() {
@@ -156,20 +151,20 @@ func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.M
 				Type:     valueType,
 			}
 			valueType.Attributes = lang.SetIntegerAttribute(valueType.Attributes, "number", 1)
-			if err := compileStructFields(ctx, []*lang.ValueDecl{valueDecl}, structDescriptor); err != nil {
+			if err := compileStructFields(thisCtx, []*lang.ValueDecl{valueDecl}, structDescriptor); err != nil {
 				return err
 			}
 		} else {
 			for _, inherit := range decl.Type.Inherits {
 				//ctx.SetOption(inheritSourceFileKey, make(map[string]bool))
-				if err := compileStructInherit(ctx, inherit, structDescriptor); err != nil {
+				if err := compileStructInherit(thisCtx, inherit, structDescriptor); err != nil {
 					//ctx.DeleteOption(inheritSourceFileKey)
 					return err
 				}
 				//ctx.DeleteOption(inheritSourceFileKey)
 			}
 
-			if err := compileStructFields(ctx, decl.Type.Fields, structDescriptor); err != nil {
+			if err := compileStructFields(thisCtx, decl.Type.Fields, structDescriptor); err != nil {
 				return err
 			}
 		}
@@ -182,8 +177,8 @@ func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.M
 		}
 	}
 
-	if register, ok := ctx.GetOption("register_struct").(bool); !ok || register {
-		if msg := ctx.GetParentMessageDescriptor(); msg != nil {
+	if register, ok := ctx.Value("register_struct").(bool); !ok || register {
+		if msg := context.MessageDescriptor(ctx); msg != nil {
 			if !msg.IsMessageExist(*structDescriptor.Name) {
 				msg.AddInnerMessage(structDescriptor)
 			}
@@ -198,7 +193,7 @@ func CompileStruct(ctx *Context, decl *lang.StructDecl, structDescriptor *desc.M
 }
 
 //TODO 不在相同的package下的inherit不需要进行Boxed类型的处理
-func compileStructInherit(ctx *Context, inherit *lang.NominalType, descriptor *desc.MessageDescriptor) error {
+func compileStructInherit(ctx context.Context, inherit *lang.NominalType, descriptor *desc.MessageDescriptor) error {
 	decl := inherit.TypeDeclaration.GetStructDecl()
 	if decl == nil || decl.Type == nil {
 		return nil
@@ -218,7 +213,7 @@ func compileStructInherit(ctx *Context, inherit *lang.NominalType, descriptor *d
 		}
 	}
 
-	file := ctx.GetFileDescriptor()
+	file := context.FileDescriptor(ctx)
 	//FIXME remove the inherit dependency file to protobuf file imports
 	//sourceFiles, ok := ctx.GetOption(inheritSourceFileKey).(map[string]bool)
 	//if !ok {
@@ -236,16 +231,12 @@ func compileStructInherit(ctx *Context, inherit *lang.NominalType, descriptor *d
 	return compileStructFields(ctx, decl.Type.Fields, descriptor)
 }
 
-func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *desc.MessageDescriptor) error {
-	scope := lang.GetScope(ctx.GetCurrent())
+func compileStructFields(ctx context.Context, fields []*lang.ValueDecl, msgDescriptor *desc.MessageDescriptor) error {
+	scope := lang.GetScope(context.TypeValue(ctx))
 
 	for _, field := range fields {
 		member := &descriptor.FieldDescriptorProto{}
-		ctx.Open(field, member)
-		close := func() {
-			ctx.Close()
-		}
-
+		fieldCtx := context.WithDescriptor(context.WithType(ctx, field), member)
 		member.Name = &field.Name
 
 		if decl := field.Type.TypeDeclaration; decl != nil {
@@ -266,9 +257,8 @@ func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *
 				argument := field.Type.GenericArguments[0]
 				repeated := descriptor.FieldDescriptorProto_LABEL_REPEATED
 				member.Label = &repeated
-				t, name, err := CompileNominalType(ctx, argument)
+				t, name, err := CompileNominalType(fieldCtx, argument)
 				if err != nil {
-					close()
 					return errors.New(
 						fmt.Sprintf("failed to compile the type %s: %s", argument.Name, err.Error()))
 				}
@@ -276,7 +266,6 @@ func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *
 				member.Type = &pType
 				member.TypeName = &pName
 			} else {
-				close()
 				return errors.New(fmt.Sprintf("unexpect array type of %s", field.Type.Name))
 			}
 		case "Union":
@@ -284,9 +273,8 @@ func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *
 			// TODO 如果number标号在Union类型上，则需要将该Union转换成message；如果不是则使用oneof
 			if len(field.Type.GenericArguments) > 0 {
 				if _, err := field.GetIntegerAttribute("number"); err == nil {
-					t, name, err := CompileNominalType(ctx, field.Type)
+					t, name, err := CompileNominalType(fieldCtx, field.Type)
 					if err != nil {
-						close()
 						return errors.New(
 							fmt.Sprintf("failed to compile the type %s: %s", field.Type.Name, err.Error()))
 					}
@@ -302,10 +290,17 @@ func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *
 				})
 
 				index := int32(len(msgDescriptor.OneofDecl) - 1)
-				for i, argument := range field.Type.GenericArguments {
-					t, name, err := CompileNominalType(ctx, argument)
+				for _, argument := range field.Type.GenericArguments {
+					var argumentCtx context.Context
+					if member == nil {
+						member = &descriptor.FieldDescriptorProto{}
+						argumentCtx = context.WithDescriptor(fieldCtx, member)
+					} else {
+						argumentCtx = fieldCtx
+					}
+
+					t, name, err := CompileNominalType(argumentCtx, argument)
 					if err != nil {
-						close()
 						return errors.New(
 							fmt.Sprintf("failed to compile the type %s: %s", argument.Name, err.Error()))
 					}
@@ -319,31 +314,23 @@ func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *
 
 					number, err := lang.GetIntegerAttribute(argument.Attributes, "number")
 					if err != nil {
-						close()
 						return errors.New("has not set the number in field")
 					}
 					if number <= 0 {
-						close()
 						return errors.New("number attribute value must be positive")
 					}
 					n := int32(number)
 					member.Number = &n
 
 					msgDescriptor.Field = append(msgDescriptor.Field, member)
-					close()
-
-					if i < len(field.Type.GenericArguments)-1 {
-						member = &descriptor.FieldDescriptorProto{}
-						ctx.Open(field, member)
-					}
+					member = nil
 				}
 
 				continue
 			}
 		default:
-			t, name, err := CompileNominalType(ctx, field.Type)
+			t, name, err := CompileNominalType(fieldCtx, field.Type)
 			if err != nil {
-				close()
 				return errors.New(
 					fmt.Sprintf("failed to compile the type %s: %s", field.Type.Name, err.Error()))
 			}
@@ -355,11 +342,9 @@ func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *
 
 		number, err := lang.GetIntegerAttribute(field.Type.Attributes, "number")
 		if err != nil {
-			close()
 			return errors.New("has not set the number in field")
 		}
 		if number <= 0 {
-			close()
 			return errors.New("number attribute value must be positive")
 		}
 		n := int32(number)
@@ -368,19 +353,18 @@ func compileStructFields(ctx *Context, fields []*lang.ValueDecl, msgDescriptor *
 		alias, err := lang.GetStringAttribute(field.Type.Attributes, "alias")
 		if err == nil {
 			desc.SetStringFieldOption(mojo.E_Alias, alias)(member)
-			addOptionsDependency(ctx)
+			addOptionsDependency(fieldCtx)
 		}
 
 		msgDescriptor.Field = append(msgDescriptor.Field, member)
-		close()
 	}
 	return nil
 }
 
 const OptionsDependency = "mojo/mojo.proto"
 
-func addOptionsDependency(ctx *Context) {
-	fileDescriptor := ctx.GetFileDescriptor()
+func addOptionsDependency(ctx context.Context) {
+	fileDescriptor := context.FileDescriptor(ctx)
 	for _, dep := range fileDescriptor.Dependency {
 		if dep == OptionsDependency {
 			return
