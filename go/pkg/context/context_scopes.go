@@ -12,10 +12,12 @@ func WithScope(ctx context.Context) context.Context {
 }
 
 func WithScopeType(ctx context.Context, value interface{}) context.Context {
-	if scope := lang.GetScope(value); scope != nil {
-		return WithValues(WithType(ctx, value), ScopeKey, scope)
+	scope := lang.GetScope(value)
+	if scope == nil {
+		scope = lang.NewScope()
+		lang.SetScope(value, scope)
 	}
-	return WithScope(WithType(ctx, value))
+	return WithValues(WithType(ctx, value), ScopeKey, scope)
 }
 
 func Scope(ctx context.Context) *lang.Scope {

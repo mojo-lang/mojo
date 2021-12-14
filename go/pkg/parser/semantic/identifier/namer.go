@@ -5,6 +5,7 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/plugin"
+	"strings"
 )
 
 func init() {
@@ -20,14 +21,25 @@ func (p *Namer) Parse(ctx context.Context, pkg *lang.Package) error {
 		return nil
 	}
 
-	thisCtx := context.WithScope(context.WithType(ctx, pkg))
+	thisCtx := context.WithScopeType(ctx, pkg)
 	thisScope := context.Scope(thisCtx)
 
 	defer func() {
-		pkg.Scope = thisScope
 		scope := context.Scope(ctx)
 		if scope != nil { // not global
 			for key, value := range thisScope.Identifiers {
+				// for core identifiers like String, ignore mojo.String to Global scope
+				// only support mojo.core.String, String, core.String to Global scope
+				if pkg.Name == "mojo" {
+					if value.PackageName == "mojo.core" && !strings.HasPrefix(key, "core.") {
+						scope.Identifiers[key] = value
+						continue
+					}
+					// add core.String to Global scope
+					if strings.HasPrefix(value.PackageName, "mojo.") {
+						scope.Identifiers[key] = value
+					}
+				}
 				scope.Identifiers[pkg.Name+"."+key] = value
 
 				if value.PackageName == "mojo.core" {
@@ -53,11 +65,10 @@ func (p *Namer) Parse(ctx context.Context, pkg *lang.Package) error {
 }
 
 func (p *Namer) ParserSourceFile(ctx context.Context, file *lang.SourceFile) error {
-	thisCtx := context.WithScope(context.WithType(ctx, file))
+	thisCtx := context.WithScopeType(ctx, file)
 	thisScope := context.Scope(thisCtx)
 
 	defer func() {
-		file.Scope = thisScope
 		scope := context.Scope(ctx)
 		for key, value := range thisScope.Identifiers {
 			scope.Identifiers[key] = value
@@ -112,7 +123,7 @@ func (p *Namer) ParserSourceFile(ctx context.Context, file *lang.SourceFile) err
 }
 
 func (p *Namer) ParseStruct(ctx context.Context, decl *lang.StructDecl) error {
-	thisCtx := context.WithScope(context.WithType(ctx, decl))
+	thisCtx := context.WithScopeType(ctx, decl)
 	thisScope := context.Scope(thisCtx)
 
 	file := context.SourceFile(ctx)
@@ -151,7 +162,6 @@ func (p *Namer) ParseStruct(ctx context.Context, decl *lang.StructDecl) error {
 		identifier.SourceFileName = file.FullName
 	}
 
-	decl.Scope = thisScope
 	for key, value := range thisScope.Identifiers {
 		if value.Kind != lang.Identifier_KIND_GENERIC_PARAMETER {
 			context.Scope(ctx).Identifiers[decl.Name+"."+key] = value
@@ -169,7 +179,7 @@ func (p *Namer) ParseEnum(ctx context.Context, decl *lang.EnumDecl) error {
 }
 
 func (p *Namer) ParseTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) error {
-	thisCtx := context.WithScope(context.WithType(ctx, decl))
+	thisCtx := context.WithScopeType(ctx, decl)
 	thisScope := context.Scope(thisCtx)
 
 	file := context.SourceFile(ctx)
@@ -181,12 +191,11 @@ func (p *Namer) ParseTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) er
 		identifier.SourceFileName = file.FullName
 	}
 
-	decl.Scope = thisScope
 	return nil
 }
 
 func (p *Namer) ParseInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
-	thisCtx := context.WithScope(context.WithType(ctx, decl))
+	thisCtx := context.WithScopeType(ctx, decl)
 	thisScope := context.Scope(thisCtx)
 
 	file := context.SourceFile(ctx)
@@ -200,7 +209,6 @@ func (p *Namer) ParseInterface(ctx context.Context, decl *lang.InterfaceDecl) er
 	//	p.ParseTypeAlias(ctx, declaration)
 	//}
 
-	decl.Scope = thisScope
 	for key, value := range thisScope.Identifiers {
 		context.Scope(ctx).Identifiers[decl.Name+"."+key] = value
 	}

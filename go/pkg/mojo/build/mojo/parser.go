@@ -146,6 +146,7 @@ func (p *Parser) parse(pkg *lang.Package) error {
 		return err
 	}
 
+	root.ExtraInfo = pkg.ExtraInfo
 	return nil
 }
 

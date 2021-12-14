@@ -112,7 +112,7 @@ func parseFile(fileName string, content []byte, xxxSkip []string, injections Inj
 
 		structName := typeSpec.Name.Name
 		for _, field := range structDecl.Fields.List {
-			if len(field.Names) > 0 {
+			if len(field.Names) > 0 && field.Tag != nil {
 				name := field.Names[0].Name
 				currentTag := field.Tag.Value
 				area := textArea{
