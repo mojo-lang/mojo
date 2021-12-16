@@ -17,6 +17,11 @@ func (w *WellKnowTypeCompiler) Compile(ctx context.Context, nominalType *lang.No
 			Type:   openapi.Schema_TYPE_STRING,
 			Format: "url",
 		}), nil
+	case core.DurationTypeName:
+		return openapi.NewReferenceableSchema(&openapi.Schema{
+			Type:   openapi.Schema_TYPE_STRING,
+			Format: "Duration",
+		}), nil
 	default:
 		return nil, nil
 	}
