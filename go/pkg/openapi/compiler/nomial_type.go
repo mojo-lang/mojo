@@ -48,7 +48,7 @@ func (n *NominalTypeCompiler) GetSchema(s *openapi.ReferenceableSchema) *openapi
 func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*openapi.ReferenceableSchema, error) {
 	schema := &openapi.Schema{}
 
-	attribute := lang.GetAttribute(nominalType.Attributes, "type_format")
+	attribute := lang.GetAttribute(nominalType.Attributes, core.TypeFormatAttributeName)
 	if attribute != nil && len(attribute.GenericArguments) > 0 {
 		return compileNominalType(ctx, attribute.GenericArguments[0])
 	}
@@ -58,16 +58,20 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
 		core.Int8TypeName, core.Int16TypeName, core.Int32TypeName, core.Int64TypeName,
 		core.IntTypeName, core.UIntTypeName:
 		schema.Type = openapi.Schema_TYPE_INTEGER
-		if nominalType.Name != "Int" || nominalType.Name != "UInt" {
+		if nominalType.Name != "Int" && nominalType.Name != "UInt" {
 			schema.Format = strings.ToLower(nominalType.Name)
 		}
-	case core.Float32TypeName, core.Float64TypeName, core.FloatTypeName, core.DoubleTypeName:
+	case core.Float32TypeName, core.FloatTypeName:
 		schema.Type = openapi.Schema_TYPE_NUMBER
+		schema.Format = "float32"
+	case core.Float64TypeName, core.DoubleTypeName:
+		schema.Type = openapi.Schema_TYPE_NUMBER
+		schema.Format = "float64"
 	case core.BoolTypeName:
 		schema.Type = openapi.Schema_TYPE_BOOLEAN
 	case core.StringTypeName:
 		schema.Type = openapi.Schema_TYPE_STRING
-		if constant, _ := lang.GetStringAttribute(nominalType.Attributes, "const"); len(constant) > 0 {
+		if constant, _ := lang.GetStringAttribute(nominalType.Attributes, core.ConstAttributeName); len(constant) > 0 {
 			schema.Enum = []*core.Value{
 				core.NewStringValue(constant),
 			}
@@ -83,6 +87,12 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
 
 		schema.Type = openapi.Schema_TYPE_ARRAY
 		schema.Items = s
+		if val, err := lang.GetIntegerAttribute(nominalType.Attributes, core.MinLengthAttributeName); err == nil {
+			schema.MinItems = uint64(val)
+		}
+		if val, err := lang.GetIntegerAttribute(nominalType.Attributes, core.MaxLengthAttributeName); err == nil {
+			schema.MaxItems = uint64(val)
+		}
 	case core.MapTypeName:
 		schema.Type = openapi.Schema_TYPE_OBJECT
 		s, err := compileNominalType(ctx, nominalType.GenericArguments[1])
@@ -98,6 +108,12 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
 				return nil, err
 			}
 			schemas = append(schemas, s)
+		}
+		if alias, _ := lang.GetStringAttribute(nominalType.Attributes, lang.OriginalTypeAliasName); len(alias) > 0 {
+			typeAlias := context.TypeAliasDecl(ctx)
+			if typeAlias != nil {
+				schema.Title = typeAlias.GetFullName()
+			}
 		}
 		schema.OneOf = schemas
 	case core.TimestampTypeName, core.DateTimeTypeName:

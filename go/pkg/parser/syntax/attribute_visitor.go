@@ -1,7 +1,6 @@
 package syntax
 
 import (
-	"fmt"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"strconv"
@@ -53,8 +52,6 @@ func (a *AttributeVisitor) VisitAttribute(ctx *AttributeContext) interface{} {
 			if argumentClause != nil {
 				if arguments, ok := argumentClause.Accept(a).([]*lang.Argument); ok {
 					attribute.Arguments = arguments
-				} else {
-					logs.Warnw("failed to parse arguments in attribute", "attribute", attribute.Name, "code", argumentClause.GetText(), "source", attributeIdentifier.GetStart().GetSource())
 				}
 			}
 			return attribute
@@ -77,19 +74,45 @@ func (a *AttributeVisitor) VisitAttributeIdentifier(ctx *AttributeIdentifierCont
 }
 
 func (a *AttributeVisitor) VisitAttributeArgumentClause(ctx *AttributeArgumentClauseContext) interface{} {
-	expressionList := ctx.Expressions()
-	if expressionList != nil {
-		visitor := &ExpressionsVisitor{}
-		if expressions, ok := expressionList.Accept(visitor).([]*lang.Expression); ok {
-			var arguments []*lang.Argument
-			for _, expr := range expressions {
-				arguments = append(arguments, &lang.Argument{Value: expr})
-			}
-			return arguments
+	arguments := ctx.AttributeArguments()
+	if arguments != nil {
+		if as, ok := arguments.Accept(a).([]*lang.Argument); ok {
+			return as
 		} else {
-			fmt.Print("===> error")
+			logs.Warnw("failed to parse attribute arguments", "code", arguments.GetText(), "source", arguments.GetStart().GetSource())
 		}
 	}
 
+	return nil
+}
+
+func (a *AttributeVisitor) VisitAttributeArguments(ctx *AttributeArgumentsContext) interface{} {
+	argumentCtxs := ctx.AllAttributeArgument()
+	if argumentCtxs != nil {
+		var arguments []*lang.Argument
+		for _, argumentCtx := range argumentCtxs {
+			if argument, ok := argumentCtx.Accept(a).(*lang.Argument); ok {
+				arguments = append(arguments, argument)
+			} else {
+				logs.Warnw("failed to parse attribute argument", "code", argumentCtx.GetText(), "source", argumentCtx.GetStart().GetSource())
+			}
+		}
+		return arguments
+	}
+	return nil
+}
+
+func (a *AttributeVisitor) VisitAttributeArgument(ctx *AttributeArgumentContext) interface{} {
+	if expression := GetExpression(ctx.Expression()); expression != nil {
+		argument := &lang.Argument{
+			StartPosition: GetPosition(ctx.GetStart()),
+			EndPosition:   GetPosition(ctx.GetStop()),
+			Value:         expression,
+		}
+		if identifier := ctx.LabelIdentifier(); identifier != nil {
+			argument.Label = identifier.GetText()
+		}
+		return argument
+	}
 	return nil
 }

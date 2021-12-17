@@ -201,6 +201,8 @@ github.com/mojo-lang/core/go v0.0.0-20211129015033-278d409edb1c h1:a40epNieW7YwV
 github.com/mojo-lang/core/go v0.0.0-20211129015033-278d409edb1c/go.mod h1:wxoQGiRDiWUOr780A65MRvGpgRvOMswKGMzHFtgVGI8=
 github.com/mojo-lang/core/go v0.0.0-20211210011915-b1eb7bdf1cb3 h1:8uW6QG+e/AlijNa/2NsfG0gVH9cvxmEClVoAp2RqUr4=
 github.com/mojo-lang/core/go v0.0.0-20211210011915-b1eb7bdf1cb3/go.mod h1:/OxRlMkDnfHCVDWGTVW+ZD7OUgV3AMfuH5rhdSxpzCM=
+github.com/mojo-lang/core/go v0.0.0-20211217054003-aa2685cde731 h1:gg92arbX6BHAVZZMRQKWyFoYl7cA+Lx5lwv2SCegKio=
+github.com/mojo-lang/core/go v0.0.0-20211217054003-aa2685cde731/go.mod h1:/OxRlMkDnfHCVDWGTVW+ZD7OUgV3AMfuH5rhdSxpzCM=
 github.com/mojo-lang/document/go v0.0.0-20211117011435-ec994bc588a8/go.mod h1:UvN11oZksSczoJcxCR8CSsEhxt/rNbTtWq89Qlh6oMM=
 github.com/mojo-lang/document/go v0.0.0-20211120065328-ad33b3c38ee1 h1:oASH/ffbS2Xgnu2Dhc4MXhPloWLzOWrPiTSr/bLP65c=
 github.com/mojo-lang/document/go v0.0.0-20211120065328-ad33b3c38ee1/go.mod h1:UvN11oZksSczoJcxCR8CSsEhxt/rNbTtWq89Qlh6oMM=
@@ -214,6 +216,8 @@ github.com/mojo-lang/document/go v0.0.0-20211129015358-9010fc5a9680 h1:7sT48CcJW
 github.com/mojo-lang/document/go v0.0.0-20211129015358-9010fc5a9680/go.mod h1:ouM91mJV494ZKFkV0/nGf9dOnoxSaw3vusyeaQx19oQ=
 github.com/mojo-lang/document/go v0.0.0-20211210013335-fcd578ecb1ad h1:p9zc4pWl+fYuAovd0+Uyv2ZpYCHoKrf63/SxQV9UWPQ=
 github.com/mojo-lang/document/go v0.0.0-20211210013335-fcd578ecb1ad/go.mod h1:ykkysfwfzZtBo4yylMb8X7osP+o5bcJLpEhpMmL9Tfo=
+github.com/mojo-lang/document/go v0.0.0-20211217054243-5f99395f7054 h1:/XgfKtgJXKMD8rOwaZVAoBXkXxdtddyx3uqqOLycGnQ=
+github.com/mojo-lang/document/go v0.0.0-20211217054243-5f99395f7054/go.mod h1:VQ10MLbKXbWYRhiSAbVQjb4Dv4ZGUSoApPo0OpuNcmU=
 github.com/mojo-lang/geom/go v0.0.0-20211121061729-3cc68d7658b2 h1:Hol891mkMBcrNrCHfJf60BYiBchybSW36W9w30ah38g=
 github.com/mojo-lang/geom/go v0.0.0-20211121061729-3cc68d7658b2/go.mod h1:5yzkd4aL13WaoZhvDCGdHHvSYlli5jyZ5UZYuRlL8qI=
 github.com/mojo-lang/lang/go v0.0.0-20211121055402-3790212d18a1 h1:fL1GWQhv1wmmws6xmhCTi+JGp6IU5ax0yG8zDte76HA=
@@ -228,6 +232,8 @@ github.com/mojo-lang/lang/go v0.0.0-20211129022017-9b32d1b31431 h1:tAFjfGb3XrV6w
 github.com/mojo-lang/lang/go v0.0.0-20211129022017-9b32d1b31431/go.mod h1:boweUQyXCfUksDm+bh7OZvb6jjcSsuvZGdtr7+v/DEI=
 github.com/mojo-lang/lang/go v0.0.0-20211210013609-a3dcb5f122fa h1:LTChLtl323xD3R29Vj+jUJXW9VfQsvrnVbqqTcim91w=
 github.com/mojo-lang/lang/go v0.0.0-20211210013609-a3dcb5f122fa/go.mod h1:wF1b4rj30NQQe0qa1MR6EUJhq2kO8w/55u99BtDXBAk=
+github.com/mojo-lang/lang/go v0.0.0-20211217055646-e3356b15107b h1:NFHZAjGTh8S31EEJ/I4RNW1tIaj8glyIfNZVJh80CVE=
+github.com/mojo-lang/lang/go v0.0.0-20211217055646-e3356b15107b/go.mod h1:hyO4oBFCUJCgjtnHCwQo7C4nAbhE/2yKYyyB1UxKOcw=
 github.com/mojo-lang/openapi/go v0.0.0-20211120065151-f7baa0230daa h1:5xVT46+WtRMzbny5VDDOlA87ugifStwa3rRGwMLm5uI=
 github.com/mojo-lang/openapi/go v0.0.0-20211120065151-f7baa0230daa/go.mod h1:bDR1dhE8hPGdbhgAdoQurY7TbgeVpuw5+AvpUM3YlFg=
 github.com/mojo-lang/openapi/go v0.0.0-20211121061554-b18badff02d2 h1:KOVxPY5bEHLD3x84Me0ufWmb32orRMWc23CEi6+XHqM=
@@ -240,6 +246,8 @@ github.com/mojo-lang/openapi/go v0.0.0-20211129022249-94a7eec4d399 h1:FKN7aC4+Tn
 github.com/mojo-lang/openapi/go v0.0.0-20211129022249-94a7eec4d399/go.mod h1:KxDk52ijQK8nnitVugOGpxYL3xkxBsP7k4ns/wqx+M4=
 github.com/mojo-lang/openapi/go v0.0.0-20211210013806-e7d00315e5a7 h1:Po63QBMbMv5Jel2Iuz9GYcUB7NJbLEQeTNW2gfBQwcg=
 github.com/mojo-lang/openapi/go v0.0.0-20211210013806-e7d00315e5a7/go.mod h1:xm0bvPUpovTi0kfBta7phDhcBkSk5wLFScLbNEjR25c=
+github.com/mojo-lang/openapi/go v0.0.0-20211217055758-40cd53ea6bdb h1:KwTtuDPt+MTUyQSOo7mzCiAO5Fw/iu6Cdl7zGE8uhEA=
+github.com/mojo-lang/openapi/go v0.0.0-20211217055758-40cd53ea6bdb/go.mod h1:ZxaSPKDF/8l8hxD3OCYxoLLiYKvm0/o8b4ttQL+i+eI=
 github.com/mojo-lang/protobuf/go v0.0.0-20211210014427-8f36e37870ae h1:bfuV+Ud91rlqSlacpEbPifzvNWIcWSjP2nXM/zhIwSM=
 github.com/mojo-lang/protobuf/go v0.0.0-20211210014427-8f36e37870ae/go.mod h1:27TkCmG3KfgMEsSASlW/LHNORmrVvIGvEvYhEMUt8LY=
 github.com/mojo-lang/yaml v0.0.0-20210912132100-a6a60fbf6f20 h1:H/tfkRZKtlFK0/WeOsgsfimP2G9fd8jQxAqX5M/gc/4=

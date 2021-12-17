@@ -371,6 +371,14 @@ func (v *BaseMojoParserVisitor) VisitAttributeArgumentClause(ctx *AttributeArgum
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitAttributeArgument(ctx *AttributeArgumentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitAttributeArguments(ctx *AttributeArgumentsContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitAttributes(ctx *AttributesContext) interface{} {
 	return v.VisitChildren(ctx)
 }

@@ -19,6 +19,41 @@ func TestAttributeVisitor_VisitAttribute_Number(t *testing.T) {
 	assert.Equal(t, int64(1), attribute.Arguments[0].GetIntegerLiteralExpr().Value)
 }
 
+func TestAttributeVisitor_VisitAttribute_Object(t *testing.T) {
+	const typeAttribute = `@t(foo: 11, bar: 22) type Mailbox{}`
+
+	parser := &Parser{}
+	file, err := parser.ParseString(typeAttribute)
+
+	assert.NoError(t, err)
+	attribute := getAttribute(file)
+	assert.NotNil(t, attribute)
+
+	assert.Equal(t, "t", attribute.Name)
+
+	assert.Equal(t, "foo", attribute.Arguments[0].Label)
+	assert.Equal(t, int64(11), attribute.Arguments[0].GetIntegerLiteralExpr().Value)
+
+	assert.Equal(t, "bar", attribute.Arguments[1].Label)
+	assert.Equal(t, int64(22), attribute.Arguments[1].GetIntegerLiteralExpr().Value)
+}
+
+func TestAttributeVisitor_VisitAttribute_Array(t *testing.T) {
+	const typeAttribute = `@foo("test1", "test2", "test3") type Mailbox{}`
+
+	parser := &Parser{}
+	file, err := parser.ParseString(typeAttribute)
+
+	assert.NoError(t, err)
+	attribute := getAttribute(file)
+	assert.NotNil(t, attribute)
+
+	assert.Equal(t, "foo", attribute.Name)
+	assert.Equal(t, "test1", attribute.Arguments[0].GetStringLiteralExpr().Value)
+	assert.Equal(t, "test2", attribute.Arguments[1].GetStringLiteralExpr().Value)
+	assert.Equal(t, "test3", attribute.Arguments[2].GetStringLiteralExpr().Value)
+}
+
 func TestAttributeVisitor_VisitAttribute_FieldNumber(t *testing.T) {
 	const typeAttribute = `type Mailbox { user : String @1 }`
 

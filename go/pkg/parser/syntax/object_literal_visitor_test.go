@@ -7,9 +7,7 @@ import (
 )
 
 func TestObjectLiteralVisitor_VisitObjectLiteral(t *testing.T) {
-	const typeAttribute = `
-@default({"key": "value"})
-type Mailbox{}`
+	const typeAttribute = `{"key": "value"}`
 
 	parser := &Parser{}
 	file, err := parser.ParseString(typeAttribute)
@@ -18,16 +16,16 @@ type Mailbox{}`
 	expr := getExpression(file)
 	assert.NotNil(t, expr)
 
-	map := make(map[string]string)
+	object := make(map[string]string)
 	expr.EvalStringMapLiteral(func(key string, value *lang.Expression) error {
 		v, err := value.EvalStringLiteral()
 		if err != nil {
 			return err
 		}
-		map[key] = v
+		object[key] = v
 		return nil
 	})
 
-	assert.NotEmpty(t, map)
-	assert.Equal(t, "value", map["key"])
+	assert.NotEmpty(t, object)
+	assert.Equal(t, "value", object["key"])
 }

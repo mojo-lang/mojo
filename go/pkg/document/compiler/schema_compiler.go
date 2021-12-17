@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"fmt"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/document/go/pkg/mojo/document"
@@ -14,7 +15,10 @@ type SchemaCompiler struct {
 }
 
 func wrapCode(code string) *document.Inline {
-	return document.NewCodeInlineFrom(code)
+	if len(code) > 0 {
+		return document.NewCodeInlineFrom(code)
+	}
+	return document.NewTextInline(code)
 }
 
 func wrapCodeToBlock(code string) *document.Block {
@@ -36,7 +40,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 			Header:    document.NewTextTableHeader("字段", "类型", "格式类型", "是否必须", "默认值", "说明"),
 		}
 
-		fieldNames := decl.GetStructDecl().FieldNames()
+		fieldNames := decl.GetStructDecl().FieldNames(lang.FieldNamOptionUseAlias)
 		if decl == nil {
 			fieldNames = schema.FieldNames(s.Components.Schemas)
 		}
@@ -136,10 +140,26 @@ func (s *SchemaCompiler) compileFields(ctx context.Context, fieldNames []string,
 
 		row.Vals = append(row.Vals, document.NewTextTableCell("")) // 默认值
 
+		// const
+		constVal := ""
+		if constSchema := property.GetSchemaOf(s.Components.Schemas); len(constSchema.Enum) == 1 {
+			constVal = constSchema.Enum[0].GetString()
+			if len(constVal) > 0 {
+				constVal = fmt.Sprintf("the value must be const to \"%s\"", constVal)
+			}
+		}
+
 		// 说明
 		doc := property.GetDescription(s.Components)
 		if doc != nil {
+			if len(constVal) > 0 {
+				doc.Blocks = append(doc.Blocks, document.NewTextPlainBlock(constVal))
+			}
 			row.Vals = append(row.Vals, &document.Table_Cell{Vals: doc.Blocks})
+		} else {
+			if len(constVal) > 0 {
+				row.Vals = append(row.Vals, document.NewTextTableCell(constVal))
+			}
 		}
 
 		table.Rows = append(table.Rows, row)

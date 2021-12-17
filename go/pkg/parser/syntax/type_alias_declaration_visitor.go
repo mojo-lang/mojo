@@ -32,7 +32,9 @@ func (s *TypeAliasDeclarationVisitor) VisitTypeAliasDeclaration(ctx *TypeAliasDe
 }
 
 func (s *TypeAliasDeclarationVisitor) VisitTypeAliasAssignment(ctx *TypeAliasAssignmentContext) interface{} {
-	return GetType(ctx.Type_())
+	nominal := GetType(ctx.Type_())
+	nominal.Attributes = GetAttributes(ctx.Attributes())
+	return nominal
 }
 
 func (s *TypeAliasDeclarationVisitor) VisitTypeAliasName(ctx *TypeAliasNameContext) interface{} {

@@ -280,6 +280,12 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#attributeArgumentClause.
 	VisitAttributeArgumentClause(ctx *AttributeArgumentClauseContext) interface{}
 
+	// Visit a parse tree produced by MojoParser#attributeArgument.
+	VisitAttributeArgument(ctx *AttributeArgumentContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#attributeArguments.
+	VisitAttributeArguments(ctx *AttributeArgumentsContext) interface{}
+
 	// Visit a parse tree produced by MojoParser#attributes.
 	VisitAttributes(ctx *AttributesContext) interface{}
 

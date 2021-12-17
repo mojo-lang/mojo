@@ -81,7 +81,7 @@ func (b *BoxedUnion) compileObjectField(field *lang.ValueDecl, structDecl *lang.
 	}
 
 	if len(b.Discriminator) > 0 && !strings.HasPrefix(b.Discriminator, "@") {
-		names := field.GetType().GetTypeDeclaration().GetStructDecl().FieldNames()
+		names := field.GetType().GetTypeDeclaration().GetStructDecl().FieldNames(lang.FieldNamOptionDefault)
 		for _, name := range names {
 			if name == b.Discriminator {
 				unionField.HasDiscriminatorField = true

@@ -181,6 +181,16 @@ func (e *ExpressionVisitor) VisitLiteralExpression(ctx *LiteralExpressionContext
 		return mapCtx.Accept(NewMapLiteralVisitor())
 	}
 
+	stringOperatorLiteralCtx := ctx.StringOperatorLiteral()
+	if stringOperatorLiteralCtx != nil {
+		return stringOperatorLiteralCtx.Accept(NewStringOperatorLiteralVisitor())
+	}
+
+	numericOperatorLiteralCtx := ctx.NumericOperatorLiteral()
+	if numericOperatorLiteralCtx != nil {
+		return numericOperatorLiteralCtx.Accept(NewNumericOperatorLiteralVisitor())
+	}
+
 	return nil
 }
 
@@ -235,8 +245,7 @@ func (e *ExpressionVisitor) VisitNumericLiteral(ctx *NumericLiteralContext) inte
 
 	floatCtx := ctx.FLOAT_LITERAL()
 	if floatCtx != nil {
-		v, err := strconv.ParseFloat(floatCtx.GetText(), 64)
-		if err != nil {
+		if v, err := strconv.ParseFloat(floatCtx.GetText(), 64); err == nil {
 			return lang.NewFloatLiteralExpression(&lang.FloatLiteralExpr{
 				StartPosition: nil,
 				EndPosition:   nil,
@@ -261,8 +270,8 @@ func (e *ExpressionVisitor) VisitIntegerLiteral(ctx *IntegerLiteralContext) inte
 		}
 
 		return &lang.IntegerLiteralExpr{
-			StartPosition: nil,
-			EndPosition:   nil,
+			StartPosition: GetPosition(ctx.GetStart()),
+			EndPosition:   GetPosition(ctx.GetStop()),
 			Kind:          0,
 			Implicit:      false,
 			IsNegative:    false,

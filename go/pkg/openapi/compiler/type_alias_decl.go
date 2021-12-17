@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
@@ -14,6 +15,12 @@ func CompileTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDecl) (*opena
 
 	thisCtx := context.WithType(ctx, decl)
 	components := context.Components(thisCtx)
+
+	disableGenerated := false
+	if disableGenerate, _ := lang.GetDisableGenerateAttribute(decl.Attributes); len(disableGenerate) > 0 {
+		disableGenerated = disableGenerate.Including("openapi", "")
+	}
+
 	// add an dummy schema first for recursion reference
 	components.Schemas[decl.GetFullName()] = &openapi.Schema{
 		Title: "DUMMY",
@@ -26,7 +33,17 @@ func CompileTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDecl) (*opena
 	}
 
 	components.Schemas[decl.GetFullName()] = schema.GetSchema()
-	return schema, nil
+
+	if disableGenerated {
+		delete(components.Schemas, decl.GetFullName())
+		return schema, nil
+	} else {
+		return openapi.NewReferencedSchema(&openapi.Reference{
+			Ref: &core.Url{
+				Fragment: openapi.ReferenceRoot + decl.GetFullName(),
+			},
+		}), nil
+	}
 }
 
 func compileTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDecl) (*openapi.ReferenceableSchema, error) {

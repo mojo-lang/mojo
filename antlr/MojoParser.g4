@@ -153,7 +153,7 @@ genericArgument : type_ attributes?;
 //gt : {_input.LT(1).getText().equals(">")}? operator ;
 
 // GRAMMAR OF A DECLARATION
-declaration : document? (attributes EOL)?
+declaration : document? (attributes EOL?)?
       ( packageDeclaration
       | importDeclaration
       | constantDeclaration
@@ -380,12 +380,17 @@ attribute
  ;
 
 attributeIdentifier : ((packageIdentifier DOT)? attributeName);
-attributeName : VALUE_IDENTIFIER | keywordAsIdentifierInLabels;
+attributeName : labelIdentifier;
 
-attributeArgumentClause : LPAREN (EOL*  expressions)? EOL* RPAREN  ;
+attributeArgumentClause
+    : LPAREN (EOL* attributeArguments)? EOL* RPAREN
+    ;
+
+attributeArgument : (labelIdentifier COLON)? expression;
+attributeArguments : attributeArgument (eov EOL* attributeArgument)* eov?;
 
 // GRAMMAR OF AN ATTRIBUTES
-attributes : attribute (EOL* attribute)* ;
+attributes : attribute (EOL? attribute)* ;
 
 // Expressions
 

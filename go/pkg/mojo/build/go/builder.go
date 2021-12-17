@@ -49,13 +49,12 @@ func GoModTidy(pwd string) error {
 	cmd := exec.Command("go", "mod", "tidy")
 	cmd.Dir = pwd
 
-	logs.Debug("begin to running go mod tidy")
+	logs.Info("begin to running go mod tidy")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		logs.Errorw("failed to run go mod tidy", "error", string(out))
 		return err
 	}
-	logs.Debug("finish to run go mod tidy")
-
+	logs.Info("finish to run go mod tidy")
 	return nil
 }
