@@ -7,9 +7,7 @@ import (
 )
 
 func TestObjectLiteralVisitor_VisitMapLiteral(t *testing.T) {
-	const typeAttribute = `
-@default({"key": "value"})
-type Mailbox{}`
+	const typeAttribute = `{"key": "value"}`
 
 	parser := &Parser{}
 	file, err := parser.ParseString(typeAttribute)

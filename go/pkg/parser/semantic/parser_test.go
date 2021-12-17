@@ -15,7 +15,7 @@ func TestParser_TreePackages(t *testing.T) {
 		{FullName: "jo.bar.car.dir.far"},
 	}
 
-	root := treePackages(packages)
+	root := treePackages(packages, nil)
 	assert.Equal(t, true, root.IsGlobal())
 	assert.Equal(t, "foo", root.Children[0].FullName)
 	assert.Equal(t, "jo", root.Children[1].FullName)
@@ -31,7 +31,7 @@ func TestParser_TreePackages_Single(t *testing.T) {
 		{FullName: "foo.bar"},
 	}
 
-	root := treePackages(packages)
+	root := treePackages(packages, nil)
 	assert.Equal(t, true, root.IsGlobal())
 	assert.Equal(t, "foo", root.Children[0].FullName)
 	assert.Equal(t, "foo.bar", root.Children[0].Children[0].FullName)

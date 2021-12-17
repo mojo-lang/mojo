@@ -25,8 +25,8 @@ func TestPackageDeclarationVisitor_VisitPackageDeclaration(t *testing.T) {
 	assert.Equal(t, "Apache", pkg.License)
 	assert.Equal(t, "../core", pkg.Dependencies["mojo.core"].Path)
 	assert.Equal(t, "../document", pkg.Dependencies["mojo.document"].Path)
-	assert.Equal(t, int32(1), pkg.Dependencies["mojo.core"].Version.Range.Min.Minor)
-	assert.Equal(t, int32(2), pkg.Dependencies["mojo.core"].Version.Range.Max.Minor)
+	assert.Equal(t, uint64(1), pkg.Dependencies["mojo.core"].Version.Range.Min.Minor)
+	assert.Equal(t, uint64(2), pkg.Dependencies["mojo.core"].Version.Range.Max.Minor)
 }
 
 func TestPackageDeclarationVisitor_VisitPackageDeclaration2(t *testing.T) {
@@ -46,8 +46,8 @@ func TestPackageDeclarationVisitor_VisitPackageDeclaration2(t *testing.T) {
 	assert.NotNil(t, pkg)
 
 	assert.Equal(t, "Apache", pkg.License)
-	assert.Equal(t, int32(1), pkg.Dependencies["mojo.core"].Version.Range.Min.Minor)
-	assert.Equal(t, int32(2), pkg.Dependencies["mojo.core"].Version.Range.Max.Minor)
+	assert.Equal(t, uint64(1), pkg.Dependencies["mojo.core"].Version.Range.Min.Minor)
+	assert.Equal(t, uint64(2), pkg.Dependencies["mojo.core"].Version.Range.Max.Minor)
 }
 
 func getPackage(file *lang.SourceFile) *lang.Package {
