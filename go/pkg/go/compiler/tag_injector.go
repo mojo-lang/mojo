@@ -27,183 +27,86 @@
 package compiler
 
 import (
-	"fmt"
-	"github.com/mojo-lang/mojo/go/pkg/util"
+	"context"
+	"github.com/fatih/structtag"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/go/pkg/go/compiler/inject"
 	"go/ast"
-	"go/parser"
-	"go/token"
-	"regexp"
 	"strings"
 )
 
-var (
-	rInject = regexp.MustCompile("`.+`$")
-	rTags   = regexp.MustCompile(`[\w_]+:"[^"]+"`)
-)
+type TagChanger = func(ctx context.Context, field *ast.Field, tags *structtag.Tags)
+type TagInjections map[string]structtag.Tags
 
 type TagInjector struct {
+	inject.Injector
+
+	tagChangers []TagChanger
 }
 
-func (t TagInjector) InjectTag(fileName string, content []byte, xxxSkip []string, injections Injections) ([]byte, error) {
-	areas, err := parseFile(fileName, content, xxxSkip, injections)
-	if err != nil {
-		return nil, err
+func NewTagInjector(xxxSkip []string, injections TagInjections) *TagInjector {
+	injector := &TagInjector{}
+
+	injector.OnStructField = injector.onStructField
+
+	if len(xxxSkip) > 0 {
+		injector.tagChangers = append(injector.tagChangers, func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
+			fieldName := field.Names[0].Name
+			if strings.HasPrefix(fieldName, "XXX") {
+				for _, skip := range xxxSkip {
+					tags.Set(&structtag.Tag{
+						Key:  skip,
+						Name: "-",
+					})
+				}
+			}
+		})
+	}
+	if len(injections) > 0 {
+		injector.tagChangers = append(injector.tagChangers, func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
+			structName := inject.GetStructName(ctx)
+			fieldName := field.Names[0].Name
+
+			key := structName + "." + fieldName
+			if injection, ok := injections[key]; ok {
+				for _, tag := range injection.Tags() {
+					tags.Set(tag)
+				}
+			}
+		})
 	}
 
-	return injectFile(content, areas), nil
+	return injector
 }
 
-type textArea struct {
-	Start      int
-	End        int
-	CurrentTag string
-	InjectTag  string
+func (i *TagInjector) RegisterTagChanger(changer TagChanger) *TagInjector {
+	i.tagChangers = append(i.tagChangers, changer)
+	return i
 }
 
-type TagItem struct {
-	Key   string
-	Value string
-}
-
-type TagItems []TagItem
-
-type Injections map[string]TagItems
-
-func parseFile(fileName string, content []byte, xxxSkip []string, injections Injections) (areas []textArea, err error) {
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, fileName, content, parser.ParseComments)
-	if err != nil {
+func (i *TagInjector) onStructField(ctx context.Context, field *ast.Field, areaAppender func(area inject.Area)) {
+	if field.Tag == nil {
 		return
 	}
 
-	for _, decl := range f.Decls {
-		// check if is generic declaration
-		genDecl, ok := decl.(*ast.GenDecl)
-		if !ok {
-			continue
+	tagValue := core.RemoveQuote(field.Tag.Value, "`")
+	tags, _ := structtag.Parse(tagValue)
+	if tags == nil {
+		return
+	}
+
+	if len(i.tagChangers) > 0 {
+		for _, changer := range i.tagChangers {
+			changer(ctx, field, tags)
 		}
 
-		var typeSpec *ast.TypeSpec
-		for _, spec := range genDecl.Specs {
-			if ts, tsOK := spec.(*ast.TypeSpec); tsOK {
-				typeSpec = ts
-				break
-			}
-		}
-
-		// skip if can't get type spec
-		if typeSpec == nil {
-			continue
-		}
-
-		// not a struct, skip
-		structDecl, ok := typeSpec.Type.(*ast.StructType)
-		if !ok {
-			continue
-		}
-
-		var skipTags TagItems
-		for _, skip := range xxxSkip {
-			skipTags = append(skipTags, TagItem{
-				Key:   skip,
-				Value: "-",
+		newTag := tags.String()
+		if tagValue != newTag {
+			areaAppender(&inject.TextArea{
+				Start:   field.Tag.Pos(),
+				End:     field.Tag.End(),
+				Content: "`" + newTag + "`",
 			})
 		}
-
-		structName := typeSpec.Name.Name
-		for _, field := range structDecl.Fields.List {
-			if len(field.Names) > 0 && field.Tag != nil {
-				name := field.Names[0].Name
-				currentTag := field.Tag.Value
-				area := textArea{
-					Start:      int(field.Pos()),
-					End:        int(field.End()),
-					CurrentTag: currentTag[1 : len(currentTag)-1],
-				}
-
-				if len(skipTags) > 0 && strings.HasPrefix(name, "XXX") {
-					area.InjectTag = skipTags.format()
-					areas = append(areas, area)
-					//logs.Infow("inject field tag", "file", fileName, "struct", structName, "field", name, "injection", area.InjectTag)
-					continue
-				}
-
-				key := structName + "." + name
-				if injection, ok := injections[key]; ok {
-					area.InjectTag = injection.format()
-					areas = append(areas, area)
-					//logs.Infow("inject field tag", "file", fileName, "struct", structName, "field", name, "injection", area.InjectTag)
-				}
-			}
-		}
 	}
-	//logs.Infof("parsed file %s, number of fields to inject custom tags: %d", fileName, len(areas))
-	return
-}
-
-func injectFile(input []byte, areas []textArea) []byte {
-	// inject custom tags from tail of file first to preserve order
-	for i := range areas {
-		area := areas[len(areas)-i-1]
-		//logs.Debugf("inject custom tag %q to expression %q", area.InjectTag, string(input[area.Start-1:area.End-1]))
-		input = injectTag(input, area)
-	}
-
-	return input
-}
-
-func (t TagItems) format() string {
-	var tags []string
-	for _, item := range t {
-		item.Value = util.RemoveQuote(item.Value)
-		tags = append(tags, fmt.Sprintf(`%s:"%s"`, item.Key, item.Value))
-	}
-	return strings.Join(tags, " ")
-}
-
-func (t TagItems) override(items TagItems) TagItems {
-	var overrided []TagItem
-	for i := range t {
-		var dup = -1
-		for j := range items {
-			if t[i].Key == items[j].Key {
-				dup = j
-				break
-			}
-		}
-		if dup == -1 {
-			overrided = append(overrided, t[i])
-		} else {
-			overrided = append(overrided, items[dup])
-			items = append(items[:dup], items[dup+1:]...)
-		}
-	}
-	return append(overrided, items...)
-}
-
-func newTagItems(tag string) TagItems {
-	var items []TagItem
-	splitted := rTags.FindAllString(tag, -1)
-
-	for _, t := range splitted {
-		sepPos := strings.Index(t, ":")
-		items = append(items, TagItem{
-			Key:   t[:sepPos],
-			Value: t[sepPos+1:],
-		})
-	}
-	return items
-}
-
-func injectTag(contents []byte, area textArea) (injected []byte) {
-	expr := make([]byte, area.End-area.Start)
-	copy(expr, contents[area.Start-1:area.End-1])
-	cti := newTagItems(area.CurrentTag)
-	iti := newTagItems(area.InjectTag)
-	ti := cti.override(iti)
-	expr = rInject.ReplaceAll(expr, []byte(fmt.Sprintf("`%s`", ti.format())))
-	injected = append(injected, contents[:area.Start-1]...)
-	injected = append(injected, expr...)
-	injected = append(injected, contents[area.End-1:]...)
-	return
 }

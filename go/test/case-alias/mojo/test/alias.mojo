@@ -26,3 +26,15 @@ type Foo {
 
     u: U<String, Int32> @5
 }
+
+type H<T> = [T]
+
+type J = H<String>
+
+type Foo2<T> {
+    bar: T @1
+}
+
+type Bar = Foo2<String>
+
+type FooBar: Foo2<Bar>

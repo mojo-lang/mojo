@@ -5,6 +5,7 @@ type Data struct {
 	BoxedDictionaries []*BoxedMap
 	BoxedUnions       []*BoxedUnion
 	Enums             []*Enum
+	DbJSONs           []*DbJSON
 	GoMod             *GoMod
 
 	NameIndex map[string]bool

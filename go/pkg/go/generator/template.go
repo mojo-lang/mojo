@@ -34,6 +34,9 @@ var goEnumFmtFile string
 //go:embed template/go/ENUM.json.go.tmpl
 var goEnumJsonFile string
 
+//go:embed template/go/DB_JSON.sql.go.tmpl
+var goDbJSONSqlFile string
+
 //go:embed template/go.mod.tmpl
 var goModFile string
 

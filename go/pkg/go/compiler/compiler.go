@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"strings"
 )
 
@@ -24,7 +25,16 @@ type Compiler struct {
 	*Data
 }
 
-func (c *Compiler) Compile(decl interface{}) error {
+func (c *Compiler) CompileDbJSON(ctx context.Context, decl *lang.StructDecl) error {
+	dbJSONs := make(DbJSONs, 0, 0)
+	dbJSONs.CompileStruct(ctx, decl)
+	if len(dbJSONs) > 0 {
+		c.Data.DbJSONs = append(c.Data.DbJSONs, dbJSONs...)
+	}
+	return nil
+}
+
+func (c *Compiler) Compile(ctx context.Context, decl interface{}) error {
 	switch declaration := decl.(type) {
 	case *lang.StructDecl:
 		if union, err := lang.GetBoolAttribute(declaration.Attributes, "union"); union && err != nil {

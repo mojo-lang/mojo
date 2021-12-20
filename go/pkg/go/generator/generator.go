@@ -16,36 +16,14 @@ func packageToPath(pkg string) string {
 	return path2.Join("pkg", lang.PackageNameToPath(pkg))
 }
 
-func (g *Generator) generateDecl(decl compiler.Decl, extTemplate string, fmtTemplate string, jsonTemplate string) error {
-	if len(extTemplate) > 0 {
-		str, err := ApplyTemplate("goExtFile", extTemplate, decl, FuncMap)
+func (g *Generator) generateDecl(decl compiler.Decl, fileType string, template string) error {
+	if len(template) > 0 {
+		str, err := ApplyTemplate("goFile"+fileType, template, decl, FuncMap)
 		if err != nil {
 			return err
 		}
 		g.Files = append(g.Files, &util.GeneratedFile{
-			Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+".ext.go"),
-			Content: FormatCode(str),
-		})
-	}
-
-	if len(fmtTemplate) > 0 {
-		str, err := ApplyTemplate("goFmtFile", fmtTemplate, decl, FuncMap)
-		if err != nil {
-			return err
-		}
-		g.Files = append(g.Files, &util.GeneratedFile{
-			Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+".fmt.go"),
-			Content: FormatCode(str),
-		})
-	}
-
-	if len(jsonTemplate) > 0 {
-		str, err := ApplyTemplate("goJsonFile", jsonTemplate, decl, FuncMap)
-		if err != nil {
-			return err
-		}
-		g.Files = append(g.Files, &util.GeneratedFile{
-			Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+".json.go"),
+			Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+"."+fileType+".go"),
 			Content: FormatCode(str),
 		})
 	}
@@ -54,16 +32,21 @@ func (g *Generator) generateDecl(decl compiler.Decl, extTemplate string, fmtTemp
 
 func (g *Generator) Generate(data *compiler.Data) error {
 	for _, decl := range data.BoxedArrays {
-		g.generateDecl(decl, "", "", goArrayJsonFile)
+		g.generateDecl(decl, "json", goArrayJsonFile)
 	}
 
 	for _, decl := range data.Enums {
-		g.generateDecl(decl, "", goEnumFmtFile, goEnumJsonFile)
+		g.generateDecl(decl, "fmt", goEnumJsonFile)
+		g.generateDecl(decl, "json", goEnumJsonFile)
 	}
 
 	//for _, decl := range data.BoxedUnions {
 	//	g.generateDecl(decl, "", "", goUnionJsonFile)
 	//}
+
+	for _, decl := range data.DbJSONs {
+		g.generateDecl(decl, "sql", goDbJSONSqlFile)
+	}
 
 	if data.GoMod != nil {
 		str, err := ApplyTemplate("goModFile", goModFile, data.GoMod, FuncMap)

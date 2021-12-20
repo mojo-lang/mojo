@@ -538,11 +538,12 @@ func (g *Generator) generateMessage(message *descriptor.MessageDescriptor) {
 		if field.Options != nil {
 			g.S(" [")
 			fieldOptions := mojo.FieldOptionsExtensions()
-			for i, option := range fieldOptions {
+			first := true
+			for _, option := range fieldOptions {
 				switch option.TypeDescriptor().Kind() {
 				case protoreflect.BoolKind:
 					if v := descriptor.GetBoolFieldOption(field, option); v != nil {
-						if i > 0 {
+						if !first {
 							g.S(", ")
 						}
 						if *v {
@@ -550,22 +551,25 @@ func (g *Generator) generateMessage(message *descriptor.MessageDescriptor) {
 						} else {
 							g.S("(", mojo.GetOptionFullName(option), ")=false")
 						}
+						first = false
 					}
 				case protoreflect.Int32Kind, protoreflect.Int64Kind,
 					protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind,
 					protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
 					if v := descriptor.GetInt64FieldOption(field, option); v != nil {
-						if i > 0 {
+						if !first {
 							g.S(", ")
 						}
 						g.S("(", mojo.GetOptionFullName(option), ")=", *v)
+						first = false
 					}
 				case protoreflect.StringKind:
 					if v := descriptor.GetStringFieldOption(field, option); len(v) > 0 {
-						if i > 0 {
+						if !first {
 							g.S(", ")
 						}
 						g.S("(", mojo.GetOptionFullName(option), ")=", "\"", v, "\"")
+						first = false
 					}
 				}
 			}

@@ -239,7 +239,7 @@ func CompileParameters(ctx context.Context, method *lang.FunctionDecl, httpMetho
 
 	params := method.Signature.Parameters
 	if pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination"); pagination {
-		params = append(params, langcompiler.GeneratePaginationParameters()...)
+		params = append(params, langcompiler.PaginationRequestFields()...)
 	}
 
 	for _, param := range params {

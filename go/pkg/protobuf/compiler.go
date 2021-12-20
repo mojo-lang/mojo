@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	langcompiler "github.com/mojo-lang/mojo/go/pkg/compiler"
@@ -22,7 +23,7 @@ var _ = compiler.TuplePlugin{}
 var _ = compiler.UnionPlugin{}
 
 type Compiler struct {
-	Files   []*desc.FileDescriptor
+	Files []*desc.FileDescriptor
 }
 
 func NewCompiler() *Compiler {
@@ -216,6 +217,10 @@ func (c *Compiler) compileTypeAlias(ctx context.Context, decl *lang.TypeAliasDec
 		return nil
 	}
 
+	if options, _ := lang.GetDisableGenerateAttribute(decl.Attributes); options.Including("protobuf", "") {
+		return nil
+	}
+
 	decl.Type.Attributes = lang.SetStringAttribute(decl.Type.Attributes, lang.OriginalTypeAliasName, decl.Name)
 	_, _, err := compiler.CompileNominalType(ctx, decl.Type)
 	return err
@@ -223,6 +228,10 @@ func (c *Compiler) compileTypeAlias(ctx context.Context, decl *lang.TypeAliasDec
 
 func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl, descriptor *desc.MessageDescriptor) error {
 	if len(decl.GenericParameters) > 0 {
+		return nil
+	}
+
+	if options, _ := lang.GetDisableGenerateAttribute(decl.Attributes); options.Including("protobuf", "") {
 		return nil
 	}
 
@@ -262,26 +271,27 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
 	}
 
 	// generate the request message
-	s := &lang.StructDecl{}
-	s.Name = strcase.ToCamel(method.Name) + "Request"
+	req := &lang.StructDecl{}
+	req.Name = strcase.ToCamel(method.Name) + "Request"
 
 	// add number attribute if there is no field has number attribute
 	//for i, param := range method.Type.Parameters {
 	//	param.Attributes
 	//}
 
-	s.Type = &lang.StructType{
+	req.Type = &lang.StructType{
 		Fields: method.Signature.Parameters,
 	}
 
-	if pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination"); pagination {
-		s.Type.Fields = append(s.Type.Fields, langcompiler.GeneratePaginationParameters()...)
+	pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination")
+	if pagination {
+		req.Type.Fields = append(req.Type.Fields, langcompiler.PaginationRequestFields()...)
 	}
 
 	file := context.FileDescriptor(ctx)
-	c.compileStruct(ctx, s, desc.NewMessageDescriptor(file))
+	c.compileStruct(ctx, req, desc.NewMessageDescriptor(file))
 
-	m.InputType = &s.Name
+	m.InputType = &req.Name
 
 	// FIXME move to the resolver of semantic parser
 	var nullTypeName = "mojo.core.Null"
@@ -293,7 +303,7 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
 			file.Dependency = append(file.Dependency, "mojo/core/null.proto")
 		}
 	} else {
-		if result.Name == "Tuple" {
+		if result.GetFullName() == core.TupleTypeName {
 			name := strcase.ToCamel(method.Name) + "Response"
 			result.Attributes = lang.SetStringAttribute(result.Attributes, "alias", name)
 		}
@@ -307,6 +317,26 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
 		//TODO the type should be the struct
 		m.OutputType = &name
 	}
+
+	/*else if result.GetFullName() == core.ArrayTypeName && pagination {
+		result.Attributes = lang.SetIntegerAttribute(result.Attributes, "number", 1)
+		val := result.GenericArguments[0]
+		name := transformer.Plural(strcase.ToSnake(val.Name))
+
+		// generate the request message
+		resp := &lang.StructDecl{}
+		resp.Name = strcase.ToCamel(method.Name) + "Response"
+		resp.Type = &lang.StructType{
+			Fields: []*lang.ValueDecl{{
+				Name: name,
+				Type: result,
+			}},
+		}
+		resp.Type.Fields = append(resp.Type.Fields, langcompiler.PaginationResponseFields()...)
+
+		c.compileStruct(ctx, resp, desc.NewMessageDescriptor(file))
+		m.OutputType = &resp.Name
+	}*/
 
 	// options
 

@@ -3,6 +3,8 @@ package compiler
 import (
 	"errors"
 	"fmt"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/db/go/pkg/mojo/db"
 	"strings"
 
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
@@ -350,9 +352,24 @@ func compileStructFields(ctx context.Context, fields []*lang.ValueDecl, msgDescr
 		n := int32(number)
 		member.Number = &n
 
-		alias, err := lang.GetStringAttribute(field.Type.Attributes, "alias")
-		if err == nil {
+		if alias, err := lang.GetStringAttribute(field.Type.Attributes, core.AliasAttributeName); err == nil {
 			desc.SetStringFieldOption(mojo.E_Alias, alias)(member)
+			addOptionsDependency(fieldCtx)
+		}
+		if lang.HasAttribute(field.Type.Attributes, db.JSONAttributeName) {
+			desc.SetBoolFieldOption(mojo.E_DbJson, true)(member)
+			addOptionsDependency(fieldCtx)
+		}
+		if lang.HasAttribute(field.Type.Attributes, db.IgnoreAttributeName) {
+			desc.SetBoolFieldOption(mojo.E_DbIgnore, true)(member)
+			addOptionsDependency(fieldCtx)
+		}
+		if index, err := lang.GetStringAttribute(field.Type.Attributes, db.IndexAttributeName); err == nil {
+			desc.SetStringFieldOption(mojo.E_DbIgnore, index)(member)
+			addOptionsDependency(fieldCtx)
+		}
+		if explode, err := lang.GetStringAttribute(field.Type.Attributes, db.ExplodeAttributeName); err == nil {
+			desc.SetStringFieldOption(mojo.E_DbExplode, explode)(member)
 			addOptionsDependency(fieldCtx)
 		}
 

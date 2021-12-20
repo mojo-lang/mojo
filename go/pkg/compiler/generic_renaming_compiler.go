@@ -95,7 +95,7 @@ func (c *GenericRenamingCompiler) CompilePackage(ctx context.Context, pkg *lang.
 		}
 	}
 
-	return c.Renaming()
+	return c.Renaming(thisCtx)
 }
 
 func (c *GenericRenamingCompiler) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
@@ -179,7 +179,43 @@ func (c *GenericRenamingCompiler) CompileTypeAlias(ctx context.Context, decl *la
 	return nil
 }
 
-func (c *GenericRenamingCompiler) Renaming() error {
+func updateAliasRedeclaration(ctx context.Context, fullName string, declaration *lang.Declaration) {
+	pkg := context.Package(ctx)
+	for _, sourceFile := range pkg.SourceFiles {
+		if sourceFile.IsGenericInstantiated() {
+			continue
+		}
+		for _, statement := range sourceFile.Statements {
+			if decl := statement.GetDeclaration().GetStructDecl(); decl != nil {
+				updateAliasRedeclarationWithStruct(fullName, declaration, decl)
+			}
+		}
+	}
+}
+
+func updateAliasRedeclarationWithStruct(fullName string, declaration *lang.Declaration, structDecl *lang.StructDecl) {
+	for _, d := range structDecl.StructDecls {
+		updateAliasRedeclarationWithStruct(fullName, declaration, d)
+	}
+
+	if structDecl.Type != nil {
+		for _, i := range structDecl.Type.Inherits {
+			updateAliasRedeclarationWithNominalType(fullName, declaration, i)
+		}
+
+		for _, f := range structDecl.Type.Fields {
+			updateAliasRedeclarationWithNominalType(fullName, declaration, f.Type)
+		}
+	}
+}
+
+func updateAliasRedeclarationWithNominalType(fullName string, declaration *lang.Declaration, nominal *lang.NominalType) {
+	if nominal.GetFullName() == fullName {
+		nominal.TypeDeclaration = lang.NewTypeDeclarationFromDeclaration(declaration)
+	}
+}
+
+func (c *GenericRenamingCompiler) Renaming(ctx context.Context) error {
 	for key, ref := range c.References {
 		if !needRename(ref) {
 			continue
@@ -212,7 +248,8 @@ func (c *GenericRenamingCompiler) Renaming() error {
 								Type:                  decls[0].Type,
 								Scope:                 decls[0].Scope,
 							}
-							f.Statements[i] = lang.NewStructDeclStatement(newDecl)
+							newDeclaration := lang.NewStructDeclaration(newDecl)
+							f.Statements[i] = lang.NewDeclarationStatement(newDeclaration)
 
 							enclosing := decl.EnclosingType
 							for enclosing != nil {
@@ -232,6 +269,7 @@ func (c *GenericRenamingCompiler) Renaming() error {
 							}
 
 							// processing the package scope
+							updateAliasRedeclaration(ctx, newDecl.GetFullName(), newDeclaration)
 							break
 						}
 					}

@@ -2,8 +2,10 @@ package compiler
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
+	"github.com/fatih/structtag"
 	"github.com/gogo/protobuf/gogoproto"
 	"github.com/gogo/protobuf/proto"
 	ggdescriptor "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
@@ -15,8 +17,10 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/go/compiler/inject"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"go/ast"
 	"os/exec"
 	path2 "path"
 	"strings"
@@ -102,6 +106,7 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 		//vanity.ForEachFile(fs, vanity.TurnOnUnmarshalerAll)
 		//vanity.ForEachFile(fs, vanity.TurnOffGogoImport)
 		vanity.ForEachFieldInFiles(fs, JsonTagLowerCamelCase)
+		vanity.ForEachFieldInFiles(fs, CompileDBFieldOptions)
 
 		parameter := "plugins=grpc"
 		req := &plugin.CodeGeneratorRequest{
@@ -139,7 +144,22 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 
 	for _, f := range outFiles {
 		xxxSkip := []string{"gorm", "xml", "bson"}
-		bytes, err := TagInjector{}.InjectTag(f.Name, []byte(f.Content), xxxSkip, nil)
+		injector := NewTagInjector(xxxSkip, nil)
+		injector.RegisterTagChanger(func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
+			if dbTag, _ := tags.Get("db"); dbTag != nil && inject.HasTagOption(dbTag, "ignore") {
+				tags.Set(&structtag.Tag{
+					Key:  "gorm",
+					Name: "-",
+				})
+			}
+		})
+
+		bytes, err := injector.Inject(f.Name, []byte(f.Content))
+		if err == nil {
+			f.Content = string(bytes)
+		}
+
+		bytes, err = NewDbJSONInjector().Inject(f.Name, []byte(f.Content))
 		if err == nil {
 			f.Content = string(bytes)
 		}
@@ -170,6 +190,46 @@ func CompileAliasFieldOptions(field *ggdescriptor.FieldDescriptorProto) {
 	}
 	if v := value.(*string); v != nil && len(*v) > 0 {
 		SetStringFieldOption(gogoproto.E_Jsontag, *v+",omitempty")(field)
+	}
+}
+
+func CompileDBFieldOptions(field *ggdescriptor.FieldDescriptorProto) {
+	tag := "db:\""
+
+	first := true
+	if value, err := proto.GetUnsafeExtension(field.Options, mojo.E_DbJson.Field); err != nil || value == nil {
+	} else {
+		tag += "json"
+		first = false
+	}
+
+	if value, err := proto.GetUnsafeExtension(field.Options, mojo.E_DbExplode.Field); err != nil || value == nil {
+	} else {
+		v := value.(*string)
+		if !first {
+			tag += ","
+		}
+		if v != nil && len(*v) > 0 {
+			tag += "explode=" + *v
+		} else {
+			tag += "explode"
+		}
+		first = false
+	}
+
+	if value, err := proto.GetUnsafeExtension(field.Options, mojo.E_DbIgnore.Field); err != nil || value == nil {
+	} else {
+		if !first {
+			tag += ","
+		}
+		tag += "ignore"
+		first = false
+	}
+
+	tag += "\""
+
+	if !first {
+		SetStringFieldOption(gogoproto.E_Moretags, tag)(field)
 	}
 }
 
@@ -257,10 +317,56 @@ var E_Alias = &proto.ExtensionDesc{
 	Filename:      "mojo/mojo.proto",
 }
 
+var E_DbIgnore = &proto.ExtensionDesc{
+	ExtendedType:  (*ggdescriptor.FieldOptions)(nil),
+	ExtensionType: (*bool)(nil),
+	Field:         75100,
+	Name:          "mojo.db_ignore",
+	Tag:           "varint,75100,opt,name=db_ignore",
+	Filename:      "mojo/mojo.proto",
+}
+var E_DbJson = &proto.ExtensionDesc{
+	ExtendedType:  (*ggdescriptor.FieldOptions)(nil),
+	ExtensionType: (*bool)(nil),
+	Field:         75101,
+	Name:          "mojo.db_json",
+	Tag:           "varint,75101,opt,name=db_json",
+	Filename:      "mojo/mojo.proto",
+}
+var E_DbIndex = &proto.ExtensionDesc{
+	ExtendedType:  (*ggdescriptor.FieldOptions)(nil),
+	ExtensionType: (*string)(nil),
+	Field:         75102,
+	Name:          "mojo.db_index",
+	Tag:           "bytes,75102,opt,name=db_index",
+	Filename:      "mojo/mojo.proto",
+}
+var E_DbExplode = &proto.ExtensionDesc{
+	ExtendedType:  (*ggdescriptor.FieldOptions)(nil),
+	ExtensionType: (*string)(nil),
+	Field:         75103,
+	Name:          "mojo.db_explode",
+	Tag:           "bytes,75103,opt,name=db_explode",
+	Filename:      "mojo/mojo.proto",
+}
+var E_DbReference = &proto.ExtensionDesc{
+	ExtendedType:  (*ggdescriptor.FieldOptions)(nil),
+	ExtensionType: (*string)(nil),
+	Field:         75104,
+	Name:          "mojo.db_reference",
+	Tag:           "bytes,75104,opt,name=db_reference",
+	Filename:      "mojo/mojo.proto",
+}
+
 func init() {
 	proto.RegisterExtension(E_EnumAlias)
 	proto.RegisterExtension(E_EnumvalueAlias)
 	proto.RegisterExtension(E_GettersAll)
 	proto.RegisterExtension(E_Getters)
 	proto.RegisterExtension(E_Alias)
+	proto.RegisterExtension(E_DbIgnore)
+	proto.RegisterExtension(E_DbJson)
+	proto.RegisterExtension(E_DbIndex)
+	proto.RegisterExtension(E_DbExplode)
+	proto.RegisterExtension(E_DbReference)
 }

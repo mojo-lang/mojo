@@ -6,6 +6,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/go/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/go/generator"
 	protocompiler "github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
@@ -37,7 +38,12 @@ func (c *Compiler) Compile() (util.GeneratedFiles, error) {
 		return nil, err
 	}
 
-	files = append(files, fs...)
+	for _, f := range fs {
+		if len(f.Content) > 0 {
+			f.Content = generator.FormatCode(f.Content)
+		}
+		files = append(files, f)
+	}
 
 	// other compilers
 	err = c.compilePackage(context.Empty(), c.Package)
@@ -70,7 +76,7 @@ func (c *Compiler) compilePackage(ctx context.Context, pkg *lang.Package) error 
 	thisCtx := context.WithType(ctx, pkg)
 
 	cmp := &compiler.Compiler{Data: c.Data}
-	err := cmp.Compile(pkg)
+	err := cmp.Compile(thisCtx, pkg)
 	if err != nil {
 		return err
 	}
@@ -133,9 +139,14 @@ func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl) err
 		return nil
 	}
 
+	{
+		cmp := &compiler.Compiler{Data: c.Data}
+		cmp.CompileDbJSON(thisCtx, decl)
+	}
+
 	if boxed, err := lang.GetBoolAttribute(decl.Attributes, "boxed"); boxed && err == nil {
 		cmp := &compiler.Compiler{Data: c.Data}
-		return cmp.Compile(decl)
+		return cmp.Compile(thisCtx, decl)
 	}
 
 	for _, s := range decl.StructDecls {
@@ -191,9 +202,9 @@ func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl) err
 }
 
 func (c *Compiler) compileEnum(ctx context.Context, decl *lang.EnumDecl) error {
-	//thisCtx := context.WithType(ctx, decl)
+	thisCtx := context.WithType(ctx, decl)
 	cmp := &compiler.Compiler{Data: c.Data}
-	return cmp.Compile(decl)
+	return cmp.Compile(thisCtx, decl)
 }
 
 func (c *Compiler) compileStructField(ctx context.Context, field *lang.ValueDecl) error {
