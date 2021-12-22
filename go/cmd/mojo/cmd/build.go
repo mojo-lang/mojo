@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/commander"
+	"github.com/mojo-lang/mojo/go/pkg/cmd/commander"
 	"github.com/urfave/cli/v2"
 	"os"
 	"strings"

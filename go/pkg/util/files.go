@@ -7,7 +7,6 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"os"
-	path2 "path"
 	"path/filepath"
 	"strings"
 )
@@ -111,7 +110,7 @@ func clearFiles(path string, recursive bool, filter func(file string) bool) erro
 			return err
 		}
 		for _, f := range fileInfos {
-			name := path2.Join(path, f.Name())
+			name := filepath.Join(path, f.Name())
 			if !f.IsDir() && filter(name) {
 				files = append(files, name)
 			}
@@ -128,4 +127,11 @@ func clearFiles(path string, recursive bool, filter func(file string) bool) erro
 	}
 
 	return nil
+}
+
+func GetAbsolutePath(pwd string, path string) string {
+	if filepath.IsAbs(path) {
+		return path
+	}
+	return filepath.Join(pwd, path)
 }

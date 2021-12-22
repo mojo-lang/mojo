@@ -1,0 +1,6 @@
+FROM centos:8
+
+ADD {{}}-{{}}-{{}}-server /{{}}-{{}}-{{}}-server
+
+WORKDIR /
+ENTRYPOINT [ "/{{}}-{{}}-{{}}-server" ]

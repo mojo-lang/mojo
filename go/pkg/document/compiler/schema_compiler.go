@@ -142,7 +142,7 @@ func (s *SchemaCompiler) compileFields(ctx context.Context, fieldNames []string,
 
 		// const
 		constVal := ""
-		if constSchema := property.GetSchemaOf(s.Components.Schemas); len(constSchema.Enum) == 1 {
+		if constSchema := property.GetSchemaOf(s.Components.Schemas); constSchema != nil && len(constSchema.Enum) == 1 {
 			constVal = constSchema.Enum[0].GetString()
 			if len(constVal) > 0 {
 				constVal = fmt.Sprintf("the value must be const to \"%s\"", constVal)

@@ -8,8 +8,9 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	langcompiler "github.com/mojo-lang/mojo/go/pkg/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/context"
+	langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 	desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
@@ -302,6 +303,10 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
 		if file != nil {
 			file.Dependency = append(file.Dependency, "mojo/core/null.proto")
 		}
+	} else if result.GetFullName() == core.ArrayTypeName && pagination {
+		resp := GeneratePaginationResponse(method)
+		c.compileStruct(ctx, resp, desc.NewMessageDescriptor(file))
+		m.OutputType = &resp.Name
 	} else {
 		if result.GetFullName() == core.TupleTypeName {
 			name := strcase.ToCamel(method.Name) + "Response"
@@ -318,28 +323,33 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
 		m.OutputType = &name
 	}
 
-	/*else if result.GetFullName() == core.ArrayTypeName && pagination {
-		result.Attributes = lang.SetIntegerAttribute(result.Attributes, "number", 1)
-		val := result.GenericArguments[0]
-		name := transformer.Plural(strcase.ToSnake(val.Name))
-
-		// generate the request message
-		resp := &lang.StructDecl{}
-		resp.Name = strcase.ToCamel(method.Name) + "Response"
-		resp.Type = &lang.StructType{
-			Fields: []*lang.ValueDecl{{
-				Name: name,
-				Type: result,
-			}},
-		}
-		resp.Type.Fields = append(resp.Type.Fields, langcompiler.PaginationResponseFields()...)
-
-		c.compileStruct(ctx, resp, desc.NewMessageDescriptor(file))
-		m.OutputType = &resp.Name
-	}*/
-
 	// options
 
 	serviceDescriptor.Method = append(serviceDescriptor.Method, m)
 	return nil
+}
+
+func GeneratePaginationResponse(method *lang.FunctionDecl) *lang.StructDecl {
+	result := method.Signature.Result
+	if result == nil || result.GetFullName() != core.ArrayTypeName {
+		return nil
+	}
+
+	result.Attributes = lang.SetIntegerAttribute(result.Attributes, "number", 1)
+	val := result.GenericArguments[0]
+	name := transformer.Plural(strcase.ToSnake(val.Name))
+
+	// generate the request message
+	resp := &lang.StructDecl{}
+	resp.PackageName = method.PackageName
+	resp.SourceFileName = method.SourceFileName
+	resp.Name = strcase.ToCamel(method.Name) + "Response"
+	resp.Type = &lang.StructType{
+		Fields: []*lang.ValueDecl{{
+			Name: name,
+			Type: result,
+		}},
+	}
+	resp.Type.Fields = append(resp.Type.Fields, langcompiler.PaginationResponseFields()...)
+	return resp
 }

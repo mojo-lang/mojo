@@ -544,7 +544,7 @@ func renderInterface(svc *svcdef.Interface, prev string, data *gengokit.Data) (s
 
 func parseASTFromString(s string, t *testing.T) *ast.File {
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, "", s, 0)
+	f, err := parser.ParseFile2(fset, "", s, 0)
 	if err != nil {
 		t.Fatal(err)
 	}

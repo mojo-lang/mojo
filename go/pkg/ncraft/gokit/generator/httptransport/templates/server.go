@@ -99,9 +99,10 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/tracing/opentracing"
 
-	stdopentracing "github.com/opentracing/opentracing-go"
 	httptransport "github.com/go-kit/kit/transport/http"
+	pagination "github.com/ncraft-io/ncraft-go/pkg/pagination"
 	nhttp "github.com/ncraft-io/ncraft-go/pkg/transport/http"
+	stdopentracing "github.com/opentracing/opentracing-go"
 
 	{{range $i := .ExternalMessageImports}}
 	"{{$i}}"
@@ -228,6 +229,28 @@ func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.Respon
 // EncodeHTTPGenericResponse is a transport/http.EncodeResponseFunc that encodes
 // the response as JSON to the response writer. Primarily useful in a server.
 func EncodeHTTPGenericResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+	encoder := jsoniter.ConfigFastest.NewEncoder(w)
+	encoder.SetEscapeHTML(false)
+	return encoder.Encode(response)
+}
+
+func EncodeHTTPPaginationResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	if p, ok := response.(pagination.Paginater); ok {
+		total := p.GetTotalCount()
+		if total > 0 {
+			w.Header().Set("X-Total-Count", strconv.Itoa(int(total)))
+		}
+
+		next := p.GetNextPageToken()
+		if len(next) > 0 {
+			path, _ := ctx.Value("request-url").(string)
+			if len(path) == 0 {
+				path = "/"
+			}
+			w.Header().Set("Link", fmt.Sprintf("<%s?next-page-token=%s>; rel=\"next\"", path, next))
+		}
+	}
+
 	encoder := jsoniter.ConfigFastest.NewEncoder(w)
 	encoder.SetEscapeHTML(false)
 	return encoder.Encode(response)

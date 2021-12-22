@@ -6,6 +6,7 @@ type Data struct {
 	BoxedUnions       []*BoxedUnion
 	Enums             []*Enum
 	DbJSONs           []*DbJSON
+	PaginationResults []*PaginationResult
 	GoMod             *GoMod
 
 	NameIndex map[string]bool

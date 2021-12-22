@@ -36,7 +36,7 @@ func (g *Generator) Generate(data *compiler.Data) error {
 	}
 
 	for _, decl := range data.Enums {
-		g.generateDecl(decl, "fmt", goEnumJsonFile)
+		g.generateDecl(decl, "fmt", goEnumFmtFile)
 		g.generateDecl(decl, "json", goEnumJsonFile)
 	}
 
@@ -46,6 +46,10 @@ func (g *Generator) Generate(data *compiler.Data) error {
 
 	for _, decl := range data.DbJSONs {
 		g.generateDecl(decl, "sql", goDbJSONSqlFile)
+	}
+
+	for _, decl := range data.PaginationResults {
+		g.generateDecl(decl, "json", goPaginationJsonFile)
 	}
 
 	if data.GoMod != nil {

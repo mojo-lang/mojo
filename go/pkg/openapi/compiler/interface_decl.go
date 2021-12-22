@@ -6,8 +6,8 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/document/go/pkg/markdown"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	langcompiler "github.com/mojo-lang/mojo/go/pkg/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/context"
+	langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"strings"
 )
@@ -99,7 +99,7 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, api *openapi.
 					}
 
 					path, pathParam := CompilePath(value.Value)
-					paramCtx := context.WithValues(thisCtx,"pathParams", pathParam)
+					paramCtx := context.WithValues(thisCtx, "pathParams", pathParam)
 					parameters, err := CompileParameters(paramCtx, method, httpMethod)
 					if err != nil {
 						return "", err

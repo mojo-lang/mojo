@@ -29,7 +29,7 @@ func (m {{.Name}}) Value() (driver.Value, error) {
 	return {{if not .InDbPkg}}db.{{end}}JSONValuer{}.Value(m.{{.UnderlyingTypeName}})
 {{else}}
 	return {{if not .InDbPkg}}db.{{end}}JSONValuer{}.Value(m)
-{{end}}
+{{- end}}
 }
 
 func (m *{{.Name}}) Scan(value interface{}) error {
@@ -37,7 +37,7 @@ func (m *{{.Name}}) Scan(value interface{}) error {
 	return {{if not .InDbPkg}}db.{{end}}JSONScanner{}.Scan(&m.{{.UnderlyingTypeName}}, value)
 {{else}}
 	return {{if not .InDbPkg}}db.{{end}}JSONScanner{}.Scan(m, value)
-{{end}}
+{{- end}}
 }
 
 func (m {{.Name}}) GormDBDataType(gdb *gorm.DB, field *schema.Field) string {

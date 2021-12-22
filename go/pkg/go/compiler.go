@@ -3,10 +3,10 @@ package _go
 import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/go/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
 	protocompiler "github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
@@ -257,11 +257,20 @@ func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDec
 	thisCtx := context.WithType(ctx, decl)
 
 	for _, method := range decl.Type.Methods {
-		result := method.Signature.Result
-		if result != nil {
-			_, err := c.compileNominalType(thisCtx, result)
-			if err != nil {
-				return errors.Errorf("failed to compile the type %s: %s", result.Name, err.Error())
+		isPagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination")
+		if isPagination {
+			pagination := &compiler.PaginationResult{}
+			if err := pagination.CompileMethod(method); err != nil {
+				return err
+			}
+			c.Data.PaginationResults = append(c.Data.PaginationResults, pagination)
+		} else {
+			result := method.Signature.Result
+			if result != nil {
+				_, err := c.compileNominalType(thisCtx, result)
+				if err != nil {
+					return errors.Errorf("failed to compile the type %s: %s", result.Name, err.Error())
+				}
 			}
 		}
 	}

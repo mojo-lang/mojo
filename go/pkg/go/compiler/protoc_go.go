@@ -33,7 +33,7 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 
 	cmd := exec.Command("protoc", "-I.")
 	for _, dep := range pkg.ResolvedDependencies {
-		wd := dep.GetExtraString("pwd")
+		wd := dep.GetExtraString("workingDir")
 		p := dep.GetExtraString("path")
 		cmd.Args = append(cmd.Args, "--proto_path="+path2.Join(wd, p, "protobuf"))
 	}

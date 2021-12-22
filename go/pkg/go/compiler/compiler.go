@@ -7,11 +7,7 @@ import (
 )
 
 func GetGoPackage(pkg string) string {
-	segments := strings.Split(pkg, ".")
-	if len(segments) > 0 {
-		return segments[len(segments)-1]
-	}
-	return ""
+	return lang.GetGoPackageName(pkg)
 }
 
 func GetFullName(enclosing string, name string) string {

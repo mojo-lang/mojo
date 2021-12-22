@@ -9,6 +9,10 @@ type PackageCompiler interface {
 	CompilePackage(ctx context.Context, pkg *lang.Package) error
 }
 
+type SourceFileCompiler interface {
+	CompileSourceFile(ctx context.Context, file *lang.SourceFile) error
+}
+
 type StructCompiler interface {
 	CompileStruct(ctx context.Context, decl *lang.StructDecl) error
 }

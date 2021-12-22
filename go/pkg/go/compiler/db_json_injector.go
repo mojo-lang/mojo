@@ -58,11 +58,15 @@ func (i *DbJSONInjector) onStructField(ctx context.Context, field *ast.Field, ap
 				newTypeDefine += " struct {" + typeName + "}"
 
 				newTypeName = "*" + newTypeName
+			} else {
+				return
 			}
 		} else if _, ok := field.Type.(*ast.ArrayType); ok {
 			newTypeDefine += " " + typeName
 		} else if _, ok := field.Type.(*ast.MapType); ok {
 			newTypeDefine += " " + typeName
+		} else {
+			return
 		}
 
 		recvStructName := "*" + structName

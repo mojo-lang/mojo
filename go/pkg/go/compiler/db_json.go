@@ -47,6 +47,7 @@ func (j *DbJSONs) CompileStruct(ctx context.Context, decl *lang.StructDecl) erro
 
 		if field.Type.PackageName == pkg.FullName {
 			dbJSON.Name = field.Type.Name
+			dbJSON.FullName = lang.GetFullName("", field.Type.GetEnclosingNames(), field.Type.Name)
 			dbJSON.UnderlyingTypeName = ""
 			dbJSON.StructType = false
 		}

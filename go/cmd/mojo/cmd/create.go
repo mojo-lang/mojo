@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/mojo/commander"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/create/scaffolding"
+	"github.com/mojo-lang/mojo/go/pkg/cmd/commander"
+	"github.com/mojo-lang/mojo/go/pkg/cmd/create/scaffolding"
 	"github.com/urfave/cli/v2"
 )
 
