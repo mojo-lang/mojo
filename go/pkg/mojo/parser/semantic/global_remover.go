@@ -2,6 +2,7 @@ package semantic
 
 import (
 	"errors"
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/context"
@@ -39,17 +40,21 @@ func (r *GlobalRemover) ParsePackage(ctx context.Context, pkg *lang.Package) err
 		return errors.New("empty packages to parse")
 	}
 
-	if pkg.IsGlobal() {
-		pkgName := parser.ContextPackageName(ctx)
-		processPkg := r.removeGlobal(pkg, pkgName)
-		if processPkg == nil {
-			return errors.New("the GlobalRemover does not match the GlobalMaker")
-		}
+	if !pkg.IsGlobal() {
+		return nil
+	}
 
-		if plugins := plugin.ContextPlugins(ctx); plugins != nil {
-			if err := plugins.Next().ParsePackage(ctx, processPkg); err != nil {
-				return err
-			}
+	logs.Infow("enter to the plugin", "plugin", r.Name)
+
+	pkgName := parser.ContextPackageName(ctx)
+	processPkg := r.removeGlobal(pkg, pkgName)
+	if processPkg == nil {
+		return errors.New("the GlobalRemover does not match the GlobalMaker")
+	}
+
+	if plugins := plugin.ContextPlugins(ctx); plugins != nil && plugins.Next() != nil {
+		if err := plugins.ParsePackage(ctx, processPkg); err != nil {
+			return err
 		}
 	}
 	return nil

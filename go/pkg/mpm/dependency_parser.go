@@ -55,8 +55,8 @@ func (p *DependencyParser) ParsePackage(ctx context.Context, pkg *lang.Package) 
 	}
 
 	if plugins := plugin.ContextPlugins(ctx); plugins != nil {
-		if fsCache := parser.ContextFsCache(ctx); len(fsCache) > 0 && fsCache[pkg.FullName] != nil {
-			if _, err := plugins.Next().ParsePackagePath(parser.WithDeclaredPackage(ctx, pkg), pkgPath, fsCache[pkg.FullName]); err != nil {
+		if fsCache := parser.ContextFsCache(ctx); len(fsCache) > 0 && fsCache[pkg.FullName] != nil && plugins.Next() != nil {
+			if _, err := plugins.ParsePackagePath(parser.WithDeclaredPackage(ctx, pkg), pkgPath, fsCache[pkg.FullName]); err != nil {
 				return err
 			}
 		}

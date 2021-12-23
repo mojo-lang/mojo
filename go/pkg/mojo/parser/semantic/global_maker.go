@@ -45,8 +45,8 @@ func (r *GlobalMaker) ParsePackage(ctx context.Context, pkg *lang.Package) error
 	pkgs := pkg.GetAllPackageArray()
 	r.Global = treePackages(pkgs, r.Global)
 
-	if plugins := plugin.ContextPlugins(ctx); plugins != nil {
-		if err := plugins.Next().ParsePackage(ctx, r.Global); err != nil {
+	if plugins := plugin.ContextPlugins(ctx); plugins != nil && plugins.Next() != nil {
+		if err := plugins.ParsePackage(ctx, r.Global); err != nil {
 			return err
 		}
 	}

@@ -2,10 +2,7 @@ package mpm
 
 import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	_ "github.com/mojo-lang/mojo/go/pkg/parser/semantic"
-	_ "github.com/mojo-lang/mojo/go/pkg/parser/semantic/circle"
-	_ "github.com/mojo-lang/mojo/go/pkg/parser/semantic/identifier"
-	_ "github.com/mojo-lang/mojo/go/pkg/parser/syntax"
+	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
 	"github.com/mojo-lang/mojo/go/pkg/plugin"
 	"github.com/mojo-lang/mojo/go/test"
 	"github.com/stretchr/testify/assert"

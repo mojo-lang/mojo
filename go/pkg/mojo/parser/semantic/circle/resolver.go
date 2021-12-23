@@ -36,10 +36,11 @@ func NewResolver(options core.Options) *Resolver {
 }
 
 func (r *Resolver) ParsePackage(ctx context.Context, pkg *lang.Package) error {
-	logs.Infow("enter the plugin", "plugin", r.Name, "method", "ParsePackage", "pkg", pkg.FullName)
-
 	if !r.Force && pkg.GetExtraBool(r.Name) {
+		logs.Infow("already processed, skip the plugin", "plugin", r.Name, "method", "ParsePackage", "pkg", pkg.FullName)
 		return nil
+	} else {
+		logs.Infow("enter the plugin", "plugin", r.Name, "method", "ParsePackage", "pkg", pkg.FullName)
 	}
 
 	thisCtx := context.WithType(ctx, pkg)
@@ -54,7 +55,7 @@ func (r *Resolver) ParsePackage(ctx context.Context, pkg *lang.Package) error {
 		return err
 	}
 
-	if !pkg.IsPadding() || !r.Force {
+	if !pkg.IsPadding() && !r.Force {
 		pkg.SetExtraBool(pluginName, true)
 	}
 	return nil
