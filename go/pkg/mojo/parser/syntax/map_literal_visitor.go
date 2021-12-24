@@ -63,7 +63,11 @@ func (e *MapLiteralVisitor) VisitMapLiteralItem(ctx *MapLiteralItemContext) inte
 	}
 	if integerLiteralCtx := ctx.IntegerLiteral(); integerLiteralCtx != nil {
 		if expr, ok := integerLiteralCtx.Accept(NewExpressionVisitor()).(*lang.Expression); ok {
-			key = strconv.FormatInt(expr.GetIntegerLiteralExpr().Value, 10)
+			integerLiteral := expr.GetIntegerLiteralExpr()
+			key = strconv.FormatUint(integerLiteral.Value, 10)
+			if integerLiteral.IsNegative {
+				key = "-" + key
+			}
 			numeric = true
 		}
 	}

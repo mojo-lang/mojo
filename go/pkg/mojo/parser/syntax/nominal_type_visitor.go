@@ -272,10 +272,9 @@ func (n *NominalTypeVisitor) VisitPrime(ctx *PrimeContext) interface{} {
 }
 
 func (n *NominalTypeVisitor) VisitPrimeType(ctx *PrimeTypeContext) interface{} {
-	identifierCtx := ctx.TypeIdentifier()
-	if identifierCtx != nil {
-		visitor := NewTypeIdentifierVisitor()
-		return identifierCtx.Accept(visitor)
+	identifier := GetTypeIdentifier(ctx.TypeIdentifier())
+	if identifier != nil {
+		return identifier
 	}
 
 	arrayTypeCtx := ctx.ArrayType()

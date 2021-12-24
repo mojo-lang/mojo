@@ -8,13 +8,7 @@ import (
 
 func TestObjectLiteralVisitor_VisitObjectLiteral(t *testing.T) {
 	const typeAttribute = `{"key": "value"}`
-
-	parser := &Parser{}
-	file, err := parser.ParseString(typeAttribute)
-
-	assert.NoError(t, err)
-	expr := getExpression(file)
-	assert.NotNil(t, expr)
+	expr := parseExpression(t, typeAttribute)
 
 	object := make(map[string]string)
 	expr.EvalStringMapLiteral(func(key string, value *lang.Expression) error {

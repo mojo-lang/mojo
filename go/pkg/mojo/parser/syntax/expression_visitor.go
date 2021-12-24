@@ -73,9 +73,32 @@ func (e *ExpressionVisitor) VisitBinaryExpression(ctx *BinaryExpressionContext) 
 					RightHandArgument: expression,
 				}
 			}
+		} else if conditionalOperator := ctx.ConditionalOperator(); conditionalOperator != nil {
+			conditionalExpr := &lang.ConditionalExpr{
+				EndPosition: GetPosition(ctx.GetStop()),
+			}
+
+			if expr, ok := conditionalOperator.Accept(e).(*lang.Expression); ok {
+				conditionalExpr.ThenBranch = expr
+			} else {
+				return nil
+			}
+
+			if expression, ok := prefixExprCtx.Accept(e).(*lang.Expression); ok {
+				conditionalExpr.ElseBranch = expression
+				return &lang.BinaryExpr{
+					Operator:          &lang.Operator{Symbol: "?"},
+					LeftHandArgument:  nil,
+					RightHandArgument: lang.NewConditionalExpression(conditionalExpr),
+				}
+			}
 		}
 	}
 	return nil
+}
+
+func (e *ExpressionVisitor) VisitConditionalOperator(ctx *ConditionalOperatorContext) interface{} {
+	return GetExpression(ctx.Expression())
 }
 
 func (e *ExpressionVisitor) VisitPrefixExpression(ctx *PrefixExpressionContext) interface{} {
@@ -84,6 +107,16 @@ func (e *ExpressionVisitor) VisitPrefixExpression(ctx *PrefixExpressionContext) 
 		if expression, ok := postfixCtx.Accept(e).(*lang.Expression); ok {
 			operator := ctx.PrefixOperator()
 			if operator != nil {
+				if operator.GetText() == "-" {
+					switch expression.Expression.(type) {
+					case *lang.Expression_IntegerLiteralExpr:
+						expression.GetIntegerLiteralExpr().SetNegative()
+						return expression
+					case *lang.Expression_FloatLiteralExpr:
+						expression.GetFloatLiteralExpr().SetNegative()
+						return expression
+					}
+				}
 				return lang.NewPrefixUnaryExpression(&lang.PrefixUnaryExpr{
 					Operator:   operator.GetText(),
 					Expression: expression,
@@ -106,7 +139,7 @@ func (e *ExpressionVisitor) VisitPostfixExpression(ctx *PostfixExpressionContext
 					PrimaryExpression: expression,
 				}
 				var expr *lang.Expression
-				if expr, ok = visitor.Visit(suffixExpr).(*lang.Expression); ok {
+				if expr, ok = suffixExpr.Accept(visitor).(*lang.Expression); ok {
 					expression = expr
 				}
 			}
@@ -179,6 +212,11 @@ func (e *ExpressionVisitor) VisitLiteralExpression(ctx *LiteralExpressionContext
 	mapCtx := ctx.MapLiteral()
 	if mapCtx != nil {
 		return mapCtx.Accept(NewMapLiteralVisitor())
+	}
+
+	structLiteralCtx := ctx.StructLiteral()
+	if structLiteralCtx != nil {
+		return structLiteralCtx.Accept(NewStructLiteralVisitor())
 	}
 
 	stringOperatorLiteralCtx := ctx.StringOperatorLiteral()
@@ -275,7 +313,7 @@ func (e *ExpressionVisitor) VisitIntegerLiteral(ctx *IntegerLiteralContext) inte
 			Kind:          0,
 			Implicit:      false,
 			IsNegative:    false,
-			Value:         int64(v),
+			Value:         v,
 		}
 	}
 
@@ -324,8 +362,8 @@ func (e *ExpressionVisitor) VisitParenthesizedExpression(ctx *ParenthesizedExpre
 func (e *ExpressionVisitor) VisitWildcardExpression(ctx *WildcardExpressionContext) interface{} {
 	if ctx.UNDERSCORE().GetText() == "_" {
 		return lang.NewWildcardExpression(&lang.WildcardExpr{
-			StartPosition: nil,
-			EndPosition:   nil,
+			StartPosition: GetPosition(ctx.GetStart()),
+			EndPosition:   GetPosition(ctx.GetStop()),
 		})
 	}
 	return nil

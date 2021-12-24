@@ -44,6 +44,15 @@ func (b BinaryExprParser) Parse(prefix *lang.Expression, binaries []*lang.Binary
 		return nil
 	}
 
+	if len(binaries) == 1 {
+		binary := binaries[0]
+		if binary.Operator.Symbol == "?" && binary.RightHandArgument.GetConditionalExpr() != nil {
+			conditional := binary.RightHandArgument.GetConditionalExpr()
+			conditional.Condition = prefix
+			return binary.RightHandArgument
+		}
+	}
+
 	bins := []*lang.BinaryExpr{
 		{Operator: &lang.Operator{}, RightHandArgument: prefix},
 	}

@@ -9,6 +9,15 @@ type TypeIdentifierVisitor struct {
 	*BaseMojoParserVisitor
 }
 
+func GetTypeIdentifier(ctx ITypeIdentifierContext) *lang.NominalType {
+	if ctx != nil {
+		if nominal, ok := ctx.Accept(NewTypeIdentifierVisitor()).(*lang.NominalType); ok {
+			return nominal
+		}
+	}
+	return nil
+}
+
 func NewTypeIdentifierVisitor() *TypeIdentifierVisitor {
 	visitor := &TypeIdentifierVisitor{}
 	return visitor

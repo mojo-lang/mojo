@@ -426,8 +426,8 @@ typeCastingOperator
 
 // GRAMMAR OF A PRIMARY EXPRESSION
 primaryExpression
- : declarationIdentifier genericArgumentClause?
- | literalExpression
+ : literalExpression
+ | declarationIdentifier genericArgumentClause?
  | typeIdentifier DOT declarationIdentifier genericArgumentClause?
  | closureExpression
  | parenthesizedExpression
@@ -442,11 +442,11 @@ primaryExpression
 literalExpression
  : numericOperatorLiteral
  | stringOperatorLiteral
+ | structLiteral
  | literal
  | arrayLiteral
  | mapLiteral
  | objectLiteral
- | structLiteral
  ;
 
 numericOperatorLiteral : numericLiteral postfixLiteralOperator ;
@@ -723,7 +723,7 @@ keywordAsIdentifierInDeclarations
     | KEYWORD_IS
     | 'match'
     | 'not'
-    | KEYWORD_NULL
+    //| KEYWORD_NULL
     | 'package'
     | 'repeat'
     | 'return'

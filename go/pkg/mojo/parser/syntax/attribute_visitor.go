@@ -28,8 +28,8 @@ func (a *AttributeVisitor) VisitAttribute(ctx *AttributeContext) interface{} {
 		}
 
 		return &lang.Attribute{
-			StartPosition:    GetPosition(number.GetSymbol()),
-			EndPosition:      nil,
+			StartPosition:    GetPosition(ctx.GetStart()),
+			EndPosition:      GetPosition(ctx.GetStop()),
 			PackageName:      "",
 			Name:             "number",
 			GenericArguments: nil,
@@ -37,7 +37,7 @@ func (a *AttributeVisitor) VisitAttribute(ctx *AttributeContext) interface{} {
 				lang.NewIntegerLiteralArgument(&lang.IntegerLiteralExpr{
 					StartPosition: nil,
 					EndPosition:   nil,
-					Value:         v,
+					Value:         uint64(v),
 				}),
 			},
 		}

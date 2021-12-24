@@ -7,13 +7,7 @@ import (
 
 func TestStringOperatorLiteralVisitor_VisitStringOperatorLiteral(t *testing.T) {
 	const StringOperatorExpression = `r"^ab$"`
-
-	parser := &Parser{}
-	file, err := parser.ParseString(StringOperatorExpression)
-
-	assert.NoError(t, err)
-	expr := getExpression(file)
-	assert.NotNil(t, expr)
+	expr := parseExpression(t, StringOperatorExpression)
 
 	stringExpr := expr.GetStringLiteralUnaryExpr()
 	assert.NotNil(t, stringExpr)

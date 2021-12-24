@@ -38,6 +38,19 @@ func New(options core.Options) *Parser {
 	}
 }
 
+func (p Parser) ParseExpression(expr string) (*lang.Expression, error) {
+	if file, err := p.ParseString(expr); err != nil {
+		return nil, err
+	} else {
+		if len(file.Statements) > 0 {
+			if expression := file.Statements[0].GetExpression(); expression != nil {
+				return expression, nil
+			}
+		}
+	}
+	return nil, errors.New("not a valid expression")
+}
+
 func (p Parser) ParseString(mojo string) (*lang.SourceFile, error) {
 	input := antlr.NewInputStream(mojo)
 	return p.ParseStream("", input)

@@ -16,7 +16,7 @@ func TestAttributeVisitor_VisitAttribute_Number(t *testing.T) {
 	attribute := getAttribute(file)
 	assert.NotNil(t, attribute)
 
-	assert.Equal(t, int64(1), attribute.Arguments[0].GetIntegerLiteralExpr().Value)
+	assert.Equal(t, uint64(1), attribute.Arguments[0].GetIntegerLiteralExpr().Value)
 }
 
 func TestAttributeVisitor_VisitAttribute_Object(t *testing.T) {
@@ -32,10 +32,10 @@ func TestAttributeVisitor_VisitAttribute_Object(t *testing.T) {
 	assert.Equal(t, "t", attribute.Name)
 
 	assert.Equal(t, "foo", attribute.Arguments[0].Label)
-	assert.Equal(t, int64(11), attribute.Arguments[0].GetIntegerLiteralExpr().Value)
+	assert.Equal(t, uint64(11), attribute.Arguments[0].GetIntegerLiteralExpr().Value)
 
 	assert.Equal(t, "bar", attribute.Arguments[1].Label)
-	assert.Equal(t, int64(22), attribute.Arguments[1].GetIntegerLiteralExpr().Value)
+	assert.Equal(t, uint64(22), attribute.Arguments[1].GetIntegerLiteralExpr().Value)
 }
 
 func TestAttributeVisitor_VisitAttribute_Array(t *testing.T) {
@@ -64,7 +64,7 @@ func TestAttributeVisitor_VisitAttribute_FieldNumber(t *testing.T) {
 	attribute := getFieldAttribute(file, 0)
 	assert.NotNil(t, attribute)
 
-	assert.Equal(t, int64(1), attribute.Arguments[0].GetIntegerLiteralExpr().Value)
+	assert.Equal(t, uint64(1), attribute.Arguments[0].GetIntegerLiteralExpr().Value)
 }
 
 func getAttribute(file *lang.SourceFile) *lang.Attribute {

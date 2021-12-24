@@ -191,7 +191,7 @@ var parserATN = []uint16{
 	99, 3, 99, 3, 99, 3, 99, 3, 99, 3, 99, 3, 99, 3, 99, 3, 99, 5, 99, 1505,
 	10, 99, 3, 100, 6, 100, 1508, 10, 100, 13, 100, 14, 100, 1509, 3, 101,
 	3, 101, 3, 101, 3, 101, 3, 102, 3, 102, 3, 102, 3, 102, 5, 102, 1520, 10,
-	102, 3, 103, 3, 103, 5, 103, 1524, 10, 103, 3, 103, 3, 103, 3, 103, 3,
+	102, 3, 103, 3, 103, 3, 103, 5, 103, 1525, 10, 103, 3, 103, 3, 103, 3,
 	103, 3, 103, 5, 103, 1531, 10, 103, 3, 103, 3, 103, 3, 103, 3, 103, 3,
 	103, 3, 103, 5, 103, 1539, 10, 103, 3, 104, 3, 104, 3, 104, 3, 104, 3,
 	104, 3, 104, 3, 104, 5, 104, 1548, 10, 104, 3, 105, 3, 105, 3, 105, 3,
@@ -296,7 +296,7 @@ var parserATN = []uint16{
 	300, 302, 304, 306, 308, 310, 312, 314, 316, 318, 320, 322, 324, 326, 328,
 	330, 332, 334, 336, 338, 340, 342, 344, 346, 348, 350, 352, 354, 356, 358,
 	360, 362, 364, 366, 368, 370, 372, 374, 2, 13, 3, 2, 75, 76, 4, 2, 76,
-	76, 78, 78, 8, 2, 3, 7, 10, 10, 13, 21, 23, 26, 28, 29, 31, 31, 3, 2, 3,
+	76, 78, 78, 8, 2, 3, 7, 10, 10, 13, 20, 23, 26, 28, 29, 31, 31, 3, 2, 3,
 	31, 3, 2, 60, 61, 4, 2, 42, 45, 47, 56, 4, 2, 11, 11, 27, 27, 3, 2, 79,
 	83, 3, 2, 85, 86, 4, 2, 41, 41, 91, 91, 4, 2, 39, 39, 91, 91, 2, 2371,
 	2, 379, 3, 2, 2, 2, 4, 399, 3, 2, 2, 2, 6, 401, 3, 2, 2, 2, 8, 403, 3,
@@ -798,20 +798,20 @@ var parserATN = []uint16{
 	5, 190, 96, 2, 1513, 1514, 7, 40, 2, 2, 1514, 201, 3, 2, 2, 2, 1515, 1516,
 	7, 18, 2, 2, 1516, 1520, 5, 280, 141, 2, 1517, 1518, 7, 4, 2, 2, 1518,
 	1520, 5, 280, 141, 2, 1519, 1515, 3, 2, 2, 2, 1519, 1517, 3, 2, 2, 2, 1520,
-	203, 3, 2, 2, 2, 1521, 1523, 5, 312, 157, 2, 1522, 1524, 5, 48, 25, 2,
-	1523, 1522, 3, 2, 2, 2, 1523, 1524, 3, 2, 2, 2, 1524, 1539, 3, 2, 2, 2,
-	1525, 1539, 5, 206, 104, 2, 1526, 1527, 5, 288, 145, 2, 1527, 1528, 7,
-	32, 2, 2, 1528, 1530, 5, 312, 157, 2, 1529, 1531, 5, 48, 25, 2, 1530, 1529,
+	203, 3, 2, 2, 2, 1521, 1539, 5, 206, 104, 2, 1522, 1524, 5, 312, 157, 2,
+	1523, 1525, 5, 48, 25, 2, 1524, 1523, 3, 2, 2, 2, 1524, 1525, 3, 2, 2,
+	2, 1525, 1539, 3, 2, 2, 2, 1526, 1527, 5, 288, 145, 2, 1527, 1528, 7, 32,
+	2, 2, 1528, 1530, 5, 312, 157, 2, 1529, 1531, 5, 48, 25, 2, 1530, 1529,
 	3, 2, 2, 2, 1530, 1531, 3, 2, 2, 2, 1531, 1539, 3, 2, 2, 2, 1532, 1539,
 	5, 238, 120, 2, 1533, 1539, 5, 246, 124, 2, 1534, 1539, 5, 248, 125, 2,
 	1535, 1539, 5, 244, 123, 2, 1536, 1539, 5, 252, 127, 2, 1537, 1539, 5,
-	236, 119, 2, 1538, 1521, 3, 2, 2, 2, 1538, 1525, 3, 2, 2, 2, 1538, 1526,
+	236, 119, 2, 1538, 1521, 3, 2, 2, 2, 1538, 1522, 3, 2, 2, 2, 1538, 1526,
 	3, 2, 2, 2, 1538, 1532, 3, 2, 2, 2, 1538, 1533, 3, 2, 2, 2, 1538, 1534,
 	3, 2, 2, 2, 1538, 1535, 3, 2, 2, 2, 1538, 1536, 3, 2, 2, 2, 1538, 1537,
 	3, 2, 2, 2, 1539, 205, 3, 2, 2, 2, 1540, 1548, 5, 208, 105, 2, 1541, 1548,
-	5, 210, 106, 2, 1542, 1548, 5, 356, 179, 2, 1543, 1548, 5, 216, 109, 2,
-	1544, 1548, 5, 222, 112, 2, 1545, 1548, 5, 228, 115, 2, 1546, 1548, 5,
-	234, 118, 2, 1547, 1540, 3, 2, 2, 2, 1547, 1541, 3, 2, 2, 2, 1547, 1542,
+	5, 210, 106, 2, 1542, 1548, 5, 234, 118, 2, 1543, 1548, 5, 356, 179, 2,
+	1544, 1548, 5, 216, 109, 2, 1545, 1548, 5, 222, 112, 2, 1546, 1548, 5,
+	228, 115, 2, 1547, 1540, 3, 2, 2, 2, 1547, 1541, 3, 2, 2, 2, 1547, 1542,
 	3, 2, 2, 2, 1547, 1543, 3, 2, 2, 2, 1547, 1544, 3, 2, 2, 2, 1547, 1545,
 	3, 2, 2, 2, 1547, 1546, 3, 2, 2, 2, 1548, 207, 3, 2, 2, 2, 1549, 1550,
 	5, 362, 182, 2, 1550, 1551, 5, 212, 107, 2, 1551, 209, 3, 2, 2, 2, 1552,
@@ -1092,7 +1092,7 @@ var parserATN = []uint16{
 	1289, 1293, 1296, 1301, 1305, 1309, 1314, 1320, 1325, 1329, 1334, 1338,
 	1343, 1347, 1351, 1357, 1364, 1373, 1382, 1397, 1400, 1402, 1407, 1417,
 	1421, 1426, 1434, 1443, 1450, 1454, 1458, 1463, 1468, 1475, 1482, 1486,
-	1492, 1504, 1509, 1519, 1523, 1530, 1538, 1547, 1563, 1567, 1572, 1582,
+	1492, 1504, 1509, 1519, 1524, 1530, 1538, 1547, 1563, 1567, 1572, 1582,
 	1589, 1593, 1601, 1605, 1610, 1620, 1627, 1631, 1635, 1644, 1648, 1653,
 	1663, 1670, 1674, 1679, 1696, 1703, 1707, 1712, 1718, 1725, 1732, 1736,
 	1740, 1749, 1756, 1769, 1773, 1780, 1788, 1792, 1797, 1807, 1809, 1816,
@@ -7323,7 +7323,7 @@ func (p *MojoParser) ImportGroup() (localctx IImportGroupContext) {
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
+	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
 		{
 			p.SetState(781)
 			p.ImportValue()
@@ -7366,7 +7366,7 @@ func (p *MojoParser) ImportGroup() (localctx IImportGroupContext) {
 			p.GetErrorHandler().Sync(p)
 
 			switch p.GetTokenStream().LA(1) {
-			case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
+			case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
 				{
 					p.SetState(792)
 					p.ImportValue()
@@ -9366,7 +9366,7 @@ func (p *MojoParser) FunctionName() (localctx IFunctionNameContext) {
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
+	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(939)
@@ -16676,6 +16676,16 @@ func NewPrimaryExpressionContext(parser antlr.Parser, parent antlr.ParserRuleCon
 
 func (s *PrimaryExpressionContext) GetParser() antlr.Parser { return s.parser }
 
+func (s *PrimaryExpressionContext) LiteralExpression() ILiteralExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ILiteralExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ILiteralExpressionContext)
+}
+
 func (s *PrimaryExpressionContext) DeclarationIdentifier() IDeclarationIdentifierContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDeclarationIdentifierContext)(nil)).Elem(), 0)
 
@@ -16694,16 +16704,6 @@ func (s *PrimaryExpressionContext) GenericArgumentClause() IGenericArgumentClaus
 	}
 
 	return t.(IGenericArgumentClauseContext)
-}
-
-func (s *PrimaryExpressionContext) LiteralExpression() ILiteralExpressionContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*ILiteralExpressionContext)(nil)).Elem(), 0)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(ILiteralExpressionContext)
 }
 
 func (s *PrimaryExpressionContext) TypeIdentifier() ITypeIdentifierContext {
@@ -16825,24 +16825,24 @@ func (p *MojoParser) PrimaryExpression() (localctx IPrimaryExpressionContext) {
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(1519)
-			p.DeclarationIdentifier()
-		}
-		p.SetState(1521)
-		p.GetErrorHandler().Sync(p)
-
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 190, p.GetParserRuleContext()) == 1 {
-			{
-				p.SetState(1520)
-				p.GenericArgumentClause()
-			}
-
+			p.LiteralExpression()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(1523)
-			p.LiteralExpression()
+			p.SetState(1520)
+			p.DeclarationIdentifier()
+		}
+		p.SetState(1522)
+		p.GetErrorHandler().Sync(p)
+
+		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 190, p.GetParserRuleContext()) == 1 {
+			{
+				p.SetState(1521)
+				p.GenericArgumentClause()
+			}
+
 		}
 
 	case 3:
@@ -16975,6 +16975,16 @@ func (s *LiteralExpressionContext) StringOperatorLiteral() IStringOperatorLitera
 	return t.(IStringOperatorLiteralContext)
 }
 
+func (s *LiteralExpressionContext) StructLiteral() IStructLiteralContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IStructLiteralContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IStructLiteralContext)
+}
+
 func (s *LiteralExpressionContext) Literal() ILiteralContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*ILiteralContext)(nil)).Elem(), 0)
 
@@ -17013,16 +17023,6 @@ func (s *LiteralExpressionContext) ObjectLiteral() IObjectLiteralContext {
 	}
 
 	return t.(IObjectLiteralContext)
-}
-
-func (s *LiteralExpressionContext) StructLiteral() IStructLiteralContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IStructLiteralContext)(nil)).Elem(), 0)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IStructLiteralContext)
 }
 
 func (s *LiteralExpressionContext) GetRuleContext() antlr.RuleContext {
@@ -17084,35 +17084,35 @@ func (p *MojoParser) LiteralExpression() (localctx ILiteralExpressionContext) {
 		p.EnterOuterAlt(localctx, 3)
 		{
 			p.SetState(1540)
-			p.Literal()
+			p.StructLiteral()
 		}
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
 			p.SetState(1541)
-			p.ArrayLiteral()
+			p.Literal()
 		}
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
 		{
 			p.SetState(1542)
-			p.MapLiteral()
+			p.ArrayLiteral()
 		}
 
 	case 6:
 		p.EnterOuterAlt(localctx, 6)
 		{
 			p.SetState(1543)
-			p.ObjectLiteral()
+			p.MapLiteral()
 		}
 
 	case 7:
 		p.EnterOuterAlt(localctx, 7)
 		{
 			p.SetState(1544)
-			p.StructLiteral()
+			p.ObjectLiteral()
 		}
 
 	}
@@ -24786,7 +24786,7 @@ func (p *MojoParser) DeclarationIdentifier() (localctx IDeclarationIdentifierCon
 			p.Match(MojoParserVALUE_IDENTIFIER)
 		}
 
-	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR:
+	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(2067)
@@ -25245,10 +25245,6 @@ func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_NOT() antlr.TerminalN
 	return s.GetToken(MojoParserKEYWORD_NOT, 0)
 }
 
-func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_NULL() antlr.TerminalNode {
-	return s.GetToken(MojoParserKEYWORD_NULL, 0)
-}
-
 func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_PACKAGE() antlr.TerminalNode {
 	return s.GetToken(MojoParserKEYWORD_PACKAGE, 0)
 }
@@ -25321,7 +25317,7 @@ func (p *MojoParser) KeywordAsIdentifierInDeclarations() (localctx IKeywordAsIde
 		p.SetState(2084)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<MojoParserKEYWORD_AND)|(1<<MojoParserKEYWORD_AS)|(1<<MojoParserKEYWORD_ATTRIBUTE)|(1<<MojoParserKEYWORD_BREAK)|(1<<MojoParserKEYWORD_CONST)|(1<<MojoParserKEYWORD_ENUM)|(1<<MojoParserKEYWORD_FUNC)|(1<<MojoParserKEYWORD_IF)|(1<<MojoParserKEYWORD_IMPORT)|(1<<MojoParserKEYWORD_IN)|(1<<MojoParserKEYWORD_INTERFACE)|(1<<MojoParserKEYWORD_IS)|(1<<MojoParserKEYWORD_MATCH)|(1<<MojoParserKEYWORD_NOT)|(1<<MojoParserKEYWORD_NULL)|(1<<MojoParserKEYWORD_PACKAGE)|(1<<MojoParserKEYWORD_REPEATE)|(1<<MojoParserKEYWORD_RETURN)|(1<<MojoParserKEYWORD_STRUCT)|(1<<MojoParserKEYWORD_TYPE)|(1<<MojoParserKEYWORD_VAR)|(1<<MojoParserKEYWORD_XOR))) != 0) {
+		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<MojoParserKEYWORD_AND)|(1<<MojoParserKEYWORD_AS)|(1<<MojoParserKEYWORD_ATTRIBUTE)|(1<<MojoParserKEYWORD_BREAK)|(1<<MojoParserKEYWORD_CONST)|(1<<MojoParserKEYWORD_ENUM)|(1<<MojoParserKEYWORD_FUNC)|(1<<MojoParserKEYWORD_IF)|(1<<MojoParserKEYWORD_IMPORT)|(1<<MojoParserKEYWORD_IN)|(1<<MojoParserKEYWORD_INTERFACE)|(1<<MojoParserKEYWORD_IS)|(1<<MojoParserKEYWORD_MATCH)|(1<<MojoParserKEYWORD_NOT)|(1<<MojoParserKEYWORD_PACKAGE)|(1<<MojoParserKEYWORD_REPEATE)|(1<<MojoParserKEYWORD_RETURN)|(1<<MojoParserKEYWORD_STRUCT)|(1<<MojoParserKEYWORD_TYPE)|(1<<MojoParserKEYWORD_VAR)|(1<<MojoParserKEYWORD_XOR))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
