@@ -2,13 +2,13 @@ package semantic
 
 import (
 	"errors"
-	"github.com/mojo-lang/core/go/pkg/logs"
 	"sort"
 
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/context"
-	"github.com/mojo-lang/mojo/go/pkg/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 )
 
 func init() {
@@ -41,7 +41,7 @@ func (r *GlobalMaker) ParsePackage(ctx context.Context, pkg *lang.Package) error
 	if pkg == nil {
 		return errors.New("empty packages to parse")
 	}
-	
+
 	pkgs := pkg.GetAllPackageArray()
 	r.Global = treePackages(pkgs, r.Global)
 

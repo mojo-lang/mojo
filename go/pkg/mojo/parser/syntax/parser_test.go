@@ -1,7 +1,7 @@
 package syntax
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

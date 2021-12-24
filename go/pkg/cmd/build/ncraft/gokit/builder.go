@@ -11,13 +11,13 @@ import (
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 	_go "github.com/mojo-lang/mojo/go/pkg/cmd/build/go"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit"
 	kitcompiler "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
-	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/pkg/errors"
 )
 

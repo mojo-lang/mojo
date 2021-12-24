@@ -1,7 +1,7 @@
 package scaffolding
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 	"io/ioutil"
 	path2 "path"
 )

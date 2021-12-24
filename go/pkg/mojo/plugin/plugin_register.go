@@ -1,7 +1,7 @@
 package plugin
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/plugin/parser"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
 )
 
 type parserPlugin struct {

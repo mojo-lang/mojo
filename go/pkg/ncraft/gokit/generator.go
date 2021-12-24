@@ -4,11 +4,11 @@ package gokit
 import (
 	"bytes"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/template"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
-	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/pkg/errors"
 	"go/format"
 	"io"

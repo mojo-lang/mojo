@@ -3,7 +3,7 @@ package _go
 import (
 	"github.com/mojo-lang/mojo/go/pkg/go/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator"
-	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 )
 
 type Generator struct {

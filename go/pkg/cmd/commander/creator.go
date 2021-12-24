@@ -6,8 +6,8 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/cmd/create/scaffolding"
 	"github.com/mojo-lang/mojo/go/pkg/cmd/create/scaffolding/types"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers"
-	"github.com/mojo-lang/mojo/go/pkg/util"
 	"os/exec"
 	path2 "path"
 )

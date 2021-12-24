@@ -3,7 +3,7 @@ package gokit
 import (
 	"errors"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
 )

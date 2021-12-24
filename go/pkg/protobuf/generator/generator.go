@@ -7,7 +7,7 @@ import (
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo"
-	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"log"

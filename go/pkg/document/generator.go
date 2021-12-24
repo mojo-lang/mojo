@@ -2,7 +2,7 @@ package document
 
 import (
 	"github.com/mojo-lang/document/go/pkg/markdown"
-	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 )
 
 type Generator struct {

@@ -6,8 +6,8 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/document/go/pkg/markdown"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/context"
 	langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"strings"
 )

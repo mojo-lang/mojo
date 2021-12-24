@@ -1,13 +1,14 @@
 package _go
 
 import (
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/mojo/go/pkg/go"
-	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
-	"github.com/mojo-lang/mojo/go/pkg/util"
-	desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"os/exec"
 	path2 "path"
+
+	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
+	"github.com/mojo-lang/mojo/go/pkg/go"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
+	desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
 type Builder struct {

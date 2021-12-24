@@ -3,12 +3,12 @@ package _go
 import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/go/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 	protocompiler "github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
-	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"github.com/pkg/errors"
 )

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/context"
-	"github.com/mojo-lang/mojo/go/pkg/plugin/hook"
-	"github.com/mojo-lang/mojo/go/pkg/plugin/parser"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/hook"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
 	"io/fs"
 )
 
