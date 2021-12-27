@@ -53,9 +53,9 @@ func (e *ExpressionVisitor) VisitExpression(ctx *ExpressionContext) interface{} 
 }
 
 func (e *ExpressionVisitor) VisitBinaryExpressions(ctx *BinaryExpressionsContext) interface{} {
-	binaryCtxs := ctx.AllBinaryExpression()
+	binaryCtxes := ctx.AllBinaryExpression()
 	var binaries []*lang.BinaryExpr
-	for _, binaryCtx := range binaryCtxs {
+	for _, binaryCtx := range binaryCtxes {
 		if expr, ok := binaryCtx.Accept(e).(*lang.BinaryExpr); ok {
 			binaries = append(binaries, expr)
 		}
@@ -118,8 +118,8 @@ func (e *ExpressionVisitor) VisitPrefixExpression(ctx *PrefixExpressionContext) 
 					}
 				}
 				return lang.NewPrefixUnaryExpression(&lang.PrefixUnaryExpr{
-					Operator:   operator.GetText(),
-					Expression: expression,
+					Operator: &lang.Operator{Symbol: operator.GetText()},
+					Argument: expression,
 				})
 			}
 			return expression
@@ -147,8 +147,8 @@ func (e *ExpressionVisitor) VisitPostfixExpression(ctx *PostfixExpressionContext
 			operator := ctx.PostfixOperator()
 			if operator != nil {
 				return lang.NewPostfixUnaryExpression(&lang.PostfixUnaryExpr{
-					Operator:   operator.GetText(),
-					Expression: expression,
+					Operator: &lang.Operator{Symbol: operator.GetText()},
+					Argument: expression,
 				})
 			}
 
@@ -354,7 +354,14 @@ func (e *ExpressionVisitor) VisitDeclarationIdentifier(ctx *DeclarationIdentifie
 
 func (e *ExpressionVisitor) VisitParenthesizedExpression(ctx *ParenthesizedExpressionContext) interface{} {
 	if exprCtx := ctx.Expression(); exprCtx != nil {
-		return exprCtx.Accept(e)
+		if expr, ok := exprCtx.Accept(e).(*lang.Expression); ok {
+			return lang.NewParenthesizedExpression(&lang.ParenthesizedExpr{
+				StartPosition: GetPosition(ctx.GetStart()),
+				EndPosition:   GetPosition(ctx.GetStop()),
+				Kind:          0,
+				Expression:    expr,
+			})
+		}
 	}
 	return nil
 }

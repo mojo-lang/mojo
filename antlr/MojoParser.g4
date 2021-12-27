@@ -716,20 +716,14 @@ keywordAsIdentifierInDeclarations
     | 'const'
     | 'enum'
     | 'func'
-    | 'if'
     | 'import'
-    | 'in'
     | 'interface'
-    | KEYWORD_IS
     | 'match'
     | 'not'
-    //| KEYWORD_NULL
     | 'package'
     | 'repeat'
-    | 'return'
     | 'struct'
     | 'type'
-    | 'var'
     | 'xor'
     ;
 
@@ -840,14 +834,20 @@ halfOpenRangeOperator : DOT_DOT_LT;
 binaryOperator
     : rangeOperator
     | halfOpenRangeOperator
-    | operator;
+    | operator
+    | KEYWORD_AND
+    | KEYWORD_OR
+    ;
 
 /**
  "If an operator has whitespace on the left side only, it is treated as a
  prefix unary operator. As an example, the ++ operator in a ++b is treated
  as a prefix unary operator."
 */
-prefixOperator :  operator ;
+prefixOperator
+    : operator
+    | KEYWORD_NOT
+    ;
 
 /**
  "If an operator has whitespace on the right side only, it is treated as a

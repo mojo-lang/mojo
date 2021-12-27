@@ -87,10 +87,10 @@ func (a *AttributeVisitor) VisitAttributeArgumentClause(ctx *AttributeArgumentCl
 }
 
 func (a *AttributeVisitor) VisitAttributeArguments(ctx *AttributeArgumentsContext) interface{} {
-	argumentCtxs := ctx.AllAttributeArgument()
-	if argumentCtxs != nil {
+	argumentCtxes := ctx.AllAttributeArgument()
+	if argumentCtxes != nil {
 		var arguments []*lang.Argument
-		for _, argumentCtx := range argumentCtxs {
+		for _, argumentCtx := range argumentCtxes {
 			if argument, ok := argumentCtx.Accept(a).(*lang.Argument); ok {
 				arguments = append(arguments, argument)
 			} else {

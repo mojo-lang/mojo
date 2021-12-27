@@ -16,12 +16,13 @@ func (s *NumericOperatorLiteralVisitor) VisitNumericOperatorLiteral (ctx *Numeri
 
 	operatorCtx := ctx.PostfixLiteralOperator()
 	if operatorCtx != nil {
-		expr.Operator = operatorCtx.GetText()
-
+		expr.Operator = &lang.Operator{
+			Symbol: operatorCtx.GetText(),
+		}
 		literalCtx := ctx.NumericLiteral()
 		if literalCtx != nil {
 			if expression, ok := literalCtx.Accept(NewExpressionVisitor()).(*lang.Expression); ok {
-				expr.Expression = expression
+				expr.Argument = expression
 				return lang.NewNumericLiteralUnaryExpression(expr)
 			}
 		}

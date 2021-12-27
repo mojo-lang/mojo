@@ -15,7 +15,7 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 94, 2213,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 94, 2217,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
 	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
@@ -271,104 +271,105 @@ var parserATN = []uint16{
 	12, 163, 14, 163, 2097, 11, 163, 3, 163, 3, 163, 3, 164, 3, 164, 3, 164,
 	7, 164, 2104, 10, 164, 12, 164, 14, 164, 2107, 11, 164, 3, 165, 3, 165,
 	3, 166, 3, 166, 3, 167, 3, 167, 3, 168, 3, 168, 3, 169, 3, 169, 3, 170,
-	3, 170, 3, 170, 5, 170, 2122, 10, 170, 3, 171, 3, 171, 3, 172, 3, 172,
-	3, 173, 3, 173, 5, 173, 2130, 10, 173, 3, 173, 3, 173, 7, 173, 2134, 10,
-	173, 12, 173, 14, 173, 2137, 11, 173, 5, 173, 2139, 10, 173, 3, 174, 3,
-	174, 6, 174, 2143, 10, 174, 13, 174, 14, 174, 2144, 3, 175, 3, 175, 5,
-	175, 2149, 10, 175, 3, 176, 3, 176, 5, 176, 2153, 10, 176, 3, 177, 3, 177,
-	3, 178, 3, 178, 5, 178, 2159, 10, 178, 3, 179, 3, 179, 3, 179, 3, 179,
-	5, 179, 2165, 10, 179, 3, 180, 3, 180, 3, 181, 3, 181, 3, 182, 5, 182,
-	2172, 10, 182, 3, 182, 3, 182, 5, 182, 2176, 10, 182, 3, 182, 5, 182, 2179,
-	10, 182, 3, 183, 3, 183, 3, 184, 3, 184, 3, 185, 3, 185, 3, 186, 3, 186,
-	3, 187, 3, 187, 3, 187, 3, 187, 5, 187, 2193, 10, 187, 3, 187, 5, 187,
-	2196, 10, 187, 3, 187, 5, 187, 2199, 10, 187, 3, 188, 3, 188, 3, 188, 3,
-	188, 5, 188, 2205, 10, 188, 3, 188, 5, 188, 2208, 10, 188, 3, 188, 5, 188,
-	2211, 10, 188, 3, 188, 2, 5, 160, 280, 282, 189, 2, 4, 6, 8, 10, 12, 14,
-	16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50,
-	52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86,
-	88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118,
-	120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140, 142, 144, 146, 148,
-	150, 152, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172, 174, 176, 178,
-	180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200, 202, 204, 206, 208,
-	210, 212, 214, 216, 218, 220, 222, 224, 226, 228, 230, 232, 234, 236, 238,
-	240, 242, 244, 246, 248, 250, 252, 254, 256, 258, 260, 262, 264, 266, 268,
-	270, 272, 274, 276, 278, 280, 282, 284, 286, 288, 290, 292, 294, 296, 298,
-	300, 302, 304, 306, 308, 310, 312, 314, 316, 318, 320, 322, 324, 326, 328,
-	330, 332, 334, 336, 338, 340, 342, 344, 346, 348, 350, 352, 354, 356, 358,
-	360, 362, 364, 366, 368, 370, 372, 374, 2, 13, 3, 2, 75, 76, 4, 2, 76,
-	76, 78, 78, 8, 2, 3, 7, 10, 10, 13, 20, 23, 26, 28, 29, 31, 31, 3, 2, 3,
-	31, 3, 2, 60, 61, 4, 2, 42, 45, 47, 56, 4, 2, 11, 11, 27, 27, 3, 2, 79,
-	83, 3, 2, 85, 86, 4, 2, 41, 41, 91, 91, 4, 2, 39, 39, 91, 91, 2, 2371,
-	2, 379, 3, 2, 2, 2, 4, 399, 3, 2, 2, 2, 6, 401, 3, 2, 2, 2, 8, 403, 3,
-	2, 2, 2, 10, 423, 3, 2, 2, 2, 12, 425, 3, 2, 2, 2, 14, 443, 3, 2, 2, 2,
-	16, 453, 3, 2, 2, 2, 18, 470, 3, 2, 2, 2, 20, 472, 3, 2, 2, 2, 22, 484,
-	3, 2, 2, 2, 24, 486, 3, 2, 2, 2, 26, 520, 3, 2, 2, 2, 28, 522, 3, 2, 2,
-	2, 30, 548, 3, 2, 2, 2, 32, 565, 3, 2, 2, 2, 34, 586, 3, 2, 2, 2, 36, 588,
-	3, 2, 2, 2, 38, 590, 3, 2, 2, 2, 40, 592, 3, 2, 2, 2, 42, 596, 3, 2, 2,
-	2, 44, 612, 3, 2, 2, 2, 46, 637, 3, 2, 2, 2, 48, 639, 3, 2, 2, 2, 50, 655,
-	3, 2, 2, 2, 52, 670, 3, 2, 2, 2, 54, 675, 3, 2, 2, 2, 56, 695, 3, 2, 2,
-	2, 58, 713, 3, 2, 2, 2, 60, 724, 3, 2, 2, 2, 62, 732, 3, 2, 2, 2, 64, 734,
-	3, 2, 2, 2, 66, 742, 3, 2, 2, 2, 68, 750, 3, 2, 2, 2, 70, 752, 3, 2, 2,
-	2, 72, 755, 3, 2, 2, 2, 74, 758, 3, 2, 2, 2, 76, 763, 3, 2, 2, 2, 78, 766,
-	3, 2, 2, 2, 80, 785, 3, 2, 2, 2, 82, 806, 3, 2, 2, 2, 84, 810, 3, 2, 2,
-	2, 86, 814, 3, 2, 2, 2, 88, 865, 3, 2, 2, 2, 90, 868, 3, 2, 2, 2, 92, 877,
-	3, 2, 2, 2, 94, 881, 3, 2, 2, 2, 96, 896, 3, 2, 2, 2, 98, 898, 3, 2, 2,
-	2, 100, 911, 3, 2, 2, 2, 102, 913, 3, 2, 2, 2, 104, 924, 3, 2, 2, 2, 106,
-	939, 3, 2, 2, 2, 108, 943, 3, 2, 2, 2, 110, 945, 3, 2, 2, 2, 112, 958,
-	3, 2, 2, 2, 114, 977, 3, 2, 2, 2, 116, 1016, 3, 2, 2, 2, 118, 1018, 3,
-	2, 2, 2, 120, 1054, 3, 2, 2, 2, 122, 1056, 3, 2, 2, 2, 124, 1078, 3, 2,
-	2, 2, 126, 1099, 3, 2, 2, 2, 128, 1101, 3, 2, 2, 2, 130, 1120, 3, 2, 2,
-	2, 132, 1140, 3, 2, 2, 2, 134, 1147, 3, 2, 2, 2, 136, 1156, 3, 2, 2, 2,
-	138, 1167, 3, 2, 2, 2, 140, 1188, 3, 2, 2, 2, 142, 1207, 3, 2, 2, 2, 144,
-	1221, 3, 2, 2, 2, 146, 1232, 3, 2, 2, 2, 148, 1254, 3, 2, 2, 2, 150, 1256,
-	3, 2, 2, 2, 152, 1277, 3, 2, 2, 2, 154, 1296, 3, 2, 2, 2, 156, 1307, 3,
-	2, 2, 2, 158, 1320, 3, 2, 2, 2, 160, 1357, 3, 2, 2, 2, 162, 1367, 3, 2,
-	2, 2, 164, 1369, 3, 2, 2, 2, 166, 1371, 3, 2, 2, 2, 168, 1377, 3, 2, 2,
-	2, 170, 1385, 3, 2, 2, 2, 172, 1387, 3, 2, 2, 2, 174, 1390, 3, 2, 2, 2,
-	176, 1402, 3, 2, 2, 2, 178, 1407, 3, 2, 2, 2, 180, 1411, 3, 2, 2, 2, 182,
-	1413, 3, 2, 2, 2, 184, 1434, 3, 2, 2, 2, 186, 1438, 3, 2, 2, 2, 188, 1456,
-	3, 2, 2, 2, 190, 1466, 3, 2, 2, 2, 192, 1470, 3, 2, 2, 2, 194, 1492, 3,
-	2, 2, 2, 196, 1504, 3, 2, 2, 2, 198, 1507, 3, 2, 2, 2, 200, 1511, 3, 2,
-	2, 2, 202, 1519, 3, 2, 2, 2, 204, 1538, 3, 2, 2, 2, 206, 1547, 3, 2, 2,
-	2, 208, 1549, 3, 2, 2, 2, 210, 1552, 3, 2, 2, 2, 212, 1555, 3, 2, 2, 2,
-	214, 1557, 3, 2, 2, 2, 216, 1559, 3, 2, 2, 2, 218, 1577, 3, 2, 2, 2, 220,
-	1595, 3, 2, 2, 2, 222, 1597, 3, 2, 2, 2, 224, 1615, 3, 2, 2, 2, 226, 1635,
-	3, 2, 2, 2, 228, 1640, 3, 2, 2, 2, 230, 1658, 3, 2, 2, 2, 232, 1676, 3,
-	2, 2, 2, 234, 1681, 3, 2, 2, 2, 236, 1684, 3, 2, 2, 2, 238, 1718, 3, 2,
-	2, 2, 240, 1720, 3, 2, 2, 2, 242, 1740, 3, 2, 2, 2, 244, 1742, 3, 2, 2,
-	2, 246, 1745, 3, 2, 2, 2, 248, 1773, 3, 2, 2, 2, 250, 1780, 3, 2, 2, 2,
-	252, 1782, 3, 2, 2, 2, 254, 1784, 3, 2, 2, 2, 256, 1797, 3, 2, 2, 2, 258,
-	1799, 3, 2, 2, 2, 260, 1811, 3, 2, 2, 2, 262, 1820, 3, 2, 2, 2, 264, 1828,
-	3, 2, 2, 2, 266, 1830, 3, 2, 2, 2, 268, 1848, 3, 2, 2, 2, 270, 1850, 3,
-	2, 2, 2, 272, 1855, 3, 2, 2, 2, 274, 1859, 3, 2, 2, 2, 276, 1863, 3, 2,
-	2, 2, 278, 1870, 3, 2, 2, 2, 280, 1876, 3, 2, 2, 2, 282, 1889, 3, 2, 2,
-	2, 284, 1943, 3, 2, 2, 2, 286, 1945, 3, 2, 2, 2, 288, 1953, 3, 2, 2, 2,
-	290, 1963, 3, 2, 2, 2, 292, 1967, 3, 2, 2, 2, 294, 1969, 3, 2, 2, 2, 296,
-	1987, 3, 2, 2, 2, 298, 2008, 3, 2, 2, 2, 300, 2014, 3, 2, 2, 2, 302, 2018,
-	3, 2, 2, 2, 304, 2025, 3, 2, 2, 2, 306, 2037, 3, 2, 2, 2, 308, 2046, 3,
-	2, 2, 2, 310, 2064, 3, 2, 2, 2, 312, 2070, 3, 2, 2, 2, 314, 2074, 3, 2,
-	2, 2, 316, 2076, 3, 2, 2, 2, 318, 2084, 3, 2, 2, 2, 320, 2086, 3, 2, 2,
-	2, 322, 2088, 3, 2, 2, 2, 324, 2090, 3, 2, 2, 2, 326, 2100, 3, 2, 2, 2,
-	328, 2108, 3, 2, 2, 2, 330, 2110, 3, 2, 2, 2, 332, 2112, 3, 2, 2, 2, 334,
-	2114, 3, 2, 2, 2, 336, 2116, 3, 2, 2, 2, 338, 2121, 3, 2, 2, 2, 340, 2123,
-	3, 2, 2, 2, 342, 2125, 3, 2, 2, 2, 344, 2138, 3, 2, 2, 2, 346, 2142, 3,
-	2, 2, 2, 348, 2148, 3, 2, 2, 2, 350, 2152, 3, 2, 2, 2, 352, 2154, 3, 2,
-	2, 2, 354, 2158, 3, 2, 2, 2, 356, 2164, 3, 2, 2, 2, 358, 2166, 3, 2, 2,
-	2, 360, 2168, 3, 2, 2, 2, 362, 2178, 3, 2, 2, 2, 364, 2180, 3, 2, 2, 2,
-	366, 2182, 3, 2, 2, 2, 368, 2184, 3, 2, 2, 2, 370, 2186, 3, 2, 2, 2, 372,
-	2198, 3, 2, 2, 2, 374, 2210, 3, 2, 2, 2, 376, 378, 7, 91, 2, 2, 377, 376,
-	3, 2, 2, 2, 378, 381, 3, 2, 2, 2, 379, 377, 3, 2, 2, 2, 379, 380, 3, 2,
-	2, 2, 380, 383, 3, 2, 2, 2, 381, 379, 3, 2, 2, 2, 382, 384, 5, 8, 5, 2,
-	383, 382, 3, 2, 2, 2, 383, 384, 3, 2, 2, 2, 384, 388, 3, 2, 2, 2, 385,
-	387, 7, 91, 2, 2, 386, 385, 3, 2, 2, 2, 387, 390, 3, 2, 2, 2, 388, 386,
-	3, 2, 2, 2, 388, 389, 3, 2, 2, 2, 389, 391, 3, 2, 2, 2, 390, 388, 3, 2,
-	2, 2, 391, 392, 7, 2, 2, 3, 392, 3, 3, 2, 2, 2, 393, 400, 5, 54, 28, 2,
-	394, 400, 5, 190, 96, 2, 395, 400, 5, 10, 6, 2, 396, 400, 5, 22, 12, 2,
-	397, 400, 5, 34, 18, 2, 398, 400, 5, 6, 4, 2, 399, 393, 3, 2, 2, 2, 399,
-	394, 3, 2, 2, 2, 399, 395, 3, 2, 2, 2, 399, 396, 3, 2, 2, 2, 399, 397,
-	3, 2, 2, 2, 399, 398, 3, 2, 2, 2, 400, 5, 3, 2, 2, 2, 401, 402, 5, 324,
-	163, 2, 402, 7, 3, 2, 2, 2, 403, 415, 5, 4, 3, 2, 404, 408, 5, 368, 185,
-	2, 405, 407, 7, 91, 2, 2, 406, 405, 3, 2, 2, 2, 407, 410, 3, 2, 2, 2, 408,
+	3, 170, 3, 170, 3, 170, 3, 170, 5, 170, 2124, 10, 170, 3, 171, 3, 171,
+	5, 171, 2128, 10, 171, 3, 172, 3, 172, 3, 173, 3, 173, 5, 173, 2134, 10,
+	173, 3, 173, 3, 173, 7, 173, 2138, 10, 173, 12, 173, 14, 173, 2141, 11,
+	173, 5, 173, 2143, 10, 173, 3, 174, 3, 174, 6, 174, 2147, 10, 174, 13,
+	174, 14, 174, 2148, 3, 175, 3, 175, 5, 175, 2153, 10, 175, 3, 176, 3, 176,
+	5, 176, 2157, 10, 176, 3, 177, 3, 177, 3, 178, 3, 178, 5, 178, 2163, 10,
+	178, 3, 179, 3, 179, 3, 179, 3, 179, 5, 179, 2169, 10, 179, 3, 180, 3,
+	180, 3, 181, 3, 181, 3, 182, 5, 182, 2176, 10, 182, 3, 182, 3, 182, 5,
+	182, 2180, 10, 182, 3, 182, 5, 182, 2183, 10, 182, 3, 183, 3, 183, 3, 184,
+	3, 184, 3, 185, 3, 185, 3, 186, 3, 186, 3, 187, 3, 187, 3, 187, 3, 187,
+	5, 187, 2197, 10, 187, 3, 187, 5, 187, 2200, 10, 187, 3, 187, 5, 187, 2203,
+	10, 187, 3, 188, 3, 188, 3, 188, 3, 188, 5, 188, 2209, 10, 188, 3, 188,
+	5, 188, 2212, 10, 188, 3, 188, 5, 188, 2215, 10, 188, 3, 188, 2, 5, 160,
+	280, 282, 189, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
+	32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66,
+	68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102,
+	104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132,
+	134, 136, 138, 140, 142, 144, 146, 148, 150, 152, 154, 156, 158, 160, 162,
+	164, 166, 168, 170, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192,
+	194, 196, 198, 200, 202, 204, 206, 208, 210, 212, 214, 216, 218, 220, 222,
+	224, 226, 228, 230, 232, 234, 236, 238, 240, 242, 244, 246, 248, 250, 252,
+	254, 256, 258, 260, 262, 264, 266, 268, 270, 272, 274, 276, 278, 280, 282,
+	284, 286, 288, 290, 292, 294, 296, 298, 300, 302, 304, 306, 308, 310, 312,
+	314, 316, 318, 320, 322, 324, 326, 328, 330, 332, 334, 336, 338, 340, 342,
+	344, 346, 348, 350, 352, 354, 356, 358, 360, 362, 364, 366, 368, 370, 372,
+	374, 2, 13, 3, 2, 75, 76, 4, 2, 76, 76, 78, 78, 12, 2, 3, 7, 10, 10, 13,
+	13, 15, 15, 17, 17, 19, 20, 23, 24, 26, 26, 28, 28, 31, 31, 3, 2, 3, 31,
+	3, 2, 60, 61, 4, 2, 42, 45, 47, 56, 4, 2, 11, 11, 27, 27, 3, 2, 79, 83,
+	3, 2, 85, 86, 4, 2, 41, 41, 91, 91, 4, 2, 39, 39, 91, 91, 2, 2378, 2, 379,
+	3, 2, 2, 2, 4, 399, 3, 2, 2, 2, 6, 401, 3, 2, 2, 2, 8, 403, 3, 2, 2, 2,
+	10, 423, 3, 2, 2, 2, 12, 425, 3, 2, 2, 2, 14, 443, 3, 2, 2, 2, 16, 453,
+	3, 2, 2, 2, 18, 470, 3, 2, 2, 2, 20, 472, 3, 2, 2, 2, 22, 484, 3, 2, 2,
+	2, 24, 486, 3, 2, 2, 2, 26, 520, 3, 2, 2, 2, 28, 522, 3, 2, 2, 2, 30, 548,
+	3, 2, 2, 2, 32, 565, 3, 2, 2, 2, 34, 586, 3, 2, 2, 2, 36, 588, 3, 2, 2,
+	2, 38, 590, 3, 2, 2, 2, 40, 592, 3, 2, 2, 2, 42, 596, 3, 2, 2, 2, 44, 612,
+	3, 2, 2, 2, 46, 637, 3, 2, 2, 2, 48, 639, 3, 2, 2, 2, 50, 655, 3, 2, 2,
+	2, 52, 670, 3, 2, 2, 2, 54, 675, 3, 2, 2, 2, 56, 695, 3, 2, 2, 2, 58, 713,
+	3, 2, 2, 2, 60, 724, 3, 2, 2, 2, 62, 732, 3, 2, 2, 2, 64, 734, 3, 2, 2,
+	2, 66, 742, 3, 2, 2, 2, 68, 750, 3, 2, 2, 2, 70, 752, 3, 2, 2, 2, 72, 755,
+	3, 2, 2, 2, 74, 758, 3, 2, 2, 2, 76, 763, 3, 2, 2, 2, 78, 766, 3, 2, 2,
+	2, 80, 785, 3, 2, 2, 2, 82, 806, 3, 2, 2, 2, 84, 810, 3, 2, 2, 2, 86, 814,
+	3, 2, 2, 2, 88, 865, 3, 2, 2, 2, 90, 868, 3, 2, 2, 2, 92, 877, 3, 2, 2,
+	2, 94, 881, 3, 2, 2, 2, 96, 896, 3, 2, 2, 2, 98, 898, 3, 2, 2, 2, 100,
+	911, 3, 2, 2, 2, 102, 913, 3, 2, 2, 2, 104, 924, 3, 2, 2, 2, 106, 939,
+	3, 2, 2, 2, 108, 943, 3, 2, 2, 2, 110, 945, 3, 2, 2, 2, 112, 958, 3, 2,
+	2, 2, 114, 977, 3, 2, 2, 2, 116, 1016, 3, 2, 2, 2, 118, 1018, 3, 2, 2,
+	2, 120, 1054, 3, 2, 2, 2, 122, 1056, 3, 2, 2, 2, 124, 1078, 3, 2, 2, 2,
+	126, 1099, 3, 2, 2, 2, 128, 1101, 3, 2, 2, 2, 130, 1120, 3, 2, 2, 2, 132,
+	1140, 3, 2, 2, 2, 134, 1147, 3, 2, 2, 2, 136, 1156, 3, 2, 2, 2, 138, 1167,
+	3, 2, 2, 2, 140, 1188, 3, 2, 2, 2, 142, 1207, 3, 2, 2, 2, 144, 1221, 3,
+	2, 2, 2, 146, 1232, 3, 2, 2, 2, 148, 1254, 3, 2, 2, 2, 150, 1256, 3, 2,
+	2, 2, 152, 1277, 3, 2, 2, 2, 154, 1296, 3, 2, 2, 2, 156, 1307, 3, 2, 2,
+	2, 158, 1320, 3, 2, 2, 2, 160, 1357, 3, 2, 2, 2, 162, 1367, 3, 2, 2, 2,
+	164, 1369, 3, 2, 2, 2, 166, 1371, 3, 2, 2, 2, 168, 1377, 3, 2, 2, 2, 170,
+	1385, 3, 2, 2, 2, 172, 1387, 3, 2, 2, 2, 174, 1390, 3, 2, 2, 2, 176, 1402,
+	3, 2, 2, 2, 178, 1407, 3, 2, 2, 2, 180, 1411, 3, 2, 2, 2, 182, 1413, 3,
+	2, 2, 2, 184, 1434, 3, 2, 2, 2, 186, 1438, 3, 2, 2, 2, 188, 1456, 3, 2,
+	2, 2, 190, 1466, 3, 2, 2, 2, 192, 1470, 3, 2, 2, 2, 194, 1492, 3, 2, 2,
+	2, 196, 1504, 3, 2, 2, 2, 198, 1507, 3, 2, 2, 2, 200, 1511, 3, 2, 2, 2,
+	202, 1519, 3, 2, 2, 2, 204, 1538, 3, 2, 2, 2, 206, 1547, 3, 2, 2, 2, 208,
+	1549, 3, 2, 2, 2, 210, 1552, 3, 2, 2, 2, 212, 1555, 3, 2, 2, 2, 214, 1557,
+	3, 2, 2, 2, 216, 1559, 3, 2, 2, 2, 218, 1577, 3, 2, 2, 2, 220, 1595, 3,
+	2, 2, 2, 222, 1597, 3, 2, 2, 2, 224, 1615, 3, 2, 2, 2, 226, 1635, 3, 2,
+	2, 2, 228, 1640, 3, 2, 2, 2, 230, 1658, 3, 2, 2, 2, 232, 1676, 3, 2, 2,
+	2, 234, 1681, 3, 2, 2, 2, 236, 1684, 3, 2, 2, 2, 238, 1718, 3, 2, 2, 2,
+	240, 1720, 3, 2, 2, 2, 242, 1740, 3, 2, 2, 2, 244, 1742, 3, 2, 2, 2, 246,
+	1745, 3, 2, 2, 2, 248, 1773, 3, 2, 2, 2, 250, 1780, 3, 2, 2, 2, 252, 1782,
+	3, 2, 2, 2, 254, 1784, 3, 2, 2, 2, 256, 1797, 3, 2, 2, 2, 258, 1799, 3,
+	2, 2, 2, 260, 1811, 3, 2, 2, 2, 262, 1820, 3, 2, 2, 2, 264, 1828, 3, 2,
+	2, 2, 266, 1830, 3, 2, 2, 2, 268, 1848, 3, 2, 2, 2, 270, 1850, 3, 2, 2,
+	2, 272, 1855, 3, 2, 2, 2, 274, 1859, 3, 2, 2, 2, 276, 1863, 3, 2, 2, 2,
+	278, 1870, 3, 2, 2, 2, 280, 1876, 3, 2, 2, 2, 282, 1889, 3, 2, 2, 2, 284,
+	1943, 3, 2, 2, 2, 286, 1945, 3, 2, 2, 2, 288, 1953, 3, 2, 2, 2, 290, 1963,
+	3, 2, 2, 2, 292, 1967, 3, 2, 2, 2, 294, 1969, 3, 2, 2, 2, 296, 1987, 3,
+	2, 2, 2, 298, 2008, 3, 2, 2, 2, 300, 2014, 3, 2, 2, 2, 302, 2018, 3, 2,
+	2, 2, 304, 2025, 3, 2, 2, 2, 306, 2037, 3, 2, 2, 2, 308, 2046, 3, 2, 2,
+	2, 310, 2064, 3, 2, 2, 2, 312, 2070, 3, 2, 2, 2, 314, 2074, 3, 2, 2, 2,
+	316, 2076, 3, 2, 2, 2, 318, 2084, 3, 2, 2, 2, 320, 2086, 3, 2, 2, 2, 322,
+	2088, 3, 2, 2, 2, 324, 2090, 3, 2, 2, 2, 326, 2100, 3, 2, 2, 2, 328, 2108,
+	3, 2, 2, 2, 330, 2110, 3, 2, 2, 2, 332, 2112, 3, 2, 2, 2, 334, 2114, 3,
+	2, 2, 2, 336, 2116, 3, 2, 2, 2, 338, 2123, 3, 2, 2, 2, 340, 2127, 3, 2,
+	2, 2, 342, 2129, 3, 2, 2, 2, 344, 2142, 3, 2, 2, 2, 346, 2146, 3, 2, 2,
+	2, 348, 2152, 3, 2, 2, 2, 350, 2156, 3, 2, 2, 2, 352, 2158, 3, 2, 2, 2,
+	354, 2162, 3, 2, 2, 2, 356, 2168, 3, 2, 2, 2, 358, 2170, 3, 2, 2, 2, 360,
+	2172, 3, 2, 2, 2, 362, 2182, 3, 2, 2, 2, 364, 2184, 3, 2, 2, 2, 366, 2186,
+	3, 2, 2, 2, 368, 2188, 3, 2, 2, 2, 370, 2190, 3, 2, 2, 2, 372, 2202, 3,
+	2, 2, 2, 374, 2214, 3, 2, 2, 2, 376, 378, 7, 91, 2, 2, 377, 376, 3, 2,
+	2, 2, 378, 381, 3, 2, 2, 2, 379, 377, 3, 2, 2, 2, 379, 380, 3, 2, 2, 2,
+	380, 383, 3, 2, 2, 2, 381, 379, 3, 2, 2, 2, 382, 384, 5, 8, 5, 2, 383,
+	382, 3, 2, 2, 2, 383, 384, 3, 2, 2, 2, 384, 388, 3, 2, 2, 2, 385, 387,
+	7, 91, 2, 2, 386, 385, 3, 2, 2, 2, 387, 390, 3, 2, 2, 2, 388, 386, 3, 2,
+	2, 2, 388, 389, 3, 2, 2, 2, 389, 391, 3, 2, 2, 2, 390, 388, 3, 2, 2, 2,
+	391, 392, 7, 2, 2, 3, 392, 3, 3, 2, 2, 2, 393, 400, 5, 54, 28, 2, 394,
+	400, 5, 190, 96, 2, 395, 400, 5, 10, 6, 2, 396, 400, 5, 22, 12, 2, 397,
+	400, 5, 34, 18, 2, 398, 400, 5, 6, 4, 2, 399, 393, 3, 2, 2, 2, 399, 394,
+	3, 2, 2, 2, 399, 395, 3, 2, 2, 2, 399, 396, 3, 2, 2, 2, 399, 397, 3, 2,
+	2, 2, 399, 398, 3, 2, 2, 2, 400, 5, 3, 2, 2, 2, 401, 402, 5, 324, 163,
+	2, 402, 7, 3, 2, 2, 2, 403, 415, 5, 4, 3, 2, 404, 408, 5, 368, 185, 2,
+	405, 407, 7, 91, 2, 2, 406, 405, 3, 2, 2, 2, 407, 410, 3, 2, 2, 2, 408,
 	406, 3, 2, 2, 2, 408, 409, 3, 2, 2, 2, 409, 411, 3, 2, 2, 2, 410, 408,
 	3, 2, 2, 2, 411, 412, 5, 4, 3, 2, 412, 414, 3, 2, 2, 2, 413, 404, 3, 2,
 	2, 2, 414, 417, 3, 2, 2, 2, 415, 413, 3, 2, 2, 2, 415, 416, 3, 2, 2, 2,
@@ -1038,70 +1039,72 @@ var parserATN = []uint16{
 	3, 2, 2, 2, 2107, 2105, 3, 2, 2, 2, 2108, 2109, 7, 49, 2, 2, 2109, 329,
 	3, 2, 2, 2, 2110, 2111, 7, 48, 2, 2, 2111, 331, 3, 2, 2, 2, 2112, 2113,
 	7, 64, 2, 2, 2113, 333, 3, 2, 2, 2, 2114, 2115, 7, 65, 2, 2, 2115, 335,
-	3, 2, 2, 2, 2116, 2117, 7, 66, 2, 2, 2117, 337, 3, 2, 2, 2, 2118, 2122,
-	5, 334, 168, 2, 2119, 2122, 5, 336, 169, 2, 2120, 2122, 5, 344, 173, 2,
-	2121, 2118, 3, 2, 2, 2, 2121, 2119, 3, 2, 2, 2, 2121, 2120, 3, 2, 2, 2,
-	2122, 339, 3, 2, 2, 2, 2123, 2124, 5, 344, 173, 2, 2124, 341, 3, 2, 2,
-	2, 2125, 2126, 9, 6, 2, 2, 2126, 343, 3, 2, 2, 2, 2127, 2129, 5, 350, 176,
-	2, 2128, 2130, 5, 346, 174, 2, 2129, 2128, 3, 2, 2, 2, 2129, 2130, 3, 2,
-	2, 2, 2130, 2139, 3, 2, 2, 2, 2131, 2135, 5, 352, 177, 2, 2132, 2134, 5,
-	354, 178, 2, 2133, 2132, 3, 2, 2, 2, 2134, 2137, 3, 2, 2, 2, 2135, 2133,
-	3, 2, 2, 2, 2135, 2136, 3, 2, 2, 2, 2136, 2139, 3, 2, 2, 2, 2137, 2135,
-	3, 2, 2, 2, 2138, 2127, 3, 2, 2, 2, 2138, 2131, 3, 2, 2, 2, 2139, 345,
-	3, 2, 2, 2, 2140, 2141, 6, 174, 8, 2, 2141, 2143, 5, 348, 175, 2, 2142,
-	2140, 3, 2, 2, 2, 2143, 2144, 3, 2, 2, 2, 2144, 2142, 3, 2, 2, 2, 2144,
-	2145, 3, 2, 2, 2, 2145, 347, 3, 2, 2, 2, 2146, 2149, 5, 350, 176, 2, 2147,
-	2149, 7, 94, 2, 2, 2148, 2146, 3, 2, 2, 2, 2148, 2147, 3, 2, 2, 2, 2149,
-	349, 3, 2, 2, 2, 2150, 2153, 9, 7, 2, 2, 2151, 2153, 7, 77, 2, 2, 2152,
-	2150, 3, 2, 2, 2, 2152, 2151, 3, 2, 2, 2, 2153, 351, 3, 2, 2, 2, 2154,
-	2155, 7, 32, 2, 2, 2155, 353, 3, 2, 2, 2, 2156, 2159, 7, 32, 2, 2, 2157,
-	2159, 5, 348, 175, 2, 2158, 2156, 3, 2, 2, 2, 2158, 2157, 3, 2, 2, 2, 2159,
-	355, 3, 2, 2, 2, 2160, 2165, 5, 362, 182, 2, 2161, 2165, 5, 366, 184, 2,
-	2162, 2165, 5, 358, 180, 2, 2163, 2165, 5, 360, 181, 2, 2164, 2160, 3,
-	2, 2, 2, 2164, 2161, 3, 2, 2, 2, 2164, 2162, 3, 2, 2, 2, 2164, 2163, 3,
-	2, 2, 2, 2165, 357, 3, 2, 2, 2, 2166, 2167, 9, 8, 2, 2, 2167, 359, 3, 2,
-	2, 2, 2168, 2169, 7, 21, 2, 2, 2169, 361, 3, 2, 2, 2, 2170, 2172, 5, 330,
-	166, 2, 2171, 2170, 3, 2, 2, 2, 2171, 2172, 3, 2, 2, 2, 2172, 2173, 3,
-	2, 2, 2, 2173, 2179, 5, 364, 183, 2, 2174, 2176, 5, 330, 166, 2, 2175,
-	2174, 3, 2, 2, 2, 2175, 2176, 3, 2, 2, 2, 2176, 2177, 3, 2, 2, 2, 2177,
-	2179, 7, 84, 2, 2, 2178, 2171, 3, 2, 2, 2, 2178, 2175, 3, 2, 2, 2, 2179,
-	363, 3, 2, 2, 2, 2180, 2181, 9, 9, 2, 2, 2181, 365, 3, 2, 2, 2, 2182, 2183,
-	9, 10, 2, 2, 2183, 367, 3, 2, 2, 2, 2184, 2185, 9, 11, 2, 2, 2185, 369,
-	3, 2, 2, 2, 2186, 2187, 9, 12, 2, 2, 2187, 371, 3, 2, 2, 2, 2188, 2192,
-	7, 41, 2, 2, 2189, 2190, 5, 326, 164, 2, 2190, 2191, 7, 91, 2, 2, 2191,
-	2193, 3, 2, 2, 2, 2192, 2189, 3, 2, 2, 2, 2192, 2193, 3, 2, 2, 2, 2193,
-	2199, 3, 2, 2, 2, 2194, 2196, 5, 326, 164, 2, 2195, 2194, 3, 2, 2, 2, 2195,
-	2196, 3, 2, 2, 2, 2196, 2197, 3, 2, 2, 2, 2197, 2199, 7, 91, 2, 2, 2198,
-	2188, 3, 2, 2, 2, 2198, 2195, 3, 2, 2, 2, 2199, 373, 3, 2, 2, 2, 2200,
-	2204, 7, 39, 2, 2, 2201, 2202, 5, 326, 164, 2, 2202, 2203, 7, 91, 2, 2,
-	2203, 2205, 3, 2, 2, 2, 2204, 2201, 3, 2, 2, 2, 2204, 2205, 3, 2, 2, 2,
-	2205, 2211, 3, 2, 2, 2, 2206, 2208, 5, 326, 164, 2, 2207, 2206, 3, 2, 2,
-	2, 2207, 2208, 3, 2, 2, 2, 2208, 2209, 3, 2, 2, 2, 2209, 2211, 7, 91, 2,
-	2, 2210, 2200, 3, 2, 2, 2, 2210, 2207, 3, 2, 2, 2, 2211, 375, 3, 2, 2,
-	2, 300, 379, 383, 388, 399, 408, 415, 419, 423, 430, 438, 448, 458, 465,
-	470, 477, 484, 491, 498, 502, 508, 516, 520, 527, 534, 538, 543, 553, 560,
-	569, 576, 581, 586, 594, 600, 607, 617, 624, 628, 637, 643, 650, 660, 667,
-	672, 675, 679, 681, 693, 699, 703, 708, 718, 722, 729, 740, 747, 761, 771,
-	778, 785, 791, 796, 800, 804, 808, 812, 822, 829, 836, 844, 851, 855, 860,
-	865, 868, 873, 879, 885, 896, 901, 906, 917, 922, 927, 933, 937, 943, 947,
-	952, 956, 962, 966, 971, 975, 979, 984, 988, 993, 1004, 1011, 1016, 1023,
-	1030, 1034, 1041, 1045, 1052, 1054, 1059, 1064, 1068, 1073, 1080, 1085,
-	1089, 1094, 1106, 1113, 1117, 1120, 1125, 1129, 1134, 1138, 1143, 1152,
-	1156, 1161, 1165, 1169, 1174, 1178, 1183, 1193, 1200, 1204, 1207, 1212,
-	1219, 1226, 1230, 1235, 1240, 1244, 1249, 1258, 1263, 1267, 1272, 1282,
-	1289, 1293, 1296, 1301, 1305, 1309, 1314, 1320, 1325, 1329, 1334, 1338,
-	1343, 1347, 1351, 1357, 1364, 1373, 1382, 1397, 1400, 1402, 1407, 1417,
-	1421, 1426, 1434, 1443, 1450, 1454, 1458, 1463, 1468, 1475, 1482, 1486,
-	1492, 1504, 1509, 1519, 1524, 1530, 1538, 1547, 1563, 1567, 1572, 1582,
-	1589, 1593, 1601, 1605, 1610, 1620, 1627, 1631, 1635, 1644, 1648, 1653,
-	1663, 1670, 1674, 1679, 1696, 1703, 1707, 1712, 1718, 1725, 1732, 1736,
-	1740, 1749, 1756, 1769, 1773, 1780, 1788, 1792, 1797, 1807, 1809, 1816,
-	1820, 1828, 1835, 1848, 1852, 1857, 1867, 1876, 1884, 1886, 1894, 1899,
-	1906, 1911, 1915, 1920, 1927, 1932, 1934, 1936, 1943, 1948, 1953, 1960,
-	1965, 1973, 1977, 1982, 1992, 1999, 2003, 2008, 2012, 2021, 2028, 2033,
-	2041, 2051, 2058, 2062, 2066, 2070, 2074, 2081, 2095, 2105, 2121, 2129,
-	2135, 2138, 2144, 2148, 2152, 2158, 2164, 2171, 2175, 2178, 2192, 2195,
-	2198, 2204, 2207, 2210,
+	3, 2, 2, 2, 2116, 2117, 7, 66, 2, 2, 2117, 337, 3, 2, 2, 2, 2118, 2124,
+	5, 334, 168, 2, 2119, 2124, 5, 336, 169, 2, 2120, 2124, 5, 344, 173, 2,
+	2121, 2124, 7, 3, 2, 2, 2122, 2124, 7, 22, 2, 2, 2123, 2118, 3, 2, 2, 2,
+	2123, 2119, 3, 2, 2, 2, 2123, 2120, 3, 2, 2, 2, 2123, 2121, 3, 2, 2, 2,
+	2123, 2122, 3, 2, 2, 2, 2124, 339, 3, 2, 2, 2, 2125, 2128, 5, 344, 173,
+	2, 2126, 2128, 7, 20, 2, 2, 2127, 2125, 3, 2, 2, 2, 2127, 2126, 3, 2, 2,
+	2, 2128, 341, 3, 2, 2, 2, 2129, 2130, 9, 6, 2, 2, 2130, 343, 3, 2, 2, 2,
+	2131, 2133, 5, 350, 176, 2, 2132, 2134, 5, 346, 174, 2, 2133, 2132, 3,
+	2, 2, 2, 2133, 2134, 3, 2, 2, 2, 2134, 2143, 3, 2, 2, 2, 2135, 2139, 5,
+	352, 177, 2, 2136, 2138, 5, 354, 178, 2, 2137, 2136, 3, 2, 2, 2, 2138,
+	2141, 3, 2, 2, 2, 2139, 2137, 3, 2, 2, 2, 2139, 2140, 3, 2, 2, 2, 2140,
+	2143, 3, 2, 2, 2, 2141, 2139, 3, 2, 2, 2, 2142, 2131, 3, 2, 2, 2, 2142,
+	2135, 3, 2, 2, 2, 2143, 345, 3, 2, 2, 2, 2144, 2145, 6, 174, 8, 2, 2145,
+	2147, 5, 348, 175, 2, 2146, 2144, 3, 2, 2, 2, 2147, 2148, 3, 2, 2, 2, 2148,
+	2146, 3, 2, 2, 2, 2148, 2149, 3, 2, 2, 2, 2149, 347, 3, 2, 2, 2, 2150,
+	2153, 5, 350, 176, 2, 2151, 2153, 7, 94, 2, 2, 2152, 2150, 3, 2, 2, 2,
+	2152, 2151, 3, 2, 2, 2, 2153, 349, 3, 2, 2, 2, 2154, 2157, 9, 7, 2, 2,
+	2155, 2157, 7, 77, 2, 2, 2156, 2154, 3, 2, 2, 2, 2156, 2155, 3, 2, 2, 2,
+	2157, 351, 3, 2, 2, 2, 2158, 2159, 7, 32, 2, 2, 2159, 353, 3, 2, 2, 2,
+	2160, 2163, 7, 32, 2, 2, 2161, 2163, 5, 348, 175, 2, 2162, 2160, 3, 2,
+	2, 2, 2162, 2161, 3, 2, 2, 2, 2163, 355, 3, 2, 2, 2, 2164, 2169, 5, 362,
+	182, 2, 2165, 2169, 5, 366, 184, 2, 2166, 2169, 5, 358, 180, 2, 2167, 2169,
+	5, 360, 181, 2, 2168, 2164, 3, 2, 2, 2, 2168, 2165, 3, 2, 2, 2, 2168, 2166,
+	3, 2, 2, 2, 2168, 2167, 3, 2, 2, 2, 2169, 357, 3, 2, 2, 2, 2170, 2171,
+	9, 8, 2, 2, 2171, 359, 3, 2, 2, 2, 2172, 2173, 7, 21, 2, 2, 2173, 361,
+	3, 2, 2, 2, 2174, 2176, 5, 330, 166, 2, 2175, 2174, 3, 2, 2, 2, 2175, 2176,
+	3, 2, 2, 2, 2176, 2177, 3, 2, 2, 2, 2177, 2183, 5, 364, 183, 2, 2178, 2180,
+	5, 330, 166, 2, 2179, 2178, 3, 2, 2, 2, 2179, 2180, 3, 2, 2, 2, 2180, 2181,
+	3, 2, 2, 2, 2181, 2183, 7, 84, 2, 2, 2182, 2175, 3, 2, 2, 2, 2182, 2179,
+	3, 2, 2, 2, 2183, 363, 3, 2, 2, 2, 2184, 2185, 9, 9, 2, 2, 2185, 365, 3,
+	2, 2, 2, 2186, 2187, 9, 10, 2, 2, 2187, 367, 3, 2, 2, 2, 2188, 2189, 9,
+	11, 2, 2, 2189, 369, 3, 2, 2, 2, 2190, 2191, 9, 12, 2, 2, 2191, 371, 3,
+	2, 2, 2, 2192, 2196, 7, 41, 2, 2, 2193, 2194, 5, 326, 164, 2, 2194, 2195,
+	7, 91, 2, 2, 2195, 2197, 3, 2, 2, 2, 2196, 2193, 3, 2, 2, 2, 2196, 2197,
+	3, 2, 2, 2, 2197, 2203, 3, 2, 2, 2, 2198, 2200, 5, 326, 164, 2, 2199, 2198,
+	3, 2, 2, 2, 2199, 2200, 3, 2, 2, 2, 2200, 2201, 3, 2, 2, 2, 2201, 2203,
+	7, 91, 2, 2, 2202, 2192, 3, 2, 2, 2, 2202, 2199, 3, 2, 2, 2, 2203, 373,
+	3, 2, 2, 2, 2204, 2208, 7, 39, 2, 2, 2205, 2206, 5, 326, 164, 2, 2206,
+	2207, 7, 91, 2, 2, 2207, 2209, 3, 2, 2, 2, 2208, 2205, 3, 2, 2, 2, 2208,
+	2209, 3, 2, 2, 2, 2209, 2215, 3, 2, 2, 2, 2210, 2212, 5, 326, 164, 2, 2211,
+	2210, 3, 2, 2, 2, 2211, 2212, 3, 2, 2, 2, 2212, 2213, 3, 2, 2, 2, 2213,
+	2215, 7, 91, 2, 2, 2214, 2204, 3, 2, 2, 2, 2214, 2211, 3, 2, 2, 2, 2215,
+	375, 3, 2, 2, 2, 301, 379, 383, 388, 399, 408, 415, 419, 423, 430, 438,
+	448, 458, 465, 470, 477, 484, 491, 498, 502, 508, 516, 520, 527, 534, 538,
+	543, 553, 560, 569, 576, 581, 586, 594, 600, 607, 617, 624, 628, 637, 643,
+	650, 660, 667, 672, 675, 679, 681, 693, 699, 703, 708, 718, 722, 729, 740,
+	747, 761, 771, 778, 785, 791, 796, 800, 804, 808, 812, 822, 829, 836, 844,
+	851, 855, 860, 865, 868, 873, 879, 885, 896, 901, 906, 917, 922, 927, 933,
+	937, 943, 947, 952, 956, 962, 966, 971, 975, 979, 984, 988, 993, 1004,
+	1011, 1016, 1023, 1030, 1034, 1041, 1045, 1052, 1054, 1059, 1064, 1068,
+	1073, 1080, 1085, 1089, 1094, 1106, 1113, 1117, 1120, 1125, 1129, 1134,
+	1138, 1143, 1152, 1156, 1161, 1165, 1169, 1174, 1178, 1183, 1193, 1200,
+	1204, 1207, 1212, 1219, 1226, 1230, 1235, 1240, 1244, 1249, 1258, 1263,
+	1267, 1272, 1282, 1289, 1293, 1296, 1301, 1305, 1309, 1314, 1320, 1325,
+	1329, 1334, 1338, 1343, 1347, 1351, 1357, 1364, 1373, 1382, 1397, 1400,
+	1402, 1407, 1417, 1421, 1426, 1434, 1443, 1450, 1454, 1458, 1463, 1468,
+	1475, 1482, 1486, 1492, 1504, 1509, 1519, 1524, 1530, 1538, 1547, 1563,
+	1567, 1572, 1582, 1589, 1593, 1601, 1605, 1610, 1620, 1627, 1631, 1635,
+	1644, 1648, 1653, 1663, 1670, 1674, 1679, 1696, 1703, 1707, 1712, 1718,
+	1725, 1732, 1736, 1740, 1749, 1756, 1769, 1773, 1780, 1788, 1792, 1797,
+	1807, 1809, 1816, 1820, 1828, 1835, 1848, 1852, 1857, 1867, 1876, 1884,
+	1886, 1894, 1899, 1906, 1911, 1915, 1920, 1927, 1932, 1934, 1936, 1943,
+	1948, 1953, 1960, 1965, 1973, 1977, 1982, 1992, 1999, 2003, 2008, 2012,
+	2021, 2028, 2033, 2041, 2051, 2058, 2062, 2066, 2070, 2074, 2081, 2095,
+	2105, 2123, 2127, 2133, 2139, 2142, 2148, 2152, 2156, 2162, 2168, 2175,
+	2179, 2182, 2196, 2199, 2202, 2208, 2211, 2214,
 }
 var literalNames = []string{
 	"", "'and'", "'as'", "'attribute'", "'break'", "'const'", "'continue'",
@@ -2832,21 +2835,24 @@ func (p *MojoParser) Condition() (localctx IConditionContext) {
 
 	p.SetState(468)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 13, p.GetParserRuleContext()) {
-	case 1:
+
+	switch p.GetTokenStream().LA(1) {
+	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FALSE, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TRUE, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR, MojoParserDOT, MojoParserLCURLY, MojoParserLPAREN, MojoParserLBRACK, MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserUNDERSCORE, MojoParserTYPE_IDENTIFIER, MojoParserVALUE_IDENTIFIER, MojoParserOPERATOR_HEAD_OTHER, MojoParserBINARY_LITERAL, MojoParserOCTAL_LITERAL, MojoParserDECIMAL_LITERAL, MojoParserPURE_DECIMAL_DIGITS, MojoParserHEXADECIMAL_LITERAL, MojoParserFLOAT_LITERAL, MojoParserSTATIC_STRING_LITERAL, MojoParserINTERPOLATED_STRING_LITERAL:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(466)
 			p.Expression()
 		}
 
-	case 2:
+	case MojoParserKEYWORD_VAR:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(467)
 			p.OptionalBindingCondition()
 		}
 
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 
 	return localctx
@@ -4421,7 +4427,7 @@ func (p *MojoParser) ReturnStatement() (localctx IReturnStatementContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<MojoParserKEYWORD_AND)|(1<<MojoParserKEYWORD_AS)|(1<<MojoParserKEYWORD_ATTRIBUTE)|(1<<MojoParserKEYWORD_BREAK)|(1<<MojoParserKEYWORD_CONST)|(1<<MojoParserKEYWORD_ENUM)|(1<<MojoParserKEYWORD_FALSE)|(1<<MojoParserKEYWORD_FUNC)|(1<<MojoParserKEYWORD_IF)|(1<<MojoParserKEYWORD_IMPORT)|(1<<MojoParserKEYWORD_IN)|(1<<MojoParserKEYWORD_INTERFACE)|(1<<MojoParserKEYWORD_IS)|(1<<MojoParserKEYWORD_MATCH)|(1<<MojoParserKEYWORD_NOT)|(1<<MojoParserKEYWORD_NULL)|(1<<MojoParserKEYWORD_PACKAGE)|(1<<MojoParserKEYWORD_REPEATE)|(1<<MojoParserKEYWORD_RETURN)|(1<<MojoParserKEYWORD_STRUCT)|(1<<MojoParserKEYWORD_TRUE)|(1<<MojoParserKEYWORD_TYPE)|(1<<MojoParserKEYWORD_VAR)|(1<<MojoParserKEYWORD_XOR)|(1<<MojoParserDOT)|(1<<MojoParserLCURLY))) != 0) || (((_la-32)&-(0x1f+1)) == 0 && ((1<<uint((_la-32)))&((1<<(MojoParserLPAREN-32))|(1<<(MojoParserLBRACK-32))|(1<<(MojoParserLT-32))|(1<<(MojoParserGT-32))|(1<<(MojoParserBANG-32))|(1<<(MojoParserQUESTION-32))|(1<<(MojoParserAND-32))|(1<<(MojoParserMINUS-32))|(1<<(MojoParserEQUAL-32))|(1<<(MojoParserPIPE-32))|(1<<(MojoParserSLASH-32))|(1<<(MojoParserPLUS-32))|(1<<(MojoParserSTAR-32))|(1<<(MojoParserPERCENT-32))|(1<<(MojoParserCARET-32))|(1<<(MojoParserTILDE-32))|(1<<(MojoParserUNDERSCORE-32)))) != 0) || (((_la-73)&-(0x1f+1)) == 0 && ((1<<uint((_la-73)))&((1<<(MojoParserTYPE_IDENTIFIER-73))|(1<<(MojoParserVALUE_IDENTIFIER-73))|(1<<(MojoParserOPERATOR_HEAD_OTHER-73))|(1<<(MojoParserBINARY_LITERAL-73))|(1<<(MojoParserOCTAL_LITERAL-73))|(1<<(MojoParserDECIMAL_LITERAL-73))|(1<<(MojoParserPURE_DECIMAL_DIGITS-73))|(1<<(MojoParserHEXADECIMAL_LITERAL-73))|(1<<(MojoParserFLOAT_LITERAL-73))|(1<<(MojoParserSTATIC_STRING_LITERAL-73))|(1<<(MojoParserINTERPOLATED_STRING_LITERAL-73)))) != 0) {
+	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<MojoParserKEYWORD_AND)|(1<<MojoParserKEYWORD_AS)|(1<<MojoParserKEYWORD_ATTRIBUTE)|(1<<MojoParserKEYWORD_BREAK)|(1<<MojoParserKEYWORD_CONST)|(1<<MojoParserKEYWORD_ENUM)|(1<<MojoParserKEYWORD_FALSE)|(1<<MojoParserKEYWORD_FUNC)|(1<<MojoParserKEYWORD_IMPORT)|(1<<MojoParserKEYWORD_INTERFACE)|(1<<MojoParserKEYWORD_MATCH)|(1<<MojoParserKEYWORD_NOT)|(1<<MojoParserKEYWORD_NULL)|(1<<MojoParserKEYWORD_PACKAGE)|(1<<MojoParserKEYWORD_REPEATE)|(1<<MojoParserKEYWORD_STRUCT)|(1<<MojoParserKEYWORD_TRUE)|(1<<MojoParserKEYWORD_TYPE)|(1<<MojoParserKEYWORD_XOR)|(1<<MojoParserDOT)|(1<<MojoParserLCURLY))) != 0) || (((_la-32)&-(0x1f+1)) == 0 && ((1<<uint((_la-32)))&((1<<(MojoParserLPAREN-32))|(1<<(MojoParserLBRACK-32))|(1<<(MojoParserLT-32))|(1<<(MojoParserGT-32))|(1<<(MojoParserBANG-32))|(1<<(MojoParserQUESTION-32))|(1<<(MojoParserAND-32))|(1<<(MojoParserMINUS-32))|(1<<(MojoParserEQUAL-32))|(1<<(MojoParserPIPE-32))|(1<<(MojoParserSLASH-32))|(1<<(MojoParserPLUS-32))|(1<<(MojoParserSTAR-32))|(1<<(MojoParserPERCENT-32))|(1<<(MojoParserCARET-32))|(1<<(MojoParserTILDE-32))|(1<<(MojoParserUNDERSCORE-32)))) != 0) || (((_la-73)&-(0x1f+1)) == 0 && ((1<<uint((_la-73)))&((1<<(MojoParserTYPE_IDENTIFIER-73))|(1<<(MojoParserVALUE_IDENTIFIER-73))|(1<<(MojoParserOPERATOR_HEAD_OTHER-73))|(1<<(MojoParserBINARY_LITERAL-73))|(1<<(MojoParserOCTAL_LITERAL-73))|(1<<(MojoParserDECIMAL_LITERAL-73))|(1<<(MojoParserPURE_DECIMAL_DIGITS-73))|(1<<(MojoParserHEXADECIMAL_LITERAL-73))|(1<<(MojoParserFLOAT_LITERAL-73))|(1<<(MojoParserSTATIC_STRING_LITERAL-73))|(1<<(MojoParserINTERPOLATED_STRING_LITERAL-73)))) != 0) {
 		{
 			p.SetState(591)
 			p.Expression()
@@ -7323,7 +7329,7 @@ func (p *MojoParser) ImportGroup() (localctx IImportGroupContext) {
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
+	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
 		{
 			p.SetState(781)
 			p.ImportValue()
@@ -7366,7 +7372,7 @@ func (p *MojoParser) ImportGroup() (localctx IImportGroupContext) {
 			p.GetErrorHandler().Sync(p)
 
 			switch p.GetTokenStream().LA(1) {
-			case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
+			case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
 				{
 					p.SetState(792)
 					p.ImportValue()
@@ -8549,8 +8555,9 @@ func (p *MojoParser) VariableDeclaration() (localctx IVariableDeclarationContext
 
 	p.SetState(894)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 78, p.GetParserRuleContext()) {
-	case 1:
+
+	switch p.GetTokenStream().LA(1) {
+	case MojoParserKEYWORD_VAR:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(888)
@@ -8561,7 +8568,7 @@ func (p *MojoParser) VariableDeclaration() (localctx IVariableDeclarationContext
 			p.PatternInitializers()
 		}
 
-	case 2:
+	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(890)
@@ -8576,6 +8583,8 @@ func (p *MojoParser) VariableDeclaration() (localctx IVariableDeclarationContext
 			p.Expression()
 		}
 
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 
 	return localctx
@@ -9366,7 +9375,7 @@ func (p *MojoParser) FunctionName() (localctx IFunctionNameContext) {
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
+	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(939)
@@ -14243,7 +14252,7 @@ func (p *MojoParser) TuplePattern() (localctx ITuplePatternContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<MojoParserKEYWORD_AND)|(1<<MojoParserKEYWORD_AS)|(1<<MojoParserKEYWORD_ATTRIBUTE)|(1<<MojoParserKEYWORD_BREAK)|(1<<MojoParserKEYWORD_CONST)|(1<<MojoParserKEYWORD_ENUM)|(1<<MojoParserKEYWORD_FALSE)|(1<<MojoParserKEYWORD_FUNC)|(1<<MojoParserKEYWORD_IF)|(1<<MojoParserKEYWORD_IMPORT)|(1<<MojoParserKEYWORD_IN)|(1<<MojoParserKEYWORD_INTERFACE)|(1<<MojoParserKEYWORD_IS)|(1<<MojoParserKEYWORD_MATCH)|(1<<MojoParserKEYWORD_NOT)|(1<<MojoParserKEYWORD_NULL)|(1<<MojoParserKEYWORD_PACKAGE)|(1<<MojoParserKEYWORD_REPEATE)|(1<<MojoParserKEYWORD_RETURN)|(1<<MojoParserKEYWORD_STRUCT)|(1<<MojoParserKEYWORD_TRUE)|(1<<MojoParserKEYWORD_TYPE)|(1<<MojoParserKEYWORD_VAR)|(1<<MojoParserKEYWORD_XOR)|(1<<MojoParserDOT)|(1<<MojoParserLCURLY))) != 0) || (((_la-32)&-(0x1f+1)) == 0 && ((1<<uint((_la-32)))&((1<<(MojoParserLPAREN-32))|(1<<(MojoParserLBRACK-32))|(1<<(MojoParserLT-32))|(1<<(MojoParserGT-32))|(1<<(MojoParserBANG-32))|(1<<(MojoParserQUESTION-32))|(1<<(MojoParserAND-32))|(1<<(MojoParserMINUS-32))|(1<<(MojoParserEQUAL-32))|(1<<(MojoParserPIPE-32))|(1<<(MojoParserSLASH-32))|(1<<(MojoParserPLUS-32))|(1<<(MojoParserSTAR-32))|(1<<(MojoParserPERCENT-32))|(1<<(MojoParserCARET-32))|(1<<(MojoParserTILDE-32))|(1<<(MojoParserUNDERSCORE-32)))) != 0) || (((_la-73)&-(0x1f+1)) == 0 && ((1<<uint((_la-73)))&((1<<(MojoParserTYPE_IDENTIFIER-73))|(1<<(MojoParserVALUE_IDENTIFIER-73))|(1<<(MojoParserOPERATOR_HEAD_OTHER-73))|(1<<(MojoParserBINARY_LITERAL-73))|(1<<(MojoParserOCTAL_LITERAL-73))|(1<<(MojoParserDECIMAL_LITERAL-73))|(1<<(MojoParserPURE_DECIMAL_DIGITS-73))|(1<<(MojoParserHEXADECIMAL_LITERAL-73))|(1<<(MojoParserFLOAT_LITERAL-73))|(1<<(MojoParserSTATIC_STRING_LITERAL-73))|(1<<(MojoParserINTERPOLATED_STRING_LITERAL-73)))) != 0) {
+	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<MojoParserKEYWORD_AND)|(1<<MojoParserKEYWORD_AS)|(1<<MojoParserKEYWORD_ATTRIBUTE)|(1<<MojoParserKEYWORD_BREAK)|(1<<MojoParserKEYWORD_CONST)|(1<<MojoParserKEYWORD_ENUM)|(1<<MojoParserKEYWORD_FALSE)|(1<<MojoParserKEYWORD_FUNC)|(1<<MojoParserKEYWORD_IMPORT)|(1<<MojoParserKEYWORD_INTERFACE)|(1<<MojoParserKEYWORD_IS)|(1<<MojoParserKEYWORD_MATCH)|(1<<MojoParserKEYWORD_NOT)|(1<<MojoParserKEYWORD_NULL)|(1<<MojoParserKEYWORD_PACKAGE)|(1<<MojoParserKEYWORD_REPEATE)|(1<<MojoParserKEYWORD_STRUCT)|(1<<MojoParserKEYWORD_TRUE)|(1<<MojoParserKEYWORD_TYPE)|(1<<MojoParserKEYWORD_XOR)|(1<<MojoParserDOT)|(1<<MojoParserLCURLY))) != 0) || (((_la-32)&-(0x1f+1)) == 0 && ((1<<uint((_la-32)))&((1<<(MojoParserLPAREN-32))|(1<<(MojoParserLBRACK-32))|(1<<(MojoParserLT-32))|(1<<(MojoParserGT-32))|(1<<(MojoParserBANG-32))|(1<<(MojoParserQUESTION-32))|(1<<(MojoParserAND-32))|(1<<(MojoParserMINUS-32))|(1<<(MojoParserEQUAL-32))|(1<<(MojoParserPIPE-32))|(1<<(MojoParserSLASH-32))|(1<<(MojoParserPLUS-32))|(1<<(MojoParserSTAR-32))|(1<<(MojoParserPERCENT-32))|(1<<(MojoParserCARET-32))|(1<<(MojoParserTILDE-32))|(1<<(MojoParserUNDERSCORE-32)))) != 0) || (((_la-73)&-(0x1f+1)) == 0 && ((1<<uint((_la-73)))&((1<<(MojoParserTYPE_IDENTIFIER-73))|(1<<(MojoParserVALUE_IDENTIFIER-73))|(1<<(MojoParserOPERATOR_HEAD_OTHER-73))|(1<<(MojoParserBINARY_LITERAL-73))|(1<<(MojoParserOCTAL_LITERAL-73))|(1<<(MojoParserDECIMAL_LITERAL-73))|(1<<(MojoParserPURE_DECIMAL_DIGITS-73))|(1<<(MojoParserHEXADECIMAL_LITERAL-73))|(1<<(MojoParserFLOAT_LITERAL-73))|(1<<(MojoParserSTATIC_STRING_LITERAL-73))|(1<<(MojoParserINTERPOLATED_STRING_LITERAL-73)))) != 0) {
 		{
 			p.SetState(1370)
 			p.TuplePatternElementList()
@@ -24786,7 +24795,7 @@ func (p *MojoParser) DeclarationIdentifier() (localctx IDeclarationIdentifierCon
 			p.Match(MojoParserVALUE_IDENTIFIER)
 		}
 
-	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_XOR:
+	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_REPEATE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(2067)
@@ -25217,24 +25226,12 @@ func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_FUNC() antlr.Terminal
 	return s.GetToken(MojoParserKEYWORD_FUNC, 0)
 }
 
-func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_IF() antlr.TerminalNode {
-	return s.GetToken(MojoParserKEYWORD_IF, 0)
-}
-
 func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_IMPORT() antlr.TerminalNode {
 	return s.GetToken(MojoParserKEYWORD_IMPORT, 0)
 }
 
-func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_IN() antlr.TerminalNode {
-	return s.GetToken(MojoParserKEYWORD_IN, 0)
-}
-
 func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_INTERFACE() antlr.TerminalNode {
 	return s.GetToken(MojoParserKEYWORD_INTERFACE, 0)
-}
-
-func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_IS() antlr.TerminalNode {
-	return s.GetToken(MojoParserKEYWORD_IS, 0)
 }
 
 func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_MATCH() antlr.TerminalNode {
@@ -25253,20 +25250,12 @@ func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_REPEATE() antlr.Termi
 	return s.GetToken(MojoParserKEYWORD_REPEATE, 0)
 }
 
-func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_RETURN() antlr.TerminalNode {
-	return s.GetToken(MojoParserKEYWORD_RETURN, 0)
-}
-
 func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_STRUCT() antlr.TerminalNode {
 	return s.GetToken(MojoParserKEYWORD_STRUCT, 0)
 }
 
 func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_TYPE() antlr.TerminalNode {
 	return s.GetToken(MojoParserKEYWORD_TYPE, 0)
-}
-
-func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_VAR() antlr.TerminalNode {
-	return s.GetToken(MojoParserKEYWORD_VAR, 0)
 }
 
 func (s *KeywordAsIdentifierInDeclarationsContext) KEYWORD_XOR() antlr.TerminalNode {
@@ -25317,7 +25306,7 @@ func (p *MojoParser) KeywordAsIdentifierInDeclarations() (localctx IKeywordAsIde
 		p.SetState(2084)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<MojoParserKEYWORD_AND)|(1<<MojoParserKEYWORD_AS)|(1<<MojoParserKEYWORD_ATTRIBUTE)|(1<<MojoParserKEYWORD_BREAK)|(1<<MojoParserKEYWORD_CONST)|(1<<MojoParserKEYWORD_ENUM)|(1<<MojoParserKEYWORD_FUNC)|(1<<MojoParserKEYWORD_IF)|(1<<MojoParserKEYWORD_IMPORT)|(1<<MojoParserKEYWORD_IN)|(1<<MojoParserKEYWORD_INTERFACE)|(1<<MojoParserKEYWORD_IS)|(1<<MojoParserKEYWORD_MATCH)|(1<<MojoParserKEYWORD_NOT)|(1<<MojoParserKEYWORD_PACKAGE)|(1<<MojoParserKEYWORD_REPEATE)|(1<<MojoParserKEYWORD_RETURN)|(1<<MojoParserKEYWORD_STRUCT)|(1<<MojoParserKEYWORD_TYPE)|(1<<MojoParserKEYWORD_VAR)|(1<<MojoParserKEYWORD_XOR))) != 0) {
+		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<MojoParserKEYWORD_AND)|(1<<MojoParserKEYWORD_AS)|(1<<MojoParserKEYWORD_ATTRIBUTE)|(1<<MojoParserKEYWORD_BREAK)|(1<<MojoParserKEYWORD_CONST)|(1<<MojoParserKEYWORD_ENUM)|(1<<MojoParserKEYWORD_FUNC)|(1<<MojoParserKEYWORD_IMPORT)|(1<<MojoParserKEYWORD_INTERFACE)|(1<<MojoParserKEYWORD_MATCH)|(1<<MojoParserKEYWORD_NOT)|(1<<MojoParserKEYWORD_PACKAGE)|(1<<MojoParserKEYWORD_REPEATE)|(1<<MojoParserKEYWORD_STRUCT)|(1<<MojoParserKEYWORD_TYPE)|(1<<MojoParserKEYWORD_XOR))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -26300,6 +26289,14 @@ func (s *BinaryOperatorContext) Operator() IOperatorContext {
 	return t.(IOperatorContext)
 }
 
+func (s *BinaryOperatorContext) KEYWORD_AND() antlr.TerminalNode {
+	return s.GetToken(MojoParserKEYWORD_AND, 0)
+}
+
+func (s *BinaryOperatorContext) KEYWORD_OR() antlr.TerminalNode {
+	return s.GetToken(MojoParserKEYWORD_OR, 0)
+}
+
 func (s *BinaryOperatorContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -26338,7 +26335,7 @@ func (p *MojoParser) BinaryOperator() (localctx IBinaryOperatorContext) {
 		}
 	}()
 
-	p.SetState(2119)
+	p.SetState(2121)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -26361,6 +26358,20 @@ func (p *MojoParser) BinaryOperator() (localctx IBinaryOperatorContext) {
 		{
 			p.SetState(2118)
 			p.Operator()
+		}
+
+	case MojoParserKEYWORD_AND:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(2119)
+			p.Match(MojoParserKEYWORD_AND)
+		}
+
+	case MojoParserKEYWORD_OR:
+		p.EnterOuterAlt(localctx, 5)
+		{
+			p.SetState(2120)
+			p.Match(MojoParserKEYWORD_OR)
 		}
 
 	default:
@@ -26418,6 +26429,10 @@ func (s *PrefixOperatorContext) Operator() IOperatorContext {
 	return t.(IOperatorContext)
 }
 
+func (s *PrefixOperatorContext) KEYWORD_NOT() antlr.TerminalNode {
+	return s.GetToken(MojoParserKEYWORD_NOT, 0)
+}
+
 func (s *PrefixOperatorContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -26456,10 +26471,26 @@ func (p *MojoParser) PrefixOperator() (localctx IPrefixOperatorContext) {
 		}
 	}()
 
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(2121)
-		p.Operator()
+	p.SetState(2125)
+	p.GetErrorHandler().Sync(p)
+
+	switch p.GetTokenStream().LA(1) {
+	case MojoParserDOT, MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserOPERATOR_HEAD_OTHER:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(2123)
+			p.Operator()
+		}
+
+	case MojoParserKEYWORD_NOT:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(2124)
+			p.Match(MojoParserKEYWORD_NOT)
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 
 	return localctx
@@ -26552,7 +26583,7 @@ func (p *MojoParser) PostfixOperator() (localctx IPostfixOperatorContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(2123)
+		p.SetState(2127)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == MojoParserPLUS_PLUS || _la == MojoParserMINUS_MINUS) {
@@ -26697,22 +26728,22 @@ func (p *MojoParser) Operator() (localctx IOperatorContext) {
 
 	var _alt int
 
-	p.SetState(2136)
+	p.SetState(2140)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserOPERATOR_HEAD_OTHER:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(2125)
+			p.SetState(2129)
 			p.Operator_head()
 		}
-		p.SetState(2127)
+		p.SetState(2131)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 281, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 282, p.GetParserRuleContext()) == 1 {
 			{
-				p.SetState(2126)
+				p.SetState(2130)
 				p.Operator_characters()
 			}
 
@@ -26721,24 +26752,24 @@ func (p *MojoParser) Operator() (localctx IOperatorContext) {
 	case MojoParserDOT:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(2129)
+			p.SetState(2133)
 			p.Dot_operator_head()
 		}
-		p.SetState(2133)
+		p.SetState(2137)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 282, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 283, p.GetParserRuleContext())
 
 		for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 			if _alt == 1 {
 				{
-					p.SetState(2130)
+					p.SetState(2134)
 					p.Dot_operator_character()
 				}
 
 			}
-			p.SetState(2135)
+			p.SetState(2139)
 			p.GetErrorHandler().Sync(p)
-			_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 282, p.GetParserRuleContext())
+			_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 283, p.GetParserRuleContext())
 		}
 
 	default:
@@ -26850,19 +26881,19 @@ func (p *MojoParser) Operator_characters() (localctx IOperator_charactersContext
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(2140)
+	p.SetState(2144)
 	p.GetErrorHandler().Sync(p)
 	_alt = 1
 	for ok := true; ok; ok = _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		switch _alt {
 		case 1:
-			p.SetState(2138)
+			p.SetState(2142)
 
 			if !(p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS) {
 				panic(antlr.NewFailedPredicateException(p, "p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS", ""))
 			}
 			{
-				p.SetState(2139)
+				p.SetState(2143)
 				p.Operator_character()
 			}
 
@@ -26870,9 +26901,9 @@ func (p *MojoParser) Operator_characters() (localctx IOperator_charactersContext
 			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 		}
 
-		p.SetState(2142)
+		p.SetState(2146)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 284, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 285, p.GetParserRuleContext())
 	}
 
 	return localctx
@@ -26968,21 +26999,21 @@ func (p *MojoParser) Operator_character() (localctx IOperator_characterContext) 
 		}
 	}()
 
-	p.SetState(2146)
+	p.SetState(2150)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserOPERATOR_HEAD_OTHER:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(2144)
+			p.SetState(2148)
 			p.Operator_head()
 		}
 
 	case MojoParserOPERATOR_FOLLOWING_CHARACTER:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(2145)
+			p.SetState(2149)
 			p.Match(MojoParserOPERATOR_FOLLOWING_CHARACTER)
 		}
 
@@ -27130,14 +27161,14 @@ func (p *MojoParser) Operator_head() (localctx IOperator_headContext) {
 		}
 	}()
 
-	p.SetState(2150)
+	p.SetState(2154)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(2148)
+			p.SetState(2152)
 			_la = p.GetTokenStream().LA(1)
 
 			if !(((_la-40)&-(0x1f+1)) == 0 && ((1<<uint((_la-40)))&((1<<(MojoParserLT-40))|(1<<(MojoParserGT-40))|(1<<(MojoParserBANG-40))|(1<<(MojoParserQUESTION-40))|(1<<(MojoParserAND-40))|(1<<(MojoParserMINUS-40))|(1<<(MojoParserEQUAL-40))|(1<<(MojoParserPIPE-40))|(1<<(MojoParserSLASH-40))|(1<<(MojoParserPLUS-40))|(1<<(MojoParserSTAR-40))|(1<<(MojoParserPERCENT-40))|(1<<(MojoParserCARET-40))|(1<<(MojoParserTILDE-40)))) != 0) {
@@ -27151,7 +27182,7 @@ func (p *MojoParser) Operator_head() (localctx IOperator_headContext) {
 	case MojoParserOPERATOR_HEAD_OTHER:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(2149)
+			p.SetState(2153)
 			p.Match(MojoParserOPERATOR_HEAD_OTHER)
 		}
 
@@ -27244,7 +27275,7 @@ func (p *MojoParser) Dot_operator_head() (localctx IDot_operator_headContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(2152)
+		p.SetState(2156)
 		p.Match(MojoParserDOT)
 	}
 
@@ -27341,21 +27372,21 @@ func (p *MojoParser) Dot_operator_character() (localctx IDot_operator_characterC
 		}
 	}()
 
-	p.SetState(2156)
+	p.SetState(2160)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserDOT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(2154)
+			p.SetState(2158)
 			p.Match(MojoParserDOT)
 		}
 
 	case MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserOPERATOR_HEAD_OTHER, MojoParserOPERATOR_FOLLOWING_CHARACTER:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(2155)
+			p.SetState(2159)
 			p.Operator_character()
 		}
 
@@ -27482,35 +27513,35 @@ func (p *MojoParser) Literal() (localctx ILiteralContext) {
 		}
 	}()
 
-	p.SetState(2162)
+	p.SetState(2166)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserMINUS, MojoParserBINARY_LITERAL, MojoParserOCTAL_LITERAL, MojoParserDECIMAL_LITERAL, MojoParserPURE_DECIMAL_DIGITS, MojoParserHEXADECIMAL_LITERAL, MojoParserFLOAT_LITERAL:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(2158)
+			p.SetState(2162)
 			p.NumericLiteral()
 		}
 
 	case MojoParserSTATIC_STRING_LITERAL, MojoParserINTERPOLATED_STRING_LITERAL:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(2159)
+			p.SetState(2163)
 			p.StringLiteral()
 		}
 
 	case MojoParserKEYWORD_FALSE, MojoParserKEYWORD_TRUE:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(2160)
+			p.SetState(2164)
 			p.BoolLiteral()
 		}
 
 	case MojoParserKEYWORD_NULL:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(2161)
+			p.SetState(2165)
 			p.NullLiteral()
 		}
 
@@ -27608,7 +27639,7 @@ func (p *MojoParser) BoolLiteral() (localctx IBoolLiteralContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(2164)
+		p.SetState(2168)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == MojoParserKEYWORD_FALSE || _la == MojoParserKEYWORD_TRUE) {
@@ -27704,7 +27735,7 @@ func (p *MojoParser) NullLiteral() (localctx INullLiteralContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(2166)
+		p.SetState(2170)
 		p.Match(MojoParserKEYWORD_NULL)
 	}
 
@@ -27812,29 +27843,11 @@ func (p *MojoParser) NumericLiteral() (localctx INumericLiteralContext) {
 		}
 	}()
 
-	p.SetState(2176)
+	p.SetState(2180)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 291, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 292, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
-		p.SetState(2169)
-		p.GetErrorHandler().Sync(p)
-		_la = p.GetTokenStream().LA(1)
-
-		if _la == MojoParserMINUS {
-			{
-				p.SetState(2168)
-				p.NegatePrefixOperator()
-			}
-
-		}
-		{
-			p.SetState(2171)
-			p.IntegerLiteral()
-		}
-
-	case 2:
-		p.EnterOuterAlt(localctx, 2)
 		p.SetState(2173)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
@@ -27848,6 +27861,24 @@ func (p *MojoParser) NumericLiteral() (localctx INumericLiteralContext) {
 		}
 		{
 			p.SetState(2175)
+			p.IntegerLiteral()
+		}
+
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		p.SetState(2177)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+
+		if _la == MojoParserMINUS {
+			{
+				p.SetState(2176)
+				p.NegatePrefixOperator()
+			}
+
+		}
+		{
+			p.SetState(2179)
 			p.Match(MojoParserFLOAT_LITERAL)
 		}
 
@@ -27955,7 +27986,7 @@ func (p *MojoParser) IntegerLiteral() (localctx IIntegerLiteralContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(2178)
+		p.SetState(2182)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(((_la-77)&-(0x1f+1)) == 0 && ((1<<uint((_la-77)))&((1<<(MojoParserBINARY_LITERAL-77))|(1<<(MojoParserOCTAL_LITERAL-77))|(1<<(MojoParserDECIMAL_LITERAL-77))|(1<<(MojoParserPURE_DECIMAL_DIGITS-77))|(1<<(MojoParserHEXADECIMAL_LITERAL-77)))) != 0) {
@@ -28056,7 +28087,7 @@ func (p *MojoParser) StringLiteral() (localctx IStringLiteralContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(2180)
+		p.SetState(2184)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == MojoParserSTATIC_STRING_LITERAL || _la == MojoParserINTERPOLATED_STRING_LITERAL) {
@@ -28157,7 +28188,7 @@ func (p *MojoParser) Eos() (localctx IEosContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(2182)
+		p.SetState(2186)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == MojoParserSEMI || _la == MojoParserEOL) {
@@ -28258,7 +28289,7 @@ func (p *MojoParser) Eov() (localctx IEovContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(2184)
+		p.SetState(2188)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == MojoParserCOMMA || _la == MojoParserEOL) {
@@ -28367,27 +28398,27 @@ func (p *MojoParser) EosWithDocument() (localctx IEosWithDocumentContext) {
 		}
 	}()
 
-	p.SetState(2196)
+	p.SetState(2200)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserSEMI:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(2186)
+			p.SetState(2190)
 			p.Match(MojoParserSEMI)
 		}
-		p.SetState(2190)
+		p.SetState(2194)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
 			{
-				p.SetState(2187)
+				p.SetState(2191)
 				p.FollowingDocument()
 			}
 			{
-				p.SetState(2188)
+				p.SetState(2192)
 				p.Match(MojoParserEOL)
 			}
 
@@ -28395,19 +28426,19 @@ func (p *MojoParser) EosWithDocument() (localctx IEosWithDocumentContext) {
 
 	case MojoParserEOL, MojoParserFOLLOWING_LINE_DOCUMENT:
 		p.EnterOuterAlt(localctx, 2)
-		p.SetState(2193)
+		p.SetState(2197)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
 			{
-				p.SetState(2192)
+				p.SetState(2196)
 				p.FollowingDocument()
 			}
 
 		}
 		{
-			p.SetState(2195)
+			p.SetState(2199)
 			p.Match(MojoParserEOL)
 		}
 
@@ -28513,26 +28544,26 @@ func (p *MojoParser) EovWithDocument() (localctx IEovWithDocumentContext) {
 		}
 	}()
 
-	p.SetState(2208)
+	p.SetState(2212)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserCOMMA:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(2198)
+			p.SetState(2202)
 			p.Match(MojoParserCOMMA)
 		}
-		p.SetState(2202)
+		p.SetState(2206)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 295, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 296, p.GetParserRuleContext()) == 1 {
 			{
-				p.SetState(2199)
+				p.SetState(2203)
 				p.FollowingDocument()
 			}
 			{
-				p.SetState(2200)
+				p.SetState(2204)
 				p.Match(MojoParserEOL)
 			}
 
@@ -28540,19 +28571,19 @@ func (p *MojoParser) EovWithDocument() (localctx IEovWithDocumentContext) {
 
 	case MojoParserEOL, MojoParserFOLLOWING_LINE_DOCUMENT:
 		p.EnterOuterAlt(localctx, 2)
-		p.SetState(2205)
+		p.SetState(2209)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
 			{
-				p.SetState(2204)
+				p.SetState(2208)
 				p.FollowingDocument()
 			}
 
 		}
 		{
-			p.SetState(2207)
+			p.SetState(2211)
 			p.Match(MojoParserEOL)
 		}
 

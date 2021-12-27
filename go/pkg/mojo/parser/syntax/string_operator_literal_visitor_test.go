@@ -11,6 +11,6 @@ func TestStringOperatorLiteralVisitor_VisitStringOperatorLiteral(t *testing.T) {
 
 	stringExpr := expr.GetStringLiteralUnaryExpr()
 	assert.NotNil(t, stringExpr)
-	assert.Equal(t, "r", stringExpr.Operator)
-	assert.Equal(t, "^ab$", stringExpr.Expression.GetStringLiteralExpr().Value)
+	assert.Equal(t, "r", stringExpr.Operator.Symbol)
+	assert.Equal(t, "^ab$", stringExpr.Argument.GetStringLiteralExpr().Value)
 }
