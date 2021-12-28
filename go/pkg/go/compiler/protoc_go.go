@@ -21,8 +21,11 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"go/ast"
+	"io/ioutil"
+	"os"
 	"os/exec"
 	path2 "path"
+	"path/filepath"
 	"strings"
 )
 
@@ -43,9 +46,14 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 
 	cmd.Dir = path2.Join(path, "protobuf")
 
+	outFileName := filepath.Join(cmd.Dir, "out.descriptor")
+	defer func() {
+		os.Remove(outFileName)
+	}()
+
 	//cmd.Args = append(cmd.Args, "--go_out=.")
 	//cmd.Args = append(cmd.Args, "--gogo_out=plugins=grpc:.")
-	cmd.Args = append(cmd.Args, "--descriptor_set_out=/dev/stdout")
+	cmd.Args = append(cmd.Args, fmt.Sprintf("--descriptor_set_out=%s", outFileName))
 
 	var outFiles util.GeneratedFiles
 
@@ -95,6 +103,11 @@ func ProtocGo(path string, pkg *lang.Package, files []*descriptor.FileDescriptor
 			return nil, err
 		}
 		logs.Debugw("finish to run protoc cmd", "warning", stderr.String(), "cmd", fileCmd.String())
+
+		out, err = ioutil.ReadFile(outFileName)
+		if err != nil {
+			return nil, err
+		}
 
 		fs, err := UnmarshalFiles(out)
 		if err != nil {
