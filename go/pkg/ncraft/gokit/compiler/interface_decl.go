@@ -304,6 +304,25 @@ func compileBindingParameter(decl *lang.ValueDecl, pathParams map[string]bool, e
 	}
 
 	binding.Params = append(binding.Params, param)
+
+	if fieldType := param.Field.GetType(); fieldType != nil && fieldType.Message != nil {
+		for pathParam := range pathParams {
+			if strings.Contains(pathParam, ".") {
+				for _, field := range fieldType.Message.Fields {
+					fullName := param.Field.Name + "." + field.Name
+					if pathParam == fullName {
+						field.FullName = fullName
+						field.Enclosing = param.Field
+						binding.Params = append(binding.Params, &types.HTTPParameter{
+							Field:    field,
+							Location: "path",
+						})
+					}
+				}
+			}
+		}
+	}
+
 	return nil
 }
 

@@ -1,6 +1,6 @@
 FROM centos:8
 
-ADD {{}}-{{}}-{{}}-server /{{}}-{{}}-{{}}-server
+ADD {{.PackageName}}-{{ToKebab .Interface.Name}}-server /{{.PackageName}}-{{ToKebab .Interface.Name}}-server
 
 WORKDIR /
-ENTRYPOINT [ "/{{}}-{{}}-{{}}-server" ]
+ENTRYPOINT [ "/{{.PackageName}}-{{ToKebab .Interface.Name}}-server" ]

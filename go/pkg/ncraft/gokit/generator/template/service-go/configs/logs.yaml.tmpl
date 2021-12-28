@@ -4,8 +4,8 @@ logs:
   initFields:
     company: your-company
     group: your-group
-    package: {{}}
-    server: {{}}-server
+    package: {{.PackageName}}
+    server: {{ToKebab .Interface.Name}}-server
     version: 1.0.0
   file:
     maxSize: 100
