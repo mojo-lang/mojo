@@ -11,8 +11,6 @@ type Method struct {
 	RequestType  string
 	ResponseType string
 
-	Pagination bool
-
 	Bindings []*Binding
 
 	ResponseBodyField *Field

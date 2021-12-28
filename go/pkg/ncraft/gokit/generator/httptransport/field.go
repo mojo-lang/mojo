@@ -96,20 +96,22 @@ if len({{.LocalName}}Strs) > 0 {
 {{if not (eq .ParamName .FullParamName)}}
 if len({{.LocalName}}Str) == 0 {
 	{{.LocalName}}Str = {{.Location}}Params["{{.FullParamName}}"]
-}{{end}}`
+}
+{{end}}
+`
 
 	genericLogic := `{{.ConvertFunc}}{{if .ConvertFuncNeedsErrorCheck}}
 if err != nil {
 	return nil, errors.Wrap(err, fmt.Sprintf("Error while extracting {{.LocalName}} from {{.Location}}, {{.Location}}Params: %v", {{.Location}}Params))
-}{{end -}}
+}{{end}}
 {{define "init_parent"}}{{if .Enclosing}}
 	{{template "init_parent" .Enclosing}}
 	if req.{{.Enclosing.FullName}} == nil {
 		req.{{.Enclosing.FullName}} = &{{.Enclosing.GoType}}{}
 	}
-{{- end}}
-{{- end}}
-{{- template "init_parent" .}}
+{{end}}
+{{end}}
+{{template "init_parent" .}}
 req.{{.FullName}} = {{.TypeConversion}}
 `
 

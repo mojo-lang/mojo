@@ -229,12 +229,6 @@ func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.Respon
 // EncodeHTTPGenericResponse is a transport/http.EncodeResponseFunc that encodes
 // the response as JSON to the response writer. Primarily useful in a server.
 func EncodeHTTPGenericResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
-	encoder := jsoniter.ConfigFastest.NewEncoder(w)
-	encoder.SetEscapeHTML(false)
-	return encoder.Encode(response)
-}
-
-func EncodeHTTPPaginationResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	if p, ok := response.(pagination.Paginater); ok {
 		total := p.GetTotalCount()
 		if total > 0 {
@@ -243,11 +237,15 @@ func EncodeHTTPPaginationResponse(ctx context.Context, w http.ResponseWriter, re
 
 		next := p.GetNextPageToken()
 		if len(next) > 0 {
-			path, _ := ctx.Value("request-url").(string)
+			path, _ := ctx.Value("http-request-path").(string)
 			if len(path) == 0 {
-				path = "/"
+				path = "/?next-page-token=" + next
+			} else {
+				url, _ := core.ParseUrl(path)
+				url.Query.Add("next-page-token", next)
+				path = url.Format()
 			}
-			w.Header().Set("Link", fmt.Sprintf("<%s?next-page-token=%s>; rel=\"next\"", path, next))
+			w.Header().Set("Link", fmt.Sprintf("<%s>; rel=\"next\"", path, next))
 		}
 	}
 
