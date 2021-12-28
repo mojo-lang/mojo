@@ -12,6 +12,7 @@ import (
 	"io/fs"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -69,7 +70,7 @@ func (p *DependencyParser) ParsePackagePath(ctx context.Context, pkgPath string,
 	workingDir := parser.ContextWorkingDir(ctx)
 	logs.Infow("enter the plugin", "plugin", p.Name, "method", "ParsePackagePath", "workingDir", workingDir, "path", pkgPath)
 
-	fullPath := path.Join(workingDir, pkgPath)
+	fullPath := filepath.Join(workingDir, pkgPath)
 	if pkg, ok := p.parsedPackages[fullPath]; ok {
 		logs.Infow("skip when already parsed the package", "plugin", p.Name, "method", "ParsePackagePath", "fullPath", fullPath)
 		return pkg, nil
@@ -98,10 +99,10 @@ func (p *DependencyParser) ParsePackagePath(ctx context.Context, pkgPath string,
 			}
 		}
 
-		depPath = util.GetAbsolutePath(path.Join(workingDir, pkgPath), depPath)
-		depWd := path.Dir(depPath)
+		depPath = util.GetAbsolutePath(filepath.Join(workingDir, pkgPath), depPath)
+		depWd := filepath.Dir(depPath)
 
-		depPkg, err := p.ParsePackagePath(parser.WithWorkingDir(ctx, depWd), path.Base(depPath), os.DirFS(depWd))
+		depPkg, err := p.ParsePackagePath(parser.WithWorkingDir(ctx, depWd), filepath.Base(depPath), os.DirFS(depWd))
 		if err != nil {
 			return nil, err
 		}
