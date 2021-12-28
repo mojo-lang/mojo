@@ -228,7 +228,7 @@ func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.Respon
 
 // EncodeHTTPGenericResponse is a transport/http.EncodeResponseFunc that encodes
 // the response as JSON to the response writer. Primarily useful in a server.
-func EncodeHTTPGenericResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	if p, ok := response.(pagination.Paginater); ok {
 		total := p.GetTotalCount()
 		if total > 0 {
@@ -274,7 +274,7 @@ func headersToContext(ctx context.Context, r *http.Request) context.Context {
 
 	// Tune specific change.
 	// also add the request url
-	ctx = context.WithValue(ctx, "request-url", r.URL.Path)
+	ctx = context.WithValue(ctx, "http-request-path", r.URL.Path)
 	ctx = context.WithValue(ctx, "transport", "HTTPJSON")
 
 	return ctx

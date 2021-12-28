@@ -8,6 +8,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
 	apicompiler "github.com/mojo-lang/mojo/go/pkg/openapi/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"strings"
@@ -136,9 +137,14 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
 		decl = result.GetTypeDeclaration().GetStructDecl()
 
 		if decl.GetFullName() == "mojo.core.Array" {
-			decl, err = compiler.CompileArrayToStruct(result)
-			if err != nil {
-				return err
+			pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination")
+			if pagination {
+				decl = protobuf.GeneratePaginationResponse(method)
+			} else {
+				decl, err = compiler.CompileArrayToStruct(result)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	} else {
