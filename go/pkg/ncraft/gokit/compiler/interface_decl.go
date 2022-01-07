@@ -377,7 +377,7 @@ func compileBindingField(schema *openapi.Schema, index map[string]*openapi.Schem
 			}
 		}
 	case openapi.Schema_TYPE_ARRAY:
-		s := schema.Items.GetSchema()
+		s := schema.Items.GetSchemaOf(index)
 		f := compileBindingField(s, index)
 		if f != nil {
 			field.Type = &types.FieldType{
