@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/db/go/pkg/mojo/db"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -11,8 +12,8 @@ type DbJSON struct {
 	GoPackageName string
 	InDbPkg       bool
 
-	PackageName   string
-	FullName      string
+	PackageName string
+	FullName    string
 
 	Name               string
 	UnderlyingTypeName string
@@ -35,15 +36,20 @@ func (j *DbJSONs) CompileStruct(ctx context.Context, decl *lang.StructDecl) erro
 
 		newName := decl.Name + strcase.ToCamel(field.Name)
 		dbJSON := &DbJSON{
-			PackageName: pkg.FullName,
+			PackageName:        pkg.FullName,
 			GoPackageName:      GetGoPackage(pkg.FullName),
 			Name:               newName,
 			UnderlyingTypeName: field.Type.Name,
 			StructType:         false,
-			FullName: newName,
+			FullName:           newName,
 		}
 
 		dbJSON.InDbPkg = dbJSON.GoPackageName == "db"
+
+		fieldFullTypeName := field.Type.GetFullName()
+		if fieldFullTypeName == core.ArrayTypeName || fieldFullTypeName == core.MapTypeName {
+			dbJSON.UnderlyingTypeName = ""
+		}
 
 		if field.Type.PackageName == pkg.FullName {
 			dbJSON.Name = field.Type.Name
