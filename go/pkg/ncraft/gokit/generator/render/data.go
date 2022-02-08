@@ -2,6 +2,8 @@ package render
 
 import (
 	"bytes"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
+	"go/format"
 	"io"
 	"strings"
 	"text/template"
@@ -45,6 +47,8 @@ type Data struct {
 
 	Version     string
 	VersionDate string
+
+	Entities map[string]*types.Entity
 
 	Extension map[string]interface{}
 }
@@ -119,4 +123,19 @@ var FuncMap = template.FuncMap{
 	"ToKebab":      strcase.ToKebab,
 	"ToCamel":      strcase.ToCamel,
 	"ToLowerCamel": strcase.ToLowerCamel,
+	"Plural":       transformer.Plural,
+}
+
+// formatCode takes a string representing golang code and attempts to return a
+// formatted copy of that code.  If formatting fails, a warning is logged and
+// the original code is returned.
+func FormatCode(code []byte) []byte {
+	formatted, err := format.Source(code)
+	if err != nil {
+		//log.WithError(err).Warn("Code formatting error, generated service will not build, outputting unformatted code")
+		// return code so at least we get something to examine
+		return code
+	}
+
+	return formatted
 }

@@ -3,14 +3,15 @@ package gokit
 
 import (
 	"bytes"
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/model"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/template"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
 	"github.com/pkg/errors"
-	"go/format"
 	"io"
 	"io/ioutil"
 	"strings"
@@ -51,6 +52,15 @@ func GenerateTemplatedService(sd *types.Service, conf render.Config, tmplPaths [
 	svcName := strcase.ToKebab(sd.Interface.Name)
 
 	for _, tmplPath := range tmplPaths {
+		if tmplPath == model.TemplatePath {
+			m := model.Model{}
+			if files, err := m.Generate(tmplPath, data); err != nil {
+				logs.Errorw("failed to generate model template files", "err", err.Error())
+			} else {
+				codeGenFiles = append(codeGenFiles, files...)
+			}
+		}
+
 		// Re-derive the actual path for this file based on the service output
 		// path provided by the ncraft main.go
 		actualPath := templatePathToActual(tmplPath, sd.PkgName, svcName)
@@ -127,7 +137,7 @@ func generateTemplateFile(tmplPath string, data *render.Data, prevFile io.Reader
 
 	// ignore error as we want to write the code either way to inspect after
 	// writing to disk
-	formattedCode := formatCode(codeBytes)
+	formattedCode := render.FormatCode(codeBytes)
 
 	return bytes.NewReader(formattedCode), nil
 }
@@ -154,18 +164,4 @@ func applyTemplateFromPath(tmplPath string, data *render.Data, getter template.F
 	}
 
 	return data.ApplyTemplate(string(tmplBytes), tmplPath)
-}
-
-// formatCode takes a string representing golang code and attempts to return a
-// formatted copy of that code.  If formatting fails, a warning is logged and
-// the original code is returned.
-func formatCode(code []byte) []byte {
-	formatted, err := format.Source(code)
-	if err != nil {
-		//log.WithError(err).Warn("Code formatting error, generated service will not build, outputting unformatted code")
-		// return code so at least we get something to examine
-		return code
-	}
-
-	return formatted
 }

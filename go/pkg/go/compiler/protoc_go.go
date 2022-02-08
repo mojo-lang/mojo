@@ -330,6 +330,31 @@ var E_Alias = &proto.ExtensionDesc{
 	Filename:      "mojo/mojo.proto",
 }
 
+var E_Key = &proto.ExtensionDesc{
+	ExtendedType:  (*ggdescriptor.FieldOptions)(nil),
+	ExtensionType: (*string)(nil),
+	Field:         75002,
+	Name:          "mojo.key",
+	Tag:           "bytes,75002,opt,name=key",
+	Filename:      "mojo/mojo.proto",
+}
+
+var E_Reference = &proto.ExtensionDesc{
+	ExtendedType:  (*ggdescriptor.FieldOptions)(nil),
+	ExtensionType: (*string)(nil),
+	Field:         75003,
+	Name:          "mojo.reference",
+	Tag:           "bytes,75003,opt,name=reference",
+	Filename:      "mojo/mojo.proto",
+}
+var E_BackReference = &proto.ExtensionDesc{
+	ExtendedType:  (*ggdescriptor.FieldOptions)(nil),
+	ExtensionType: (*string)(nil),
+	Field:         75004,
+	Name:          "mojo.back_reference",
+	Tag:           "bytes,75004,opt,name=back_reference",
+	Filename:      "mojo/mojo.proto",
+}
 var E_DbIgnore = &proto.ExtensionDesc{
 	ExtendedType:  (*ggdescriptor.FieldOptions)(nil),
 	ExtensionType: (*bool)(nil),
@@ -377,6 +402,9 @@ func init() {
 	proto.RegisterExtension(E_GettersAll)
 	proto.RegisterExtension(E_Getters)
 	proto.RegisterExtension(E_Alias)
+	proto.RegisterExtension(E_Key)
+	proto.RegisterExtension(E_Reference)
+	proto.RegisterExtension(E_BackReference)
 	proto.RegisterExtension(E_DbIgnore)
 	proto.RegisterExtension(E_DbJson)
 	proto.RegisterExtension(E_DbIndex)

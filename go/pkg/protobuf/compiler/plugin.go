@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/db/go/pkg/mojo/db"
+	"google.golang.org/protobuf/runtime/protoimpl"
 	"strings"
 
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
@@ -352,10 +353,20 @@ func compileStructFields(ctx context.Context, fields []*lang.ValueDecl, msgDescr
 		n := int32(number)
 		member.Number = &n
 
-		if alias, err := lang.GetStringAttribute(field.Type.Attributes, core.AliasAttributeName); err == nil {
-			desc.SetStringFieldOption(mojo.E_Alias, alias)(member)
-			addOptionsDependency(fieldCtx)
+		setStringOption := func(attribute string, info *protoimpl.ExtensionInfo) {
+			if field.HasAttribute(attribute) {
+				option := ""
+				option, _ = field.GetStringAttribute(attribute)
+				desc.SetStringFieldOption(info, option)(member)
+				addOptionsDependency(fieldCtx)
+			}
 		}
+
+		setStringOption(core.AliasAttributeName, mojo.E_Alias)
+		setStringOption(core.KeyAttributeName, mojo.E_Key)
+		setStringOption(core.ReferenceAttributeName, mojo.E_Reference)
+		setStringOption(core.BackReferenceAttributeName, mojo.E_BackReference)
+
 		if lang.HasAttribute(field.Type.Attributes, db.JSONAttributeName) {
 			desc.SetBoolFieldOption(mojo.E_DbJson, true)(member)
 			addOptionsDependency(fieldCtx)

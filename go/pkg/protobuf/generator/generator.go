@@ -536,20 +536,20 @@ func (g *Generator) generateMessage(message *descriptor.MessageDescriptor) {
 		}
 
 		if field.Options != nil {
-			g.S(" [")
 			fieldOptions := mojo.FieldOptionsExtensions()
 			first := true
+			buffer := bytes.NewBuffer(nil)
 			for _, option := range fieldOptions {
 				switch option.TypeDescriptor().Kind() {
 				case protoreflect.BoolKind:
 					if v := descriptor.GetBoolFieldOption(field, option); v != nil {
 						if !first {
-							g.S(", ")
+							buffer.WriteString(", ")
 						}
 						if *v {
-							g.S("(", mojo.GetOptionFullName(option), ")=true")
+							buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=true"))
 						} else {
-							g.S("(", mojo.GetOptionFullName(option), ")=false")
+							buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=false"))
 						}
 						first = false
 					}
@@ -558,22 +558,28 @@ func (g *Generator) generateMessage(message *descriptor.MessageDescriptor) {
 					protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
 					if v := descriptor.GetInt64FieldOption(field, option); v != nil {
 						if !first {
-							g.S(", ")
+							buffer.WriteString(", ")
 						}
-						g.S("(", mojo.GetOptionFullName(option), ")=", *v)
+						buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=", *v))
 						first = false
 					}
 				case protoreflect.StringKind:
 					if v := descriptor.GetStringFieldOption(field, option); len(v) > 0 {
 						if !first {
-							g.S(", ")
+							buffer.WriteString(", ")
 						}
-						g.S("(", mojo.GetOptionFullName(option), ")=", "\"", v, "\"")
+						buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=", "\"", v, "\""))
 						first = false
 					}
 				}
 			}
-			g.S("];\n")
+			if buffer.Len() > 0 {
+				g.S(" [")
+				g.S(buffer.String())
+				g.S("];\n")
+			} else {
+				g.S(";\n")
+			}
 		} else {
 			g.S(";\n")
 		}

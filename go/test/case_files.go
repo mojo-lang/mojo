@@ -5,6 +5,9 @@ import "embed"
 //go:embed case-alias/*
 var AliasCaseFiles embed.FS
 
+//go:embed case-entity/*
+var EntityCaseFiles embed.FS
+
 //go:embed case-enum/*
 var EnumCaseFiles embed.FS
 
