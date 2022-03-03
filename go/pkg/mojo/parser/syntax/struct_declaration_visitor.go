@@ -1,13 +1,15 @@
 package syntax
 
 import (
-	"fmt"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
 
 type StructDeclarationVisitor struct {
 	*BaseMojoParserVisitor
+
+	name              string
+	followingDocument *lang.Document
 }
 
 func NewStructDeclarationVisitor() *StructDeclarationVisitor {
@@ -16,30 +18,32 @@ func NewStructDeclarationVisitor() *StructDeclarationVisitor {
 }
 
 func (s *StructDeclarationVisitor) VisitStructDeclaration(ctx *StructDeclarationContext) interface{} {
-	structName := ctx.StructName()
-	if structName != nil {
+	s.name = ""
+	if structName := ctx.StructName(); structName != nil {
 		if name, ok := structName.Accept(s).(string); ok {
+			s.name = name
+
 			decl := &lang.StructDecl{
-				StartPosition:     nil,
-				EndPosition:       nil,
+				StartPosition:     GetPosition(ctx.GetStart()),
+				EndPosition:       GetPosition(ctx.GetStop()),
 				Name:              name,
 				GenericParameters: GetGenericParameters(ctx.GenericParameterClause()),
 				EnclosingType:     nil,
 			}
 
 			enclosingType := &lang.NominalType{
-				Name: name,
+				Name:            name,
 				TypeDeclaration: lang.NewStructTypeDeclaration(decl), // may cause reference circle
 			}
 
-			structType := ctx.StructType()
-			if structType != nil {
+			if structType := ctx.StructType(); structType != nil {
 				if len(structType.GetText()) > 0 {
 					if d, ok := structType.Accept(s).(*lang.StructDecl); ok {
 						decl.Type = d.Type
 						decl.EnumDecls = d.EnumDecls
 						decl.StructDecls = d.StructDecls
 						decl.TypeAliasDecls = d.TypeAliasDecls
+						decl.SetEndPosition(d.EndPosition)
 
 						for _, enumDecl := range decl.EnumDecls {
 							enumDecl.EnclosingType = enclosingType
@@ -78,30 +82,32 @@ func (s *StructDeclarationVisitor) VisitStructDeclaration(ctx *StructDeclaration
 
 func (s *StructDeclarationVisitor) VisitStructType(ctx *StructTypeContext) interface{} {
 	var decl *lang.StructDecl
-	body := ctx.StructBody()
-	if body != nil {
+	s.followingDocument = nil
+
+	if body := ctx.StructBody(); body != nil {
 		if d, ok := body.Accept(s).(*lang.StructDecl); ok {
 			decl = d
 		}
 	}
 
-	inheritances := ctx.TypeInheritanceClause()
-	if inheritances != nil {
-		visitor := NewTypeInheritancesVisitor()
-		if t, ok := inheritances.Accept(visitor).([]*lang.NominalType); ok {
+	if inheritances := ctx.TypeInheritanceClause(); inheritances != nil {
+		if types := GetTypeInheritances(inheritances); len(types) > 0 {
 			if decl == nil {
 				decl = &lang.StructDecl{Type: &lang.StructType{}}
 			}
 			if decl.Type == nil {
 				decl.Type = &lang.StructType{}
 			}
-			decl.Type.Inherits = t
-		} else {
-			fmt.Print("===> error")
+			decl.Type.Inherits = types
+			decl.Type.Inherits[len(decl.Type.Inherits)-1].Document = s.followingDocument
 		}
 	}
 
 	if decl != nil {
+		if decl.Type != nil {
+			decl.Type.SetStartPosition(GetPosition(ctx.GetStart()))
+			decl.Type.SetEndPosition(GetPosition(ctx.GetStop()))
+		}
 		return decl
 	}
 
@@ -114,18 +120,19 @@ func (s *StructDeclarationVisitor) VisitStructName(ctx *StructNameContext) inter
 }
 
 func (s *StructDeclarationVisitor) VisitStructBody(ctx *StructBodyContext) interface{} {
-	members := ctx.StructMembers()
-	if members != nil {
-		return members.Accept(s)
+	if followingDocumentCtx := ctx.FollowingDocument(); followingDocumentCtx != nil {
+		s.followingDocument = GetFollowingDocument(followingDocumentCtx)
 	}
 
-	return &lang.StructDecl{}
+	if members := ctx.StructMembers(); members != nil {
+		return members.Accept(s)
+	}
+	return &lang.StructDecl{} // opaque struct
 }
 
 func (s *StructDeclarationVisitor) VisitStructMembers(ctx *StructMembersContext) interface{} {
-	members := ctx.AllStructMember()
 	documents := ctx.AllEosWithDocument()
-	if len(members) > 0 {
+	if members := ctx.AllStructMember(); len(members) > 0 {
 		decl := &lang.StructDecl{
 			Type: &lang.StructType{},
 		}
@@ -142,23 +149,45 @@ func (s *StructDeclarationVisitor) VisitStructMembers(ctx *StructMembersContext)
 			}
 		}
 		var document *lang.Document
+		var freeDocument *lang.Document
 		for i, member := range members {
 			if len(documents) > 0 {
 				document = GetEosDocument(documents[i])
 			}
 			switch m := member.Accept(s).(type) {
 			case *lang.StructDecl:
+				if freeDocument != nil {
+					m.SetStartPosition(&lang.Position{LeadingComments: lang.NewComments(freeDocument)})
+					freeDocument = nil
+				}
 				decl.StructDecls = append(decl.StructDecls, m)
 			case *lang.EnumDecl:
+				if freeDocument != nil {
+					m.SetStartPosition(&lang.Position{LeadingComments: lang.NewComments(freeDocument)})
+					freeDocument = nil
+				}
 				decl.EnumDecls = append(decl.EnumDecls, m)
 			case *lang.TypeAliasDecl:
+				if freeDocument != nil {
+					m.SetStartPosition(&lang.Position{LeadingComments: lang.NewComments(freeDocument)})
+					freeDocument = nil
+				}
 				decl.TypeAliasDecls = append(decl.TypeAliasDecls, m)
 				m.Document = appendDocumentLine(m.Document, document)
 			case *lang.ValueDecl:
+				if freeDocument != nil {
+					m.SetStartPosition(&lang.Position{LeadingComments: lang.NewComments(freeDocument)})
+					freeDocument = nil
+				}
 				decl.Type.Fields = append(decl.Type.Fields, m)
 				m.Document = appendDocumentLine(m.Document, document)
-			default:
+			case *lang.Document:
+				freeDocument = m
 			}
+		}
+
+		if freeDocument != nil {
+			decl.Type.SetEndPosition(&lang.Position{LeadingComments: lang.NewComments(freeDocument)})
 		}
 		return decl
 	}
@@ -170,52 +199,52 @@ func (s *StructDeclarationVisitor) VisitStructMember(ctx *StructMemberContext) i
 	document := GetDocument(ctx.Document())
 	attributes := GetAttributes(ctx.Attributes())
 
-	structCtx := ctx.StructDeclaration()
-	if structCtx != nil {
-		visitor := NewStructDeclarationVisitor()
-		if structDecl, ok := structCtx.Accept(visitor).(*lang.StructDecl); ok {
+	var startPosition *lang.Position
+	if document != nil {
+		startPosition = document.StartPosition
+	}
+	if startPosition == nil && len(attributes) > 0 {
+		startPosition = attributes[0].StartPosition
+	}
+
+	if structCtx := ctx.StructDeclaration(); structCtx != nil {
+		if structDecl, ok := structCtx.Accept(NewStructDeclarationVisitor()).(*lang.StructDecl); ok {
 			structDecl.Document = document
 			structDecl.Attributes = attributes
+			structDecl.SetStartPosition(startPosition)
 			return structDecl
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	enumCtx := ctx.EnumDeclaration()
-	if enumCtx != nil {
-		visitor := NewEnumDeclarationVisitor()
-		if enumDecl, ok := enumCtx.Accept(visitor).(*lang.EnumDecl); ok {
+	if enumCtx := ctx.EnumDeclaration(); enumCtx != nil {
+		if enumDecl, ok := enumCtx.Accept(NewEnumDeclarationVisitor()).(*lang.EnumDecl); ok {
 			enumDecl.Document = document
 			enumDecl.Attributes = attributes
+			enumDecl.SetStartPosition(startPosition)
 			return enumDecl
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	typeAliasCtx := ctx.TypeAliasDeclaration()
-	if typeAliasCtx != nil {
-		visitor := NewTypeAliasDeclarationVisitor()
-		if typeAlias, ok := typeAliasCtx.Accept(visitor).(*lang.TypeAliasDecl); ok {
+	if typeAliasCtx := ctx.TypeAliasDeclaration(); typeAliasCtx != nil {
+		if typeAlias, ok := typeAliasCtx.Accept(NewTypeAliasDeclarationVisitor()).(*lang.TypeAliasDecl); ok {
 			typeAlias.Document = document
 			typeAlias.Attributes = attributes
+			typeAlias.SetStartPosition(startPosition)
 			return typeAlias
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	memberCtx := ctx.StructMemberDeclaration()
-	if memberCtx != nil {
-		visitor := NewValueDeclarationVisitor()
-		if memberDecl, ok := memberCtx.Accept(visitor).(*lang.ValueDecl); ok {
+	if memberCtx := ctx.StructMemberDeclaration(); memberCtx != nil {
+		if memberDecl, ok := memberCtx.Accept(NewValueDeclarationVisitor()).(*lang.ValueDecl); ok {
 			memberDecl.Document = document
 			memberDecl.Attributes = attributes
+			memberDecl.SetStartPosition(startPosition)
 			return memberDecl
-		} else {
-			fmt.Print("===> error")
 		}
+	}
+
+	if freeFloatingDocumentContext := ctx.FreeFloatingDocument(); freeFloatingDocumentContext != nil {
+		return GetFreeFloatingDocument(freeFloatingDocumentContext)
 	}
 
 	return nil

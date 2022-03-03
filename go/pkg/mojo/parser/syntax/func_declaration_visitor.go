@@ -18,44 +18,58 @@ func NewFuncDeclarationVisitor() *FuncDeclarationVisitor {
 
 func (f *FuncDeclarationVisitor) VisitFunctionDeclaration(ctx *FunctionDeclarationContext) interface{} {
 	decl := &lang.FunctionDecl{}
+	f.Decl = decl
 
-	nameCtx := ctx.FunctionName()
-	if nameCtx != nil {
-		decl.Name = nameCtx.Accept(f).(string)
+	if nameCtx := ctx.FunctionName(); nameCtx != nil {
+		if name, ok := nameCtx.Accept(f).(string); ok && len(name) > 0 {
+			decl.Name = name
+			decl.GenericParameters = GetGenericParameters(ctx.GenericParameterClause())
+
+			if signatureCtx := ctx.FunctionSignature(); signatureCtx != nil {
+				if signature, ok := signatureCtx.Accept(f).(*lang.FunctionDecl_Signature); ok && signature != nil {
+					decl.Signature = signature
+					return decl
+				}
+				logs.Errorw("failed to parse function signature", "name", decl.Name, "signature", signatureCtx.GetText())
+			} else {
+				logs.Errorw("failed to parse function without signature", "name", decl.Name)
+			}
+		}
+		logs.Errorw("failed to parse function name", "code", nameCtx.GetText())
+	} else {
+		logs.Errorw("failed to parse function without name")
 	}
 
-	decl.GenericParameters = GetGenericParameters(ctx.GenericParameterClause())
-
-	signatureCtx := ctx.FunctionSignature()
-	if signatureCtx != nil {
-		decl.Signature = signatureCtx.Accept(f).(*lang.FunctionDecl_Signature)
-	}
-
-	return decl
+	return nil
 }
 
 func (f *FuncDeclarationVisitor) VisitInterfaceMethodDeclaration(ctx *InterfaceMethodDeclarationContext) interface{} {
-	f.Decl = &lang.FunctionDecl{}
+	if nameCtx := ctx.FunctionName(); nameCtx != nil {
+		if name, ok := nameCtx.Accept(f).(string); ok && len(name) > 0 {
+			decl := &lang.FunctionDecl{}
+			f.Decl = decl
 
-	nameCtx := ctx.FunctionName()
-	if nameCtx != nil {
-		f.Decl.Name = nameCtx.Accept(f).(string)
+			decl.Name = name
+			decl.GenericParameters = GetGenericParameters(ctx.GenericParameterClause())
+			decl.StartPosition = GetPosition(ctx.GetStart())
+			decl.EndPosition = GetPosition(ctx.GetStop())
+
+			if signatureCtx := ctx.FunctionSignature(); signatureCtx != nil {
+				if signature, ok := signatureCtx.Accept(f).(*lang.FunctionDecl_Signature); ok && signature != nil {
+					decl.Signature = signature
+					return decl
+				}
+				logs.Errorw("failed to parse interface method signature", "name", decl.Name, "signature", signatureCtx.GetText())
+			} else {
+				logs.Errorw("failed to parse interface method without signature", "name", decl.Name)
+			}
+		}
+		logs.Errorw("failed to parse interface method name", "code", nameCtx.GetText())
 	} else {
-		logs.Errorw("failed to parse method name in the interface")
-		return nil
+		logs.Errorw("failed to parse interface method without name")
 	}
 
-	f.Decl.GenericParameters = GetGenericParameters(ctx.GenericParameterClause())
-
-	signatureCtx := ctx.FunctionSignature()
-	if signatureCtx != nil {
-		f.Decl.Signature = signatureCtx.Accept(f).(*lang.FunctionDecl_Signature)
-	} else {
-		logs.Errorw("failed to parse method signature in the interface", "name", f.Decl.Name)
-		return nil
-	}
-
-	return f.Decl
+	return nil
 }
 
 func (f *FuncDeclarationVisitor) VisitFunctionName(ctx *FunctionNameContext) interface{} {
@@ -100,22 +114,20 @@ func (f *FuncDeclarationVisitor) VisitFunctionParameters(ctx *FunctionParameters
 	paramCtxes := ctx.AllFunctionParameter()
 	documents := ctx.AllEovWithDocument()
 	var parameters []*lang.ValueDecl
-	var document *lang.Document
 	for i, paramCtx := range paramCtxes {
+		var document *lang.Document
 		if i < len(documents) {
 			document = GetEovDocument(documents[i])
-		} else {
-			document = nil
 		}
 
-		visitor := NewValueDeclarationVisitor()
-		if value, ok := paramCtx.Accept(visitor).(*lang.ValueDecl); ok {
+		if value, ok := paramCtx.Accept(NewValueDeclarationVisitor()).(*lang.ValueDecl); ok {
 			if document != nil {
 				value.Document = document
+				value.SetEndPosition(document.EndPosition)
 			}
 			parameters = append(parameters, value)
 		} else {
-			logs.Errorw("failed to parse the parameter in the function decl", "function", f.Decl.Name)
+			logs.Errorw("failed to parse the parameter in the function decl", "function", f.Decl.Name, "code", paramCtx.GetText())
 			return nil
 		}
 	}
@@ -126,6 +138,8 @@ func (f *FuncDeclarationVisitor) VisitFunctionParameters(ctx *FunctionParameters
 func (f *FuncDeclarationVisitor) VisitFunctionResult(ctx *FunctionResultContext) interface{} {
 	returnType := GetType(ctx.Type_())
 	if returnType != nil {
+		returnType.StartPosition = GetPosition(ctx.GetStart())
+		returnType.EndPosition = GetPosition(ctx.GetStop())
 		returnType.Document = GetFollowingDocument(ctx.FollowingDocument())
 		returnType.Attributes = GetAttributes(ctx.Attributes())
 	}
@@ -134,10 +148,8 @@ func (f *FuncDeclarationVisitor) VisitFunctionResult(ctx *FunctionResultContext)
 }
 
 func (f *FuncDeclarationVisitor) VisitFunctionBody(ctx *FunctionBodyContext) interface{} {
-	documentCtx := ctx.FollowingDocument()
-	if documentCtx != nil {
-		document := GetFollowingDocument(documentCtx)
-		if document != nil {
+	if documentCtx := ctx.FollowingDocument(); documentCtx != nil {
+		if document := GetFollowingDocument(documentCtx); document != nil {
 			if f.Decl.Signature != nil && len(f.Decl.Signature.Parameters) > 0 {
 				parameters := f.Decl.Signature.Parameters
 				parameters[len(parameters)-1].Document = document

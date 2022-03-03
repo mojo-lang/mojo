@@ -136,7 +136,7 @@ func (c *CircleCompiler) compile(ctx context.Context, pkg *lang.Package) (pollut
 
 		var resolvedIdentifiers []*lang.Identifier
 		for _, identifier := range sourceFile.ResolvedIdentifiers {
-			if sourceFile.Scope.Identifiers[identifier.Name] != nil {
+			if sourceFile.Scope.Identifiers[identifier.FullName] != nil {
 				continue
 			}
 			resolvedIdentifiers = append(resolvedIdentifiers, identifier)

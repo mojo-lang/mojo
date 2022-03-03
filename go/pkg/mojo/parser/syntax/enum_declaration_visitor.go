@@ -1,14 +1,12 @@
 package syntax
 
 import (
-	"fmt"
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
 
 type EnumDeclarationVisitor struct {
 	*BaseMojoParserVisitor
-
-	EnumDecl *lang.EnumDecl
 }
 
 func NewEnumDeclarationVisitor() *EnumDeclarationVisitor {
@@ -16,37 +14,30 @@ func NewEnumDeclarationVisitor() *EnumDeclarationVisitor {
 }
 
 func (e *EnumDeclarationVisitor) VisitEnumDeclaration(ctx *EnumDeclarationContext) interface{} {
-	decl := &lang.EnumDecl{}
-	decl.Type = &lang.EnumType{}
-
-	//decl.Document.SetDocument(GetDocument(ctx.Document()))
-	//decl.Attributes = GetAttributes(ctx.Attributes())
-
-	nameCtx := ctx.EnumName()
-	if nameCtx != nil {
-		visitor := NewTypeNameVisitor()
-		if name, ok := nameCtx.Accept(visitor).(string); ok {
+	if nameCtx := ctx.EnumName(); nameCtx != nil {
+		if name, ok := nameCtx.Accept(NewTypeNameVisitor()).(string); ok {
+			decl := &lang.EnumDecl{}
 			decl.Name = name
-		} else {
-			fmt.Print("===> error")
+
+			if bodyCtx := ctx.EnumBody(); bodyCtx != nil {
+				if t, ok := bodyCtx.Accept(e).(*lang.EnumType); ok {
+					decl.Type = t
+
+					inheritances := GetTypeInheritances(ctx.TypeInheritanceClause())
+					if len(inheritances) > 0 {
+						decl.Type.UnderlyingType = inheritances[0]
+					}
+
+					return decl
+				}
+				logs.Errorw("failed to parse enum decl body", "name", name, "body", bodyCtx.GetText())
+			} else {
+				logs.Errorw("failed to parse enum decl without body", "name", name)
+			}
 		}
 	}
 
-	bodyCtx := ctx.EnumBody()
-	if bodyCtx != nil {
-		if t, ok := bodyCtx.Accept(e).(*lang.EnumType); ok {
-			decl.Type = t
-		} else {
-			fmt.Print("===> error")
-		}
-	}
-
-	inheritances := GetTypeInheritances(ctx.TypeInheritanceClause())
-	if len(inheritances) > 0 {
-		decl.Type.UnderlyingType = inheritances[0]
-	}
-
-	return decl
+	return nil
 }
 
 func (e *EnumDeclarationVisitor) VisitEnumBody(ctx *EnumBodyContext) interface{} {
@@ -55,20 +46,32 @@ func (e *EnumDeclarationVisitor) VisitEnumBody(ctx *EnumBodyContext) interface{}
 		return membersCtx.Accept(e)
 	}
 
-	return &lang.EnumType{}
+	return nil
 }
 
 func (e *EnumDeclarationVisitor) VisitEnumMembers(ctx *EnumMembersContext) interface{} {
-	memberCtxes := ctx.AllEnumMember()
 	t := &lang.EnumType{}
-	for _, memberCtx := range memberCtxes {
-		visitor := NewValueDeclarationVisitor()
+	t.StartPosition = GetPosition(ctx.GetStart())
+	t.EndPosition = GetPosition(ctx.GetStop())
 
-		if value, ok := memberCtx.Accept(visitor).(*lang.ValueDecl); ok {
+	memberCtxes := ctx.AllEnumMember()
+	var freeDocument *lang.Document
+	for _, memberCtx := range memberCtxes {
+		member := memberCtx.Accept(NewValueDeclarationVisitor())
+		if value, ok := member.(*lang.ValueDecl); ok {
+			if freeDocument != nil {
+				value.SetStartPosition(&lang.Position{LeadingComments: lang.NewComments(freeDocument)})
+				freeDocument = nil
+			}
 			t.Enumerators = append(t.Enumerators, value)
-		} else {
-			fmt.Print("===> error")
 		}
+		if document, ok := member.(*lang.Document); ok {
+			freeDocument = document
+		}
+	}
+
+	if freeDocument != nil {
+		t.SetEndPosition(&lang.Position{LeadingComments: lang.NewComments(freeDocument)})
 	}
 
 	return t

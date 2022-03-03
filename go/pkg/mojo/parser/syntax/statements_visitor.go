@@ -1,12 +1,13 @@
 package syntax
 
 import (
-	"fmt"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
 
 type StatementsVisitor struct {
 	*BaseMojoParserVisitor
+
+	FreeFloatingDocument *lang.Document
 }
 
 func NewStatementsVisitor() *StatementsVisitor {
@@ -18,29 +19,42 @@ func (s *StatementsVisitor) VisitStatements(ctx *StatementsContext) interface{} 
 	statementCtxes := ctx.AllStatement()
 
 	var statements []*lang.Statement
+	var document *lang.Document
 	for _, statementCtx := range statementCtxes {
-		if statement, ok := statementCtx.Accept(s).(*lang.Statement); ok {
-			if statement != nil {
-				statements = append(statements, statement)
+		obj := statementCtx.Accept(s)
+		if statement, ok := obj.(*lang.Statement); ok && statement != nil {
+			if document != nil {
+				lang.SetStartPosition(statement, &lang.Position{LeadingComments: lang.NewComments(document)})
+				document = nil
 			}
+
+			statements = append(statements, statement)
 		}
+		if doc, ok := obj.(*lang.Document); ok && doc != nil {
+			document = doc
+		}
+	}
+
+	if document != nil {
+		s.FreeFloatingDocument = document
 	}
 	return statements
 }
 
 func (s *StatementsVisitor) VisitStatement(ctx *StatementContext) interface{} {
-	declCtx := ctx.Declaration()
-	if declCtx != nil {
+	if declCtx := ctx.Declaration(); declCtx != nil {
 		return declCtx.Accept(s)
 	}
 
-	expressionCtx := ctx.Expression()
-	if expressionCtx != nil {
-		visitor := NewExpressionVisitor()
-		if expression, ok := expressionCtx.Accept(visitor).(*lang.Expression); ok {
+	if expressionCtx := ctx.Expression(); expressionCtx != nil {
+		if expression, ok := expressionCtx.Accept(NewExpressionVisitor()).(*lang.Expression); ok && expression != nil {
 			return lang.NewExpressionStatement(expression)
-		} else {
-			fmt.Print("===> error")
+		}
+	}
+
+	if documentCtx := ctx.FreeFloatingDocument(); documentCtx != nil {
+		if document := GetFreeFloatingDocument(documentCtx); document != nil {
+			return document
 		}
 	}
 
@@ -51,94 +65,80 @@ func (s *StatementsVisitor) VisitDeclaration(ctx *DeclarationContext) interface{
 	document := GetDocument(ctx.Document())
 	attributes := GetAttributes(ctx.Attributes())
 
-	packageCtx := ctx.PackageDeclaration()
-	if packageCtx != nil {
-		visitor := NewPackageDeclarationVisitor()
-		if decl, ok := packageCtx.Accept(visitor).(*lang.PackageDecl); ok {
+	var startPosition *lang.Position
+	if document != nil {
+		startPosition = document.StartPosition
+	}
+	if startPosition == nil && len(attributes) > 0 {
+		startPosition = attributes[0].StartPosition
+	}
+
+	if packageCtx := ctx.PackageDeclaration(); packageCtx != nil {
+		if decl, ok := packageCtx.Accept(NewPackageDeclarationVisitor()).(*lang.PackageDecl); ok {
 			decl.Document = document
+			decl.SetStartPosition(startPosition)
 			return lang.NewPackageDeclStatement(decl)
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	importCtx := ctx.ImportDeclaration()
-	if importCtx != nil {
-		visitor := NewImportDeclarationVisitor()
-		if decl, ok := packageCtx.Accept(visitor).(*lang.ImportDecl); ok {
+	if importCtx := ctx.ImportDeclaration(); importCtx != nil {
+		if decl, ok := importCtx.Accept(NewImportDeclarationVisitor()).(*lang.ImportDecl); ok {
+			decl.Document = document
+			decl.SetStartPosition(startPosition)
 			return lang.NewImportDeclStatement(decl)
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	enumCtx := ctx.EnumDeclaration()
-	if enumCtx != nil {
-		visitor := NewEnumDeclarationVisitor()
-		if decl, ok := enumCtx.Accept(visitor).(*lang.EnumDecl); ok {
+	if enumCtx := ctx.EnumDeclaration(); enumCtx != nil {
+		if decl, ok := enumCtx.Accept(NewEnumDeclarationVisitor()).(*lang.EnumDecl); ok {
 			decl.Document = document
 			decl.Attributes = attributes
+			decl.SetStartPosition(startPosition)
 			return lang.NewEnumDeclStatement(decl)
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	structCtx := ctx.StructDeclaration()
-	if structCtx != nil {
-		visitor := NewStructDeclarationVisitor()
-		if decl, ok := structCtx.Accept(visitor).(*lang.StructDecl); ok {
+	if structCtx := ctx.StructDeclaration(); structCtx != nil {
+		if decl, ok := structCtx.Accept(NewStructDeclarationVisitor()).(*lang.StructDecl); ok {
 			decl.Document = document
 			decl.Attributes = attributes
+			decl.SetStartPosition(startPosition)
 			return lang.NewStructDeclStatement(decl)
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	interfaceCtx := ctx.InterfaceDeclaration()
-	if interfaceCtx != nil {
-		visitor := NewInterfaceDeclarationVisitor()
-		if decl, ok := interfaceCtx.Accept(visitor).(*lang.InterfaceDecl); ok {
+	if interfaceCtx := ctx.InterfaceDeclaration(); interfaceCtx != nil {
+		if decl, ok := interfaceCtx.Accept(NewInterfaceDeclarationVisitor()).(*lang.InterfaceDecl); ok {
 			decl.Document = document
 			decl.Attributes = attributes
+			decl.SetStartPosition(startPosition)
 			return lang.NewInterfaceDeclStatement(decl)
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	typeAliasCtx := ctx.TypeAliasDeclaration()
-	if typeAliasCtx != nil {
-		visitor := NewTypeAliasDeclarationVisitor()
-		if decl, ok := typeAliasCtx.Accept(visitor).(*lang.TypeAliasDecl); ok {
+	if typeAliasCtx := ctx.TypeAliasDeclaration(); typeAliasCtx != nil {
+		if decl, ok := typeAliasCtx.Accept(NewTypeAliasDeclarationVisitor()).(*lang.TypeAliasDecl); ok {
 			decl.Document = document
 			decl.Attributes = attributes
+			decl.SetStartPosition(startPosition)
 			return lang.NewTypeAliasDeclStatement(decl)
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	functionCtx := ctx.FunctionDeclaration()
-	if functionCtx != nil {
-		visitor := NewFuncDeclarationVisitor()
-		if decl, ok := functionCtx.Accept(visitor).(*lang.FunctionDecl); ok {
+	if functionCtx := ctx.FunctionDeclaration(); functionCtx != nil {
+		if decl, ok := functionCtx.Accept(NewFuncDeclarationVisitor()).(*lang.FunctionDecl); ok {
 			decl.Document = document
 			decl.Attributes = attributes
+			decl.SetStartPosition(startPosition)
 			return lang.NewFunctionDeclStatement(decl)
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 
-	//variableDeclaration := ctx.VariableDeclaration()
-	//if variableDeclaration != nil {
-	//	visitor := NewValueDeclarationVisitor()
-	//	if decl, ok := variableDeclaration.Accept(visitor).(*lang.ValueDecl); ok {
-	//		return lang.New
-	//	}
-	//}
+	if variableDeclaration := ctx.VariableDeclaration(); variableDeclaration != nil {
+		if decl, ok := variableDeclaration.Accept(NewValueDeclarationVisitor()).(*lang.VariableDecl); ok {
+			return lang.NewVariableDeclStatement(decl)
+		}
+	}
 
 	return nil
 }

@@ -224,20 +224,24 @@ WS
 
 DELIMITED_COMMENT
   : '/*' (DELIMITED_COMMENT|.)*? '*/'
-  -> channel(HIDDEN) ; // nesting comments allowed
+  -> channel(HIDDEN)
+  ; // nesting comments allowed
 
 LINE_COMMENT
   : '//' (~[/<\u000A\u000D] ~[\u000A\u000D]*)?
-  -> channel(HIDDEN) ;
+  -> channel(HIDDEN)
+  ;
 
 LINE_COMMENT_FOR_DOCUMENT
   : '////' ~[\u000A\u000D]*
-  -> channel(HIDDEN) ;
+  -> channel(HIDDEN)
+  ;
 
 EOL   : '\u000A' | '\u000D' '\u000A'; // \r\n
 
 LINE_DOCUMENT : '///' (~[/<\u000A\u000D] ~[\u000A\u000D]*)?;
 FOLLOWING_LINE_DOCUMENT : '//<' ~[\u000A\u000D]*;
+INNER_LINE_DOCUMENT : '//!' ~[\u000A\u000D]*;
 
 //fragment
 OPERATOR_FOLLOWING_CHARACTER

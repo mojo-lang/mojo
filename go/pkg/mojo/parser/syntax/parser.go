@@ -70,7 +70,10 @@ func (p Parser) ParseStream(fileName string, input *antlr.InputStream) (*lang.So
 	tree := parser.MojoFile()
 	visitor := NewMojoFileVisitor()
 	result := visitor.Visit(tree).(bool)
+
 	if result && errorListener.Error == nil {
+		CommentParser{}.Parse(stream)
+
 		return visitor.SourceFile, nil
 	}
 

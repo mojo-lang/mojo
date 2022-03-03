@@ -1,4 +1,4 @@
-// Code generated from MojoParser.g4 by ANTLR 4.9.2. DO NOT EDIT.
+// Code generated from MojoParser.g4 by ANTLR 4.9.3. DO NOT EDIT.
 
 package syntax // MojoParser
 import "github.com/antlr/antlr4/runtime/Go/antlr"
@@ -15,7 +15,7 @@ func (v *BaseMojoParserVisitor) VisitStatement(ctx *StatementContext) interface{
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitFreeDocument(ctx *FreeDocumentContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitFreeFloatingDocument(ctx *FreeFloatingDocumentContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -300,6 +300,10 @@ func (v *BaseMojoParserVisitor) VisitInterfaceDeclaration(ctx *InterfaceDeclarat
 }
 
 func (v *BaseMojoParserVisitor) VisitInterfaceName(ctx *InterfaceNameContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitInterfaceType(ctx *InterfaceTypeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

@@ -9,19 +9,26 @@ import (
 func TestTypeAliasDeclarationVisitor_VisitTypeAliasDeclaration(t *testing.T) {
 	const typeAlias = `@foo('bar') type Mailbox = String`
 
-	parser := &Parser{}
-	file, err := parser.ParseString(typeAlias)
+	decl := parseTypeAlias(t, typeAlias)
 
-	assert.NoError(t, err)
-	decl := getDecl(file)
-	assert.NotNil(t, decl)
 	assert.Equal(t, "Mailbox", decl.Name)
 	assert.Equal(t, "String", decl.Type.Name)
 	assert.Equal(t, 1, len(decl.Attributes))
 	assert.Equal(t, "foo", decl.Attributes[0].Name)
 }
 
-func getDecl(file *lang.SourceFile) *lang.TypeAliasDecl {
+func parseTypeAlias(t *testing.T, decl string) *lang.TypeAliasDecl {
+	parser := &Parser{}
+	file, err := parser.ParseString(decl)
+
+	assert.NoError(t, err)
+	aliasDecl := getAliasDecl(file)
+	assert.NotNil(t, aliasDecl)
+
+	return aliasDecl
+}
+
+func getAliasDecl(file *lang.SourceFile) *lang.TypeAliasDecl {
 	if len(file.Statements) > 0 {
 		statement := file.Statements[0]
 		if decl := statement.GetDeclaration(); decl != nil {

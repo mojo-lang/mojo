@@ -27,11 +27,14 @@ func (m *MojoFileVisitor) Visit(tree antlr.ParseTree) interface{} {
 }
 
 func (m *MojoFileVisitor) VisitMojoFile(ctx *MojoFileContext) interface{} {
-	if statements := ctx.Statements(); statements != nil {
-		visitor := NewStatementsVisitor()
-		if s, ok := statements.Accept(visitor).([]*lang.Statement); ok {
-			m.SourceFile.Statements = s
-		}
+	statements := ctx.Statements()
+	visitor := NewStatementsVisitor()
+	if s, ok := statements.Accept(visitor).([]*lang.Statement); ok {
+		m.SourceFile.Statements = append(m.SourceFile.Statements, s...)
+	}
+
+	if visitor.FreeFloatingDocument != nil {
+		m.SourceFile.TailingComments = lang.NewComments(visitor.FreeFloatingDocument)
 	}
 
 	return true

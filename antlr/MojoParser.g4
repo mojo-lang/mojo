@@ -47,10 +47,10 @@ statement
  | loopStatement
  | branchStatement
  | controlTransferStatement
- | freeDocument
+ | freeFloatingDocument
  ;
 
-freeDocument : document;
+freeFloatingDocument : document;
 
 statements
     : statement (eos EOL* statement)* SEMI?
@@ -153,7 +153,7 @@ genericArgument : type_ attributes?;
 //gt : {_input.LT(1).getText().equals(">")}? operator ;
 
 // GRAMMAR OF A DECLARATION
-declaration : document? (attributes EOL?)?
+declaration : (document EOL)? (attributes EOL?)?
       ( packageDeclaration
       | importDeclaration
       | constantDeclaration
@@ -204,7 +204,7 @@ patternInitializers
   | LCURLY EOL* documentedPatternInitializer (eov EOL* documentedPatternInitializer)* eov? EOL* RCURLY
   ;
 
-documentedPatternInitializer : document? (attributes EOL)? patternInitializer;
+documentedPatternInitializer : (document EOL)? (attributes EOL)? patternInitializer;
 
 /** rule is ambiguous. can match "var x = 1" with x as pattern
  *  OR with x as expression_pattern.
@@ -267,8 +267,8 @@ enumName: typeName;
 enumMembers : enumMember (eovWithDocument EOL* enumMember)* eovWithDocument?;
 
 enumMember
- : document? (attributes EOL)? declarationIdentifier attributes? (EOL* initializer)?
- //| freeDocument
+ : (document EOL)? (attributes EOL)? declarationIdentifier attributes? (EOL* initializer)?
+ | freeFloatingDocument
  ;
 
 // GRAMMAR OF A STRUCTURE DECLARATION
@@ -280,7 +280,7 @@ structName : typeName;
 structType : (EOL* typeInheritanceClause)? (EOL* structBody)?;
 
 structBody
-   : LCURLY followingDocument? (EOL* structMembers)? EOL* RCURLY
+   : LCURLY (followingDocument EOL)? (EOL* structMembers)? EOL* RCURLY
    ;
 
 structMembers
@@ -290,14 +290,14 @@ structMembers
   ;
 
 structMember
- : document? (attributes EOL)?
+ : (document EOL)? (attributes EOL)?
  ( structDeclaration
  | enumDeclaration
  | constantDeclaration
  | typeAliasDeclaration
  | structMemberDeclaration
- //| freeDocument
  )
+ | freeFloatingDocument
  ;
 
 structMemberDeclaration
@@ -307,9 +307,11 @@ structMemberDeclaration
 // GRAMMAR OF A INTERFACE DECLARATION
 
 interfaceDeclaration
-  : KEYWORD_INTERFACE interfaceName genericParameterClause? (EOL* typeInheritanceClause)? EOL* interfaceBody ;
+  : KEYWORD_INTERFACE interfaceName genericParameterClause? interfaceType;
 
 interfaceName : typeName ;
+interfaceType : (EOL* typeInheritanceClause)? EOL* interfaceBody;
+
 interfaceBody : LCURLY followingDocument? (EOL* interfaceMembers)? EOL* RCURLY ;
 
 interfaceMembers
@@ -317,11 +319,11 @@ interfaceMembers
   ;
 
 interfaceMember
- : document? (attributes EOL)?
+ : (document EOL)? (attributes EOL)?
  ( typeAliasDeclaration
  | interfaceMethodDeclaration
- //| freeDocument
  )
+ | freeFloatingDocument
  ;
 
 // GRAMMAR OF A INTERFACE METHOD DECLARATION
@@ -329,7 +331,7 @@ interfaceMethodDeclaration : functionName genericParameterClause? EOL* functionS
 
 // GRAMMAR OF A ATTRIBUTE DECLARATION
 attributeDeclaration
-  : document? (EOL* attribute)? KEYWORD_ATTRIBUTE attributeName genericParameterClause? (structType | typeAnnotation);
+  : (document EOL)? (EOL* attribute)? KEYWORD_ATTRIBUTE attributeName genericParameterClause? (structType | typeAnnotation);
 
 // Patterns
 
@@ -605,8 +607,8 @@ type_
  ;
 
 basicType
- : basicType attributes? EOL* PIPE EOL* basicType attributes? #Union
- | basicType attributes? EOL* AND EOL* basicType attributes? #Intersection
+ : basicType attributes? (followingDocument EOL)? EOL* PIPE EOL* basicType attributes? (followingDocument EOL)? #Union
+ | basicType attributes? (followingDocument EOL)? EOL* AND EOL* basicType attributes? (followingDocument EOL)?  #Intersection
  | primeType #Prime
  ;
 
@@ -761,7 +763,7 @@ keywordAsIdentifierInLabels
 
 // GRAMMAR A DOCUMENT_COMMENT
 
-document : LINE_DOCUMENT (EOL LINE_DOCUMENT)* EOL;
+document : LINE_DOCUMENT (EOL LINE_DOCUMENT)*;
 
 followingDocument : FOLLOWING_LINE_DOCUMENT (EOL FOLLOWING_LINE_DOCUMENT)*;
 

@@ -30,6 +30,10 @@ func (c *ClosureExprVisitor) VisitClosureExpression(ctx *ClosureExpressionContex
 				Statements: statements,
 			}
 		}
+
+		if visitor.FreeFloatingDocument != nil {
+			closure.SetEndPosition(&lang.Position{LeadingComments: lang.NewComments(visitor.FreeFloatingDocument)})
+		}
 	}
 
 	if closure.Body != nil {

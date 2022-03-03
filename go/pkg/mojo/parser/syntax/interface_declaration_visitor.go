@@ -8,7 +8,8 @@ import (
 type InterfaceDeclarationVisitor struct {
 	*BaseMojoParserVisitor
 
-	Interface *lang.InterfaceDecl
+	name              string
+	followingDocument *lang.Document
 }
 
 func NewInterfaceDeclarationVisitor() *InterfaceDeclarationVisitor {
@@ -17,25 +18,62 @@ func NewInterfaceDeclarationVisitor() *InterfaceDeclarationVisitor {
 }
 
 func (i *InterfaceDeclarationVisitor) VisitInterfaceDeclaration(ctx *InterfaceDeclarationContext) interface{} {
-	i.Interface = &lang.InterfaceDecl{}
-	i.Interface.Type = &lang.InterfaceType{}
+	i.name = ""
 
-	interfaceName := ctx.InterfaceName()
-	if interfaceName != nil {
-		i.Interface.Name = interfaceName.Accept(i).(string)
+	if interfaceName := ctx.InterfaceName(); interfaceName != nil {
+		if name, ok := interfaceName.Accept(i).(string); ok && len(name) > 0 {
+			i.name = name
+
+			decl := &lang.InterfaceDecl{}
+			decl.Name = name
+			decl.StartPosition = GetPosition(ctx.GetStart())
+			decl.EndPosition = GetPosition(ctx.GetStop())
+			decl.GenericParameters = GetGenericParameters(ctx.GenericParameterClause())
+
+			if typeCtx := ctx.InterfaceType(); typeCtx != nil {
+				if t, ok := typeCtx.Accept(i).(*lang.InterfaceType); ok && t != nil {
+					decl.Type = t
+				}
+			}
+
+			return decl
+		}
 	} else {
 		// error happened
 	}
+	return nil
+}
 
-	i.Interface.GenericParameters = GetGenericParameters(ctx.GenericParameterClause())
-	i.Interface.Type.Inherits = GetTypeInheritances(ctx.TypeInheritanceClause())
+func (i *InterfaceDeclarationVisitor) VisitInterfaceType(ctx *InterfaceTypeContext) interface{} {
+	i.followingDocument = nil
+	inherits := GetTypeInheritances(ctx.TypeInheritanceClause())
 
-	bodyCtx := ctx.InterfaceBody()
-	if bodyCtx != nil {
-		i.Interface.Type.Methods = bodyCtx.Accept(i).([]*lang.FunctionDecl)
+	if bodyCtx := ctx.InterfaceBody(); bodyCtx != nil {
+		if t, ok := bodyCtx.Accept(i).(*lang.InterfaceType); ok && t != nil {
+			if len(inherits) > 0 && i.followingDocument != nil {
+				inherits[len(inherits)-1].Document = i.followingDocument
+			}
+
+			t.Inherits = inherits
+			t.SetStartPosition(GetPosition(ctx.GetStart()))
+			t.SetEndPosition(GetPosition(ctx.GetStop()))
+			return t
+		}
 	}
 
-	return i.Interface
+	if len(inherits) > 0 {
+		if i.followingDocument != nil {
+			inherits[len(inherits)-1].Document = i.followingDocument
+		}
+		return &lang.InterfaceType{
+			Inherits:      inherits,
+			StartPosition: GetPosition(ctx.GetStart()),
+			EndPosition:   GetPosition(ctx.GetStop()),
+		}
+	}
+
+	logs.Warnw("declaration an opaque interface", "interface", i.name)
+	return nil
 }
 
 func (i *InterfaceDeclarationVisitor) VisitInterfaceName(ctx *InterfaceNameContext) interface{} {
@@ -43,41 +81,67 @@ func (i *InterfaceDeclarationVisitor) VisitInterfaceName(ctx *InterfaceNameConte
 }
 
 func (i *InterfaceDeclarationVisitor) VisitInterfaceBody(ctx *InterfaceBodyContext) interface{} {
-	membersCtx := ctx.InterfaceMembers()
-	if membersCtx != nil {
+	if followingDocumentCtx := ctx.FollowingDocument(); followingDocumentCtx != nil {
+		i.followingDocument = GetFollowingDocument(followingDocumentCtx)
+	}
+
+	if membersCtx := ctx.InterfaceMembers(); membersCtx != nil {
 		return membersCtx.Accept(i)
 	}
 
-	return []*lang.FunctionDecl{}
+	return nil
 }
 
 func (i *InterfaceDeclarationVisitor) VisitInterfaceMembers(ctx *InterfaceMembersContext) interface{} {
-	memberCtxes := ctx.AllInterfaceMember()
-	var methods []*lang.FunctionDecl
-	for _, memberCtx := range memberCtxes {
-		funcDecl := memberCtx.Accept(i).(*lang.FunctionDecl)
-		if funcDecl != nil {
-			methods = append(methods, funcDecl)
+	var freeDocument *lang.Document
+
+	interfaceType := &lang.InterfaceType{}
+	allInterfaceMember := ctx.AllInterfaceMember()
+	for _, memberCtx := range allInterfaceMember {
+		member := memberCtx.Accept(i)
+		if funcDecl, ok := member.(*lang.FunctionDecl); ok && funcDecl != nil {
+			if freeDocument != nil {
+				funcDecl.SetStartPosition(&lang.Position{LeadingComments: lang.NewComments(freeDocument)})
+				freeDocument = nil
+			}
+			interfaceType.Methods = append(interfaceType.Methods, funcDecl)
+		}
+		if document, ok := member.(*lang.Document); ok {
+			freeDocument = document
 		}
 	}
 
-	return methods
+	interfaceType.SetEndPosition(&lang.Position{LeadingComments: lang.NewComments(freeDocument)})
+
+	return interfaceType
 }
 
 func (i *InterfaceDeclarationVisitor) VisitInterfaceMember(ctx *InterfaceMemberContext) interface{} {
-	document := GetDocument(ctx.Document())
-	attributes := GetAttributes(ctx.Attributes())
+	if freeDocument := ctx.FreeFloatingDocument(); freeDocument != nil {
+		return GetFreeFloatingDocument(freeDocument)
+	} else {
+		document := GetDocument(ctx.Document())
+		attributes := GetAttributes(ctx.Attributes())
 
-	methodCtx := ctx.InterfaceMethodDeclaration()
-	if methodCtx != nil {
-		visitor := NewFuncDeclarationVisitor()
-		if funcDecl, ok := methodCtx.Accept(visitor).(*lang.FunctionDecl); ok {
-			funcDecl.Document = document
-			funcDecl.Attributes = attributes
-			return funcDecl
-		} else {
-			logs.Errorw("failed to parse the method in the interface", "interface", i.Interface.Name)
+		var startPosition *lang.Position
+		if document != nil {
+			startPosition = document.StartPosition
+		}
+		if startPosition == nil && len(attributes) > 0 {
+			startPosition = attributes[0].StartPosition
+		}
+
+		if methodCtx := ctx.InterfaceMethodDeclaration(); methodCtx != nil {
+			if funcDecl, ok := methodCtx.Accept(NewFuncDeclarationVisitor()).(*lang.FunctionDecl); ok {
+				funcDecl.Document = document
+				funcDecl.Attributes = attributes
+				funcDecl.SetStartPosition(startPosition)
+				return funcDecl
+			} else {
+				logs.Errorw("failed to parse the method in the interface", "interface", i.name)
+			}
 		}
 	}
+
 	return nil
 }

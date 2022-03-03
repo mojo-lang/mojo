@@ -4,42 +4,54 @@ import "github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 type ValueDeclarationVisitor struct {
 	*BaseMojoParserVisitor
-
-	ValueDecl *lang.ValueDecl
 }
 
 func NewValueDeclarationVisitor() *ValueDeclarationVisitor {
-	visitor := &ValueDeclarationVisitor{}
-	visitor.ValueDecl = &lang.ValueDecl{}
-	return visitor
+	return &ValueDeclarationVisitor{}
 }
 
 func (v *ValueDeclarationVisitor) VisitStructMemberDeclaration(ctx *StructMemberDeclarationContext) interface{} {
-	v.ValueDecl.Name = GetDeclarationIdentifier(ctx.DeclarationIdentifier())
+	decl := &lang.ValueDecl{}
 
+	decl.Name = GetDeclarationIdentifier(ctx.DeclarationIdentifier())
 	if initializerCtx := ctx.Initializer(); initializerCtx != nil {
-		initializerCtx.Accept(v)
+		if expr, ok := initializerCtx.Accept(v).(*lang.Expression); ok && expr != nil {
+			decl.InitialValue = expr
+		}
 	}
 
-	v.ValueDecl.Type = GetTypeAnnotation(ctx.TypeAnnotation())
-
-	return v.ValueDecl
+	decl.Type = GetTypeAnnotation(ctx.TypeAnnotation())
+	return decl
 }
 
 func (v *ValueDeclarationVisitor) VisitVariableDeclaration(ctx *VariableDeclarationContext) interface{} {
 	initializersCtx := ctx.PatternInitializers()
 	if initializersCtx != nil {
-		return initializersCtx.Accept(v)
+		if decls, ok := initializersCtx.Accept(v).([]*lang.ValueDecl); ok && len(decls) > 0 {
+			decl := decls[0] //fixme
+			return &lang.VariableDecl{
+				StartPosition:  decl.StartPosition,
+				EndPosition:    decl.EndPosition,
+				Implicit:       decl.Implicit,
+				Document:       decl.Document,
+				PackageName:    decl.PackageName,
+				SourceFileName: decl.SourceFileName,
+				Name:           decl.Name,
+				Attributes:     decl.Attributes,
+				Group:          decl.Group,
+				Type:           decl.Type,
+				InitialValue:   decl.InitialValue,
+			}
+		}
 	}
 	return nil
 }
 
 func (v *ValueDeclarationVisitor) VisitPatternInitializers(ctx *PatternInitializersContext) interface{} {
 	initializerCtxes := ctx.AllPatternInitializer()
-	var decls []interface{}
+	var decls []*lang.ValueDecl
 	for _, c := range initializerCtxes {
-		decl := c.Accept(v)
-		if decl != nil {
+		if decl, ok := c.Accept(v).(*lang.ValueDecl); ok && decl != nil {
 			decls = append(decls, decl)
 		}
 	}
@@ -50,16 +62,14 @@ func (v *ValueDeclarationVisitor) VisitPatternInitializers(ctx *PatternInitializ
 }
 
 func (v *ValueDeclarationVisitor) VisitPatternInitializer(ctx *PatternInitializerContext) interface{} {
-	patternCtx := ctx.Pattern()
-	if patternCtx != nil {
-		if pattern, ok := patternCtx.Accept(v).(*lang.ValueDecl); ok {
-			v.ValueDecl = pattern
-
-			initializerCtx := ctx.Initializer()
-			if initializerCtx != nil {
-				initializerCtx.Accept(v)
+	if patternCtx := ctx.Pattern(); patternCtx != nil {
+		if pattern, ok := patternCtx.Accept(v).(*lang.ValueDecl); ok && pattern != nil {
+			if initializerCtx := ctx.Initializer(); initializerCtx != nil {
+				if expr, ok := initializerCtx.Accept(v).(*lang.Expression); ok && expr != nil {
+					pattern.InitialValue = expr
+				}
 			}
-			return v.ValueDecl
+			return pattern
 		}
 	}
 	return nil
@@ -84,37 +94,49 @@ func (v *ValueDeclarationVisitor) VisitIdentifierPattern(ctx *IdentifierPatternC
 }
 
 func (v *ValueDeclarationVisitor) VisitEnumMember(ctx *EnumMemberContext) interface{} {
-	v.ValueDecl.Name = ctx.DeclarationIdentifier().GetText()
-	v.ValueDecl.Document = GetDocument(ctx.Document())
+	if freeFloatingDocumentCtx := ctx.FreeFloatingDocument(); freeFloatingDocumentCtx != nil {
+		return GetFreeFloatingDocument(freeFloatingDocumentCtx)
+	}
+
+	decl := &lang.ValueDecl{}
+	decl.Name = ctx.DeclarationIdentifier().GetText()
+	decl.Document = GetDocument(ctx.Document())
+	decl.StartPosition = GetPosition(ctx.GetStart())
+	decl.EndPosition = GetPosition(ctx.GetStop())
 
 	if initializerCtx := ctx.Initializer(); initializerCtx != nil {
-		initializerCtx.Accept(v)
+		if expr, ok := initializerCtx.Accept(v).(*lang.Expression); ok && expr != nil {
+			decl.InitialValue = expr
+		}
 	}
 
 	for _, attributesCtx := range ctx.AllAttributes() {
-		v.ValueDecl.Attributes = append(v.ValueDecl.Attributes, GetAttributes(attributesCtx)...)
+		decl.Attributes = append(decl.Attributes, GetAttributes(attributesCtx)...)
 	}
 
-	return v.ValueDecl
+	return decl
 }
 
 func (v *ValueDeclarationVisitor) VisitFunctionParameter(ctx *FunctionParameterContext) interface{} {
-	v.ValueDecl.Name = ctx.LabelIdentifier().GetText()
+	decl := &lang.ValueDecl{}
 
-	initializerCtx := ctx.Initializer()
-	if initializerCtx != nil {
-		initializerCtx.Accept(v)
+	decl.Name = ctx.LabelIdentifier().GetText()
+	decl.StartPosition = GetPosition(ctx.GetStart())
+	decl.EndPosition = GetPosition(ctx.GetStop())
+
+	if initializerCtx := ctx.Initializer(); initializerCtx != nil {
+		if expr, ok := initializerCtx.Accept(v).(*lang.Expression); ok && expr != nil {
+			decl.InitialValue = expr
+		}
 	}
 
-	v.ValueDecl.Type = GetTypeAnnotation(ctx.TypeAnnotation())
-
-	return v.ValueDecl
+	decl.Type = GetTypeAnnotation(ctx.TypeAnnotation())
+	return decl
 }
 
 func (v *ValueDeclarationVisitor) VisitInitializer(ctx *InitializerContext) interface{} {
 	if ctx != nil {
-		v.ValueDecl.InitialValue = GetExpression(ctx.Expression())
+		return GetExpression(ctx.Expression())
 	}
-	return false
+	return nil
 }
-
