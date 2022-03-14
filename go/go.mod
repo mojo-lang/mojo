@@ -13,7 +13,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/mojo-lang/core/go v0.0.0-20220313044733-377333293faa
-	github.com/mojo-lang/db/go v0.0.0-20220208121639-b57d1aadc77b
+	github.com/mojo-lang/db/go v0.0.0-20220314090443-c96f4a28e2a8
 	github.com/mojo-lang/document/go v0.0.0-20211223004737-9f1cfeafe18c
 	github.com/mojo-lang/lang/go v0.0.0-20220313050207-72ffb0ecad14
 	github.com/mojo-lang/openapi/go v0.0.0-20211217055758-40cd53ea6bdb
@@ -25,4 +25,5 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
 	google.golang.org/protobuf v1.26.0
+	gorm.io/gorm v1.23.2 // indirect
 )
