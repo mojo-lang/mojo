@@ -3,6 +3,7 @@ package compiler
 import (
     "errors"
     "fmt"
+    "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/db/go/pkg/mojo/db"
     "google.golang.org/protobuf/runtime/protoimpl"
@@ -236,6 +237,7 @@ func compileStructInherit(ctx context.Context, inherit *lang.NominalType, descri
 
 func compileStructFields(ctx context.Context, fields []*lang.ValueDecl, msgDescriptor *desc.MessageDescriptor) error {
     scope := lang.GetScope(context.TypeValue(ctx))
+    file := context.SourceFile(ctx)
 
     for _, field := range fields {
         member := &descriptor.FieldDescriptorProto{}
@@ -317,10 +319,10 @@ func compileStructFields(ctx context.Context, fields []*lang.ValueDecl, msgDescr
 
                     number, err := lang.GetIntegerAttribute(argument.Attributes, core.NumberAttributeName)
                     if err != nil {
-                        return errors.New("has not set the number in field")
+                        return logs.NewErrorw("has not set the number in field", "field", field.Name, "struct", msgDescriptor.GetName(), "file", file.GetFullName(), "line", field.GetStartPosition().GetLine())
                     }
                     if number <= 0 {
-                        return errors.New("number attribute value must be positive")
+                        return logs.NewErrorw("number attribute value must be positive", "field", field.Name, "struct", msgDescriptor.GetName(), "file", file.GetFullName(), "line", field.GetStartPosition().GetLine())
                     }
                     n := int32(number)
                     member.Number = &n
@@ -345,7 +347,7 @@ func compileStructFields(ctx context.Context, fields []*lang.ValueDecl, msgDescr
 
         number, err := lang.GetIntegerAttribute(field.Type.Attributes, core.NumberAttributeName)
         if err != nil {
-            return errors.New("has not set the number in field")
+            return logs.NewErrorw("has not set the number in field", "field", field.Name, "struct", msgDescriptor.GetName(), "file", file.GetFullName(), "line", field.GetStartPosition().GetLine())
         }
         if number <= 0 {
             return errors.New("number attribute value must be positive")
