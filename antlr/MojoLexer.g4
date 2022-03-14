@@ -222,8 +222,8 @@ WS
   : [\u0020\u0009\u000B\u000C\u0000]
   -> channel(HIDDEN) ;
 
-DELIMITED_COMMENT
-  : '/*' (DELIMITED_COMMENT|.)*? '*/'
+BLOCK_COMMENT
+  : '/*' (BLOCK_COMMENT|.)*? '*/'
   -> channel(HIDDEN)
   ; // nesting comments allowed
 
@@ -232,7 +232,7 @@ LINE_COMMENT
   -> channel(HIDDEN)
   ;
 
-LINE_COMMENT_FOR_DOCUMENT
+LINE_COMMENT_DISTINCT_DOCUMENT
   : '////' ~[\u000A\u000D]*
   -> channel(HIDDEN)
   ;

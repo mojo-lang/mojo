@@ -153,7 +153,7 @@ genericArgument : type_ attributes?;
 //gt : {_input.LT(1).getText().equals(">")}? operator ;
 
 // GRAMMAR OF A DECLARATION
-declaration : (document EOL)? (attributes EOL?)?
+declaration : (document EOL)? (attributes EOL*)?
       ( packageDeclaration
       | importDeclaration
       | constantDeclaration
@@ -224,12 +224,10 @@ typeAliasDeclaration
   ;
 
 typeAliasName : typeName ;
-typeAliasAssignment : assignmentOperator EOL* type_ attributes?;
+typeAliasAssignment : assignmentOperator EOL* type_ attributes? followingDocument?;
 
 // GRAMMAR OF A FUNCTION DECLARATION
-functionDeclaration : functionHead functionName genericParameterClause? functionSignature (EOL* functionBody)? ;
-
-functionHead : KEYWORD_FUNC ;
+functionDeclaration : KEYWORD_FUNC functionName genericParameterClause? functionSignature (EOL* functionBody)? ;
 
 functionName : declarationIdentifier | operator ;
 
@@ -237,7 +235,7 @@ functionSignature
  : functionParameterClause followingDocument? (EOL* functionResult)?
  ;
  
-functionResult : arrowOperator (labelIdentifier COLON)? type_ attributes? (EOL* followingDocument)? ;
+functionResult : arrowOperator (labelIdentifier COLON?)? type_ attributes? (EOL* followingDocument)? ;
 
 functionBody : LCURLY followingDocument? (EOL* statements)? EOL* RCURLY ;
 
@@ -252,7 +250,7 @@ functionParameters
 
 functionParameter
  : labelIdentifier typeAnnotation (EOL* initializer)?
- | labelIdentifier COLON type_ ELLIPSIS attributes?
+ | labelIdentifier COLON? type_ ELLIPSIS attributes?
  ;
 
 // GRAMMAR OF AN ENUMERATION DECLARATION
@@ -331,7 +329,7 @@ interfaceMethodDeclaration : functionName genericParameterClause? EOL* functionS
 
 // GRAMMAR OF A ATTRIBUTE DECLARATION
 attributeDeclaration
-  : (document EOL)? (EOL* attribute)? KEYWORD_ATTRIBUTE attributeName genericParameterClause? (structType | typeAnnotation);
+  : KEYWORD_ATTRIBUTE attributeName genericParameterClause? (structBody | typeAnnotation followingDocument?);
 
 // Patterns
 
@@ -388,11 +386,11 @@ attributeArgumentClause
     : LPAREN (EOL* attributeArguments)? EOL* RPAREN
     ;
 
-attributeArgument : (labelIdentifier COLON)? expression;
+attributeArgument : (labelIdentifier COLON?)? expression;
 attributeArguments : attributeArgument (eov EOL* attributeArgument)* eov?;
 
 // GRAMMAR OF AN ATTRIBUTES
-attributes : attribute (EOL? attribute)* ;
+attributes : attribute (EOL* attribute)* ;
 
 // Expressions
 
@@ -539,7 +537,7 @@ tupleExpression
 
 tupleElement
  : expression
- | labelIdentifier COLON expression
+ | labelIdentifier COLON? expression
  ;
 
 // GRAMMAR OF A WILDCARD EXPRESSION
@@ -581,9 +579,9 @@ functionCallArguments : functionCallArgument ( COMMA functionCallArgument )* ;
 
 functionCallArgument
  : expression
- | labelIdentifier COLON expression
+ | labelIdentifier COLON? expression
  | operator
- | labelIdentifier COLON operator
+ | labelIdentifier COLON? operator
  ;
 
 trailingClosures:
@@ -620,7 +618,7 @@ primeType
  ;
 
 // GRAMMAR OF A TYPE ANNOTATION
-typeAnnotation : COLON type_ attributes?;
+typeAnnotation : COLON? type_ attributes?;
 
 // GRAMMAR OF A TYPE IDENTIFIER
 typeIdentifier : (packageIdentifier DOT)? typeIdentifierClause (DOT typeIdentifierClause)* ;
@@ -631,7 +629,7 @@ typeName : TYPE_IDENTIFIER ;
 // GRAMMAR OF A TUPLE TYPE
 tupleType : LPAREN (EOL* tupleTypeElements)? EOL* RPAREN ;
 tupleTypeElements : tupleTypeElement (eovWithDocument EOL* tupleTypeElement)* eovWithDocument?;
-tupleTypeElement : ( declarationIdentifier COLON )? type_ attributes? ;
+tupleTypeElement : ( declarationIdentifier COLON? )? type_ attributes? ;
 
 // GRAMMAR OF A UNION TYPE
 

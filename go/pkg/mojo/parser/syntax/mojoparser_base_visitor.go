@@ -215,10 +215,6 @@ func (v *BaseMojoParserVisitor) VisitFunctionDeclaration(ctx *FunctionDeclaratio
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitFunctionHead(ctx *FunctionHeadContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseMojoParserVisitor) VisitFunctionName(ctx *FunctionNameContext) interface{} {
 	return v.VisitChildren(ctx)
 }

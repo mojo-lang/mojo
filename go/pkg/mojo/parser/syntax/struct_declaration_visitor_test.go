@@ -1,47 +1,47 @@
 package syntax
 
 import (
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"testing"
+    "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+    "testing"
 
-	"github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/assert"
 )
 
 func getStructDecl(file *lang.SourceFile) *lang.StructDecl {
-	if len(file.Statements) > 0 {
-		statement := file.Statements[0]
-		if decl := statement.GetDeclaration(); decl != nil {
-			return decl.GetStructDecl()
-		}
-	}
-	return nil
+    if len(file.Statements) > 0 {
+        statement := file.Statements[0]
+        if decl := statement.GetDeclaration(); decl != nil {
+            return decl.GetStructDecl()
+        }
+    }
+    return nil
 }
 
 func parseStructDecl(t *testing.T, decl string) *lang.StructDecl {
-	parser := &Parser{}
-	file, err := parser.ParseString(decl)
-	assert.NoError(t, err)
+    parser := &Parser{}
+    file, err := parser.ParseString(decl)
+    assert.NoError(t, err)
 
-	structDecl := getStructDecl(file)
-	assert.NotNil(t, structDecl)
+    structDecl := getStructDecl(file)
+    assert.NotNil(t, structDecl)
 
-	return structDecl
+    return structDecl
 }
 
 func TestStructDeclarationVisitor_VisitStructDeclaration_FreeFloatingDocument(t *testing.T) {
-	const typeDecl = `
+    const typeDecl = `
 @foo('bar')
 type Mailbox {
 	/// free floating document
 }
 `
-	decl := parseStructDecl(t, typeDecl)
-	assert.Equal(t, "Mailbox", decl.Name)
-	assert.NotEmpty(t, decl.Type.EndPosition.LeadingComments)
+    decl := parseStructDecl(t, typeDecl)
+    assert.Equal(t, "Mailbox", decl.Name)
+    assert.NotEmpty(t, decl.Type.EndPosition.LeadingComments)
 }
 
 func TestStructDeclarationVisitor_VisitStructDeclaration_Enclosing(t *testing.T) {
-	const typeDecl = `
+    const typeDecl = `
 @foo('bar')
 type Mailbox {
 	type Mail {
@@ -54,20 +54,20 @@ type Mailbox {
 	}
 }
 `
-	decl := parseStructDecl(t, typeDecl)
+    decl := parseStructDecl(t, typeDecl)
 
-	assert.Equal(t, "Mailbox", decl.Name)
-	assert.Equal(t, "Mailbox", decl.StructDecls[0].EnclosingType.Name)
+    assert.Equal(t, "Mailbox", decl.Name)
+    assert.Equal(t, "Mailbox", decl.StructDecls[0].EnclosingType.Name)
 
-	assert.Equal(t, "Mail", decl.StructDecls[0].StructDecls[0].EnclosingType.Name)
-	assert.Equal(t, "Mail", decl.StructDecls[0].StructDecls[1].EnclosingType.Name)
+    assert.Equal(t, "Mail", decl.StructDecls[0].StructDecls[0].EnclosingType.Name)
+    assert.Equal(t, "Mail", decl.StructDecls[0].StructDecls[1].EnclosingType.Name)
 
-	assert.Equal(t, "Inner", decl.StructDecls[0].StructDecls[0].StructDecls[0].Name)
-	assert.Equal(t, "Box", decl.StructDecls[0].StructDecls[0].StructDecls[0].EnclosingType.Name)
+    assert.Equal(t, "Inner", decl.StructDecls[0].StructDecls[0].StructDecls[0].Name)
+    assert.Equal(t, "Box", decl.StructDecls[0].StructDecls[0].StructDecls[0].EnclosingType.Name)
 }
 
 func TestStructDeclarationVisitor_VisitStructDeclaration_Enclosing2(t *testing.T) {
-	const typeDecl = `
+    const typeDecl = `
 /// A Package represents a set of source files
 /// collectively building a Mojo package.
 type Package {
@@ -104,9 +104,9 @@ type Package {
 }
 `
 
-	decl := parseStructDecl(t, typeDecl)
+    decl := parseStructDecl(t, typeDecl)
 
-	assert.Equal(t, "Package", decl.Name)
-	assert.Equal(t, "Requirement", decl.StructDecls[0].StructDecls[0].EnclosingType.Name)
-	assert.Equal(t, "Package", decl.StructDecls[0].StructDecls[0].EnumDecls[0].EnclosingType.EnclosingType.EnclosingType.Name)
+    assert.Equal(t, "Package", decl.Name)
+    assert.Equal(t, "Requirement", decl.StructDecls[0].StructDecls[0].EnclosingType.Name)
+    assert.Equal(t, "Package", decl.StructDecls[0].StructDecls[0].EnumDecls[0].EnclosingType.EnclosingType.EnclosingType.Name)
 }

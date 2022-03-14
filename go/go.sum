@@ -205,6 +205,8 @@ github.com/mojo-lang/core/go v0.0.0-20211223004040-601d32e5cd0a/go.mod h1:wSDW+M
 github.com/mojo-lang/core/go v0.0.0-20220208112133-2ae714d61194/go.mod h1:wSDW+MrnH/WYwpJ4vhkTIrxk/J7rX4mObJQa8hyjUAQ=
 github.com/mojo-lang/core/go v0.0.0-20220303044658-21f54848fa44 h1:9EMTmCG5nX6YSi1QRscOAnMJWWES523uCtJg+3OQj6A=
 github.com/mojo-lang/core/go v0.0.0-20220303044658-21f54848fa44/go.mod h1:wSDW+MrnH/WYwpJ4vhkTIrxk/J7rX4mObJQa8hyjUAQ=
+github.com/mojo-lang/core/go v0.0.0-20220313044733-377333293faa h1:oWDewjOtKAkzOziQI9+uukLdmND9f1jIoEHvLhXgss4=
+github.com/mojo-lang/core/go v0.0.0-20220313044733-377333293faa/go.mod h1:wSDW+MrnH/WYwpJ4vhkTIrxk/J7rX4mObJQa8hyjUAQ=
 github.com/mojo-lang/db/go v0.0.0-20220208121639-b57d1aadc77b h1:K7zNJcNJBQ59W+P+2Pwz32ja8So4igZKCxtKnhpPjik=
 github.com/mojo-lang/db/go v0.0.0-20220208121639-b57d1aadc77b/go.mod h1:khe/pFpQ5lzMlH920O8v7UZr9HEbJSPMurZCm1vuL/Q=
 github.com/mojo-lang/document/go v0.0.0-20211217054243-5f99395f7054/go.mod h1:VQ10MLbKXbWYRhiSAbVQjb4Dv4ZGUSoApPo0OpuNcmU=
@@ -213,6 +215,8 @@ github.com/mojo-lang/document/go v0.0.0-20211223004737-9f1cfeafe18c/go.mod h1:UL
 github.com/mojo-lang/lang/go v0.0.0-20220208115112-6cb8a2efb478/go.mod h1:pDeT8DbIARdGF7XjcxS3pN9Y0fk5pbtWpxBPWeQw/7o=
 github.com/mojo-lang/lang/go v0.0.0-20220303125825-ce3499055d17 h1:BQ+FURvEm+zTpqHbbMj21J3ynB2zfik9HZMn9K8pAK8=
 github.com/mojo-lang/lang/go v0.0.0-20220303125825-ce3499055d17/go.mod h1:eCXGfqZWcRrdAsoB5ETQf7u2lAiMCS6hpbZBJ4kuxGY=
+github.com/mojo-lang/lang/go v0.0.0-20220313050207-72ffb0ecad14 h1:GBzMXhRHLHSjnZxfiZyetRCwG/pylwuLC/SnhWWcJtY=
+github.com/mojo-lang/lang/go v0.0.0-20220313050207-72ffb0ecad14/go.mod h1:gU22DNak4EjUesNZo60cFtDuG/4XIt+QYrDC9E8etTw=
 github.com/mojo-lang/openapi/go v0.0.0-20211217055758-40cd53ea6bdb h1:KwTtuDPt+MTUyQSOo7mzCiAO5Fw/iu6Cdl7zGE8uhEA=
 github.com/mojo-lang/openapi/go v0.0.0-20211217055758-40cd53ea6bdb/go.mod h1:ZxaSPKDF/8l8hxD3OCYxoLLiYKvm0/o8b4ttQL+i+eI=
 github.com/mojo-lang/protobuf/go v0.0.0-20211220010439-949bfcb64cf0 h1:2o4W5ZFso5Z8rvrX8sGn5I15V/c3FQsp6VP4sPkT7tI=

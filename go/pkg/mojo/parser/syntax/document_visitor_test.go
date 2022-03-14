@@ -1,13 +1,13 @@
 package syntax
 
 import (
-	"testing"
+    "testing"
 
-	"github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/assert"
 )
 
 func TestDocumentVisitor_VisitDocument(t *testing.T) {
-	const typeDecl = `
+    const typeDecl = `
 /// document1
 /// document2
 type Mailbox {
@@ -16,7 +16,7 @@ type Mailbox {
 }
 `
 
-	decl := parseStructDecl(t, typeDecl)
+    decl := parseStructDecl(t, typeDecl)
 
-	assert.Equal(t, 2, len(decl.Document.Lines))
+    assert.Equal(t, 2, len(decl.Document.Lines))
 }

@@ -163,9 +163,6 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#functionDeclaration.
 	VisitFunctionDeclaration(ctx *FunctionDeclarationContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#functionHead.
-	VisitFunctionHead(ctx *FunctionHeadContext) interface{}
-
 	// Visit a parse tree produced by MojoParser#functionName.
 	VisitFunctionName(ctx *FunctionNameContext) interface{}
 
