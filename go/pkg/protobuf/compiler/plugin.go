@@ -417,7 +417,7 @@ func protoType(t string, typeName string) (descriptor.FieldDescriptorProto_Type,
     case "Int8", "Int16", "Int32":
         return descriptor.FieldDescriptorProto_TYPE_INT32, ""
     case "UInt8", "UInt16", "UInt32":
-        return descriptor.FieldDescriptorProto_TYPE_INT32, ""
+        return descriptor.FieldDescriptorProto_TYPE_UINT32, ""
     case "Bool":
         return descriptor.FieldDescriptorProto_TYPE_BOOL, ""
     case "String":

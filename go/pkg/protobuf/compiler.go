@@ -307,6 +307,12 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
         resp := GeneratePaginationResponse(method)
         c.compileStruct(ctx, resp, desc.NewMessageDescriptor(file))
         m.OutputType = &resp.Name
+    } else if result.IsScalar() {
+        scalarTypeName := result.GetPackageName() + "." + result.Name + "Value"
+        m.OutputType = &scalarTypeName
+        if file != nil {
+            file.Dependency = append(file.Dependency, "mojo/core/boxed.proto")
+        }
     } else {
         if result.GetFullName() == core.TupleTypeName {
             name := strcase.ToCamel(method.Name) + "Response"
