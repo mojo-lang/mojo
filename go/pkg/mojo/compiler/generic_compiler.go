@@ -19,7 +19,7 @@ func init() {
 
 const genericName = "compiler.generic"
 
-// compile the Generic Type to Nominal type except the Array, Map, Tuple, Union, Intersection
+// GenericCompiler compile the Generic Type to Nominal type except the Array, Map, Tuple, Union, Intersection
 type GenericCompiler struct {
     plugin.BasicPlugin
 
