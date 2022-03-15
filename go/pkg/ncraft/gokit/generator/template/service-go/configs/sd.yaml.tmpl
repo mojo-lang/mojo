@@ -1,14 +1,14 @@
 sd:
-  mode: direct
-//  url: 172.3.0.98:2379
-  retry:
-    enable: true
-    timeout: 1000
-    count: 3
-  etcd:
-    dialTimeout: 3
-    dialKeepAlive: 3
-//  direct:
-//    armory.barrack.v1.User:
-//      urls:
-//        - 172.3.0.98:16122
+    mode: direct
+    url: 172.3.0.98:2379
+    retry:
+        enable: true
+        timeout: 1000
+        count: 3
+    etcd:
+        dialTimeout: 3
+        dialKeepAlive: 3
+    direct:
+        armory.barrack.v1.User:
+            urls:
+            - 172.3.0.98:16122

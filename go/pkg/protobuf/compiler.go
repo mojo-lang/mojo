@@ -270,29 +270,43 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
         OutputType: nil,
         Options:    nil,
     }
-
-    // generate the request message
-    req := &lang.StructDecl{}
-    req.Name = strcase.ToCamel(method.Name) + "Request"
-
-    // add number attribute if there is no field has number attribute
-    //for i, param := range method.Type.Parameters {
-    //	param.Attributes
-    //}
-
-    req.Type = &lang.StructType{
-        Fields: method.Signature.GetParameters(),
-    }
-
-    pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination")
-    if pagination {
-        req.Type.Fields = append(req.Type.Fields, langcompiler.PaginationRequestFields()...)
-    }
-
     file := context.FileDescriptor(ctx)
-    c.compileStruct(ctx, req, desc.NewMessageDescriptor(file))
+    pagination := false
 
-    m.InputType = &req.Name
+    wrapRequestName := strcase.ToCamel(method.Name) + "Request"
+
+    // special case for the request, do NOT generate new request type
+    if parameters := method.Signature.GetParameters(); len(parameters) == 1 {
+        param := parameters[0]
+        if len(param.Name) == 0 || param.Type.Name == wrapRequestName {
+            m.InputType = &param.Type.Name
+        }
+    }
+
+    if m.InputType == nil {
+        // generate the request message
+        req := &lang.StructDecl{
+            Name: wrapRequestName,
+        }
+
+        // add number attribute if there is no field has number attribute
+        //for i, param := range method.Type.Parameters {
+        //	param.Attributes
+        //}
+
+        req.Type = &lang.StructType{
+            Fields: method.Signature.GetParameters(),
+        }
+
+        pagination, _ = lang.GetBoolAttribute(method.Attributes, "pagination")
+        if pagination {
+            req.Type.Fields = append(req.Type.Fields, langcompiler.PaginationRequestFields()...)
+        }
+
+        c.compileStruct(ctx, req, desc.NewMessageDescriptor(file))
+
+        m.InputType = &req.Name
+    }
 
     // FIXME move to the resolver of semantic parser
     var nullTypeName = "mojo.core.Null"

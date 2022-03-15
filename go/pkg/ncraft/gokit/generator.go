@@ -137,7 +137,10 @@ func generateTemplateFile(tmplPath string, data *render.Data, prevFile io.Reader
 
     // ignore error as we want to write the code either way to inspect after
     // writing to disk
-    formattedCode := render.FormatCode(codeBytes)
+    formattedCode := codeBytes
+    if strings.HasSuffix(actualFP, ".go") {
+        formattedCode = render.FormatGoCode(codeBytes)
+    }
 
     return bytes.NewReader(formattedCode), nil
 }

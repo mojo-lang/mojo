@@ -213,6 +213,8 @@ github.com/mojo-lang/core/go v0.0.0-20220314111732-b21727117ccd h1:Yy+6KsR2TxznU
 github.com/mojo-lang/core/go v0.0.0-20220314111732-b21727117ccd/go.mod h1:wSDW+MrnH/WYwpJ4vhkTIrxk/J7rX4mObJQa8hyjUAQ=
 github.com/mojo-lang/core/go v0.0.0-20220315025454-73f9e6d26afe h1:tQhJl7GFAT0VXbDgKlMo3UJTOSfsdz9BkH41BjVZK6E=
 github.com/mojo-lang/core/go v0.0.0-20220315025454-73f9e6d26afe/go.mod h1:wSDW+MrnH/WYwpJ4vhkTIrxk/J7rX4mObJQa8hyjUAQ=
+github.com/mojo-lang/core/go v0.0.0-20220315090944-7c1f7948900b h1:pD/IOK/UBOxiK+Zl9Kx7iz/6fj45TOzwnX5HU8QIYHI=
+github.com/mojo-lang/core/go v0.0.0-20220315090944-7c1f7948900b/go.mod h1:wSDW+MrnH/WYwpJ4vhkTIrxk/J7rX4mObJQa8hyjUAQ=
 github.com/mojo-lang/db/go v0.0.0-20220208121639-b57d1aadc77b h1:K7zNJcNJBQ59W+P+2Pwz32ja8So4igZKCxtKnhpPjik=
 github.com/mojo-lang/db/go v0.0.0-20220208121639-b57d1aadc77b/go.mod h1:khe/pFpQ5lzMlH920O8v7UZr9HEbJSPMurZCm1vuL/Q=
 github.com/mojo-lang/db/go v0.0.0-20220314090443-c96f4a28e2a8 h1:wuTw3HPGjFtJSHRDjTFMHl+luDHTTqf1DZNd2618cNo=
@@ -227,6 +229,8 @@ github.com/mojo-lang/lang/go v0.0.0-20220313050207-72ffb0ecad14 h1:GBzMXhRHLHSjn
 github.com/mojo-lang/lang/go v0.0.0-20220313050207-72ffb0ecad14/go.mod h1:gU22DNak4EjUesNZo60cFtDuG/4XIt+QYrDC9E8etTw=
 github.com/mojo-lang/lang/go v0.0.0-20220315025633-8ce4d149d8d5 h1:4bGAE9Yc2GW1EOoC//thsGVd4iXxhpfcW68GDJqpuBA=
 github.com/mojo-lang/lang/go v0.0.0-20220315025633-8ce4d149d8d5/go.mod h1:SyrP2IX8hH00+uWsKU+2TTAwVWkRPxRBfJR/yK5gkOI=
+github.com/mojo-lang/lang/go v0.0.0-20220315091226-37fc76d84ed1 h1:wsCyhy9Ko2Wvc/6xQvSStVlhqKSqvaSEdtEbQwxPYb8=
+github.com/mojo-lang/lang/go v0.0.0-20220315091226-37fc76d84ed1/go.mod h1:MXR51YxSfitZOcrZNOi7XEIJLLjm5k+zF9RNai0WeSU=
 github.com/mojo-lang/openapi/go v0.0.0-20211217055758-40cd53ea6bdb h1:KwTtuDPt+MTUyQSOo7mzCiAO5Fw/iu6Cdl7zGE8uhEA=
 github.com/mojo-lang/openapi/go v0.0.0-20211217055758-40cd53ea6bdb/go.mod h1:ZxaSPKDF/8l8hxD3OCYxoLLiYKvm0/o8b4ttQL+i+eI=
 github.com/mojo-lang/protobuf/go v0.0.0-20211220010439-949bfcb64cf0 h1:2o4W5ZFso5Z8rvrX8sGn5I15V/c3FQsp6VP4sPkT7tI=

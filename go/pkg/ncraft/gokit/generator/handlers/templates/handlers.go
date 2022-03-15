@@ -38,12 +38,12 @@ var ({{range $name := .ExternalStructs}}
 `
 
 const HandlerInterface = `
-type {{ToLowerCamel .Interface.Name}} struct{
+type {{ToLowerCamel .Interface.Name}}Server struct{
 }
 
-// NewInterface returns a naive, stateless implementation of Interface.
+// NewService returns a naive, stateless implementation of Interface.
 func NewService() pb.{{GoName .Interface.Name}}Server {
-	return {{ToLowerCamel .Interface.Name}}{}
+	return {{ToLowerCamel .Interface.Name}}Server{}
 }
 
 `
@@ -51,8 +51,8 @@ func NewService() pb.{{GoName .Interface.Name}}Server {
 const HandlerMethods = `
 {{with $te := . }}
 	{{range $i := $te.Interface.Methods}}
-		// {{$i.Name}} implements Interface.
-		func (s {{ToLowerCamel $te.Interface.Name}}) {{ToCamel $i.Name}}(ctx context.Context, in *{{PackageName $i.RequestType.Name}}.{{GoName $i.RequestType.Name}}) (*{{PackageName $i.ResponseType.Name}}.{{GoName $i.ResponseType.Name}}, error){
+		// {{GoName $i.Name}} implements Interface.
+		func (s {{ToLowerCamel $te.Interface.Name}}Server) {{ToCamel $i.Name}}(ctx context.Context, in *{{PackageName $i.RequestType.Name}}.{{GoName $i.RequestType.Name}}) (*{{PackageName $i.ResponseType.Name}}.{{GoName $i.ResponseType.Name}}, error){
 			var resp {{PackageName $i.ResponseType.Name}}.{{GoName $i.ResponseType.Name}}
 			resp = {{PackageName $i.ResponseType.Name}}.{{GoName $i.ResponseType.Name}}{
 				{{range $j := $i.ResponseType.Fields -}}

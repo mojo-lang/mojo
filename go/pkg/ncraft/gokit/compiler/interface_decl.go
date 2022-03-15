@@ -90,49 +90,62 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
         Bindings:  nil,
     }
 
-    r := &lang.StructDecl{}
-    r.Name = strcase.ToCamel(method.Name) + "Request"
-    r.Type = &lang.StructType{
-        Fields: method.Signature.GetParameters(),
-    }
-
-    var err error
-    m.RequestType, err = compileMessage(ctx, r)
-    if err != nil {
-        return err
-    }
-
-    registerType := func(t *lang.NominalType) {
-        if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() {
-            RegisterMessagePackage(t.Name, GetGoPackage(t.PackageName))
-
-            if len(t.GenericArguments) == 0 {
-                if t.TypeDeclaration != nil && t.TypeDeclaration.GetEnumDecl() != nil {
-                    service.ImportEnums = append(service.ImportEnums, t.Name)
-                } else {
-                    service.ImportStructs = append(service.ImportStructs, t.Name)
-                }
-
-                if path, ok := GoPackageImport(ctx, t.PackageName).(string); ok {
-                    service.ImportPaths = append(service.ImportPaths, path)
-                }
-            }
+    wrapRequestName := strcase.ToCamel(method.Name) + "Request"
+    // special case for the request, do NOT generate new request type
+    if parameters := method.Signature.GetParameters(); len(parameters) == 1 {
+        param := parameters[0]
+        if len(param.Name) == 0 || param.Type.Name == wrapRequestName {
+            m.RequestType = &types.Message{Name: param.Type.Name}
         }
     }
 
-    for _, field := range r.Type.Fields {
-        t := field.Type
-        if t.IsMapType() {
-            for _, gt := range t.GenericArguments {
-                registerType(gt)
+    if m.RequestType == nil {
+        r := &lang.StructDecl{
+            Name: wrapRequestName,
+            Type: &lang.StructType{
+                Fields: method.Signature.GetParameters(),
+            },
+        }
+
+        var err error
+        m.RequestType, err = compileMessage(ctx, r)
+        if err != nil {
+            return err
+        }
+
+        registerType := func(t *lang.NominalType) {
+            if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() {
+                RegisterMessagePackage(t.Name, GetGoPackage(t.PackageName))
+
+                if len(t.GenericArguments) == 0 {
+                    if t.TypeDeclaration != nil && t.TypeDeclaration.GetEnumDecl() != nil {
+                        service.ImportEnums = append(service.ImportEnums, t.Name)
+                    } else {
+                        service.ImportStructs = append(service.ImportStructs, t.Name)
+                    }
+
+                    if path, ok := GoPackageImport(ctx, t.PackageName).(string); ok {
+                        service.ImportPaths = append(service.ImportPaths, path)
+                    }
+                }
             }
-        } else if !t.IsScalar() {
-            registerType(t)
+        }
+
+        for _, field := range r.Type.Fields {
+            t := field.Type
+            if t.IsMapType() {
+                for _, gt := range t.GenericArguments {
+                    registerType(gt)
+                }
+            } else if !t.IsScalar() {
+                registerType(t)
+            }
         }
     }
 
     result := method.GetSignature().GetResultType()
     var decl *lang.StructDecl
+    var err error
     if result != nil {
         decl = result.GetTypeDeclaration().GetStructDecl()
 
@@ -141,8 +154,7 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
             if pagination {
                 decl = protobuf.GeneratePaginationResponse(method)
             } else {
-                decl, err = compiler.CompileArrayToStruct(result)
-                if err != nil {
+                if decl, err = compiler.CompileArrayToStruct(result); err != nil {
                     return err
                 }
             }
@@ -160,8 +172,7 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
         }
     }
 
-    m.ResponseType, err = compileMessage(thisCtx, decl)
-    if err != nil {
+    if m.ResponseType, err = compileMessage(thisCtx, decl); err != nil {
         return err
     }
 
