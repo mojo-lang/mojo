@@ -1,30 +1,30 @@
 package compiler
 
 import (
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+    "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type PackageCompiler interface {
-	CompilePackage(ctx context.Context, pkg *lang.Package) error
+    CompilePackage(ctx context.Context, pkg *lang.Package) error
 }
 
 type SourceFileCompiler interface {
-	CompileSourceFile(ctx context.Context, file *lang.SourceFile) error
+    CompileSourceFile(ctx context.Context, file *lang.SourceFile) error
 }
 
 type StructCompiler interface {
-	CompileStruct(ctx context.Context, decl *lang.StructDecl) error
+    CompileStruct(ctx context.Context, decl *lang.StructDecl) error
 }
 
 type TypeAliasCompiler interface {
-	CompileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) error
+    CompileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) error
 }
 
 type EnumCompiler interface {
-	CompileEnum(ctx context.Context, decl *lang.EnumDecl) error
+    CompileEnum(ctx context.Context, decl *lang.EnumDecl) error
 }
 
 type InterfaceCompiler interface {
-	CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error
+    CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error
 }

@@ -67,7 +67,7 @@ func (c *LabelFormatCompiler) CompileStruct(ctx context.Context, decl *lang.Stru
 }
 
 func (c *LabelFormatCompiler) CompileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) error {
-    if decl.Type.GetFullName() == core.UnionTypeName {
+    if decl.Type.GetFullName() == core.UnionTypeFullName {
         if lang.HasAttribute(decl.Attributes, core.LabelFormatAttributeName) {
         }
     }

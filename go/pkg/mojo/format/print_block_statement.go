@@ -23,6 +23,6 @@ func (p *Printer) PrintBlockStatement(ctx context.Context, stmt *lang.BlockStmt)
     }
     p.Outdent()
     p.PrintTerm(ctx, lang.NewSymbolTerm(stmt.EndPosition, lang.TermTypeEnd, "}"))
-    
+
     return p
 }

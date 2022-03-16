@@ -4,5 +4,5 @@ type SkipError struct {
 }
 
 func (SkipError) Error() string {
-	return "Skip"
+    return "Skip"
 }

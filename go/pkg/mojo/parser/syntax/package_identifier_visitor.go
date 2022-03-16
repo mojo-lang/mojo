@@ -1,38 +1,38 @@
 package syntax
 
 import (
-	"fmt"
-	"strings"
+    "fmt"
+    "strings"
 )
 
 type PackageIdentifierVisitor struct {
-	*BaseMojoParserVisitor
+    *BaseMojoParserVisitor
 }
 
 func GetPackageIdentifier(ctx IPackageIdentifierContext) string {
-	if ctx != nil {
-		visitor := NewPackageIdentifierVisitor()
-		if str, ok := ctx.Accept(visitor).(string); ok {
-			return str
-		} else {
-			fmt.Print("===> error")
-		}
-	}
-	return ""
+    if ctx != nil {
+        visitor := NewPackageIdentifierVisitor()
+        if str, ok := ctx.Accept(visitor).(string); ok {
+            return str
+        } else {
+            fmt.Print("===> error")
+        }
+    }
+    return ""
 }
 
 func NewPackageIdentifierVisitor() *PackageIdentifierVisitor {
-	visitor := &PackageIdentifierVisitor{}
-	return visitor
+    visitor := &PackageIdentifierVisitor{}
+    return visitor
 }
 
 func (t *PackageIdentifierVisitor) VisitPackageIdentifier(ctx *PackageIdentifierContext) interface{} {
-	identifiers := ctx.AllPackageName()
+    identifiers := ctx.AllPackageName()
 
-	var names []string
-	for _, identifier := range identifiers {
-		names = append(names, identifier.GetText())
-	}
+    var names []string
+    for _, identifier := range identifiers {
+        names = append(names, identifier.GetText())
+    }
 
-	return strings.Join(names, ".")
+    return strings.Join(names, ".")
 }

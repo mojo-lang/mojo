@@ -3,8 +3,9 @@ package compiler
 import (
     "errors"
     "fmt"
-    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "strings"
+
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
 
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"

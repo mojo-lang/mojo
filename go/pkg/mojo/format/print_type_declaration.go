@@ -1,8 +1,8 @@
 package format
 
 import (
-    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 func (p *Printer) PrintTypeDeclaration(ctx context.Context, decl *lang.TypeDeclaration) {

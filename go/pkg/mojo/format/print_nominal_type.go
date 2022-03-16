@@ -14,17 +14,17 @@ func (p *Printer) PrintNominalType(ctx context.Context, nominalType *lang.Nomina
     }
 
     switch nominalType.GetFullName() {
-    case core.ArrayTypeName:
+    case core.ArrayTypeFullName:
         p.PrintRaw("[")
         p.PrintNominalType(ctx, nominalType.GenericArguments[0])
         p.PrintRaw("]")
-    case core.MapTypeName:
+    case core.MapTypeFullName:
         p.PrintRaw("{")
         p.PrintNominalType(ctx, nominalType.GenericArguments[0])
         p.PrintRaw(": ")
         p.PrintNominalType(ctx, nominalType.GenericArguments[1])
         p.PrintRaw("}")
-    case core.TupleTypeName:
+    case core.TupleTypeFullName:
         p.PrintRaw("(")
         for i, element := range nominalType.GenericArguments {
             if i > 0 {
@@ -33,14 +33,14 @@ func (p *Printer) PrintNominalType(ctx context.Context, nominalType *lang.Nomina
             p.PrintNominalType(ctx, element)
         }
         p.PrintRaw(")")
-    case core.UnionTypeName:
+    case core.UnionTypeFullName:
         for i, element := range nominalType.GenericArguments {
             if i > 0 {
                 p.PrintRaw("| ")
             }
             p.PrintNominalType(ctx, element)
         }
-    case core.FunctionTypeName:
+    case core.FunctionTypeFullName:
         result := nominalType.GenericArguments[0]
         var parameters []*lang.NominalType
         if len(nominalType.GenericArguments) > 0 {

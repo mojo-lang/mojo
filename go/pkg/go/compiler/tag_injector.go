@@ -27,86 +27,86 @@
 package compiler
 
 import (
-	"context"
-	"github.com/fatih/structtag"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/mojo/go/pkg/go/compiler/inject"
-	"go/ast"
-	"strings"
+    "context"
+    "github.com/fatih/structtag"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
+    "github.com/mojo-lang/mojo/go/pkg/go/compiler/inject"
+    "go/ast"
+    "strings"
 )
 
 type TagChanger = func(ctx context.Context, field *ast.Field, tags *structtag.Tags)
 type TagInjections map[string]structtag.Tags
 
 type TagInjector struct {
-	inject.Injector
+    inject.Injector
 
-	tagChangers []TagChanger
+    tagChangers []TagChanger
 }
 
 func NewTagInjector(xxxSkip []string, injections TagInjections) *TagInjector {
-	injector := &TagInjector{}
+    injector := &TagInjector{}
 
-	injector.OnStructField = injector.onStructField
+    injector.OnStructField = injector.onStructField
 
-	if len(xxxSkip) > 0 {
-		injector.tagChangers = append(injector.tagChangers, func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
-			fieldName := field.Names[0].Name
-			if strings.HasPrefix(fieldName, "XXX") {
-				for _, skip := range xxxSkip {
-					tags.Set(&structtag.Tag{
-						Key:  skip,
-						Name: "-",
-					})
-				}
-			}
-		})
-	}
-	if len(injections) > 0 {
-		injector.tagChangers = append(injector.tagChangers, func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
-			structName := inject.GetStructName(ctx)
-			fieldName := field.Names[0].Name
+    if len(xxxSkip) > 0 {
+        injector.tagChangers = append(injector.tagChangers, func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
+            fieldName := field.Names[0].Name
+            if strings.HasPrefix(fieldName, "XXX") {
+                for _, skip := range xxxSkip {
+                    tags.Set(&structtag.Tag{
+                        Key:  skip,
+                        Name: "-",
+                    })
+                }
+            }
+        })
+    }
+    if len(injections) > 0 {
+        injector.tagChangers = append(injector.tagChangers, func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
+            structName := inject.GetStructName(ctx)
+            fieldName := field.Names[0].Name
 
-			key := structName + "." + fieldName
-			if injection, ok := injections[key]; ok {
-				for _, tag := range injection.Tags() {
-					tags.Set(tag)
-				}
-			}
-		})
-	}
+            key := structName + "." + fieldName
+            if injection, ok := injections[key]; ok {
+                for _, tag := range injection.Tags() {
+                    tags.Set(tag)
+                }
+            }
+        })
+    }
 
-	return injector
+    return injector
 }
 
 func (i *TagInjector) RegisterTagChanger(changer TagChanger) *TagInjector {
-	i.tagChangers = append(i.tagChangers, changer)
-	return i
+    i.tagChangers = append(i.tagChangers, changer)
+    return i
 }
 
 func (i *TagInjector) onStructField(ctx context.Context, field *ast.Field, areaAppender func(area inject.Area)) {
-	if field.Tag == nil {
-		return
-	}
+    if field.Tag == nil {
+        return
+    }
 
-	tagValue := core.RemoveQuote(field.Tag.Value, "`")
-	tags, _ := structtag.Parse(tagValue)
-	if tags == nil {
-		return
-	}
+    tagValue := core.RemoveQuote(field.Tag.Value, "`")
+    tags, _ := structtag.Parse(tagValue)
+    if tags == nil {
+        return
+    }
 
-	if len(i.tagChangers) > 0 {
-		for _, changer := range i.tagChangers {
-			changer(ctx, field, tags)
-		}
+    if len(i.tagChangers) > 0 {
+        for _, changer := range i.tagChangers {
+            changer(ctx, field, tags)
+        }
 
-		newTag := tags.String()
-		if tagValue != newTag {
-			areaAppender(&inject.TextArea{
-				Start:   field.Tag.Pos(),
-				End:     field.Tag.End(),
-				Content: "`" + newTag + "`",
-			})
-		}
-	}
+        newTag := tags.String()
+        if tagValue != newTag {
+            areaAppender(&inject.TextArea{
+                Start:   field.Tag.Pos(),
+                End:     field.Tag.End(),
+                Content: "`" + newTag + "`",
+            })
+        }
+    }
 }

@@ -1,7 +1,7 @@
 package template
 
 import (
-	_ "embed"
+    _ "embed"
 )
 
 //go:embed api_header.md.tmpl

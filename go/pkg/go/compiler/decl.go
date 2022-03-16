@@ -1,6 +1,6 @@
 package compiler
 
 type Decl interface {
-	GetPackageName() string
-	GetFullName() string
+    GetPackageName() string
+    GetFullName() string
 }

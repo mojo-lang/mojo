@@ -1,8 +1,8 @@
 package httptransport
 
 import (
-	"fmt"
-	"strings"
+    "fmt"
+    "strings"
 )
 
 // Contains all the functions which must be used within templates. Stored all
@@ -19,21 +19,21 @@ import (
 // in third_party/googleapis/google/api/httprule.proto. Only a small subset of
 // the functionality defined there is implemented here.
 func PathParams(url string, urlTmpl string) (map[string]string, error) {
-	rv := map[string]string{}
-	pmp := BuildParamMap(urlTmpl)
+    rv := map[string]string{}
+    pmp := BuildParamMap(urlTmpl)
 
-	expectedLen := len(strings.Split(strings.TrimRight(urlTmpl, "/"), "/"))
-	recievedLen := len(strings.Split(strings.TrimRight(url, "/"), "/"))
-	if expectedLen != recievedLen {
-		return nil, fmt.Errorf("expecting a path containing %d parts, provided path contains %d parts", expectedLen, recievedLen)
-	}
+    expectedLen := len(strings.Split(strings.TrimRight(urlTmpl, "/"), "/"))
+    recievedLen := len(strings.Split(strings.TrimRight(url, "/"), "/"))
+    if expectedLen != recievedLen {
+        return nil, fmt.Errorf("expecting a path containing %d parts, provided path contains %d parts", expectedLen, recievedLen)
+    }
 
-	parts := strings.Split(url, "/")
-	for k, v := range pmp {
-		rv[k] = parts[v]
-	}
+    parts := strings.Split(url, "/")
+    for k, v := range pmp {
+        rv[k] = parts[v]
+    }
 
-	return rv, nil
+    return rv, nil
 }
 
 // BuildParamMap takes a string representing a url template and returns a map
@@ -50,22 +50,22 @@ func PathParams(url string, urlTmpl string) (map[string]string, error) {
 //         "b": 3,
 //     }
 func BuildParamMap(urlTmpl string) map[string]int {
-	rv := map[string]int{}
+    rv := map[string]int{}
 
-	parts := strings.Split(urlTmpl, "/")
-	for idx, part := range parts {
-		if strings.ContainsAny(part, "{}") {
-			param := RemoveBraces(part)
-			rv[param] = idx
-		}
-	}
-	return rv
+    parts := strings.Split(urlTmpl, "/")
+    for idx, part := range parts {
+        if strings.ContainsAny(part, "{}") {
+            param := RemoveBraces(part)
+            rv[param] = idx
+        }
+    }
+    return rv
 }
 
 // RemoveBraces replace all curly braces in the provided string, opening and
 // closing, with empty strings.
 func RemoveBraces(val string) string {
-	val = strings.Replace(val, "{", "", -1)
-	val = strings.Replace(val, "}", "", -1)
-	return val
+    val = strings.Replace(val, "{", "", -1)
+    val = strings.Replace(val, "}", "", -1)
+    return val
 }

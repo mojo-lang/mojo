@@ -1,13 +1,13 @@
 package types
 
 type Entity struct {
-	GoPackageName string
-	PackageName string
+    GoPackageName string
+    PackageName   string
 
-	Name string
-	LowerCamelName string
+    Name           string
+    LowerCamelName string
 
-	Import string
+    Import string
 
-	Drivers []string
+    Drivers []string
 }

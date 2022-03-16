@@ -1,44 +1,44 @@
 package syntax
 
 import (
-	"testing"
+    "testing"
 
-	"github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/assert"
 )
 
 func TestSuffixExpressionVisitor_VisitFunctionCallSuffix(t *testing.T) {
-	const funcCall = "a(b, c, d)"
-	expr := parseExpression(t, funcCall)
+    const funcCall = "a(b, c, d)"
+    expr := parseExpression(t, funcCall)
 
-	funcCallExpr := expr.GetFunctionCallExpr()
-	assert.NotNil(t, funcCallExpr)
+    funcCallExpr := expr.GetFunctionCallExpr()
+    assert.NotNil(t, funcCallExpr)
 
-	assert.Equal(t, "a", funcCallExpr.Callee.GetIdentifierExpr().Identifier.Name)
-	assert.Equal(t, 3, len(funcCallExpr.Arguments))
-	assert.Equal(t, "b", funcCallExpr.Arguments[0].Value.GetIdentifierExpr().Identifier.Name)
+    assert.Equal(t, "a", funcCallExpr.Callee.GetIdentifierExpr().Identifier.Name)
+    assert.Equal(t, 3, len(funcCallExpr.Arguments))
+    assert.Equal(t, "b", funcCallExpr.Arguments[0].Value.GetIdentifierExpr().Identifier.Name)
 }
 
 func TestSuffixExpressionVisitor_VisitSubscriptSuffix(t *testing.T) {
-	const subscript = "a[b]"
-	expr := parseExpression(t, subscript)
+    const subscript = "a[b]"
+    expr := parseExpression(t, subscript)
 
-	subscriptExpr := expr.GetSubscriptExpr()
-	assert.NotNil(t, subscriptExpr)
-	assert.Equal(t, "a", subscriptExpr.Callee.GetIdentifierExpr().Identifier.Name)
-	assert.Equal(t, 1, len(subscriptExpr.Arguments))
-	assert.Equal(t, "b", subscriptExpr.Arguments[0].Value.GetIdentifierExpr().Identifier.Name)
+    subscriptExpr := expr.GetSubscriptExpr()
+    assert.NotNil(t, subscriptExpr)
+    assert.Equal(t, "a", subscriptExpr.Callee.GetIdentifierExpr().Identifier.Name)
+    assert.Equal(t, 1, len(subscriptExpr.Arguments))
+    assert.Equal(t, "b", subscriptExpr.Arguments[0].Value.GetIdentifierExpr().Identifier.Name)
 }
 
 func TestSuffixExpressionVisitor_VisitExplicitMemberSuffix(t *testing.T) {
-	const explicitMember = "a.b.c"
-	expr := parseExpression(t, explicitMember)
+    const explicitMember = "a.b.c"
+    expr := parseExpression(t, explicitMember)
 
-	explicitMemberExpr := expr.GetExplicitMemberExpr()
-	assert.NotNil(t, explicitMemberExpr)
+    explicitMemberExpr := expr.GetExplicitMemberExpr()
+    assert.NotNil(t, explicitMemberExpr)
 
-	callee := explicitMemberExpr.Callee.GetExplicitMemberExpr()
+    callee := explicitMemberExpr.Callee.GetExplicitMemberExpr()
 
-	assert.Equal(t, "a", callee.Callee.GetIdentifierExpr().Identifier.Name)
-	assert.Equal(t, "b", callee.Member)
-	assert.Equal(t, "c", explicitMemberExpr.Member)
+    assert.Equal(t, "a", callee.Callee.GetIdentifierExpr().Identifier.Name)
+    assert.Equal(t, "b", callee.Member)
+    assert.Equal(t, "c", explicitMemberExpr.Member)
 }

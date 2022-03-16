@@ -1,15 +1,15 @@
 package types
 
 type MojoPackage struct {
-	Name     string
-	FullName string
+    Name     string
+    FullName string
 
-	Version string
+    Version string
 
-	License    string
-	Repository string
+    License    string
+    Repository string
 
-	Author       string
-	Email        string
-	Organization string
+    Author       string
+    Email        string
+    Organization string
 }
