@@ -1,9 +1,10 @@
 package compiler
 
 import (
+	"strings"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"strings"
 )
 
 type UnionField struct {
@@ -11,7 +12,7 @@ type UnionField struct {
 	Type     string
 	Name     string
 
-	Boxed       bool
+	Boxed                 bool
 	HasDiscriminatorField bool
 }
 
@@ -55,10 +56,10 @@ func (b *BoxedUnion) Compile(decl *lang.StructDecl) error {
 	for _, field := range decl.Type.Fields {
 		//FIXME need to process boxed type, formatted type
 		switch field.Type.GetFullName() {
-		case core.BoolTypeName:
-		case core.IntTypeName:
-		case core.StringTypeName, core.BytesTypeName:
-		case core.ArrayTypeName:
+		case core.BoolTypeFullName:
+		case core.IntTypeFullName:
+		case core.StringTypeFullName, core.BytesTypeFullName:
+		case core.ArrayTypeFullName:
 		default:
 			if f, e := b.compileObjectField(field, decl); e != nil {
 				return e
@@ -74,10 +75,10 @@ func (b *BoxedUnion) Compile(decl *lang.StructDecl) error {
 
 func (b *BoxedUnion) compileObjectField(field *lang.ValueDecl, structDecl *lang.StructDecl) (*UnionField, error) {
 	unionField := &UnionField{
-		JsonType:              "object",
-		Type:                  field.Type.Name,
-		Name:                  field.Name,
-		Boxed:                 false,
+		JsonType: "object",
+		Type:     field.Type.Name,
+		Name:     field.Name,
+		Boxed:    false,
 	}
 
 	if len(b.Discriminator) > 0 && !strings.HasPrefix(b.Discriminator, "@") {

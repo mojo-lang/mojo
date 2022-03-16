@@ -12,12 +12,12 @@ type WellKnowTypeCompiler struct {
 
 func (w *WellKnowTypeCompiler) Compile(ctx context.Context, nominalType *lang.NominalType) (*openapi.ReferenceableSchema, error) {
 	switch nominalType.GetFullName() {
-	case core.UrlTypeName:
+	case core.UrlTypeFullName:
 		return openapi.NewReferenceableSchema(&openapi.Schema{
 			Type:   openapi.Schema_TYPE_STRING,
 			Format: "url",
 		}), nil
-	case core.DurationTypeName:
+	case core.DurationTypeFullName:
 		return openapi.NewReferenceableSchema(&openapi.Schema{
 			Type:   openapi.Schema_TYPE_STRING,
 			Format: "Duration",

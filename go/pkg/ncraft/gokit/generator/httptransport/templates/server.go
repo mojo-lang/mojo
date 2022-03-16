@@ -32,7 +32,7 @@ var ServerDecodeTemplate = `
 			{{- if not $binding.BodyField}}
 			if err = jsoniter.ConfigFastest.Unmarshal(buf, &req); err != nil {
 			{{else}}
-			req.{{$binding.BodyField.Name}} = &{{$binding.BodyField.GoType}}{}
+			req.{{$binding.BodyField.Name}} = {{if $binding.BodyField.IsMap}}make({{$binding.BodyField.GoType}}){{else}}&{{$binding.BodyField.GoType}}{}{{end}}
 			if err = jsoniter.ConfigFastest.Unmarshal(buf, req.{{$binding.BodyField.Name}}); err != nil {
 			{{end -}}
 				const size = 8196
@@ -104,8 +104,10 @@ import (
 	nhttp "github.com/ncraft-io/ncraft-go/pkg/transport/http"
 	stdopentracing "github.com/opentracing/opentracing-go"
 
+    {{$corePackage := "github.com/mojo-lang/core/go/pkg/mojo/core"}}
+    "{{$corePackage}}"
 	{{range $i := .ExternalMessageImports}}
-	"{{$i}}"
+	{{if ne $i $corePackage}}"{{$i}}"{{end}}
 	{{- end}}
 
 	// This service

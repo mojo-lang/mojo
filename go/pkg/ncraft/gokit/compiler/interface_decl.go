@@ -114,7 +114,7 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
         }
 
         registerType := func(t *lang.NominalType) {
-            if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() {
+            if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() && (len(t.PackageName) > 0 && t.PackageName != service.FullPkgName) {
                 RegisterMessagePackage(t.Name, GetGoPackage(t.PackageName))
 
                 if len(t.GenericArguments) == 0 {
@@ -158,6 +158,17 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
                     return err
                 }
             }
+        } else if result.IsScalar() {
+            decl = &lang.StructDecl{
+                PackageName:    "mojo.core",
+                SourceFileName: "mojo/core/boxed.mojo",
+                Name:           core.GetProperBoxedScalarName(result.Name),
+            }
+            result = &lang.NominalType{
+                PackageName:     decl.PackageName,
+                Name:            decl.Name,
+                TypeDeclaration: lang.NewStructTypeDeclaration(decl),
+            }
         }
     } else {
         decl = &lang.StructDecl{
@@ -166,8 +177,8 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
             Name:           "Null",
         }
         result = &lang.NominalType{
-            PackageName:     "mojo.core",
-            Name:            "Null",
+            PackageName:     decl.PackageName,
+            Name:            decl.Name,
             TypeDeclaration: lang.NewStructTypeDeclaration(decl),
         }
     }
@@ -206,15 +217,20 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
         RegisterMessagePackage(decl.Name, GetGoPackage(decl.PackageName))
 
         if result != nil && len(result.GenericArguments) == 0 {
-            if result.TypeDeclaration != nil && result.TypeDeclaration.GetEnumDecl() != nil {
-                service.ImportEnums = append(service.ImportEnums, decl.Name)
+            if result.IsScalar() {
+                service.ImportStructs = append(service.ImportStructs, m.ResponseType.Name)
+                service.ImportPaths = append(service.ImportPaths, "github.com/mojo-lang/core/go/pkg/mojo/core")
             } else {
+                if result.TypeDeclaration != nil && result.TypeDeclaration.GetEnumDecl() != nil {
+                    service.ImportEnums = append(service.ImportEnums, decl.Name)
+                } else {
+                    service.ImportStructs = append(service.ImportStructs, decl.Name)
+                }
                 service.ImportStructs = append(service.ImportStructs, decl.Name)
-            }
-            service.ImportStructs = append(service.ImportStructs, decl.Name)
 
-            if path, ok := GoPackageImport(ctx, decl.PackageName).(string); ok {
-                service.ImportPaths = append(service.ImportPaths, path)
+                if path, ok := GoPackageImport(ctx, decl.PackageName).(string); ok {
+                    service.ImportPaths = append(service.ImportPaths, path)
+                }
             }
         }
     }
@@ -253,9 +269,22 @@ func compileBindings(methodName string, path string, method *lang.FunctionDecl) 
     binding.Verb = methodName
     binding.Path = p
 
+    if len(method.Signature.GetParameters()) == 1 {
+        decl := method.Signature.ParameterDecl(0)
+        if b, _ := decl.GetBoolAttribute(protobuf.MethodRequestTypeAttributeName); b {
+            if structDecl := decl.Type.GetTypeDeclaration().GetStructDecl(); structDecl != nil {
+                structDecl.EachField(func(decl *lang.ValueDecl) error {
+                    return compileBindingParameter(decl, pathParams, nil, binding)
+                })
+                return binding, nil
+            } else {
+                return nil, errors.New("")
+            }
+        }
+    }
+
     for _, param := range method.Signature.GetParameters() {
-        err := compileBindingParameter(param, pathParams, nil, binding)
-        if err != nil {
+        if err := compileBindingParameter(param, pathParams, nil, binding); err != nil {
             return nil, err
         }
     }

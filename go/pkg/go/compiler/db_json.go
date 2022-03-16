@@ -46,8 +46,8 @@ func (j *DbJSONs) CompileStruct(ctx context.Context, decl *lang.StructDecl) erro
 
 		dbJSON.InDbPkg = dbJSON.GoPackageName == "db"
 
-		fieldFullTypeName := field.Type.GetFullName()
-		if fieldFullTypeName == core.ArrayTypeName || fieldFullTypeName == core.MapTypeName {
+		fieldTypeFullName := field.Type.GetFullName()
+		if fieldTypeFullName == core.ArrayTypeFullName || fieldTypeFullName == core.MapTypeFullName {
 			dbJSON.UnderlyingTypeName = ""
 		}
 

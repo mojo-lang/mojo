@@ -1,12 +1,13 @@
 package compiler
 
 import (
+	"strings"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/db/go/pkg/mojo/db"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-	"strings"
 )
 
 var schemaCompilers []SchemaCompiler
@@ -55,32 +56,32 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
 	}
 
 	switch nominalType.GetFullName() {
-	case core.UInt8TypeName, core.UInt16TypeName, core.UInt32TypeName, core.UInt64TypeName,
-		core.Int8TypeName, core.Int16TypeName, core.Int32TypeName, core.Int64TypeName,
-		core.IntTypeName, core.UIntTypeName:
+	case core.UInt8TypeFullName, core.UInt16TypeFullName, core.UInt32TypeFullName, core.UInt64TypeFullName,
+		core.Int8TypeFullName, core.Int16TypeFullName, core.Int32TypeFullName, core.Int64TypeFullName,
+		core.IntTypeFullName, core.UIntTypeFullName:
 		schema.Type = openapi.Schema_TYPE_INTEGER
 		if nominalType.Name != "Int" && nominalType.Name != "UInt" {
 			schema.Format = strings.ToLower(nominalType.Name)
 		}
-	case core.Float32TypeName, core.FloatTypeName:
+	case core.Float32TypeFullName, core.FloatTypeFullName:
 		schema.Type = openapi.Schema_TYPE_NUMBER
 		schema.Format = "float32"
-	case core.Float64TypeName, core.DoubleTypeName:
+	case core.Float64TypeFullName, core.DoubleTypeFullName:
 		schema.Type = openapi.Schema_TYPE_NUMBER
 		schema.Format = "float64"
-	case core.BoolTypeName:
+	case core.BoolTypeFullName:
 		schema.Type = openapi.Schema_TYPE_BOOLEAN
-	case core.StringTypeName:
+	case core.StringTypeFullName:
 		schema.Type = openapi.Schema_TYPE_STRING
 		if constant, _ := lang.GetStringAttribute(nominalType.Attributes, core.ConstAttributeName); len(constant) > 0 {
 			schema.Enum = []*core.Value{
 				core.NewStringValue(constant),
 			}
 		}
-	case core.BytesTypeName:
+	case core.BytesTypeFullName:
 		schema.Type = openapi.Schema_TYPE_STRING
 		schema.Format = "base64"
-	case core.ArrayTypeName:
+	case core.ArrayTypeFullName:
 		s, err := compileNominalType(ctx, nominalType.GenericArguments[0])
 		if err != nil {
 			return nil, err
@@ -94,14 +95,14 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
 		if val, err := lang.GetIntegerAttribute(nominalType.Attributes, core.MaxLengthAttributeName); err == nil {
 			schema.MaxItems = uint64(val)
 		}
-	case core.MapTypeName:
+	case core.MapTypeFullName:
 		schema.Type = openapi.Schema_TYPE_OBJECT
 		s, err := compileNominalType(ctx, nominalType.GenericArguments[1])
 		if err != nil {
 			return nil, err
 		}
 		schema.AdditionalProperties = s
-	case core.UnionTypeName:
+	case core.UnionTypeFullName:
 		var schemas []*openapi.ReferenceableSchema
 		for _, argument := range nominalType.GenericArguments {
 			s, err := compileNominalType(ctx, argument)
@@ -117,13 +118,13 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
 			}
 		}
 		schema.OneOf = schemas
-	case core.TimestampTypeName, core.DateTimeTypeName, db.DeleteTimeTypeName:
+	case core.TimestampTypeFullName, core.DateTimeTypeFullName, db.DeleteTimeTypeFullName:
 		schema.Type = openapi.Schema_TYPE_STRING
 		schema.Format = "DateTime"
-	case core.DateTypeName:
+	case core.DateTypeFullName:
 		schema.Type = openapi.Schema_TYPE_STRING
 		schema.Format = "Date"
-	case core.EmailAddressTypeName:
+	case core.EmailAddressTypeFullName:
 		schema.Type = openapi.Schema_TYPE_STRING
 		schema.Format = "EmailAddress"
 	default:

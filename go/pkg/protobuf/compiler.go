@@ -3,6 +3,9 @@ package protobuf
 import (
     "errors"
     "fmt"
+    "sort"
+    "strings"
+
     "github.com/golang/protobuf/protoc-gen-go/descriptor"
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
@@ -14,14 +17,14 @@ import (
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
     desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
-    "sort"
-    "strings"
 )
 
 var _ = compiler.ArrayPlugin{}
 var _ = compiler.MapPlugin{}
 var _ = compiler.TuplePlugin{}
 var _ = compiler.UnionPlugin{}
+
+const MethodRequestTypeAttributeName = "method_request_type"
 
 type Compiler struct {
     Files []*desc.FileDescriptor
@@ -279,6 +282,7 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
     if parameters := method.Signature.GetParameters(); len(parameters) == 1 {
         param := parameters[0]
         if len(param.Name) == 0 || param.Type.Name == wrapRequestName {
+            param.SetImplicitBoolAttribute(MethodRequestTypeAttributeName, true)
             m.InputType = &param.Type.Name
         }
     }
@@ -317,18 +321,18 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
         if file != nil {
             file.Dependency = append(file.Dependency, "mojo/core/null.proto")
         }
-    } else if result.GetFullName() == core.ArrayTypeName && pagination {
+    } else if result.GetFullName() == core.ArrayTypeFullName && pagination {
         resp := GeneratePaginationResponse(method)
         c.compileStruct(ctx, resp, desc.NewMessageDescriptor(file))
         m.OutputType = &resp.Name
     } else if result.IsScalar() {
-        scalarTypeName := result.GetPackageName() + "." + result.Name + "Value"
+        scalarTypeName := core.GetProperBoxedScalarName(result.GetFullName())
         m.OutputType = &scalarTypeName
         if file != nil {
             file.Dependency = append(file.Dependency, "mojo/core/boxed.proto")
         }
     } else {
-        if result.GetFullName() == core.TupleTypeName {
+        if result.GetFullName() == core.TupleTypeFullName {
             name := strcase.ToCamel(method.Name) + "Response"
             result.Attributes = lang.SetStringAttribute(result.Attributes, "alias", name)
         }
@@ -351,7 +355,7 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
 
 func GeneratePaginationResponse(method *lang.FunctionDecl) *lang.StructDecl {
     result := method.Signature.GetResultType()
-    if result == nil || result.GetFullName() != core.ArrayTypeName {
+    if result == nil || result.GetFullName() != core.ArrayTypeFullName {
         return nil
     }
 

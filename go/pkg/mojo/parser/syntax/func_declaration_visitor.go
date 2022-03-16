@@ -82,7 +82,10 @@ func (f *FuncDeclarationVisitor) VisitFunctionName(ctx *FunctionNameContext) int
 }
 
 func (f *FuncDeclarationVisitor) VisitFunctionSignature(ctx *FunctionSignatureContext) interface{} {
-    funcType := &lang.FunctionSignature{}
+    funcType := &lang.FunctionSignature{
+        StartPosition: GetPosition(ctx.GetStart()),
+        EndPosition:   GetPosition(ctx.GetStop()),
+    }
 
     if parameterCtx := ctx.FunctionParameterClause(); parameterCtx != nil {
         funcType.Parameter = parameterCtx.Accept(f).(*lang.FunctionSignature_Parameter)
