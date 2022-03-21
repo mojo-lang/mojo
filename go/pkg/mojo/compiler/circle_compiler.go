@@ -57,6 +57,13 @@ func (c *CircleCompiler) CompilePackage(ctx context.Context, pkg *lang.Package) 
         return errors.New("Can't clean the circle dependency in the " + pkg.FullName)
     }
 
+    for _, child := range pkg.Children {
+        thisCtx := context.WithType(ctx, pkg)
+        if err := c.CompilePackage(thisCtx, child); err != nil {
+            return err
+        }
+    }
+
     return nil
 }
 

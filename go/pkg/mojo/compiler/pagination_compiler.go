@@ -6,6 +6,7 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
+    "strings"
 )
 
 func init() {
@@ -32,32 +33,18 @@ func NewPaginationCompiler(options core.Options) *PaginationCompiler {
     }
 }
 
-func (c *PaginationCompiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
-    logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompilePackage", "pkg", pkg.FullName)
+func (c *PaginationCompiler) CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
+    pkg := context.Package(ctx)
+    logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompilePackage", "pkg", pkg.FullName, "interface", decl.Name)
 
-    thisCtx := context.WithType(ctx, pkg)
-    for _, sourceFile := range pkg.SourceFiles {
-        fileCtx := context.WithType(thisCtx, sourceFile)
-        for _, statement := range sourceFile.Statements {
-            if decl := statement.GetDeclaration(); decl != nil {
-                switch decl.Declaration.(type) {
-                case *lang.Declaration_InterfaceDecl:
-                    if err := c.CompileInterface(fileCtx, decl.GetInterfaceDecl()); err != nil {
-                        return err
-                    }
-                }
-            }
+    for _, method := range decl.GetType().GetMethods() {
+        name := method.Name
+        resultTypeName := method.GetSignature().GetResultType().GetFullName()
+        if resultTypeName == core.ArrayTypeFullName &&
+            (strings.HasPrefix(name, "list_") || !strings.HasPrefix(name, "batch_")) {
+            method.SetBoolAttribute(core.PaginationAttributeName, true)
         }
     }
-    return nil
-}
-
-func (c *PaginationCompiler) CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
-    //for _, s := range decl.StructDecls {
-    //
-    //}
-    //
-    //for _, field := range decl.Type.
     return nil
 }
 

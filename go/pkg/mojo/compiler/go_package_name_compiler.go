@@ -32,7 +32,8 @@ func NewGoPackageNameCompiler(options core.Options) *GoPackageNameCompiler {
     }
 }
 
-func (c *GoPackageNameCompiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
+func (c *GoPackageNameCompiler) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
+    pkg := context.Package(ctx)
     logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompilePackage", "pkg", pkg.FullName)
 
     goPkgName := pkg.GoPackageName()
@@ -40,22 +41,6 @@ func (c *GoPackageNameCompiler) CompilePackage(ctx context.Context, pkg *lang.Pa
         return nil
     }
 
-    //thisCtx := context.WithType(ctx, pkg)
-    for _, sourceFile := range pkg.SourceFiles {
-        //fileCtx := context.WithType(ctx, thisCtx)
-        for _, statement := range sourceFile.Statements {
-            if decl := statement.GetDeclaration(); decl != nil {
-                switch decl.Declaration.(type) {
-                case *lang.Declaration_StructDecl:
-                    if structDecl := decl.GetStructDecl(); structDecl != nil {
-                        structDecl.Attributes = lang.SetStringAttribute(structDecl.Attributes, "go_package_name", goPkgName)
-                    }
-                case *lang.Declaration_TypeAliasDecl:
-                case *lang.Declaration_EnumDecl:
-                case *lang.Declaration_InterfaceDecl:
-                }
-            }
-        }
-    }
+    decl.SetStringAttribute("go_package_name", goPkgName)
     return nil
 }

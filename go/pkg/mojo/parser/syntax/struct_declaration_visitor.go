@@ -153,7 +153,7 @@ func (s *StructDeclarationVisitor) VisitStructMembers(ctx *StructMembersContext)
         var document *lang.Document
         var freeDocument *lang.Document
         for i, member := range members {
-            if len(documents) > 0 {
+            if len(documents) > i {
                 document = GetEosDocument(documents[i])
             }
             switch m := member.Accept(s).(type) {

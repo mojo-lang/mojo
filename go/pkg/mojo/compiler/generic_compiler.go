@@ -116,6 +116,12 @@ func (c *GenericCompiler) CompilePackage(ctx context.Context, pkg *lang.Package)
     for _, file := range c.NewFiles {
         pkg.SourceFiles = append(pkg.SourceFiles, file)
     }
+
+    for _, child := range pkg.Children {
+        if err := c.CompilePackage(thisCtx, child); err != nil {
+            return err
+        }
+    }
     return nil
 }
 

@@ -79,6 +79,12 @@ func (c *TypeAliasCompiler) CompilePackage(ctx context.Context, pkg *lang.Packag
             sourceFile.ResolvedIdentifiers = append(sourceFile.ResolvedIdentifiers, id)
         }
     }
+
+    for _, child := range pkg.Children {
+        if err := c.CompilePackage(thisCtx, child); err != nil {
+            return err
+        }
+    }
     return nil
 }
 

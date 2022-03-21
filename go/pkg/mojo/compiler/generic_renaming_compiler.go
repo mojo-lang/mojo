@@ -117,7 +117,17 @@ func (c *GenericRenamingCompiler) CompilePackage(ctx context.Context, pkg *lang.
         }
     }
 
-    return c.Renaming(thisCtx)
+    if err := c.Renaming(thisCtx); err != nil {
+        return err
+    }
+
+    for _, child := range pkg.Children {
+        if err := c.CompilePackage(thisCtx, child); err != nil {
+            return err
+        }
+    }
+
+    return nil
 }
 
 func (c *GenericRenamingCompiler) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {

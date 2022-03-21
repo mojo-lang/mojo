@@ -63,7 +63,18 @@ func (c *EntityCompiler) CompilePackage(ctx context.Context, pkg *lang.Package) 
         return err
     }
 
-    return c.compilePackage(ctx, pkg, interfaceTarget)
+    if err := c.compilePackage(ctx, pkg, interfaceTarget); err != nil {
+        return err
+    }
+
+    for _, child := range pkg.Children {
+        thisCtx := context.WithType(ctx, pkg)
+        if err := c.CompilePackage(thisCtx, child); err != nil {
+            return err
+        }
+    }
+
+    return nil
 }
 
 func (c *EntityCompiler) compilePackage(ctx context.Context, pkg *lang.Package, target string) error {
