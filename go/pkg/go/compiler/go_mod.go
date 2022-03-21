@@ -28,7 +28,7 @@ func (g *GoMod) Compile(pkg *lang.Package) error {
 
         if len(d.Path) > 0 {
             dep.Version = "v0.0.0-00010101000000-000000000000"
-            dep.Path = path2.Join(d.Path, "go")
+            dep.Path = path2.Join("..", d.Path, "go")
         } else {
             minVersion := d.GetVersion().GetRange().GetMin().Format()
             if len(minVersion) == 0 {
