@@ -2,6 +2,7 @@ package syntax
 
 import (
     "fmt"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
 
@@ -148,28 +149,30 @@ func (n *NominalTypeVisitor) VisitArrayType(ctx *ArrayTypeContext) interface{} {
 }
 
 func (n *NominalTypeVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
-    keyTypeCtx := ctx.Type_(0)
-    if keyTypeCtx != nil {
-        keyType := keyTypeCtx.Accept(n).(*lang.NominalType)
+    if len(ctx.AllType_()) != 2 {
+        return nil
+    }
 
-        valueTypeCtx := ctx.Type_(1)
-        if valueTypeCtx != nil {
-            valueType := valueTypeCtx.Accept(n).(*lang.NominalType)
-
-            return &lang.NominalType{
-                Name: "Map",
-                GenericArguments: []*lang.NominalType{
-                    {
-                        Name:             keyType.Name,
-                        GenericArguments: keyType.GenericArguments,
-                        Attributes:       keyType.Attributes,
-                    },
-                    {
-                        Name:             valueType.Name,
-                        GenericArguments: valueType.GenericArguments,
-                        Attributes:       valueType.Attributes,
-                    },
-                },
+    if keyTypeCtx := ctx.Type_(0); keyTypeCtx != nil {
+        if keyType, ok := keyTypeCtx.Accept(n).(*lang.NominalType); ok {
+            if valueTypeCtx := ctx.Type_(1); valueTypeCtx != nil {
+                if valueType, ok := valueTypeCtx.Accept(n).(*lang.NominalType); ok {
+                    return &lang.NominalType{
+                        Name: "Map",
+                        GenericArguments: []*lang.NominalType{
+                            {
+                                Name:             keyType.Name,
+                                GenericArguments: keyType.GenericArguments,
+                                Attributes:       keyType.Attributes,
+                            },
+                            {
+                                Name:             valueType.Name,
+                                GenericArguments: valueType.GenericArguments,
+                                Attributes:       valueType.Attributes,
+                            },
+                        },
+                    }
+                }
             }
         }
     }
@@ -182,8 +185,7 @@ func (n *NominalTypeVisitor) VisitFunctionType(ctx *FunctionTypeContext) interfa
 }
 
 func (n *NominalTypeVisitor) VisitTupleType(ctx *TupleTypeContext) interface{} {
-    elementsCtx := ctx.TupleTypeElements()
-    if elementsCtx != nil {
+    if elementsCtx := ctx.TupleTypeElements(); elementsCtx != nil {
         return elementsCtx.Accept(n)
     }
     return nil
@@ -214,15 +216,13 @@ func (n *NominalTypeVisitor) VisitTupleTypeElements(ctx *TupleTypeElementsContex
 }
 
 func (n *NominalTypeVisitor) VisitTupleTypeElement(ctx *TupleTypeElementContext) interface{} {
-    typeCtx := ctx.Type_()
-    if typeCtx != nil {
+    if typeCtx := ctx.Type_(); typeCtx != nil {
         nominalType := GetType(typeCtx)
         nominalType.Attributes = GetAttributes(ctx.Attributes())
 
-        identifier := ctx.DeclarationIdentifier()
-        if identifier != nil {
+        if identifier := ctx.DeclarationIdentifier(); identifier != nil {
             nominalType.Attributes =
-                lang.SetStringAttribute(nominalType.Attributes, "label", identifier.GetText())
+                lang.SetStringAttribute(nominalType.Attributes, core.LabelAttributeName, identifier.GetText())
         }
 
         return nominalType

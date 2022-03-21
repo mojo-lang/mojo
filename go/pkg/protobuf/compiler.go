@@ -266,6 +266,27 @@ func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDec
     return nil
 }
 
+func CompileInterfaceInherits(decl *lang.InterfaceDecl) []*lang.FunctionDecl {
+    //if decl != nil && decl.Type != nil && len(decl.Type.Inherits) > 0 {
+    //    var methods []*lang.FunctionDecl
+    //    for _, inherit := range decl.Type.Inherits {
+    //        mthds := compileInterfaceInherits(inherit)
+    //    }
+    //}
+
+    return nil
+}
+
+func compileInterfaceInherits(inherit *lang.NominalType) []*lang.FunctionDecl {
+    //if decl := inherit.GetTypeDeclaration().GetInterfaceDecl(); decl != nil {
+    //    methods := decl.GetType().GetMethods()
+    //    for _, method := range methods {
+    //
+    //    }
+    //}
+    return nil
+}
+
 func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl, serviceDescriptor *desc.ServiceDescriptor) error {
     m := &descriptor.MethodDescriptorProto{
         Name:       &method.Name,
@@ -302,7 +323,7 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
             Fields: method.Signature.GetParameters(),
         }
 
-        pagination, _ = lang.GetBoolAttribute(method.Attributes, "pagination")
+        pagination, _ = lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName)
         if pagination {
             req.Type.Fields = append(req.Type.Fields, langcompiler.PaginationRequestFields()...)
         }
@@ -321,8 +342,12 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
         if file != nil {
             file.Dependency = append(file.Dependency, "mojo/core/null.proto")
         }
-    } else if result.GetFullName() == core.ArrayTypeFullName && pagination {
-        resp := GeneratePaginationResponse(method)
+    } else if result.GetFullName() == core.ArrayTypeFullName {
+        resp := GenerateArrayTypeResponse(method, pagination)
+        c.compileStruct(ctx, resp, desc.NewMessageDescriptor(file))
+        m.OutputType = &resp.Name
+    } else if result.GetFullName() == core.MapTypeFullName {
+        resp := GenerateMapTypeResponse(method)
         c.compileStruct(ctx, resp, desc.NewMessageDescriptor(file))
         m.OutputType = &resp.Name
     } else if result.IsScalar() {
@@ -353,7 +378,7 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
     return nil
 }
 
-func GeneratePaginationResponse(method *lang.FunctionDecl) *lang.StructDecl {
+func GenerateArrayTypeResponse(method *lang.FunctionDecl, pagination bool) *lang.StructDecl {
     result := method.Signature.GetResultType()
     if result == nil || result.GetFullName() != core.ArrayTypeFullName {
         return nil
@@ -374,6 +399,34 @@ func GeneratePaginationResponse(method *lang.FunctionDecl) *lang.StructDecl {
             Type: result,
         }},
     }
-    resp.Type.Fields = append(resp.Type.Fields, langcompiler.PaginationResponseFields()...)
+
+    if pagination {
+        resp.Type.Fields = append(resp.Type.Fields, langcompiler.PaginationResponseFields()...)
+    }
+    return resp
+}
+
+func GenerateMapTypeResponse(method *lang.FunctionDecl) *lang.StructDecl {
+    result := method.Signature.GetResultType()
+    if result == nil || result.GetFullName() != core.MapTypeFullName {
+        return nil
+    }
+
+    result.Attributes = lang.SetIntegerAttribute(result.Attributes, core.NumberAttributeName, 1)
+    val := result.GenericArguments[0]
+    name := transformer.Plural(strcase.ToSnake(val.Name))
+
+    // generate the request message
+    resp := &lang.StructDecl{}
+    resp.PackageName = method.PackageName
+    resp.SourceFileName = method.SourceFileName
+    resp.Name = strcase.ToCamel(method.Name) + "Response"
+    resp.Type = &lang.StructType{
+        Fields: []*lang.ValueDecl{{
+            Name: name,
+            Type: result,
+        }},
+    }
+
     return resp
 }

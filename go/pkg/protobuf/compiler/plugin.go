@@ -23,6 +23,7 @@ type Plugin interface {
 
 var plugins = make(map[string][]Plugin)
 
+// CompileNominalType
 // type alias transform
 // type: Scalar, Enum, Struct
 func CompileNominalType(ctx context.Context, t *lang.NominalType) (string, string, error) { // type, typeName, error

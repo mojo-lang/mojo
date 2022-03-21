@@ -9,7 +9,6 @@ import (
     "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
     apicompiler "github.com/mojo-lang/mojo/go/pkg/openapi/compiler"
     "github.com/mojo-lang/mojo/go/pkg/protobuf"
-    "github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
     "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
     "strings"
 )
@@ -151,13 +150,14 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
 
         if decl.GetFullName() == "mojo.core.Array" {
             pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination")
-            if pagination {
-                decl = protobuf.GeneratePaginationResponse(method)
-            } else {
-                if decl, err = compiler.CompileArrayToStruct(result); err != nil {
-                    return err
-                }
-            }
+            decl = protobuf.GenerateArrayTypeResponse(method, pagination)
+            //if pagination {
+            //    decl = protobuf.GenerateArrayTypeResponse(method)
+            //} else {
+            //    if decl, err = compiler.CompileArrayToStruct(result); err != nil {
+            //        return err
+            //    }
+            //}
         } else if result.IsScalar() {
             decl = &lang.StructDecl{
                 PackageName:    "mojo.core",

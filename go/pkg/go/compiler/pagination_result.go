@@ -1,6 +1,7 @@
 package compiler
 
 import (
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/protobuf"
@@ -18,12 +19,12 @@ func (p *PaginationResult) CompileInterface(decl *lang.InterfaceDecl) error {
 }
 
 func (p *PaginationResult) CompileMethod(method *lang.FunctionDecl) error {
-    pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination")
+    pagination, _ := lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName)
     if !pagination {
         return nil
     }
 
-    if decl := protobuf.GeneratePaginationResponse(method); decl != nil {
+    if decl := protobuf.GenerateArrayTypeResponse(method, true); decl != nil {
         p.PackageName = decl.GetPackageName()
         p.GoPackageName = GetGoPackage(decl.GetPackageName())
 
