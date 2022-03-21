@@ -7,35 +7,42 @@ import (
 
 type MojoFileVisitor struct {
     *BaseMojoParserVisitor
-
-    SourceFile *lang.SourceFile
 }
 
 func NewMojoFileVisitor() *MojoFileVisitor {
     visitor := &MojoFileVisitor{}
-    visitor.SourceFile = &lang.SourceFile{}
     return visitor
 }
 
 func (m *MojoFileVisitor) Visit(tree antlr.ParseTree) interface{} {
     switch val := tree.(type) {
     case *MojoFileContext:
-        return val.Accept(m).(bool)
+        return val.Accept(m)
     default:
-        return false
+        return nil
     }
 }
 
 func (m *MojoFileVisitor) VisitMojoFile(ctx *MojoFileContext) interface{} {
-    statements := ctx.Statements()
-    visitor := NewStatementsVisitor()
-    if s, ok := statements.Accept(visitor).([]*lang.Statement); ok {
-        m.SourceFile.Statements = append(m.SourceFile.Statements, s...)
+    if statementsCtx := ctx.Statements(); statementsCtx != nil {
+        visitor := NewStatementsVisitor()
+        sourceFile := &lang.SourceFile{}
+        if s, ok := statementsCtx.Accept(visitor).([]*lang.Statement); ok {
+            sourceFile.Statements = append(sourceFile.Statements, s...)
+        }
+
+        if visitor.FreeFloatingDocument != nil {
+            sourceFile.TailingComments = lang.NewComments(visitor.FreeFloatingDocument)
+        }
+
+        if len(sourceFile.Statements) > 0 || len(sourceFile.TailingComments) > 0 {
+            return sourceFile
+        }
+
+        // maybe something wrong
+        return nil
     }
 
-    if visitor.FreeFloatingDocument != nil {
-        m.SourceFile.TailingComments = lang.NewComments(visitor.FreeFloatingDocument)
-    }
-
-    return true
+    // source file without the statements but may be having comments
+    return &lang.SourceFile{}
 }

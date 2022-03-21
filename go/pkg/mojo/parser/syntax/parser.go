@@ -68,38 +68,34 @@ func (p Parser) ParseStream(fileName string, input *antlr.InputStream) (*lang.So
     parser.BuildParseTrees = true
 
     tree := parser.MojoFile()
-    visitor := NewMojoFileVisitor()
-    result := visitor.Visit(tree).(bool)
-
-    if result && errorListener.Error == nil {
-        comments := CommentParser{}.Parse(stream)
-        CommentMerger(comments).Merge(visitor.SourceFile)
-
-        return visitor.SourceFile, nil
+    if sourceFile, ok := NewMojoFileVisitor().Visit(tree).(*lang.SourceFile); ok {
+        if errorListener.Error == nil {
+            comments := CommentParser{}.Parse(stream)
+            CommentMerger(comments).Merge(sourceFile)
+            return sourceFile, nil
+        } else {
+            return nil, errorListener.Error
+        }
     }
 
     if errorListener.Error != nil {
-        return nil, errorListener.Error
-    } else {
-        const msg = "failed to parse mojo file"
-        logs.Errorw(msg, "file", fileName)
-        return nil, errors.New(msg)
+        return nil, logs.NewErrorw("failed to parse mojo file", "file", fileName, "error", errorListener.Error.Error())
     }
+    return nil, logs.NewErrorw("failed to parse mojo file", "file", fileName)
 }
 
 func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
     if bytes, err := fs.ReadFile(fileSys, fileName); err != nil {
         return nil, err
     } else {
-        sourceFile, err := p.ParseStream(fileName, antlr.NewInputStream(string(bytes)))
-        if err != nil {
+        if sourceFile, err := p.ParseStream(fileName, antlr.NewInputStream(string(bytes))); err != nil {
             return nil, err
+        } else {
+            sourceFile.Name = path.Base(fileName)
+            sourceFile.FullName = fileName
+
+            return sourceFile, nil
         }
-
-        sourceFile.Name = path.Base(fileName)
-        sourceFile.FullName = fileName
-
-        return sourceFile, nil
     }
 }
 
@@ -157,14 +153,13 @@ func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs
                 continue
             }
 
-            sourceFile, err := p.ParseFile(thisCtx, path.Join(currentPath, f.Name()), fileSys)
-            if err != nil {
+            if sourceFile, err := p.ParseFile(thisCtx, path.Join(currentPath, f.Name()), fileSys); err != nil {
                 return nil, err
+            } else {
+                sourceFile.PackageName = currentPkgName
+                sourceFile.FullName = path.Join(lang.PackageNameToPath(currentPkgName), sourceFile.Name)
+                currentPkg.SourceFiles = append(currentPkg.SourceFiles, sourceFile)
             }
-
-            sourceFile.PackageName = currentPkgName
-            sourceFile.FullName = path.Join(lang.PackageNameToPath(currentPkgName), sourceFile.Name)
-            currentPkg.SourceFiles = append(currentPkg.SourceFiles, sourceFile)
         }
     }
 
