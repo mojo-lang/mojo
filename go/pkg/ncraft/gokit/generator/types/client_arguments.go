@@ -1,7 +1,7 @@
 // Package clientarggen collects information for templating the code in a
 // ncraft-generated client which marshals command line flags into message fields
 // for each service. Functions and fields in clientargen are called by
-// templates in protoc-gen-ncraft-gokit/template/
+// templates in protoc-gen-ncraft-gokitkit/template/
 package types
 
 import (

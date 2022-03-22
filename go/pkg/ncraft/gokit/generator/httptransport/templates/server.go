@@ -100,8 +100,8 @@ import (
 	"github.com/go-kit/kit/tracing/opentracing"
 
 	httptransport "github.com/go-kit/kit/transport/http"
-	pagination "github.com/ncraft-io/ncraft-go/pkg/pagination"
-	nhttp "github.com/ncraft-io/ncraft-go/pkg/transport/http"
+	pagination "github.com/ncraft-io/ncraft-gokit/pkg/pagination"
+	nhttp "github.com/ncraft-io/ncraft-gokit/pkg/transport/http"
 	stdopentracing "github.com/opentracing/opentracing-go"
 
     {{$corePackage := "github.com/mojo-lang/core/go/pkg/mojo/core"}}

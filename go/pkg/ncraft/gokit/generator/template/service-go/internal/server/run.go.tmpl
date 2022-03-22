@@ -11,7 +11,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/etherlabsio/healthcheck/v2"
-	"github.com/ncraft-io/ncraft-go/pkg/logs"
+	"github.com/ncraft-io/ncraft-gokit/pkg/logs"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/cors"
 	"google.golang.org/grpc"
@@ -24,7 +24,7 @@ import (
     "os/signal"
     "syscall"
 
-    nserver "github.com/ncraft-io/ncraft-go/pkg/server"
+    nserver "github.com/ncraft-io/ncraft-gokit/pkg/server"
 
 	// Services
 	{{range $i := .AllInterfaceNames}}

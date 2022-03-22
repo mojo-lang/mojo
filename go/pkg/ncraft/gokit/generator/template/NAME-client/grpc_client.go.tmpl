@@ -11,8 +11,8 @@ import (
     "time"
     "sync"
 
-    "github.com/ncraft-io/ncraft-go/pkg/logs"
-    "github.com/ncraft-io/ncraft-go/pkg/config"
+    "github.com/ncraft-io/ncraft-gokit/pkg/logs"
+    "github.com/ncraft-io/ncraft-gokit/pkg/config"
 
     "github.com/go-kit/kit/endpoint"
     "github.com/go-kit/kit/log"
@@ -20,8 +20,8 @@ import (
     stdopentracing "github.com/opentracing/opentracing-go"
     "google.golang.org/grpc"
 
-    "github.com/ncraft-io/ncraft-go/pkg/sd/lb"
-    nclient "github.com/ncraft-io/ncraft-go/pkg/client"
+    "github.com/ncraft-io/ncraft-gokit/pkg/sd/lb"
+    nclient "github.com/ncraft-io/ncraft-gokit/pkg/client"
 
 	// This Interface
 	pb "{{.ApiImportPath -}}"
