@@ -57,7 +57,7 @@ var (
             Name:        "Int32",
             TypeDeclaration: lang.NewStructTypeDeclaration(&lang.StructDecl{
                 PackageName:    "mojo.core",
-                SourceFileName: "mojo/core/numeric.mojo",
+                SourceFileName: "mojo/core/integer.mojo",
                 Name:           "Int32",
             }),
             Attributes: []*lang.Attribute{{
@@ -105,7 +105,7 @@ var (
             Name:        "Int32",
             TypeDeclaration: lang.NewStructTypeDeclaration(&lang.StructDecl{
                 PackageName:    "mojo.core",
-                SourceFileName: "mojo/core/numeric.mojo",
+                SourceFileName: "mojo/core/integer.mojo",
                 Name:           "Int32",
             }),
             Attributes: []*lang.Attribute{{
@@ -129,7 +129,7 @@ var (
             Name:        "Int32",
             TypeDeclaration: lang.NewStructTypeDeclaration(&lang.StructDecl{
                 PackageName:    "mojo.core",
-                SourceFileName: "mojo/core/numeric.mojo",
+                SourceFileName: "mojo/core/integer.mojo",
                 Name:           "Int32",
             }),
             Attributes: []*lang.Attribute{{

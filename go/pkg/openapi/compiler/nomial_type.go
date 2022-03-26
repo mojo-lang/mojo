@@ -5,7 +5,6 @@ import (
     "strings"
 
     "github.com/mojo-lang/core/go/pkg/mojo/core"
-    "github.com/mojo-lang/db/go/pkg/mojo/db"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
@@ -65,11 +64,13 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
             schema.Format = strings.ToLower(nominalType.Name)
         }
     case core.Float32TypeFullName, core.FloatTypeFullName:
+        schema.Title = core.Float32TypeName
         schema.Type = openapi.Schema_TYPE_NUMBER
-        schema.Format = "float32"
+        schema.Format = strings.ToLower(core.Float32TypeName)
     case core.Float64TypeFullName, core.DoubleTypeFullName:
+        schema.Title = core.Float64TypeName
         schema.Type = openapi.Schema_TYPE_NUMBER
-        schema.Format = "float64"
+        schema.Format = strings.ToLower(core.Float64TypeName)
     case core.NullTypeFullName:
         schema.Type = openapi.Schema_TYPE_NULL
     case core.BoolTypeFullName:
@@ -121,15 +122,6 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
             }
         }
         schema.OneOf = schemas
-    case core.TimestampTypeFullName, core.DateTimeTypeFullName, db.DeleteTimeTypeFullName:
-        schema.Type = openapi.Schema_TYPE_STRING
-        schema.Format = "DateTime"
-    case core.DateTypeFullName:
-        schema.Type = openapi.Schema_TYPE_STRING
-        schema.Format = "Date"
-    case core.EmailAddressTypeFullName:
-        schema.Type = openapi.Schema_TYPE_STRING
-        schema.Format = "EmailAddress"
     default:
         if enumDecl := nominalType.TypeDeclaration.GetEnumDecl(); enumDecl != nil {
             return compileEnumDecl(ctx, enumDecl)

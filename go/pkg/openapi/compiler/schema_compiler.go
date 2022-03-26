@@ -14,6 +14,7 @@ type SchemaCompiler interface {
 type ReferenceCompiler struct {
 }
 
+// FilterSchema
 // filter ignore types
 // filter ignore fields
 func FilterSchema(nominalType *lang.NominalType, schema *openapi.Schema) *openapi.ReferenceableSchema {

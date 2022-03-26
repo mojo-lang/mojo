@@ -9,6 +9,7 @@ import (
     "strings"
 )
 
+// Generator
 // generate the following files:
 // 1. openapi.yaml
 // 2. struct.schema.json
