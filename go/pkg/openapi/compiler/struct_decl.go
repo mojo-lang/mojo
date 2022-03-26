@@ -25,6 +25,7 @@ var PrimeTypes = map[string]bool{
     core.UIntTypeFullName:    true,
     core.Float32TypeFullName: true,
     core.Float64TypeFullName: true,
+    core.NullTypeFullName:    true,
     core.BoolTypeFullName:    true,
     core.StringTypeFullName:  true,
     core.BytesTypeFullName:   true,
@@ -33,10 +34,17 @@ var PrimeTypes = map[string]bool{
     core.UnionTypeFullName:   true,
 }
 
+func IsPrimeType(typeFullName string) bool {
+    if _, ok := PrimeTypes[typeFullName]; ok {
+        return true
+    }
+    return false
+}
+
 func CompileStructDecl(ctx context.Context, decl *lang.StructDecl) error {
     thisCtx := context.WithType(ctx, decl)
 
-    if PrimeTypes[decl.GetFullName()] {
+    if IsPrimeType(decl.GetFullName()) {
         return nil
     }
 

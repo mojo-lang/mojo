@@ -65,7 +65,7 @@ func (r *ReferenceCompiler) Compile(ctx context.Context, nominalType *lang.Nomin
                 Fragment: openapi.ReferenceRoot + fullName,
             },
         }), nil
-    } else if structDecl := nominalType.TypeDeclaration.GetStructDecl(); structDecl != nil {
+    } else if structDecl := nominalType.TypeDeclaration.GetStructDecl(); structDecl != nil && !IsPrimeType(structDecl.GetFullName()) {
         if err := CompileStructDecl(thisCtx, structDecl); err != nil {
             return nil, err
         }

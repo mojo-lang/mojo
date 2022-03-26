@@ -1,6 +1,7 @@
 package compiler
 
 import (
+    "github.com/mojo-lang/core/go/pkg/logs"
     "strings"
 
     "github.com/mojo-lang/core/go/pkg/mojo/core"
@@ -69,6 +70,8 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
     case core.Float64TypeFullName, core.DoubleTypeFullName:
         schema.Type = openapi.Schema_TYPE_NUMBER
         schema.Format = "float64"
+    case core.NullTypeFullName:
+        schema.Type = openapi.Schema_TYPE_NULL
     case core.BoolTypeFullName:
         schema.Type = openapi.Schema_TYPE_BOOLEAN
     case core.StringTypeFullName:
@@ -141,6 +144,10 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
                 return s, nil
             }
         }
+    }
+
+    if schema.IsEmpty() {
+        return nil, logs.NewErrorw("failed to compile the nominal type", "type", nominalType.GetFullName())
     }
 
     return openapi.NewReferenceableSchema(schema), nil

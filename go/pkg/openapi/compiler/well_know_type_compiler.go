@@ -22,6 +22,25 @@ func (w *WellKnowTypeCompiler) Compile(ctx context.Context, nominalType *lang.No
             Type:   openapi.Schema_TYPE_STRING,
             Format: "Duration",
         }), nil
+    case core.ObjectTypeFullName:
+        return openapi.NewReferenceableSchema(&openapi.Schema{
+            Type: openapi.Schema_TYPE_OBJECT,
+        }), nil
+    case core.ValuesTypeFullName:
+        return openapi.NewReferenceableSchema(&openapi.Schema{
+            Type: openapi.Schema_TYPE_ARRAY,
+        }), nil
+    case core.ValueTypeFullName:
+        return openapi.NewReferenceableSchema(&openapi.Schema{
+            OneOf: []*openapi.ReferenceableSchema{
+                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_NULL}),
+                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_BOOLEAN}),
+                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_NUMBER}),
+                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_STRING}),
+                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_ARRAY}),
+                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_OBJECT}),
+            },
+        }), nil
     default:
         return nil, nil
     }
