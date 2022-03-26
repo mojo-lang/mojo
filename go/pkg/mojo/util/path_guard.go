@@ -1,6 +1,7 @@
 package util
 
 import (
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "strings"
 )
 
@@ -12,14 +13,14 @@ type PathGuard struct {
 }
 
 func (g *PathGuard) Check(path string) error {
-    if IsExist(path) {
+    if core.IsExist(path) {
         err := g.Clear(path)
         if err != nil {
             return err
         }
         return nil
     } else {
-        err := CreateDir(path)
+        err := core.CreateDir(path)
         if err != nil {
             return err
         }

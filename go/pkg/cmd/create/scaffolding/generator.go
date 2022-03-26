@@ -3,6 +3,7 @@ package scaffolding
 import (
     "errors"
     "fmt"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
@@ -62,7 +63,7 @@ func (g *Generator) Generate(data *Data, output string) error {
     }
 
     if len(files) > 0 {
-        if util.IsExist(path2.Dir(files[0].Name)) {
+        if core.IsExist(path2.Dir(files[0].Name)) {
             return fmt.Errorf("the package %s is already generated", data.Package.Name)
         }
     }
@@ -71,7 +72,7 @@ func (g *Generator) Generate(data *Data, output string) error {
         if len(f.Name) > 0 && len(f.Content) > 0 {
             name := f.Name
             path := path2.Dir(name)
-            util.CreateDir(path)
+            core.CreateDir(path)
             ioutil.WriteFile(name, []byte(f.Content), 0666)
         }
     }
@@ -82,5 +83,5 @@ func (g *Generator) Generate(data *Data, output string) error {
     if data.IsMojoPackage() {
         mojoFullPath = path2.Join(output, pkgDirName, mojoPath)
     }
-    return util.CreateDir(mojoFullPath)
+    return core.CreateDir(mojoFullPath)
 }

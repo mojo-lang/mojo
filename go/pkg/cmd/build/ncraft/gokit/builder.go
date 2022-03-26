@@ -110,7 +110,7 @@ func (b Builder) Build() error {
     if !strings.HasSuffix(prefixPath, "/") {
         prefixPath += "/"
     }
-    if util.IsExist(b.Output) {
+    if core.IsExist(b.Output) {
         err = filepath.Walk(b.Output, func(path string, f os.FileInfo, err error) error {
             if f == nil {
                 return err

@@ -3,6 +3,7 @@ package util
 import (
     "errors"
     "github.com/mojo-lang/core/go/pkg/logs"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "io"
     "io/ioutil"
     path2 "path"
@@ -49,7 +50,7 @@ func (c *GeneratedFile) WriteTo(output string, guard *PathGuard) error {
         return err
     }
 
-    if IsExist(name) {
+    if core.IsExist(name) {
         if c.SkipIfExist {
             return nil
         }

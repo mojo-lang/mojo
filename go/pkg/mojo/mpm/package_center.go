@@ -5,7 +5,6 @@ import (
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
-    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "os"
     "os/exec"
     "path"
@@ -40,7 +39,7 @@ func (p *PackageCenter) Get(name string, requirement *lang.Package_Requirement) 
         return pkg.ExtraInfo.GetString("path"), nil
     }
     repoPath := p.getPkgPath(requirement)
-    if util.IsExist(repoPath) {
+    if core.IsExist(repoPath) {
         return p.Update(name, requirement)
     }
 
@@ -57,7 +56,7 @@ func (p *PackageCenter) Install(name string, requirement *lang.Package_Requireme
     cmd := exec.Command("git", "clone", url.Format())
     cmd.Dir = path.Dir(repoPath)
 
-    util.CreateDir(cmd.Dir)
+    core.CreateDir(cmd.Dir)
 
     logs.Debugw("begin to install mojo package", "package", name, "cmd", cmd.String())
     out, err := cmd.CombinedOutput()

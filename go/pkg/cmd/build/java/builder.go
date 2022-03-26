@@ -3,6 +3,7 @@ package java
 import (
     "errors"
     "github.com/mojo-lang/core/go/pkg/logs"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
@@ -56,8 +57,8 @@ func (b Builder) protocJava() error {
 
     // move the generated files to destinations
     destDir := path2.Join(b.GetAbsolutePath(), "java/src/main/java")
-    if !util.IsExist(destDir) {
-        util.CreateDir(destDir)
+    if !core.IsExist(destDir) {
+        core.CreateDir(destDir)
     }
 
     util.DeepClearFiles(destDir, ".pb.java")

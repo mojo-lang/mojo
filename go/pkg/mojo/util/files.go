@@ -3,12 +3,15 @@ package util
 import (
     "bufio"
     "bytes"
-    "github.com/mojo-lang/core/go/pkg/logs"
+
     "io/fs"
     "io/ioutil"
     "os"
     "path/filepath"
     "strings"
+
+    "github.com/mojo-lang/core/go/pkg/logs"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
 )
 
 func ClearGeneratedFiles(path string, suffixes ...string) error {
@@ -55,29 +58,8 @@ func hasSuffix(file string, suffixes ...string) bool {
     return false
 }
 
-//调用os.MkdirAll递归创建文件夹
-func CreateDir(filePath string) error {
-    if !IsExist(filePath) {
-        err := os.MkdirAll(filePath, os.ModePerm)
-        return err
-    }
-    return nil
-}
-
-// 判断所给路径文件/文件夹是否存在(返回true是存在)
-func IsExist(path string) bool {
-    _, err := os.Stat(path) //os.Stat获取文件信息
-    if err != nil {
-        if os.IsExist(err) {
-            return true
-        }
-        return false
-    }
-    return true
-}
-
 func IsGeneratedFile(path string) bool {
-    if IsExist(path) {
+    if core.IsExist(path) {
         content, err := ioutil.ReadFile(path)
         if err != nil {
             return false

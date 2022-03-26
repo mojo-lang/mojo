@@ -7,6 +7,7 @@ import (
     plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
     "google.golang.org/protobuf/reflect/protoreflect"
@@ -282,7 +283,7 @@ func (g *Generator) removeGeneratedDir(dir string) {
     for _, path := range paths {
         if len(rootPath) == 0 || !strings.HasPrefix(path, rootPath) {
             rootPath = path
-            if util.IsExist(rootPath) {
+            if core.IsExist(rootPath) {
                 util.ClearFiles(rootPath, ".proto")
             }
         }

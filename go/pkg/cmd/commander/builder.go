@@ -1,6 +1,7 @@
 package commander
 
 import (
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/document"
@@ -10,7 +11,6 @@ import (
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/ncraft/gokit"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/openapi"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/protobuf"
-    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
     "path"
     "strings"
@@ -49,7 +49,7 @@ func (b *Builder) Execute() error {
     if len(b.Targets) == 0 {
         b.Targets = "api"
 
-        if util.IsExist(path.Join(b.Path, "service-go")) {
+        if core.IsExist(path.Join(b.Path, "service-go")) {
             b.Targets = "api,service"
         }
     }

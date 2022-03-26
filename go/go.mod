@@ -12,11 +12,11 @@ require (
 	github.com/golang/protobuf v1.5.2
 	github.com/json-iterator/go v1.1.12
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/mojo-lang/core/go v0.0.0-20220321114946-50157830d0c4
+	github.com/mojo-lang/core/go v0.0.0-20220326082440-0422ffa3ecfa
 	github.com/mojo-lang/db/go v0.0.0-20220316075821-0c529fdd3307
 	github.com/mojo-lang/document/go v0.0.0-20220321054451-1451fce4db5c
 	github.com/mojo-lang/lang/go v0.0.0-20220316075324-fd2be24ebd68
-	github.com/mojo-lang/openapi/go v0.0.0-20220316080050-7cbf2751c82a
+	github.com/mojo-lang/openapi/go v0.0.0-20220326082935-d183cdd46292
 	github.com/mojo-lang/protobuf/go v0.0.0-20211220010439-949bfcb64cf0
 	github.com/mojo-lang/yaml v0.0.0-20210912132100-a6a60fbf6f20
 	github.com/otiai10/copy v1.6.0
