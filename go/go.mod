@@ -15,7 +15,7 @@ require (
 	github.com/mojo-lang/core/go v0.0.0-20220326140252-e546bc9ca7b4
 	github.com/mojo-lang/db/go v0.0.0-20220316075821-0c529fdd3307
 	github.com/mojo-lang/document/go v0.0.0-20220321054451-1451fce4db5c
-	github.com/mojo-lang/lang/go v0.0.0-20220316075324-fd2be24ebd68
+	github.com/mojo-lang/lang/go v0.0.0-20220327042103-6bbab38d42da
 	github.com/mojo-lang/openapi/go v0.0.0-20220326082935-d183cdd46292
 	github.com/mojo-lang/protobuf/go v0.0.0-20211220010439-949bfcb64cf0
 	github.com/mojo-lang/yaml v0.0.0-20210912132100-a6a60fbf6f20

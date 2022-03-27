@@ -85,7 +85,7 @@ func (b Builder) Build() error {
     for _, pkg := range pkgs {
         options[pkg.FullName] = getPackageImport(pkg)
     }
-    for _, pkg := range b.Package.ResolvedDependencies {
+    for _, pkg := range b.Package.GetAllDepedentPackages() {
         options[pkg.FullName] = getPackageImport(pkg)
     }
 

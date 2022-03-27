@@ -98,6 +98,24 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
         }
     }
 
+    registerType := func(t *lang.NominalType) {
+        if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() && (len(t.PackageName) > 0 && t.PackageName != service.FullPkgName) {
+            RegisterMessagePackage(t.Name, GetGoPackage(t.PackageName))
+
+            if len(t.GenericArguments) == 0 {
+                if t.TypeDeclaration != nil && t.TypeDeclaration.GetEnumDecl() != nil {
+                    service.ImportEnums = append(service.ImportEnums, t.Name)
+                } else {
+                    service.ImportStructs = append(service.ImportStructs, t.Name)
+                }
+
+                if path, ok := GoPackageImport(ctx, t.PackageName).(string); ok {
+                    service.ImportPaths = append(service.ImportPaths, path)
+                }
+            }
+        }
+    }
+
     if m.RequestType == nil {
         r := &lang.StructDecl{
             Name: wrapRequestName,
@@ -112,27 +130,9 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
             return err
         }
 
-        registerType := func(t *lang.NominalType) {
-            if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() && (len(t.PackageName) > 0 && t.PackageName != service.FullPkgName) {
-                RegisterMessagePackage(t.Name, GetGoPackage(t.PackageName))
-
-                if len(t.GenericArguments) == 0 {
-                    if t.TypeDeclaration != nil && t.TypeDeclaration.GetEnumDecl() != nil {
-                        service.ImportEnums = append(service.ImportEnums, t.Name)
-                    } else {
-                        service.ImportStructs = append(service.ImportStructs, t.Name)
-                    }
-
-                    if path, ok := GoPackageImport(ctx, t.PackageName).(string); ok {
-                        service.ImportPaths = append(service.ImportPaths, path)
-                    }
-                }
-            }
-        }
-
         for _, field := range r.Type.Fields {
             t := field.Type
-            if t.IsMapType() {
+            if t.IsMapType() || t.IsArrayType() {
                 for _, gt := range t.GenericArguments {
                     registerType(gt)
                 }

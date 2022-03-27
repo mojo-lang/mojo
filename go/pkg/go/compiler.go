@@ -9,6 +9,7 @@ import (
     "github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
+    "github.com/mojo-lang/mojo/go/pkg/protobuf"
     protocompiler "github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
     "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
     "github.com/pkg/errors"
@@ -123,10 +124,19 @@ func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) error
 }
 
 var whiteList = map[string]bool{
+    "BoolValues":    true,
+    "Int32Values":   true,
+    "Int64Values":   true,
+    "IntValues":     true,
+    "UInt32Values":  true,
+    "UInt64Values":  true,
+    "UIntValues":    true,
+    "Float32Values": true,
+    "FloatValues":   true,
+    "Float64Values": true,
+    "DoubleValues":  true,
     "Strings":       true,
     "StringValues":  true,
-    "IntegerValues": true,
-    "DoubleValues":  true,
 }
 
 func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl) error {
@@ -266,11 +276,17 @@ func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDec
             }
             c.Data.PaginationResults = append(c.Data.PaginationResults, pagination)
         } else {
-            result := method.Signature.GetResultType()
-            if result != nil {
-                _, err := c.compileNominalType(thisCtx, result)
-                if err != nil {
-                    return errors.Errorf("failed to compile the type %s: %s", result.Name, err.Error())
+            if result := method.Signature.GetResultType(); result != nil {
+                if result.GetFullName() == core.ArrayTypeFullName {
+                    if d := protobuf.GenerateArrayTypeResponse(method, false); d != nil {
+                        d.SetBoolAttribute("boxed", true)
+                        return c.compileStruct(thisCtx, d)
+                    }
+                } else {
+                    _, err := c.compileNominalType(thisCtx, result)
+                    if err != nil {
+                        return errors.Errorf("failed to compile the type %s: %s", result.Name, err.Error())
+                    }
                 }
             }
         }
