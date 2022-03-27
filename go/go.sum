@@ -205,15 +205,15 @@ github.com/mojo-lang/core/go v0.0.0-20211223004040-601d32e5cd0a/go.mod h1:wSDW+M
 github.com/mojo-lang/core/go v0.0.0-20220316072623-f4cf14310a3a/go.mod h1:iLzR5Qo24QD/iTD65j/J6ANEWCptD0wf3KsiGnX/Vd8=
 github.com/mojo-lang/core/go v0.0.0-20220321053202-b888fcad659a/go.mod h1:iLzR5Qo24QD/iTD65j/J6ANEWCptD0wf3KsiGnX/Vd8=
 github.com/mojo-lang/core/go v0.0.0-20220326082440-0422ffa3ecfa/go.mod h1:iLzR5Qo24QD/iTD65j/J6ANEWCptD0wf3KsiGnX/Vd8=
-github.com/mojo-lang/core/go v0.0.0-20220326140252-e546bc9ca7b4 h1:Bt7Ucac4QQuvYHWbhY8b2v3RaK1DEaSW6TlV0cV5V58=
 github.com/mojo-lang/core/go v0.0.0-20220326140252-e546bc9ca7b4/go.mod h1:iLzR5Qo24QD/iTD65j/J6ANEWCptD0wf3KsiGnX/Vd8=
+github.com/mojo-lang/core/go v0.0.0-20220327092032-95141e1e8bfc h1:FeRkqP5zIERYFS4TwTT0X673mNlAeYn7cuS/yOMPufU=
+github.com/mojo-lang/core/go v0.0.0-20220327092032-95141e1e8bfc/go.mod h1:iLzR5Qo24QD/iTD65j/J6ANEWCptD0wf3KsiGnX/Vd8=
 github.com/mojo-lang/db/go v0.0.0-20220316075821-0c529fdd3307 h1:N13fNQMLGCJcoGeUYYZ2OJSMyEmIqKPew9LUy4wVCnA=
 github.com/mojo-lang/db/go v0.0.0-20220316075821-0c529fdd3307/go.mod h1:wpG2x2Aqyl+PCW7tYDRAJnFNkXzmN3VeZ4vtSg6w0vs=
 github.com/mojo-lang/document/go v0.0.0-20211217054243-5f99395f7054/go.mod h1:VQ10MLbKXbWYRhiSAbVQjb4Dv4ZGUSoApPo0OpuNcmU=
 github.com/mojo-lang/document/go v0.0.0-20211223004737-9f1cfeafe18c/go.mod h1:ULPDf35xfVMmepcROU2T51y8jqqBi85FUGx4WL27bUs=
 github.com/mojo-lang/document/go v0.0.0-20220321054451-1451fce4db5c h1:6zQ0swKWvMUqE3usOlSapUb1lysOdKhD3OtOUbSM3Lo=
 github.com/mojo-lang/document/go v0.0.0-20220321054451-1451fce4db5c/go.mod h1:dSfBCjK8IWo8yYsWIxRAVZv12R/3aM4A3Gaps03H57A=
-github.com/mojo-lang/lang/go v0.0.0-20220316075324-fd2be24ebd68 h1:mgrDXCvWZD3V5Co3x6yc68qk7iDcahTC3KjJ90a1jNk=
 github.com/mojo-lang/lang/go v0.0.0-20220316075324-fd2be24ebd68/go.mod h1:XI7v3uAq8oXG8eZsehYX2ROwLGWaFCj8Tpz7kAt/GIA=
 github.com/mojo-lang/lang/go v0.0.0-20220327042103-6bbab38d42da h1:N48qWW2YJw2mjSTWlbE3uG8ibscif3UvG45Uv+jrk/8=
 github.com/mojo-lang/lang/go v0.0.0-20220327042103-6bbab38d42da/go.mod h1:HMbF+yeIhEfMEcPoTSBnK82yIENo1ZOo4rocFwZsp7g=

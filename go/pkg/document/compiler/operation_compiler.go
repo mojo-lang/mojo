@@ -177,21 +177,21 @@ func (o *OperationCompiler) compileMediaType(mediaType *openapi.MediaType, doc *
     schema := mediaType.Schema.GetSchemaOf(o.Components.Schemas)
 
     decl := o.Package.GetIdentifier(schema.Title).GetDeclaration()
-    document, err := compiler.Compile(decl, schema)
-    if err != nil {
+    if document, err := compiler.Compile(decl, schema); err != nil {
         return err
+    } else if document != nil {
+        doc.Blocks = append(doc.Blocks, document.GetBlocks()...)
     }
-    doc.Blocks = append(doc.Blocks, document.Blocks...)
 
     deps := schema.Dependencies(o.Components.Schemas)
     for _, dep := range deps {
         decl = o.Package.GetIdentifier(dep.Title).GetDeclaration()
-        document, err = compiler.Compile(decl, dep)
-        if err != nil {
+        if document, err := compiler.Compile(decl, dep); err != nil {
             return err
+        } else if document != nil && len(document.Blocks) > 0 {
+            doc.AppendHeaderFrom(4, wrapCode(dep.Title))
+            doc.Blocks = append(doc.Blocks, document.GetBlocks()...)
         }
-        doc.AppendHeaderFrom(4, wrapCode(dep.Title))
-        doc.Blocks = append(doc.Blocks, document.Blocks...)
     }
     return nil
 }

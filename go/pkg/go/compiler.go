@@ -124,19 +124,7 @@ func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) error
 }
 
 var whiteList = map[string]bool{
-    "BoolValues":    true,
-    "Int32Values":   true,
-    "Int64Values":   true,
-    "IntValues":     true,
-    "UInt32Values":  true,
-    "UInt64Values":  true,
-    "UIntValues":    true,
-    "Float32Values": true,
-    "FloatValues":   true,
-    "Float64Values": true,
-    "DoubleValues":  true,
-    "Strings":       true,
-    "StringValues":  true,
+    "Strings": true,
 }
 
 func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl) error {

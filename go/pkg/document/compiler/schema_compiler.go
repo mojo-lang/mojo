@@ -44,18 +44,20 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
         if decl == nil {
             fieldNames = schema.FieldNames(s.Components.Schemas)
         }
-        s.compileFields(context.Empty(), fieldNames, schema, table)
 
-        doc.AppendTable(table)
+        if len(fieldNames) > 0 && len(schema.Properties) > 0 {
+            s.compileFields(context.Empty(), fieldNames, schema, table)
+            doc.AppendTable(table)
+        }
     } else if schema.Type == openapi.Schema_TYPE_ARRAY {
         table := &document.Table{
             Caption:   nil,
             Alignment: 0,
-            Header:    document.NewTextTableHeader("字段", "类型", "说明"),
+            Header:    document.NewTextTableHeader("类型", "说明"),
         }
         row := &document.Table_Row{}
 
-        row.Vals = append(row.Vals, document.NewTextTableCell(""))
+        //row.Vals = append(row.Vals, document.NewTextTableCell(""))
 
         typeName := schema.GetTypeName(s.Components.Schemas)
         row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))

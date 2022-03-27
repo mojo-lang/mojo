@@ -16,7 +16,9 @@ var PrimeTypes = map[string]bool{
     core.UInt8TypeFullName:        true,
     core.UInt16TypeFullName:       true,
     core.UInt32TypeFullName:       true,
+    core.UInt32ValueTypeFullName:  true,
     core.UInt64TypeFullName:       true,
+    core.UInt64ValueTypeFullName:  true,
     core.Int8TypeFullName:         true,
     core.Int16TypeFullName:        true,
     core.Int32TypeFullName:        true,
@@ -40,6 +42,9 @@ var PrimeTypes = map[string]bool{
     core.ArrayTypeFullName:        true,
     core.MapTypeFullName:          true,
     core.UnionTypeFullName:        true,
+    core.ObjectTypeFullName:       true,
+    core.ValuesTypeFullName:       true,
+    core.AnyTypeFullName:          true,
 }
 
 func IsPrimeType(typeFullName string) bool {
