@@ -14,7 +14,7 @@ type Builder struct {
     Output string
 }
 
-func (b Builder) Build() ([]*descriptor.FileDescriptor, error) {
+func (b Builder) Build() ([]*descriptor.File, error) {
     logs.Infow("begin to build protobuf.", "package", b.Package.FullName, "path", b.Path)
 
     compiler := protobuf.NewCompiler()

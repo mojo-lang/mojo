@@ -1,0 +1,167 @@
+package precompiler
+
+import (
+    "github.com/mojo-lang/core/go/pkg/logs"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
+    "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+    "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+    langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
+    "github.com/pkg/errors"
+)
+
+func CompileMethod(ctx context.Context, method *lang.FunctionDecl) (request *lang.StructDecl, response *lang.StructDecl, err error) {
+    if request, err = compileRequest(ctx, method); err != nil {
+        return nil, nil, err
+    } else if response, err = compileResponse(ctx, method); err != nil {
+        return nil, nil, err
+    } else {
+        return request, response, nil
+    }
+}
+
+func compileRequest(ctx context.Context, method *lang.FunctionDecl) (*lang.StructDecl, error) {
+    // special case for the request, do NOT generate new request type
+    if parameters := method.Signature.GetParameters(); len(parameters) == 1 {
+        param := parameters[0]
+        if len(param.Name) == 0 || param.Type.Name == wrapRequestName {
+            param.SetImplicitBoolAttribute(MethodRequestTypeAttributeName, true)
+            m.InputType = &param.Type.Name
+        }
+    }
+
+    // generate the request message
+    req := &lang.StructDecl{
+        Name: wrapRequestName,
+    }
+
+    // add number attribute if there is no field has number attribute
+    //for i, param := range method.Type.Parameters {
+    //	param.Attributes
+    //}
+
+    req.Type = &lang.StructType{
+        Fields: method.Signature.GetParameters(),
+    }
+
+    pagination, _ = lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName)
+    if pagination {
+        req.Type.Fields = append(req.Type.Fields, langcompiler.PaginationRequestFields()...)
+    }
+}
+
+func compileResponse(ctx context.Context, method *lang.FunctionDecl) (*lang.StructDecl, error) {
+    result := method.Signature.GetResultType()
+    pkg := context.Package(ctx)
+    service := context.InterfaceDecl(ctx)
+    if result == nil {
+        if id := pkg.GetIdentifier(core.NullTypeFullName); id != nil {
+            return id.Declaration.GetStructDecl(), nil
+        } else {
+            return nil, logs.NewErrorw("failed to find the identifier", "name", core.NullTypeFullName,
+                "method", method.Name, "interface", service.Name, "package", pkg.FullName)
+        }
+    } else if result.GetFullName() == core.ArrayTypeFullName {
+        pagination, _ := lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName)
+        return compileArrayTypeResponse(ctx, method, pagination)
+    } else if result.GetFullName() == core.MapTypeFullName {
+        return compileMapTypeResponse(ctx, method)
+    } else if result.IsScalar() {
+        scalarTypeName := core.GetProperBoxedScalarName(result.GetFullName())
+        if id := pkg.GetIdentifier(scalarTypeName); id != nil {
+            return id.GetDeclaration().GetStructDecl(), nil
+        } else {
+            return nil, logs.NewErrorw("failed to find the identifier", "name", scalarTypeName,
+                "method", method.Name, "interface", service.Name, "package", pkg.FullName)
+        }
+    } else {
+        if result.GetFullName() == core.TupleTypeFullName {
+            return compileTupleTypeResponse(ctx, method)
+        } else {
+            return result.TypeDeclaration.GetStructDecl(), nil
+        }
+    }
+}
+
+func compileArrayTypeResponse(ctx context.Context, method *lang.FunctionDecl, pagination bool) (*lang.StructDecl, error) {
+    result := method.Signature.GetResultType()
+    if result == nil || result.GetFullName() != core.ArrayTypeFullName {
+        return nil, errors.New("invalid array type for the response in method")
+    }
+
+    result.Attributes = lang.SetIntegerAttribute(result.Attributes, core.NumberAttributeName, 1)
+    val := result.GenericArguments[0]
+    name := transformer.Plural(strcase.ToSnake(val.Name))
+
+    // generate the request message
+    resp := &lang.StructDecl{}
+    resp.PackageName = method.PackageName
+    resp.SourceFileName = method.SourceFileName
+    resp.Name = strcase.ToCamel(method.Name) + "Response"
+    resp.Type = &lang.StructType{
+        Fields: []*lang.ValueDecl{{
+            Name: name,
+            Type: result,
+        }},
+    }
+
+    if pagination {
+        resp.Type.Fields = append(resp.Type.Fields, langcompiler.PaginationResponseFields()...)
+    }
+
+    return resp, nil
+}
+
+func compileMapTypeResponse(ctx context.Context, method *lang.FunctionDecl) (*lang.StructDecl, error) {
+    result := method.Signature.GetResultType()
+    if result == nil || result.GetFullName() != core.MapTypeFullName {
+        return nil, errors.New("invalid map type for the response in method")
+    }
+
+    result.Attributes = lang.SetIntegerAttribute(result.Attributes, core.NumberAttributeName, 1)
+    val := result.GenericArguments[0]
+    name := transformer.Plural(strcase.ToSnake(val.Name))
+
+    // generate the request message
+    resp := &lang.StructDecl{}
+    resp.PackageName = method.PackageName
+    resp.SourceFileName = method.SourceFileName
+    resp.Name = strcase.ToCamel(method.Name) + "Response"
+    resp.Type = &lang.StructType{
+        Fields: []*lang.ValueDecl{{
+            Name: name,
+            Type: result,
+        }},
+    }
+
+    return resp, nil
+}
+
+func compileTupleTypeResponse(ctx context.Context, method *lang.FunctionDecl) (*lang.StructDecl, error) {
+    result := method.Signature.GetResultType()
+    if result == nil || result.GetFullName() != core.TupleTypeFullName {
+        return nil, errors.New("invalid map type for the response in method")
+    }
+
+    name := strcase.ToCamel(method.Name) + "Response"
+    result.Attributes = lang.SetStringAttribute(result.Attributes, "alias", name)
+
+    result.Attributes = lang.SetIntegerAttribute(result.Attributes, core.NumberAttributeName, 1)
+    val := result.GenericArguments[0]
+    name := transformer.Plural(strcase.ToSnake(val.Name))
+
+    // generate the request message
+    resp := &lang.StructDecl{}
+    resp.PackageName = method.PackageName
+    resp.SourceFileName = method.SourceFileName
+    resp.Name = strcase.ToCamel(method.Name) + "Response"
+    resp.Type = &lang.StructType{
+        Fields: []*lang.ValueDecl{{
+            Name: name,
+            Type: result,
+        }},
+    }
+
+    return resp, nil
+}

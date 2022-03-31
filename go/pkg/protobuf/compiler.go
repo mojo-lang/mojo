@@ -3,10 +3,8 @@ package protobuf
 import (
     "errors"
     "fmt"
-    "sort"
     "strings"
 
-    "github.com/golang/protobuf/protoc-gen-go/descriptor"
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
@@ -14,25 +12,19 @@ import (
     langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
     "github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "github.com/mojo-lang/mojo/go/pkg/protobuf/compiler"
     desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
-var _ = compiler.ArrayPlugin{}
-var _ = compiler.MapPlugin{}
-var _ = compiler.TuplePlugin{}
-var _ = compiler.UnionPlugin{}
-
 const MethodRequestTypeAttributeName = "method_request_type"
 
 type Compiler struct {
-    Files []*desc.FileDescriptor
+    Files []*desc.File
 }
 
 func NewCompiler() *Compiler {
     c := &Compiler{}
-    c.Files = make([]*desc.FileDescriptor, 0)
+    c.Files = make([]*desc.File, 0)
     return c
 }
 
@@ -70,17 +62,17 @@ func (c *Compiler) compilePackage(ctx context.Context, pkg *lang.Package) error 
     return nil
 }
 
-func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) (*desc.FileDescriptor, error) {
+func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) (*desc.File, error) {
     if file.IsGenericInstantiated() {
         return nil, nil
     }
 
-    fileDescriptor := desc.NewFileDescriptor()
+    fileDescriptor := desc.NewFile()
     thisCtx := context.WithDescriptor(context.WithType(ctx, file), fileDescriptor)
-    fileDescriptor.Proto3 = true
+    fileDescriptor.SetProto3(true)
 
     name := strings.TrimSuffix(file.FullName, ".mojo") + ".proto"
-    fileDescriptor.Name = &name
+    fileDescriptor.SetName(name)
 
     // compile package decl
     if err := c.compilePackageDecl(file, fileDescriptor); err != nil {
@@ -102,22 +94,22 @@ func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) (*des
 
             switch decl.Declaration.(type) {
             case *lang.Declaration_TypeAliasDecl:
-                err := c.compileTypeAlias(thisCtx, decl.GetTypeAliasDecl(), desc.NewMessageDescriptor(fileDescriptor))
+                err := c.compileTypeAlias(thisCtx, decl.GetTypeAliasDecl(), desc.NewMessage(fileDescriptor))
                 if err != nil {
                     return nil, err
                 }
             case *lang.Declaration_StructDecl:
-                err := c.compileStruct(thisCtx, decl.GetStructDecl(), desc.NewMessageDescriptor(fileDescriptor))
+                err := c.compileStruct(thisCtx, decl.GetStructDecl(), desc.NewMessage(fileDescriptor))
                 if err != nil {
                     return nil, err
                 }
             case *lang.Declaration_EnumDecl:
-                err := c.compileEnum(thisCtx, decl.GetEnumDecl(), desc.NewEnumDescriptor(fileDescriptor))
+                err := c.compileEnum(thisCtx, decl.GetEnumDecl(), desc.NewEnum(fileDescriptor))
                 if err != nil {
                     return nil, err
                 }
             case *lang.Declaration_InterfaceDecl:
-                err := c.compileInterface(thisCtx, decl.GetInterfaceDecl(), desc.NewServiceDescriptor(fileDescriptor))
+                err := c.compileInterface(thisCtx, decl.GetInterfaceDecl(), desc.NewService(fileDescriptor))
                 if err != nil {
                     return nil, err
                 }
@@ -135,23 +127,23 @@ func (c *Compiler) compileFile(ctx context.Context, file *lang.SourceFile) (*des
     return fileDescriptor, nil
 }
 
-func (c *Compiler) compilePackageDecl(file *lang.SourceFile, descriptor *desc.FileDescriptor) error {
-    descriptor.Package = &file.PackageName
+func (c *Compiler) compilePackageDecl(file *lang.SourceFile, descriptor *desc.File) error {
+    descriptor.SetPackageName(file.PackageName)
     return nil
 }
 
-func (c *Compiler) compileFileOptions(ctx context.Context, file *lang.SourceFile, fileDescriptor *desc.FileDescriptor) error {
+func (c *Compiler) compileFileOptions(ctx context.Context, file *lang.SourceFile, fileDescriptor *desc.File) error {
     pkg := context.Package(ctx)
     if pkg == nil {
         return errors.New("has no package found")
     }
 
-    fileDescriptor.Options = &descriptor.FileOptions{}
+    options := fileDescriptor.GetOptions()
 
     repository := pkg.Repository
     if repository != nil {
         goPackage := fmt.Sprintf("%s;%s", pkg.GoFullPackageName(), pkg.GoPackageName())
-        fileDescriptor.Options.GoPackage = &goPackage
+        options.GoPackage = &goPackage
     }
 
     javaMultipleFiles := true
@@ -164,9 +156,9 @@ func (c *Compiler) compileFileOptions(ctx context.Context, file *lang.SourceFile
 
     javaClassName := strcase.ToCamel(strings.TrimSuffix(file.Name, ".mojo")) + "Proto"
 
-    fileDescriptor.Options.JavaMultipleFiles = &javaMultipleFiles
-    fileDescriptor.Options.JavaPackage = &javaPackage
-    fileDescriptor.Options.JavaOuterClassname = &javaClassName
+    options.JavaMultipleFiles = &javaMultipleFiles
+    options.JavaPackage = &javaPackage
+    options.JavaOuterClassname = &javaClassName
     return nil
 }
 
@@ -189,7 +181,7 @@ func getOrganizationPrefix(pkg *lang.Package) string {
     return "com." + segments[0]
 }
 
-func (c *Compiler) compileImport(file *lang.SourceFile, descriptor *desc.FileDescriptor) error {
+func (c *Compiler) compileImport(file *lang.SourceFile, descriptor *desc.File) error {
     for _, dependency := range file.ResolvedIdentifiers {
         if dependency.IsGenericInstantiated() {
             continue
@@ -202,21 +194,20 @@ func (c *Compiler) compileImport(file *lang.SourceFile, descriptor *desc.FileDes
             fileName = fileName + ".proto"
         }
 
-        if !compiler.IsSystemFile(fileName) && fileName != *descriptor.Name {
-            descriptor.Dependency = append(descriptor.Dependency, fileName)
+        if !compiler.IsSystemFile(fileName) && fileName != descriptor.GetName() {
+            descriptor.AppendDependency(fileName)
         }
     }
 
-    descriptor.Dependency = util.UniqueStringSlice(descriptor.Dependency)
-    sort.Strings(descriptor.Dependency)
+    descriptor.UniqueDependency()
     return nil
 }
 
-func (c *Compiler) compileEnum(ctx context.Context, decl *lang.EnumDecl, descriptor *desc.EnumDescriptor) error {
-    return compiler.CompileEnum(ctx, decl, descriptor)
+func (c *Compiler) compileEnum(ctx context.Context, decl *lang.EnumDecl, descriptor *desc.Enum) error {
+    return compiler.Enum{}.Compile(ctx, decl, descriptor)
 }
 
-func (c *Compiler) compileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl, descriptor *desc.MessageDescriptor) error {
+func (c *Compiler) compileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl, descriptor *desc.Message) error {
     if len(decl.GenericParameters) > 0 {
         return nil
     }
@@ -226,11 +217,11 @@ func (c *Compiler) compileTypeAlias(ctx context.Context, decl *lang.TypeAliasDec
     }
 
     decl.Type.Attributes = lang.SetStringAttribute(decl.Type.Attributes, lang.OriginalTypeAliasName, decl.Name)
-    _, _, err := compiler.CompileNominalType(ctx, decl.Type)
+    _, _, err := compiler.Nominal{}.Compile(ctx, decl.Type)
     return err
 }
 
-func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl, descriptor *desc.MessageDescriptor) error {
+func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl, descriptor *desc.Message) error {
     if len(decl.GenericParameters) > 0 {
         return nil
     }
@@ -239,12 +230,12 @@ func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl, des
         return nil
     }
 
-    return compiler.CompileStruct(ctx, decl, descriptor)
+    return compiler.Struct{}.Compile(ctx, decl, descriptor)
 }
 
-func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDecl, serviceDescriptor *desc.ServiceDescriptor) error {
+func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDecl, serviceDescriptor *desc.Service) error {
     thisCtx := context.WithDescriptor(context.WithType(ctx, decl), serviceDescriptor)
-    serviceDescriptor.Name = &decl.Name
+    serviceDescriptor.SetName(decl.Name)
 
     //if i.Document != nil {
     //	for _, l := range i.Document.Lines {
@@ -287,13 +278,9 @@ func compileInterfaceInherits(inherit *lang.NominalType) []*lang.FunctionDecl {
     return nil
 }
 
-func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl, serviceDescriptor *desc.ServiceDescriptor) error {
-    m := &descriptor.MethodDescriptorProto{
-        Name:       &method.Name,
-        InputType:  nil,
-        OutputType: nil,
-        Options:    nil,
-    }
+func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl, serviceDescriptor *desc.Service) error {
+    m := desc.NewMethod(serviceDescriptor).SetName(method.Name)
+
     file := context.FileDescriptor(ctx)
     pagination := false
 
@@ -328,7 +315,7 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
             req.Type.Fields = append(req.Type.Fields, langcompiler.PaginationRequestFields()...)
         }
 
-        c.compileStruct(ctx, req, desc.NewMessageDescriptor(file))
+        c.compileStruct(ctx, req, desc.NewMessage(file))
 
         m.InputType = &req.Name
     }
@@ -340,21 +327,21 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
         m.OutputType = &nullTypeName
 
         if file != nil {
-            file.Dependency = append(file.Dependency, "mojo/core/null.proto")
+            file.AppendDependency("mojo/core/null.proto")
         }
     } else if result.GetFullName() == core.ArrayTypeFullName {
         resp := GenerateArrayTypeResponse(method, pagination)
-        c.compileStruct(ctx, resp, desc.NewMessageDescriptor(file))
+        c.compileStruct(ctx, resp, desc.NewMessage(file))
         m.OutputType = &resp.Name
     } else if result.GetFullName() == core.MapTypeFullName {
         resp := GenerateMapTypeResponse(method)
-        c.compileStruct(ctx, resp, desc.NewMessageDescriptor(file))
+        c.compileStruct(ctx, resp, desc.NewMessage(file))
         m.OutputType = &resp.Name
     } else if result.IsScalar() {
         scalarTypeName := core.GetProperBoxedScalarName(result.GetFullName())
         m.OutputType = &scalarTypeName
         if file != nil {
-            file.Dependency = append(file.Dependency, "mojo/core/boxed.proto")
+            file.AppendDependency("mojo/core/boxed.proto")
         }
     } else {
         if result.GetFullName() == core.TupleTypeFullName {
@@ -362,7 +349,7 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
             result.Attributes = lang.SetStringAttribute(result.Attributes, "alias", name)
         }
 
-        _, name, err := compiler.CompileNominalType(ctx, result)
+        _, name, err := compiler.Nominal{}.Compile(ctx, result)
         if err != nil {
             return errors.New(
                 fmt.Sprintf("failed to compile the type %s: %s", result.Name, err.Error()))
@@ -374,7 +361,7 @@ func (c *Compiler) compileMethod(ctx context.Context, method *lang.FunctionDecl,
 
     // options
 
-    serviceDescriptor.Method = append(serviceDescriptor.Method, m)
+    serviceDescriptor.AppendMethod(m)
     return nil
 }
 

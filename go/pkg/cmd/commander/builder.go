@@ -18,7 +18,7 @@ import (
 
 type Builder struct {
     Package  *lang.Package
-    Files    []*descriptor.FileDescriptor
+    Files    []*descriptor.File
     OpenAPIs *openapi.OpenAPIs
 
     PackageName string

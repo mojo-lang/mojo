@@ -20,6 +20,6 @@ var systemMessages = map[string]bool{
     "Bytes":   true,
 }
 
-func isSystemMessage(msg *descriptor.MessageDescriptor) bool {
-    return systemMessages[*msg.Name]
+func isSystemMessage(msg *descriptor.Message) bool {
+    return systemMessages[msg.GetName()]
 }

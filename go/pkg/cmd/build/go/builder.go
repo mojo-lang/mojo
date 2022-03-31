@@ -14,7 +14,7 @@ import (
 type Builder struct {
     builder.Builder
     Output string
-    Files  []*desc.FileDescriptor
+    Files  []*desc.File
 }
 
 func (b Builder) Build() error {

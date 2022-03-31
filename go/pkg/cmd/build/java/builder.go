@@ -17,7 +17,7 @@ import (
 type Builder struct {
     builder.Builder
     Output string
-    Files  []*descriptor.FileDescriptor
+    Files  []*descriptor.File
 }
 
 func (b Builder) protocJava() error {
@@ -47,7 +47,7 @@ func (b Builder) protocJava() error {
             Args: cmd.Args,
             Dir:  cmd.Dir,
         }
-        fileCmd.Args = append(fileCmd.Args, *file.Name)
+        fileCmd.Args = append(fileCmd.Args, file.GetName())
         out, err := fileCmd.CombinedOutput()
         if err != nil {
             logs.Errorw("failed to run protoc cmd", "error", string(out), "cmd", cmd.String())

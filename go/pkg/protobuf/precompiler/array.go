@@ -1,33 +1,17 @@
-package compiler
+package precompiler
 
 import (
     "errors"
-    "fmt"
     "strings"
 
     "github.com/mojo-lang/core/go/pkg/mojo/core"
-
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
-type ArrayPlugin struct {
-}
-
-func init() {
-    p := plugins["mojo.core.Array"]
-    if p == nil {
-        p = make([]Plugin, 0)
-    }
-    p = append(p, &ArrayPlugin{})
-
-    plugins["mojo.core.Array"] = p
-}
-
-func CompileArrayToStruct(t *lang.NominalType) (*lang.StructDecl, error) {
+func CompileArrayToStruct(ctx context.Context, t *lang.NominalType) (*lang.StructDecl, error) {
     if t.Name != "Array" {
         return nil, errors.New("")
     }
@@ -60,22 +44,4 @@ func CompileArrayToStruct(t *lang.NominalType) (*lang.StructDecl, error) {
     }
 
     return s, nil
-}
-
-func (p *ArrayPlugin) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) {
-    s, err := CompileArrayToStruct(t)
-    if err != nil {
-        return "", "", err
-    }
-
-    err = CompileStruct(ctx, s, descriptor.NewMessageDescriptor(context.FileDescriptor(ctx)))
-    if err != nil {
-        return "", "", errors.New(fmt.Sprintf("failed to compile the arry field in %s.%s: %s",
-            "", //ctx.Message.Name,
-            "", //ctx.FieldName,
-            err.Error()))
-    }
-
-    //ctx.File.Message.AddInnerMessage(context.Message)
-    return "struct", s.Name, nil
 }

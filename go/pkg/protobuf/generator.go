@@ -9,13 +9,13 @@ type Generator struct {
     *generator.Generator
 }
 
-func NewGenerator(files []*descriptor.FileDescriptor) *Generator {
+func NewGenerator(files []*descriptor.File) *Generator {
     return &Generator{
         Generator: generator.New(files),
     }
 }
 
-func (g *Generator) Generate(output string) ([]*descriptor.FileDescriptor, error) {
+func (g *Generator) Generate(output string) ([]*descriptor.File, error) {
     g.GenerateAllFiles().WriteAllFiles(output)
     return g.GetGeneratedFiles(), nil
 }
