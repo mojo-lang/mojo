@@ -62,6 +62,21 @@ func TestNominalTypeVisitor_VisitType_EnclosingName(t *testing.T) {
     assert.Equal(t, "mojo.core", nominalType.PackageName)
 }
 
+func TestNominalTypeVisitor_VisitType_EnclosingName2(t *testing.T) {
+    const primeType = `type Val{ val: [mojo.core.Url.Path] }`
+
+    parser := &Parser{}
+    file, err := parser.ParseString(primeType)
+
+    assert.NoError(t, err)
+    nominalType := getNominalType(file)
+    assert.NotNil(t, nominalType)
+    assert.Equal(t, "Array", nominalType.Name)
+    assert.Equal(t, "Path", nominalType.GenericArguments[0].Name)
+    assert.Equal(t, "Url", nominalType.GenericArguments[0].EnclosingType.Name)
+    assert.Equal(t, "mojo.core", nominalType.GenericArguments[0].PackageName)
+}
+
 func TestNominalTypeVisitor_VisitMapType(t *testing.T) {
     const dictType = `type Val{ val: {String: Int} }`
 

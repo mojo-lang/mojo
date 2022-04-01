@@ -3,6 +3,7 @@ package compiler
 import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
+    "strings"
 )
 
 var _ = Array{}
@@ -20,6 +21,9 @@ func (n Nominal) Compile(ctx context.Context, t *lang.NominalType) (string, stri
     pkg := context.Package(ctx)
     getName := func() string {
         if pkg != nil && pkg.FullName == t.PackageName {
+            if names := t.GetEnclosingNames(); len(names) > 0 {
+                return strings.Join(names, ".") + "." + t.Name
+            }
             return t.Name
         } else {
             return t.GetFullName()
