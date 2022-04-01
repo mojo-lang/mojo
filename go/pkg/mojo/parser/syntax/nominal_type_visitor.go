@@ -133,13 +133,20 @@ func (n *NominalTypeVisitor) VisitArrayType(ctx *ArrayTypeContext) interface{} {
 
     if nominalType != nil {
         return &lang.NominalType{
-            Name: "Array",
+            StartPosition: GetPosition(ctx.GetStart()),
+            EndPosition:   GetPosition(ctx.GetStop()),
+            Name:          "Array",
             GenericArguments: []*lang.NominalType{
                 {
+                    StartPosition:    nominalType.StartPosition,
+                    EndPosition:      nominalType.EndPosition,
+                    Document:         nominalType.Document,
                     PackageName:      nominalType.PackageName,
+                    Implicit:         nominalType.Implicit,
                     Name:             nominalType.Name,
                     GenericArguments: nominalType.GenericArguments,
                     Attributes:       nominalType.Attributes,
+                    EnclosingType:    nominalType.EnclosingType,
                 },
             },
         }
@@ -158,17 +165,31 @@ func (n *NominalTypeVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
             if valueTypeCtx := ctx.Type_(1); valueTypeCtx != nil {
                 if valueType, ok := valueTypeCtx.Accept(n).(*lang.NominalType); ok {
                     return &lang.NominalType{
-                        Name: "Map",
+                        StartPosition: GetPosition(ctx.GetStart()),
+                        EndPosition:   GetPosition(ctx.GetStop()),
+                        Name:          "Map",
                         GenericArguments: []*lang.NominalType{
                             {
+                                StartPosition:    keyType.StartPosition,
+                                EndPosition:      keyType.EndPosition,
+                                Document:         keyType.Document,
+                                PackageName:      keyType.PackageName,
+                                Implicit:         keyType.Implicit,
                                 Name:             keyType.Name,
                                 GenericArguments: keyType.GenericArguments,
                                 Attributes:       keyType.Attributes,
+                                EnclosingType:    keyType.EnclosingType,
                             },
                             {
+                                StartPosition:    valueType.StartPosition,
+                                EndPosition:      valueType.EndPosition,
+                                Document:         valueType.Document,
+                                PackageName:      valueType.PackageName,
+                                Implicit:         valueType.Implicit,
                                 Name:             valueType.Name,
                                 GenericArguments: valueType.GenericArguments,
                                 Attributes:       valueType.Attributes,
+                                EnclosingType:    valueType.EnclosingType,
                             },
                         },
                     }
@@ -193,7 +214,9 @@ func (n *NominalTypeVisitor) VisitTupleType(ctx *TupleTypeContext) interface{} {
 
 func (n *NominalTypeVisitor) VisitTupleTypeElements(ctx *TupleTypeElementsContext) interface{} {
     tupleType := &lang.NominalType{
-        Name: "Tuple",
+        StartPosition: GetPosition(ctx.GetStart()),
+        EndPosition:   GetPosition(ctx.GetStop()),
+        Name:          "Tuple",
     }
 
     elements := ctx.AllTupleTypeElement()
@@ -232,7 +255,9 @@ func (n *NominalTypeVisitor) VisitTupleTypeElement(ctx *TupleTypeElementContext)
 
 func (n *NominalTypeVisitor) VisitUnion(ctx *UnionContext) interface{} {
     unionType := &lang.NominalType{
-        Name: "Union",
+        StartPosition: GetPosition(ctx.GetStart()),
+        EndPosition:   GetPosition(ctx.GetStop()),
+        Name:          "Union",
     }
 
     typeCtx := ctx.AllBasicType()

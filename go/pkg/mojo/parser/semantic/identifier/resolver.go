@@ -323,11 +323,10 @@ func resolveNominalType(ctx context.Context, t *lang.NominalType) ([]*lang.Ident
     if len(t.PackageName) > 0 {
         fullName = lang.GetFullName(t.PackageName, enclosingNames, t.Name)
         identifier = context.LookupIdentifier(ctx, fullName)
+    } else if len(enclosingNames) > 0 {
+        identifier = context.LookupIdentifier(ctx, lang.GetFullName("", enclosingNames, t.Name))
     } else {
         identifier = context.LookupIdentifier(ctx, t.Name)
-        if identifier == nil && len(enclosingNames) > 0 {
-            identifier = context.LookupIdentifier(ctx, lang.GetFullName("", enclosingNames, t.Name))
-        }
     }
 
     var resolveds []*lang.Identifier

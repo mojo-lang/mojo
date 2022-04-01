@@ -30,6 +30,9 @@ func CompileNominalType(ctx context.Context, t *lang.NominalType) (string, strin
     pkg := context.Package(ctx)
     getName := func() string {
         if pkg != nil && pkg.FullName == t.PackageName {
+            if names := t.GetEnclosingNames(); len(names) > 0 {
+                return strings.Join(names, ".") + "." + t.Name
+            }
             return t.Name
         } else {
             return t.GetFullName()

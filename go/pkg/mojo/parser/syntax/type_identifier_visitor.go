@@ -30,14 +30,14 @@ func (t *TypeIdentifierVisitor) VisitTypeIdentifier(ctx *TypeIdentifierContext) 
     var nominalType *lang.NominalType
 
     for _, identifier := range identifiers {
-        t := identifier.Accept(t).(*lang.NominalType)
-        t.PackageName = packageIdentifier
+        typ := identifier.Accept(t).(*lang.NominalType)
+        typ.PackageName = packageIdentifier
 
         if nominalType == nil {
-            nominalType = t
+            nominalType = typ
         } else {
-            t.EnclosingType = nominalType
-            nominalType = t
+            typ.EnclosingType = nominalType
+            nominalType = typ
         }
     }
 
@@ -45,7 +45,10 @@ func (t *TypeIdentifierVisitor) VisitTypeIdentifier(ctx *TypeIdentifierContext) 
 }
 
 func (t *TypeIdentifierVisitor) VisitTypeIdentifierClause(ctx *TypeIdentifierClauseContext) interface{} {
-    nominalType := &lang.NominalType{}
+    nominalType := &lang.NominalType{
+        StartPosition: GetPosition(ctx.GetStart()),
+        EndPosition:   GetPosition(ctx.GetStop()),
+    }
 
     nameCtx := ctx.TypeName()
     if nameCtx != nil {
