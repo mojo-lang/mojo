@@ -11,7 +11,7 @@ import (
 
 func TestDependencyParser_ParsePackagePath(t *testing.T) {
     plugins := plugin.NewPlugins("mpm", "syntax", "semantic")
-    pkg, err := plugins.ParsePackagePath(context.Empty(), "case-alias", test.AliasCaseFiles)
+    pkg, err := plugins.ParsePackagePath(context.Empty(), "mojo-alias", test.AliasCaseFiles)
     assert.NoError(t, err)
     assert.NotNil(t, pkg)
 }

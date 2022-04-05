@@ -3,7 +3,6 @@ package compiler
 import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    "strings"
 )
 
 var _ = Array{}
@@ -19,10 +18,22 @@ type Nominal struct {
 // type: Scalar, Enum, Struct
 func (n Nominal) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) { // type, typeName, error
     pkg := context.Package(ctx)
+    scope := lang.GetScope(context.StructDecl(ctx))
+
     getName := func() string {
         if pkg != nil && pkg.FullName == t.PackageName {
-            if names := t.GetEnclosingNames(); len(names) > 0 {
-                return strings.Join(names, ".") + "." + t.Name
+            if decl := t.TypeDeclaration; decl != nil {
+                if s := decl.GetStructDecl(); s != nil && s.EnclosingType != nil {
+                    if scope == nil || scope.Identifiers == nil || scope.Identifiers[s.Name] == nil {
+                        return lang.GetFullName("", t.GetEnclosingNames(), t.Name)
+                    }
+                    return s.Name
+                } else if e := decl.GetEnumDecl(); e != nil && e.EnclosingType != nil {
+                    if scope == nil || scope.Identifiers == nil || scope.Identifiers[e.Name] == nil {
+                        return lang.GetFullName("", t.GetEnclosingNames(), t.Name)
+                    }
+                    return e.Name
+                }
             }
             return t.Name
         } else {

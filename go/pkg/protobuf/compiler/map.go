@@ -3,11 +3,12 @@ package compiler
 import (
     "errors"
     "fmt"
+    "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+    "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
 type Map struct {
@@ -18,16 +19,16 @@ func init() {
 }
 
 func (p *Map) Name() string {
-    return "mojo.core.Map"
+    return core.MapTypeFullName
 }
 
 func (p *Map) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) {
-    if t.Name != "Map" {
-        return "", "", errors.New("")
+    if t.GetFullName() != core.MapTypeFullName {
+        return "", "", logs.NewErrorw("invalid Map type", "type", t.GetFullName())
     }
 
     if len(t.GenericArguments) != 2 {
-        return "", "", errors.New("")
+        return "", "", logs.NewErrorw("invalid generic arguments size for Map type", "size", len(t.GenericArguments))
     }
 
     s := &lang.StructDecl{}
@@ -62,7 +63,7 @@ func (p *Map) Compile(ctx context.Context, t *lang.NominalType) (string, string,
         }},
     }
 
-    msgDescriptor := desc.NewMessage(context.FileDescriptor(ctx))
+    msgDescriptor := descriptor.NewMessage(context.FileDescriptor(ctx))
     err := Struct{}.Compile(ctx, s, msgDescriptor)
     if err != nil {
         return "", "", errors.New(fmt.Sprintf("failed to compile the map field entry in %s.%s: %s",
@@ -74,7 +75,7 @@ func (p *Map) Compile(ctx context.Context, t *lang.NominalType) (string, string,
     msgDescriptor.SetMapEntry(true)
     message := context.MessageDescriptor(ctx)
     if message != nil {
-        message.AppendInnerMessage(msgDescriptor)
+        message.AppendMessage(msgDescriptor)
     }
 
     return "struct", s.Name, nil

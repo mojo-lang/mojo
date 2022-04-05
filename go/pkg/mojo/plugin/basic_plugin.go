@@ -9,6 +9,8 @@ type BasicPlugin struct {
     Priority      int
 
     Creator func(options core.Options) Plugin
+
+    MarkedPackages map[string]bool
 }
 
 func (p *BasicPlugin) GetName() string {

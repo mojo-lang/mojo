@@ -2,27 +2,23 @@ package compiler
 
 import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+    "github.com/mojo-lang/mojo/go/pkg/go/data"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     path2 "path"
 )
 
-type Dependency struct {
-    Name    string
-    Version string
-    Path    string
-}
-
 type GoMod struct {
-    Name         string
-    Version      string // go
-    Dependencies []*Dependency
+    *data.Data
 }
 
-func (g *GoMod) Compile(pkg *lang.Package) error {
-    g.Name = pkg.GoModName()
-    g.Version = "1.16"
+func (g *GoMod) CompilePackage(ctx context.Context, pkg *lang.Package) error {
+
+    gm := &data.GoMod{}
+    gm.Name = pkg.GoModName()
+    gm.Version = "1.16"
 
     for k, d := range pkg.Dependencies {
-        dep := &Dependency{}
+        dep := &data.Dependency{}
         resolved := pkg.ResolvedDependencies[k]
         dep.Name = resolved.GoModName()
 
@@ -37,8 +33,9 @@ func (g *GoMod) Compile(pkg *lang.Package) error {
             dep.Version = "v" + minVersion
         }
 
-        g.Dependencies = append(g.Dependencies, dep)
+        gm.Dependencies = append(gm.Dependencies, dep)
     }
 
+    g.Data.GoMod = gm
     return nil
 }

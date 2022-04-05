@@ -5,25 +5,16 @@ import (
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/db/go/pkg/mojo/db"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+    "github.com/mojo-lang/mojo/go/pkg/go/data"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 )
 
-type DbJSON struct {
-    GoPackageName string
-    InDbPkg       bool
-
-    PackageName string
-    FullName    string
-
-    Name               string
-    UnderlyingTypeName string
-
-    StructType bool
+type DbJson struct {
+    *data.Data
 }
 
-type DbJSONs []*DbJSON
-
-func (j *DbJSONs) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
+func (j *DbJson) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
     if decl.Type == nil || len(decl.Type.Fields) == 0 {
         return nil
     }
@@ -35,9 +26,9 @@ func (j *DbJSONs) CompileStruct(ctx context.Context, decl *lang.StructDecl) erro
         }
 
         newName := decl.Name + strcase.ToCamel(field.Name)
-        dbJSON := &DbJSON{
+        dbJSON := &data.DbJSON{
             PackageName:        pkg.FullName,
-            GoPackageName:      GetGoPackage(pkg.FullName),
+            GoPackageName:      compiler.GetGoPackage(pkg.FullName),
             Name:               newName,
             UnderlyingTypeName: field.Type.Name,
             StructType:         false,
@@ -58,16 +49,8 @@ func (j *DbJSONs) CompileStruct(ctx context.Context, decl *lang.StructDecl) erro
             dbJSON.StructType = false
         }
 
-        *j = append(*j, dbJSON)
+        j.DbJSONs = append(j.DbJSONs, dbJSON)
     }
 
     return nil
-}
-
-func (j *DbJSON) GetPackageName() string {
-    return j.PackageName
-}
-
-func (j *DbJSON) GetFullName() string {
-    return j.FullName
 }

@@ -3,6 +3,7 @@ package compiler
 import (
     "errors"
     "fmt"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
 
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
@@ -18,7 +19,7 @@ func init() {
 }
 
 func (p *Array) Name() string {
-    return "mojo.core.Array"
+    return core.ArrayTypeFullName
 }
 
 func (p *Array) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) {

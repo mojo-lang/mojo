@@ -1,8 +1,8 @@
-package compiler
+package data
 
 type Data struct {
     BoxedArrays       []*BoxedArray
-    BoxedDictionaries []*BoxedMap
+    BoxedMaps         []*BoxedMap
     BoxedUnions       []*BoxedUnion
     Enums             []*Enum
     DbJSONs           []*DbJSON

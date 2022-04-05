@@ -3,7 +3,7 @@ package generator
 import (
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
-    "github.com/mojo-lang/mojo/go/pkg/go/compiler"
+    "github.com/mojo-lang/mojo/go/pkg/go/data"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     path2 "path"
 )
@@ -16,7 +16,7 @@ func packageToPath(pkg string) string {
     return path2.Join("pkg", lang.PackageNameToPath(pkg))
 }
 
-func (g *Generator) generateDecl(decl compiler.Decl, fileType string, template string) error {
+func (g *Generator) generateDecl(decl data.Decl, fileType string, template string) error {
     if len(template) > 0 {
         str, err := ApplyTemplate("goFile"+fileType, template, decl, FuncMap)
         if err != nil {
@@ -30,7 +30,7 @@ func (g *Generator) generateDecl(decl compiler.Decl, fileType string, template s
     return nil
 }
 
-func (g *Generator) Generate(data *compiler.Data) error {
+func (g *Generator) Generate(data *data.Data) error {
     for _, decl := range data.BoxedArrays {
         g.generateDecl(decl, "json", goArrayJsonFile)
     }

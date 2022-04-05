@@ -3,7 +3,7 @@ package generator
 import "go/format"
 
 // FormatCode takes a string representing some go code and attempts to format
-// that code. If formating fails, the original source code is returned.
+// that code. If formatting fails, the original source code is returned.
 func FormatCode(code string) string {
     formatted, err := format.Source([]byte(code))
 

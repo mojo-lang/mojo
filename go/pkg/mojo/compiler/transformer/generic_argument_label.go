@@ -6,12 +6,12 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
 
-func UnionLabel(argument *lang.NominalType) string {
-    if label, err := lang.GetStringAttribute(argument.Attributes, core.LabelAttributeName); err != nil {
+func GenericArgumentLabel(argument *lang.NominalType) string {
+    if label, _ := argument.GetStringAttribute(core.LabelAttributeName); len(label) > 0 {
         return label
     }
 
-    if labelFormat, err := lang.GetStringAttribute(argument.Attributes, core.LabelFormatAttributeName); err != nil {
+    if labelFormat, _ := argument.GetStringAttribute(core.LabelFormatAttributeName); len(labelFormat) > 0 {
         if labelFormat == "{}" {
             return strcase.ToSnake(argument.Name)
         }

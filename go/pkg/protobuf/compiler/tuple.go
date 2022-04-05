@@ -3,6 +3,7 @@ package compiler
 import (
     "errors"
     "fmt"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
@@ -16,7 +17,7 @@ func init() {
 }
 
 func (p *Tuple) Name() string {
-    return "mojo.core.Tuple"
+    return core.TupleTypeFullName
 }
 
 func (p *Tuple) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) {

@@ -91,6 +91,12 @@ func (p *Plugins) ParsePackagePath(ctx context.Context, pkgPath string, fileSys 
         return nil, err
     }
 
+    for k, v := range pkg.GetAllPackages() {
+        if k != pkg.FullName {
+            v.ResolvedDependencies = pkg.ResolvedDependencies
+        }
+    }
+
     return pkg, nil
 }
 

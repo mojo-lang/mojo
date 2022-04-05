@@ -6,16 +6,15 @@ import (
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
     "github.com/mojo-lang/mojo/go/pkg/openapi"
+    api "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 )
-
-type OpenAPIs = openapi.OpenAPIs
 
 type Builder struct {
     builder.Builder
     Output string
 }
 
-func (b Builder) Build() (*OpenAPIs, error) {
+func (b Builder) Build() (*api.OpenAPIs, error) {
     logs.Infow("begin to build openapi.", "pwd", b.PWD, "path", b.Path)
 
     compiler := openapi.NewCompiler()

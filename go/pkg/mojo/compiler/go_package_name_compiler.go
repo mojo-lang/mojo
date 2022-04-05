@@ -28,13 +28,19 @@ func NewGoPackageNameCompiler(options core.Options) *GoPackageNameCompiler {
             Creator: func(options core.Options) plugin.Plugin {
                 return NewGoPackageNameCompiler(options)
             },
+            MarkedPackages: make(map[string]bool),
         },
     }
 }
 
 func (c *GoPackageNameCompiler) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
     pkg := context.Package(ctx)
-    logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompilePackage", "pkg", pkg.FullName)
+    pkgFullName := pkg.GetFullName()
+
+    if !c.MarkedPackages[pkgFullName] {
+        c.MarkedPackages[pkgFullName] = true
+        logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompilePackage", "pkg", pkg.FullName)
+    }
 
     goPkgName := pkg.GoPackageName()
     if goPkgName == pkg.Name {

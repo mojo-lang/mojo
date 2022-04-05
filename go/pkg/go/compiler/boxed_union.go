@@ -1,57 +1,35 @@
 package compiler
 
 import (
-    "strings"
-
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+    "github.com/mojo-lang/mojo/go/pkg/go/data"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
+    "strings"
 )
 
-type UnionField struct {
-    JsonType string // bool, number, string, array, object
-    Type     string
-    Name     string
-
-    Boxed                 bool
-    HasDiscriminatorField bool
-}
-
 type BoxedUnion struct {
-    PackageName   string
-    GoPackageName string
-    Name          string
-    FullName      string
-    EnclosingName string
-    Discriminator string
-
-    HasBoolField   bool
-    HasNumberField bool
-    HasStringField bool
-    hasArrayField  bool
-    hasObjectField bool
-
-    BoolField    *UnionField
-    NumberFields []*UnionField
-    StringFields []*UnionField
-    ArrayFields  []*UnionField
-    ObjectFields []*UnionField
+    *data.Data
 }
 
-func (b *BoxedUnion) Compile(decl *lang.StructDecl) error {
-    b.PackageName = decl.GetPackageName()
-    b.GoPackageName = GetGoPackage(decl.GetPackageName())
+func (b *BoxedUnion) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
+
+    bu := &data.BoxedUnion{}
+    bu.PackageName = decl.GetPackageName()
+    bu.GoPackageName = compiler.GetGoPackage(decl.GetPackageName())
 
     if pkg, _ := lang.GetStringAttribute(decl.Attributes, "go_package_name"); len(pkg) > 0 {
-        b.GoPackageName = pkg
+        bu.GoPackageName = pkg
     }
 
     if discriminator, _ := lang.GetStringAttribute(decl.Attributes, "discriminator"); len(discriminator) > 0 {
-        b.Discriminator = discriminator
+        bu.Discriminator = discriminator
     }
 
-    b.Name = decl.Name
-    b.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), ".")
-    b.FullName = GetFullName(b.EnclosingName, b.Name)
+    bu.Name = decl.Name
+    bu.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), ".")
+    bu.FullName = GetFullName(bu.EnclosingName, bu.Name)
 
     for _, field := range decl.Type.Fields {
         //FIXME need to process boxed type, formatted type
@@ -61,11 +39,11 @@ func (b *BoxedUnion) Compile(decl *lang.StructDecl) error {
         case core.StringTypeFullName, core.BytesTypeFullName:
         case core.ArrayTypeFullName:
         default:
-            if f, e := b.compileObjectField(field, decl); e != nil {
+            if f, e := b.compileObjectField(field, bu); e != nil {
                 return e
             } else {
-                b.ObjectFields = append(b.ObjectFields, f)
-                b.hasObjectField = true
+                bu.ObjectFields = append(bu.ObjectFields, f)
+                bu.HasObjectField = true
             }
         }
     }
@@ -73,30 +51,22 @@ func (b *BoxedUnion) Compile(decl *lang.StructDecl) error {
     return nil
 }
 
-func (b *BoxedUnion) compileObjectField(field *lang.ValueDecl, structDecl *lang.StructDecl) (*UnionField, error) {
-    unionField := &UnionField{
+func (b *BoxedUnion) compileObjectField(field *lang.ValueDecl, bu *data.BoxedUnion) (*data.UnionField, error) {
+    unionField := &data.UnionField{
         JsonType: "object",
         Type:     field.Type.Name,
         Name:     field.Name,
         Boxed:    false,
     }
 
-    if len(b.Discriminator) > 0 && !strings.HasPrefix(b.Discriminator, "@") {
+    if len(bu.Discriminator) > 0 && !strings.HasPrefix(bu.Discriminator, "@") {
         names := field.GetType().GetTypeDeclaration().GetStructDecl().FieldNames(lang.FieldNamOptionDefault)
         for _, name := range names {
-            if name == b.Discriminator {
+            if name == bu.Discriminator {
                 unionField.HasDiscriminatorField = true
             }
         }
     }
 
     return unionField, nil
-}
-
-func (b *BoxedUnion) GetPackageName() string {
-    return b.PackageName
-}
-
-func (b *BoxedUnion) GetFullName() string {
-    return b.FullName
 }

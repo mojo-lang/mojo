@@ -1,11 +1,12 @@
 package document
 
 import (
+    "strings"
+
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/document/compiler"
-    "strings"
+    "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 )
-import "github.com/mojo-lang/mojo/go/pkg/openapi"
 
 type Compiler struct {
     Documents Documents
@@ -15,7 +16,7 @@ type Compiler struct {
     OpenAPIs *openapi.OpenAPIs
 }
 
-// compile openapi to document of markdown style
+// NewCompiler compile openapi to document of markdown style
 func NewCompiler(path string, pkg *lang.Package, apis *openapi.OpenAPIs) *Compiler {
     return &Compiler{
         Path:      path,

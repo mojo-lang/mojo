@@ -29,13 +29,19 @@ func NewLabelFormatCompiler(options core.Options) *LabelFormatCompiler {
             Creator: func(options core.Options) plugin.Plugin {
                 return NewLabelFormatCompiler(options)
             },
+            MarkedPackages: make(map[string]bool),
         },
     }
 }
 
 func (c *LabelFormatCompiler) CompileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) error {
     pkg := context.Package(ctx)
-    logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompileTypeAlias", "pkg", pkg.FullName, "decl", decl.Name)
+    pkgFullName := pkg.GetFullName()
+
+    if !c.MarkedPackages[pkgFullName] {
+        c.MarkedPackages[pkgFullName] = true
+        logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompileTypeAlias", "pkg", pkg.FullName, "decl", decl.Name)
+    }
 
     if decl.Type.GetFullName() == core.UnionTypeFullName {
         if lang.HasAttribute(decl.Attributes, core.LabelFormatAttributeName) {

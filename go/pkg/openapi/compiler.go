@@ -9,12 +9,12 @@ import (
 )
 
 type Compiler struct {
-    *OpenAPIs
+    *openapi.OpenAPIs
 }
 
 func NewCompiler() *Compiler {
     c := &Compiler{
-        OpenAPIs: &OpenAPIs{
+        OpenAPIs: &openapi.OpenAPIs{
             APIs:       make(map[string]*openapi.OpenAPI),
             Components: openapi.NewComponents(),
         },

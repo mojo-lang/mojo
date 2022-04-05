@@ -1,4 +1,4 @@
-package inject
+package injection
 
 import (
     "context"
@@ -36,7 +36,7 @@ func (i Injector) parseFile(fileName string, content []byte) (areas []Area, err 
         areas = append(areas, area)
     }
 
-    fileCtx := context.WithValue(context.WithValue(context.Background(), "@file", f), "@fileContent", content)
+    fileCtx := context.WithValue(context.WithValue(context.Background(), fileKey, f), fileContentKey, content)
     for _, decl := range f.Decls {
 
         if funcDecl, ok := decl.(*ast.FuncDecl); ok && i.OnFunction != nil {
@@ -75,7 +75,7 @@ func (i Injector) parseFile(fileName string, content []byte) (areas []Area, err 
         }
         structName := typeSpec.Name.Name
 
-        structCtx := context.WithValue(context.WithValue(fileCtx, "@structType", structType), "@structName", structName)
+        structCtx := context.WithValue(context.WithValue(fileCtx, structTypeKey, structType), structNameKey, structName)
         if i.PreStruct != nil {
             i.PreStruct(structCtx, structType, structName)
         }
@@ -92,17 +92,17 @@ func (i Injector) parseFile(fileName string, content []byte) (areas []Area, err 
         }
     }
 
-    //logs.Infof("parsed file %s, number of fields to inject custom tags: %d", fileName, len(areas))
+    //logs.Infof("parsed file %s, number of fields to injection custom tags: %d", fileName, len(areas))
     return
 }
 
 func injectFile(input []byte, areas []Area) []byte {
     Sort(areas)
 
-    // inject custom tags from tail of file first to preserve order
+    // injection custom tags from tail of file first to preserve order
     for j := range areas {
         area := areas[len(areas)-j-1]
-        //logs.Debugf("inject custom tag %q to expression %q", area.InjectTag, string(input[area.Start-1:area.End-1]))
+        //logs.Debugf("injection custom tag %q to expression %q", area.InjectTag, string(input[area.Start-1:area.End-1]))
         input = injectArea(input, area)
     }
 

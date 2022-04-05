@@ -24,9 +24,10 @@ func (b Builder) Build() ([]*descriptor.File, error) {
         return nil, err
     }
 
+    files := compiler.Descriptors.Filter(b.Package.FullName, false)
     if !b.APIEnabled {
         logs.Infow("disable generation, skip to generate protobuf.")
-        return compiler.Files, nil
+        return files, nil
     }
 
     output := path2.Join(b.GetAbsolutePath(), "protobuf")
@@ -34,6 +35,6 @@ func (b Builder) Build() ([]*descriptor.File, error) {
         output = b.Output
     }
 
-    generator := protobuf.NewGenerator(compiler.Files)
+    generator := protobuf.NewGenerator(files)
     return generator.Generate(output)
 }

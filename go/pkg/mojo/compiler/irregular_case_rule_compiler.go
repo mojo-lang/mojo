@@ -28,13 +28,19 @@ func NewIrregularCaseRuleCompiler(options core.Options) *IrregularCaseRuleCompil
             Creator: func(options core.Options) plugin.Plugin {
                 return NewIrregularCaseRuleCompiler(options)
             },
+            MarkedPackages: make(map[string]bool),
         },
     }
 }
 
 func (c *IrregularCaseRuleCompiler) CompileSourceFile(ctx context.Context, sourceFile *lang.SourceFile) error {
     pkg := context.Package(ctx)
-    logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompilePackage", "pkg", pkg.GetFullName(), "file", sourceFile.GetName())
+    pkgFullName := pkg.GetFullName()
+
+    if !c.MarkedPackages[pkgFullName] {
+        c.MarkedPackages[pkgFullName] = true
+        logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompilePackage", "pkg", pkgFullName)
+    }
 
     for _, statement := range sourceFile.Statements {
         if decl := statement.GetDeclaration(); decl != nil {

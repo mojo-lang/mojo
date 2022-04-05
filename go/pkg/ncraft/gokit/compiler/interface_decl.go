@@ -2,15 +2,17 @@ package compiler
 
 import (
     "errors"
+    "github.com/mojo-lang/mojo/go/pkg/protobuf/precompiler"
+    "strings"
+
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
     apicompiler "github.com/mojo-lang/mojo/go/pkg/openapi/compiler"
-    "github.com/mojo-lang/mojo/go/pkg/protobuf"
     "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-    "strings"
+    pbf "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
 )
 
 func CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) (*types.Service, error) {
@@ -89,15 +91,6 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
         Bindings:  nil,
     }
 
-    wrapRequestName := strcase.ToCamel(method.Name) + "Request"
-    // special case for the request, do NOT generate new request type
-    if parameters := method.Signature.GetParameters(); len(parameters) == 1 {
-        param := parameters[0]
-        if len(param.Name) == 0 || param.Type.Name == wrapRequestName {
-            m.RequestType = &types.Message{Name: param.Type.Name}
-        }
-    }
-
     registerType := func(t *lang.NominalType) {
         if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() && (len(t.PackageName) > 0 && t.PackageName != service.FullPkgName) {
             RegisterMessagePackage(t.Name, GetGoPackage(t.PackageName))
@@ -116,21 +109,15 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
         }
     }
 
-    if m.RequestType == nil {
-        r := &lang.StructDecl{
-            Name: wrapRequestName,
-            Type: &lang.StructType{
-                Fields: method.Signature.GetParameters(),
-            },
-        }
+    req, resp, err := precompiler.CompileMethod(ctx, method)
+    if err != nil {
+        return err
+    }
 
-        var err error
-        m.RequestType, err = compileMessage(ctx, r)
-        if err != nil {
-            return err
-        }
-
-        for _, field := range r.Type.Fields {
+    if m.RequestType, err = compileMessage(ctx, req); err != nil {
+        return err
+    } else {
+        for _, field := range req.Type.Fields {
             t := field.Type
             if t.IsMapType() || t.IsArrayType() {
                 for _, gt := range t.GenericArguments {
@@ -143,47 +130,14 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
     }
 
     result := method.GetSignature().GetResultType()
-    var decl *lang.StructDecl
-    var err error
-    if result != nil {
-        decl = result.GetTypeDeclaration().GetStructDecl()
-
-        if decl.GetFullName() == "mojo.core.Array" {
-            pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination")
-            decl = protobuf.GenerateArrayTypeResponse(method, pagination)
-            //if pagination {
-            //    decl = protobuf.GenerateArrayTypeResponse(method)
-            //} else {
-            //    if decl, err = compiler.CompileArrayToStruct(result); err != nil {
-            //        return err
-            //    }
-            //}
-        } else if result.IsScalar() {
-            decl = &lang.StructDecl{
-                PackageName:    "mojo.core",
-                SourceFileName: "mojo/core/boxed.mojo",
-                Name:           core.GetProperBoxedScalarName(result.Name),
-            }
-            result = &lang.NominalType{
-                PackageName:     decl.PackageName,
-                Name:            decl.Name,
-                TypeDeclaration: lang.NewStructTypeDeclaration(decl),
-            }
-        }
-    } else {
-        decl = &lang.StructDecl{
-            PackageName:    "mojo.core",
-            SourceFileName: "mojo/core/null.mojo",
-            Name:           "Null",
-        }
+    if result.GetTypeDeclaration().GetStructDecl() != resp {
         result = &lang.NominalType{
-            PackageName:     decl.PackageName,
-            Name:            decl.Name,
-            TypeDeclaration: lang.NewStructTypeDeclaration(decl),
+            PackageName:     resp.PackageName,
+            Name:            resp.Name,
+            TypeDeclaration: lang.NewStructTypeDeclaration(resp),
         }
     }
-
-    if m.ResponseType, err = compileMessage(thisCtx, decl); err != nil {
+    if m.ResponseType, err = compileMessage(thisCtx, resp); err != nil {
         return err
     }
 
@@ -213,8 +167,8 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
         }
     }
 
-    if len(decl.PackageName) > 0 && decl.PackageName != service.FullPkgName {
-        RegisterMessagePackage(decl.Name, GetGoPackage(decl.PackageName))
+    if len(resp.PackageName) > 0 && resp.PackageName != service.FullPkgName {
+        RegisterMessagePackage(resp.Name, GetGoPackage(resp.PackageName))
 
         if result != nil && len(result.GenericArguments) == 0 {
             if result.IsScalar() {
@@ -222,13 +176,13 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, service *type
                 service.ImportPaths = append(service.ImportPaths, "github.com/mojo-lang/core/go/pkg/mojo/core")
             } else {
                 if result.TypeDeclaration != nil && result.TypeDeclaration.GetEnumDecl() != nil {
-                    service.ImportEnums = append(service.ImportEnums, decl.Name)
+                    service.ImportEnums = append(service.ImportEnums, resp.Name)
                 } else {
-                    service.ImportStructs = append(service.ImportStructs, decl.Name)
+                    service.ImportStructs = append(service.ImportStructs, resp.Name)
                 }
-                service.ImportStructs = append(service.ImportStructs, decl.Name)
+                service.ImportStructs = append(service.ImportStructs, resp.Name)
 
-                if path, ok := GoPackageImport(ctx, decl.PackageName).(string); ok {
+                if path, ok := GoPackageImport(ctx, resp.PackageName).(string); ok {
                     service.ImportPaths = append(service.ImportPaths, path)
                 }
             }
@@ -271,7 +225,7 @@ func compileBindings(methodName string, path string, method *lang.FunctionDecl) 
 
     if len(method.Signature.GetParameters()) == 1 {
         decl := method.Signature.ParameterDecl(0)
-        if b, _ := decl.GetBoolAttribute(protobuf.MethodRequestTypeAttributeName); b {
+        if b, _ := decl.GetBoolAttribute(pbf.MethodRequestTypeAttributeName); b {
             if structDecl := decl.Type.GetTypeDeclaration().GetStructDecl(); structDecl != nil {
                 structDecl.EachField(func(decl *lang.ValueDecl) error {
                     return compileBindingParameter(decl, pathParams, nil, binding)

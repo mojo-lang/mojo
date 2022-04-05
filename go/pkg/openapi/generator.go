@@ -14,7 +14,7 @@ import (
 // 1. openapi.yaml
 // 2. struct.schema.json
 type Generator struct {
-    *OpenAPIs
+    *openapi.OpenAPIs
 
     Package *lang.Package
     Files   []*util.GeneratedFile
@@ -22,7 +22,7 @@ type Generator struct {
 
 func NewGenerator(pkg *lang.Package, apis map[string]*openapi.OpenAPI, components *openapi.Components) *Generator {
     return &Generator{
-        OpenAPIs: &OpenAPIs{
+        OpenAPIs: &openapi.OpenAPIs{
             APIs:       apis,
             Components: components,
         },

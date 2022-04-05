@@ -1,13 +1,14 @@
 package mpm
 
 import (
-    "github.com/gogo/protobuf/proto"
-    "github.com/mojo-lang/core/go/pkg/logs"
-    "github.com/mojo-lang/core/go/pkg/mojo/core"
-    "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "os"
     "os/exec"
     "path"
+
+    "github.com/mojo-lang/core/go/pkg/logs"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
+    "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+    "google.golang.org/protobuf/proto"
 )
 
 var packageCenter *PackageCenter

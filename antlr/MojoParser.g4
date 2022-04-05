@@ -329,7 +329,7 @@ interfaceMethodDeclaration : functionName genericParameterClause? EOL* functionS
 
 // GRAMMAR OF A ATTRIBUTE DECLARATION
 attributeDeclaration
-  : KEYWORD_ATTRIBUTE attributeName genericParameterClause? (structBody | typeAnnotation followingDocument?);
+  : KEYWORD_ATTRIBUTE attributeName genericParameterClause? (structBody | typeAnnotation (EOL* initializer )? followingDocument?);
 
 // Patterns
 
@@ -390,7 +390,7 @@ attributeArgument : (labelIdentifier COLON?)? expression;
 attributeArguments : attributeArgument (eov EOL* attributeArgument)* eov?;
 
 // GRAMMAR OF AN ATTRIBUTES
-attributes : attribute (EOL* attribute)* ;
+attributes : attribute (EOL? attribute)* ;
 
 // Expressions
 
@@ -717,9 +717,11 @@ keywordAsIdentifierInDeclarations
     | 'enum'
     | 'func'
     | 'import'
+    | 'in'
     | 'interface'
     | 'match'
     | 'not'
+    | 'null'
     | 'package'
     | 'repeat'
     | 'struct'

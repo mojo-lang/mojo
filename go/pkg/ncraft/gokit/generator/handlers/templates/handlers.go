@@ -39,6 +39,7 @@ var ({{range $name := .ExternalStructs}}
 
 const HandlerInterface = `
 type {{ToLowerCamel .Interface.Name}}Server struct{
+	pb.UnimplementedABFuzzServer
 }
 
 // NewService returns a naive, stateless implementation of Interface.

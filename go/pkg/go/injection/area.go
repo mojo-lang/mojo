@@ -1,4 +1,4 @@
-package inject
+package injection
 
 import "go/token"
 

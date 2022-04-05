@@ -11,6 +11,7 @@ import (
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/ncraft/gokit"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/openapi"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/protobuf"
+    api "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
     "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
     "path"
     "strings"
@@ -19,7 +20,7 @@ import (
 type Builder struct {
     Package  *lang.Package
     Files    []*descriptor.File
-    OpenAPIs *openapi.OpenAPIs
+    OpenAPIs *api.OpenAPIs
 
     PackageName string
 

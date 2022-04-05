@@ -1,39 +1,36 @@
 package compiler
 
 import (
+    "strings"
+
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
-    "strings"
+    "github.com/mojo-lang/mojo/go/pkg/go/data"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
-type EnumItem struct {
-    RawValue string
-    Value    string
-    Number   int
-}
-
 type Enum struct {
-    PackageName   string
-    GoPackageName string
-    Name          string
-    FullName      string
-    EnclosingName string
-    WrapName      string
-
-    Items []EnumItem
+    *data.Data
 }
 
-func (e *Enum) Compile(decl *lang.EnumDecl) error {
-    e.PackageName = decl.PackageName
-    e.GoPackageName = GetGoPackage(decl.PackageName)
-    e.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), "_")
-    e.Name = decl.Name
-    e.FullName = e.Name
-    if len(e.EnclosingName) > 0 {
-        e.WrapName = e.EnclosingName
-        e.FullName = strings.Join([]string{e.EnclosingName, e.Name}, "_")
+func (e *Enum) CompileEnum(ctx context.Context, decl *lang.EnumDecl) error {
+    file := context.SourceFile(ctx)
+    if file != nil && file.PackageName != decl.PackageName {
+        return nil
+    }
+
+    enum := &data.Enum{}
+
+    enum.PackageName = decl.PackageName
+    enum.GoPackageName = GetGoPackage(decl.PackageName)
+    enum.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), "_")
+    enum.Name = decl.Name
+    enum.FullName = enum.Name
+    if len(enum.EnclosingName) > 0 {
+        enum.WrapName = enum.EnclosingName
+        enum.FullName = strings.Join([]string{enum.EnclosingName, enum.Name}, "_")
     } else {
-        e.WrapName = e.Name
+        enum.WrapName = enum.Name
     }
 
     caseStyle, _ := lang.GetStringAttribute(decl.Attributes, core.CaseStyleAttributeName)
@@ -46,7 +43,7 @@ func (e *Enum) Compile(decl *lang.EnumDecl) error {
             continue
         }
 
-        item := EnumItem{
+        item := data.EnumItem{
             RawValue: value.Name,
             Value:    value.Name,
         }
@@ -63,16 +60,9 @@ func (e *Enum) Compile(decl *lang.EnumDecl) error {
             item.Value = core.CaseStyler(caseStyle)(item.Value)
         }
 
-        e.Items = append(e.Items, item)
+        enum.Items = append(enum.Items, item)
     }
 
+    e.Enums = append(e.Enums, enum)
     return nil
-}
-
-func (b *Enum) GetPackageName() string {
-    return b.PackageName
-}
-
-func (b *Enum) GetFullName() string {
-    return b.FullName
 }

@@ -63,6 +63,7 @@ func MakeGRPCServer(endpoints Endpoints, tracer stdopentracing.Tracer, logger lo
 
 // grpcServer implements the {{GoName .Interface.Name}}Server interface
 type grpcServer struct {
+    pb.UnimplementedABFuzzServer
 {{range $i := .Interface.Methods}}
 	{{ToLowerCamel $i.Name}}   grpctransport.Handler
 {{- end}}

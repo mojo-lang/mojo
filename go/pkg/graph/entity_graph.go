@@ -36,20 +36,20 @@ func NewEntityGraph(pkg *lang.Package) *EntityGraph {
     return nil
 }
 
-func (m *EntityGraph) Render(w io.Writer) error {
+func (x *EntityGraph) Render(w io.Writer) error {
     templ, err := template.New("graph").Parse(graphTemplate)
     if err != nil {
         return fmt.Errorf("templ.Parse: %v", err)
     }
 
     var direction string
-    if len(m.Edges) > 15 {
+    if len(x.Edges) > 15 {
         direction = "horizontal"
     }
 
     if err := templ.Execute(w, map[string]interface{}{
-        "nodes":     m.Nodes,
-        "edges":     m.Edges,
+        "nodes":     x.Nodes,
+        "edges":     x.Edges,
         "direction": direction,
     }); err != nil {
         return fmt.Errorf("templ.Execute: %v", err)

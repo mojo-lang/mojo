@@ -13,7 +13,7 @@ import (
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+    "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
 type Struct struct {
@@ -21,7 +21,7 @@ type Struct struct {
 
 const inheritSourceFileKey = "inherit-source-file"
 
-func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescriptor *desc.Message) error {
+func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescriptor *descriptor.Message) error {
     thisCtx := context.WithDescriptor(context.WithType(ctx, decl), structDescriptor)
 
     file := context.FileDescriptor(ctx)
@@ -30,7 +30,7 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
     {
         enumCtx := context.WithValues(thisCtx, "register_enum", false)
         for _, e := range decl.EnumDecls {
-            enum := desc.NewEnum(file)
+            enum := descriptor.NewEnum(file)
             err := Enum{}.Compile(enumCtx, e, enum)
             if err != nil {
                 return errors.New(fmt.Sprintf("failed to parse the inner enum decl %s in %s: %s", e.Name, decl.Name, err.Error()))
@@ -42,13 +42,13 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
     {
         structCtx := context.WithValues(thisCtx, "register_struct", false)
         for _, d := range decl.StructDecls {
-            msg := desc.NewMessage(file)
+            msg := descriptor.NewMessage(file)
             err := s.Compile(structCtx, d, msg)
             if err != nil {
                 return errors.New(fmt.Sprintf("failed to parse the inner struct decl %s in %s: %s", d.Name, decl.Name, err.Error()))
             }
 
-            structDescriptor.AppendInnerMessage(msg)
+            structDescriptor.AppendMessage(msg)
         }
     }
 
@@ -94,8 +94,8 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
 
     if register, ok := ctx.Value("register_struct").(bool); !ok || register {
         if msg := context.MessageDescriptor(ctx); msg != nil {
-            if !msg.IsInnerMessageExist(structDescriptor.GetName()) {
-                msg.AppendInnerMessage(structDescriptor)
+            if !msg.IsMessageExist(structDescriptor.GetName()) {
+                msg.AppendMessage(structDescriptor)
             }
         } else if file != nil {
             if !file.IsMessageExist(structDescriptor.GetName()) {
@@ -108,14 +108,14 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
 }
 
 //TODO 不在相同的package下的inherit不需要进行Boxed类型的处理
-func (s Struct) compileStructInherit(ctx context.Context, inherit *lang.NominalType, descriptor *desc.Message) error {
+func (s Struct) compileStructInherit(ctx context.Context, inherit *lang.NominalType, msgDescriptor *descriptor.Message) error {
     decl := inherit.TypeDeclaration.GetStructDecl()
     if decl == nil || decl.Type == nil {
         return nil
     }
 
     for _, i := range decl.Type.Inherits {
-        if err := s.compileStructInherit(ctx, i, descriptor); err != nil {
+        if err := s.compileStructInherit(ctx, i, msgDescriptor); err != nil {
             return err
         }
     }
@@ -143,28 +143,15 @@ func (s Struct) compileStructInherit(ctx context.Context, inherit *lang.NominalT
         }
     }
 
-    return s.compileStructFields(ctx, decl.Type.Fields, descriptor)
+    return s.compileStructFields(ctx, decl.Type.Fields, msgDescriptor)
 }
 
-func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDecl, msgDescriptor *desc.Message) error {
-    scope := lang.GetScope(context.TypeValue(ctx))
+func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDecl, msgDescriptor *descriptor.Message) error {
     file := context.SourceFile(ctx)
 
     for _, field := range fields {
-        member := desc.NewField(msgDescriptor, field.Name)
+        member := descriptor.NewField(msgDescriptor, field.Name)
         fieldCtx := context.WithDescriptor(context.WithType(ctx, field), member)
-
-        if decl := field.Type.TypeDeclaration; decl != nil {
-            if structDecl := decl.GetStructDecl(); structDecl != nil && structDecl.EnclosingType != nil {
-                if scope == nil || scope.Identifiers == nil || scope.Identifiers[structDecl.Name] == nil {
-                    field.Type.Name = lang.GetFullName("", lang.GetEnclosingNames(structDecl.EnclosingType), field.Type.Name)
-                }
-            } else if enumDecl := decl.GetEnumDecl(); enumDecl != nil && enumDecl.EnclosingType != nil {
-                if scope == nil || scope.Identifiers == nil || scope.Identifiers[enumDecl.Name] == nil {
-                    field.Type.Name = lang.GetFullName("", lang.GetEnclosingNames(enumDecl.EnclosingType), field.Type.Name)
-                }
-            }
-        }
 
         switch field.Type.Name {
         case "Array":
@@ -199,7 +186,7 @@ func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDec
                 for _, argument := range field.Type.GenericArguments {
                     var argumentCtx context.Context
                     if member == nil {
-                        member = desc.NewField(msgDescriptor, "")
+                        member = descriptor.NewField(msgDescriptor, "")
                         argumentCtx = context.WithDescriptor(fieldCtx, member)
                     } else {
                         argumentCtx = fieldCtx

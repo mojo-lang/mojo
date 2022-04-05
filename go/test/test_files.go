@@ -2,17 +2,17 @@ package test
 
 import "embed"
 
-//go:embed case-alias/*
+//go:embed mojo-alias/*
 var AliasCaseFiles embed.FS
 
-//go:embed case-entity/*
+//go:embed mojo-entity/*
 var EntityCaseFiles embed.FS
 
-//go:embed case-enum/*
+//go:embed mojo-enum/*
 var EnumCaseFiles embed.FS
 
-//go:embed case-inherits/*
+//go:embed mojo-inherits/*
 var InheritsCaseFiles embed.FS
 
-//go:embed case-package/*
+//go:embed mojo-package/*
 var PackageCaseFiles embed.FS

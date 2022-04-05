@@ -45,7 +45,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
             fieldNames = schema.FieldNames(s.Components.Schemas)
         }
 
-        if len(fieldNames) > 0 && len(schema.Properties) > 0 {
+        if len(fieldNames) > 0 {
             s.compileFields(context.Empty(), fieldNames, schema, table)
             doc.AppendTable(table)
         }

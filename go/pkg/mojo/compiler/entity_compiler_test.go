@@ -17,7 +17,7 @@ import (
 
 func TestEntityCompiler_CompilePackage(t *testing.T) {
     plugins := plugin.NewPlugins("mpm", "syntax", "semantic", "compiler")
-    pkg, err := plugins.ParsePackagePath(context.Empty(), "case-entity", test.EntityCaseFiles)
+    pkg, err := plugins.ParsePackagePath(context.Empty(), "mojo-entity", test.EntityCaseFiles)
 
     graph.Builder{Builder: builder.Builder{Package: pkg}}.Build()
 

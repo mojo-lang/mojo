@@ -24,22 +24,22 @@
 //
 // [source](https://github.com/favadi/protoc-go-inject-tag)
 
-package compiler
+package injection
 
 import (
     "context"
     "github.com/fatih/structtag"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
-    "github.com/mojo-lang/mojo/go/pkg/go/compiler/inject"
     "go/ast"
     "strings"
+    "unicode"
 )
 
 type TagChanger = func(ctx context.Context, field *ast.Field, tags *structtag.Tags)
 type TagInjections map[string]structtag.Tags
 
 type TagInjector struct {
-    inject.Injector
+    Injector
 
     tagChangers []TagChanger
 }
@@ -52,7 +52,7 @@ func NewTagInjector(xxxSkip []string, injections TagInjections) *TagInjector {
     if len(xxxSkip) > 0 {
         injector.tagChangers = append(injector.tagChangers, func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
             fieldName := field.Names[0].Name
-            if strings.HasPrefix(fieldName, "XXX") {
+            if len(fieldName) > 0 && (strings.HasPrefix(fieldName, "XXX") || unicode.IsLower(rune(fieldName[0]))) {
                 for _, skip := range xxxSkip {
                     tags.Set(&structtag.Tag{
                         Key:  skip,
@@ -64,7 +64,7 @@ func NewTagInjector(xxxSkip []string, injections TagInjections) *TagInjector {
     }
     if len(injections) > 0 {
         injector.tagChangers = append(injector.tagChangers, func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
-            structName := inject.GetStructName(ctx)
+            structName := GetStructName(ctx)
             fieldName := field.Names[0].Name
 
             key := structName + "." + fieldName
@@ -84,7 +84,7 @@ func (i *TagInjector) RegisterTagChanger(changer TagChanger) *TagInjector {
     return i
 }
 
-func (i *TagInjector) onStructField(ctx context.Context, field *ast.Field, areaAppender func(area inject.Area)) {
+func (i *TagInjector) onStructField(ctx context.Context, field *ast.Field, areaAppender func(area Area)) {
     if field.Tag == nil {
         return
     }
@@ -102,7 +102,7 @@ func (i *TagInjector) onStructField(ctx context.Context, field *ast.Field, areaA
 
         newTag := tags.String()
         if tagValue != newTag {
-            areaAppender(&inject.TextArea{
+            areaAppender(&TextArea{
                 Start:   field.Tag.Pos(),
                 End:     field.Tag.End(),
                 Content: "`" + newTag + "`",

@@ -3,38 +3,31 @@ package compiler
 import (
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+    "github.com/mojo-lang/mojo/go/pkg/go/data"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "strings"
 )
 
 type BoxedArray struct {
-    PackageName   string
-    GoPackageName string
-    Name          string
-    FullName      string
-    EnclosingName string
-
-    FieldName string
+    *data.Data
 }
 
-func (b *BoxedArray) Compile(decl *lang.StructDecl) error {
-    b.PackageName = decl.GetPackageName()
-    b.GoPackageName = GetGoPackage(decl.GetPackageName())
+func (b *BoxedArray) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
+
+    ba := &data.BoxedArray{}
+
+    ba.PackageName = decl.GetPackageName()
+    ba.GoPackageName = GetGoPackage(decl.GetPackageName())
 
     if pkg, _ := lang.GetStringAttribute(decl.Attributes, "go_package_name"); len(pkg) > 0 {
-        b.GoPackageName = pkg
+        ba.GoPackageName = pkg
     }
 
-    b.Name = decl.Name
-    b.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), ".")
-    b.FullName = GetFullName(b.EnclosingName, b.Name)
-    b.FieldName = strcase.ToCamel(decl.Type.Fields[0].Name)
+    ba.Name = decl.Name
+    ba.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), ".")
+    ba.FullName = GetFullName(ba.EnclosingName, ba.Name)
+    ba.FieldName = strcase.ToCamel(decl.Type.Fields[0].Name)
+
+    b.BoxedArrays = append(b.BoxedArrays, ba)
     return nil
-}
-
-func (b *BoxedArray) GetPackageName() string {
-    return b.PackageName
-}
-
-func (b *BoxedArray) GetFullName() string {
-    return b.FullName
 }

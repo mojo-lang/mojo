@@ -1,4 +1,4 @@
-package compiler
+package data
 
 type Decl interface {
     GetPackageName() string

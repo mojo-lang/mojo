@@ -13,3 +13,12 @@ func IsSystemFile(fileName string) bool {
         strings.Contains(fileName, "mojo/core/union") ||
         strings.Contains(fileName, "mojo/core/bytes")
 }
+
+func GetProtoFile(fileName string) string {
+    if strings.HasSuffix(fileName, ".mojo") {
+        fileName = strings.TrimSuffix(fileName, "mojo") + "proto"
+    } else {
+        fileName = fileName + ".proto"
+    }
+    return fileName
+}

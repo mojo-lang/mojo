@@ -17,22 +17,22 @@
 
 package {{.GoPackageName}}
 
-func (m *{{.FullName}}) Len() int {
-    if m != nil {
-        return len(m.Vals)
+func (x *{{.FullName}}) Len() int {
+    if x != nil {
+        return len(x.Vals)
     }
     return 0
 }
 
-func (m *{{.FullName}}) IsEmpty() int {
-    if m != nil {
-        return len(m.Vals) == 0
+func (x *{{.FullName}}) IsEmpty() int {
+    if x != nil {
+        return len(x.Vals) == 0
     }
     return true
 }
 
-func (m *{{.FullName}}) Append(value {{.Value}}) {
-    if m != nil {
-        m.Vals = append(m.Vals, value)
+func (x *{{.FullName}}) Append(value {{.Value}}) {
+    if x != nil {
+        x.Vals = append(x.Vals, value)
     }
 }

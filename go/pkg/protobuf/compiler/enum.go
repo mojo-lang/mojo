@@ -7,15 +7,15 @@ import (
     "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+    "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
 type Enum struct {
 }
 
-func (e Enum) Compile(ctx context.Context, decl *lang.EnumDecl, enumDescriptor *desc.Enum) error {
-    thisCtx := context.WithDescriptor(context.WithType(ctx, decl), enumDescriptor)
-    enumDescriptor.SetName(decl.Name)
+func (e Enum) Compile(ctx context.Context, decl *lang.EnumDecl, enum *descriptor.Enum) error {
+    thisCtx := context.WithDescriptor(context.WithType(ctx, decl), enum)
+    enum.SetName(decl.Name)
 
     for i, e := range decl.Type.Enumerators {
         name := decl.Name + "_" + e.Name
@@ -30,14 +30,14 @@ func (e Enum) Compile(ctx context.Context, decl *lang.EnumDecl, enumDescriptor *
             }
         }
 
-        enumDescriptor.AppendValueWith(name, int32(number))
+        enum.AppendValueWith(name, int32(number))
     }
 
     message := context.MessageDescriptor(thisCtx)
     file := context.FileDescriptor(thisCtx)
     if message == nil && file != nil {
         if register, ok := ctx.Value("register_enum").(bool); !ok || register {
-            file.Enums = append(file.Enums, enumDescriptor)
+            file.Enums = append(file.Enums, enum)
         }
     }
 

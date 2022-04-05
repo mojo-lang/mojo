@@ -1,17 +1,17 @@
 package _go
 
 import (
-    "github.com/mojo-lang/mojo/go/pkg/go/compiler"
+    "github.com/mojo-lang/mojo/go/pkg/go/data"
     "github.com/mojo-lang/mojo/go/pkg/go/generator"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
 )
 
 type Generator struct {
-    Data  *compiler.Data
+    Data  *data.Data
     Files util.GeneratedFiles
 }
 
-func NewGenerator(files util.GeneratedFiles, data *compiler.Data) *Generator {
+func NewGenerator(files util.GeneratedFiles, data *data.Data) *Generator {
     return &Generator{
         Files: files,
         Data:  data,

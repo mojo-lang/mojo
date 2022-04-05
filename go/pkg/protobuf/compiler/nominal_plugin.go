@@ -12,10 +12,11 @@ type NominalPlugin interface {
     Compile(ctx context.Context, t *lang.NominalType) (string, string, error)
 }
 
+var once sync.Once
 var nominalPlugins map[string][]NominalPlugin
 
 func RegisterNominalPlugin(plugin NominalPlugin) {
-    (&sync.Once{}).Do(func() {
+    once.Do(func() {
         nominalPlugins = make(map[string][]NominalPlugin)
     })
 
@@ -27,12 +28,13 @@ func RegisterNominalPlugin(plugin NominalPlugin) {
                 return
             }
         }
-        nominalPlugins[plugin.Name()] = append(pgs, plugin)
+        pgs = append(pgs, plugin)
+        nominalPlugins[plugin.Name()] = pgs
     }
 }
 
 func NominalPlugins() map[string][]NominalPlugin {
-    (&sync.Once{}).Do(func() {
+    once.Do(func() {
         nominalPlugins = make(map[string][]NominalPlugin)
     })
     return nominalPlugins

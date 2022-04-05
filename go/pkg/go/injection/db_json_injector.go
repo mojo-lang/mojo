@@ -1,15 +1,14 @@
-package compiler
+package injection
 
 import (
     "context"
     "github.com/fatih/structtag"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
-    "github.com/mojo-lang/mojo/go/pkg/go/compiler/inject"
     "go/ast"
 )
 
 type DbJSONInjector struct {
-    inject.Injector
+    Injector
 
     newTypeDecl string
     getters     map[string]map[string]string
@@ -31,7 +30,7 @@ func (i *DbJSONInjector) preStruct(ctx context.Context, structType *ast.StructTy
     i.newTypeDecl = ""
 }
 
-func (i *DbJSONInjector) onStructField(ctx context.Context, field *ast.Field, appender func(area inject.Area)) {
+func (i *DbJSONInjector) onStructField(ctx context.Context, field *ast.Field, appender func(area Area)) {
     if field.Tag == nil {
         return
     }
@@ -43,9 +42,9 @@ func (i *DbJSONInjector) onStructField(ctx context.Context, field *ast.Field, ap
     }
 
     dbTag, _ := tags.Get("db")
-    if dbTag != nil && inject.HasTagOption(dbTag, "json") {
-        structName := inject.GetStructName(ctx)
-        fileContent := inject.GetFileContent(ctx)
+    if dbTag != nil && HasTagOption(dbTag, "json") {
+        structName := GetStructName(ctx)
+        fileContent := GetFileContent(ctx)
 
         newTypeName := structName + fieldName
         newTypeDefine := "type " + newTypeName
@@ -75,7 +74,7 @@ func (i *DbJSONInjector) onStructField(ctx context.Context, field *ast.Field, ap
         }
         i.getters[recvStructName]["Get"+fieldName] = newTypeName
 
-        appender(&inject.TextArea{
+        appender(&TextArea{
             Start:   field.Type.Pos(),
             End:     field.Type.End(),
             Content: newTypeName,
@@ -85,11 +84,11 @@ func (i *DbJSONInjector) onStructField(ctx context.Context, field *ast.Field, ap
     }
 }
 
-func (i *DbJSONInjector) postStruct(ctx context.Context, areaAppender func(area inject.Area)) {
+func (i *DbJSONInjector) postStruct(ctx context.Context, areaAppender func(area Area)) {
     if len(i.newTypeDecl) > 0 {
-        structType := inject.GetStructType(ctx)
+        structType := GetStructType(ctx)
 
-        areaAppender(&inject.TextArea{
+        areaAppender(&TextArea{
             Start:   structType.End(),
             End:     structType.End(),
             Content: i.newTypeDecl,
@@ -97,9 +96,9 @@ func (i *DbJSONInjector) postStruct(ctx context.Context, areaAppender func(area 
     }
 }
 
-func (i *DbJSONInjector) onFunction(ctx context.Context, function *ast.FuncDecl, areaAppender func(area inject.Area)) {
+func (i *DbJSONInjector) onFunction(ctx context.Context, function *ast.FuncDecl, areaAppender func(area Area)) {
     if function.Recv != nil && len(function.Recv.List) > 0 {
-        fileContent := inject.GetFileContent(ctx)
+        fileContent := GetFileContent(ctx)
         recvType := function.Recv.List[0].Type
         recvTypeName := string(fileContent[recvType.Pos()-1 : recvType.End()-1])
 
@@ -108,7 +107,7 @@ func (i *DbJSONInjector) onFunction(ctx context.Context, function *ast.FuncDecl,
         }
 
         if newTypeName := i.getters[recvTypeName][function.Name.Name]; len(newTypeName) > 0 {
-            areaAppender(&inject.TextArea{
+            areaAppender(&TextArea{
                 Start:   function.Type.Results.Pos(),
                 End:     function.Type.Results.End(),
                 Content: newTypeName,

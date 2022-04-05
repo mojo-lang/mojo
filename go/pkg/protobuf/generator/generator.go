@@ -86,7 +86,7 @@ func (g *Generator) Error(err error, msgs ...string) {
 // Fail reports a problem and exits the program.
 func (g *Generator) Fail(msgs ...string) {
     s := strings.Join(msgs, " ")
-    log.Print("protoc-gen-proto: error:", s)
+    logs.Error("Protobuf Generator: error:", s)
     os.Exit(1)
 }
 
@@ -103,16 +103,26 @@ func (g *Generator) printAtom(v interface{}) {
         fmt.Fprint(g, *v)
     case int:
         fmt.Fprint(g, v)
+    case *int:
+        fmt.Fprint(g, *v)
+    case int32:
+        fmt.Fprint(g, v)
     case *int32:
         fmt.Fprint(g, *v)
+    case int64:
+        fmt.Fprint(g, v)
     case *int64:
+        fmt.Fprint(g, *v)
+    case float32:
+        fmt.Fprint(g, v)
+    case *float32:
         fmt.Fprint(g, *v)
     case float64:
         fmt.Fprint(g, v)
     case *float64:
         fmt.Fprint(g, *v)
     default:
-        g.Fail(fmt.Sprintf("unknown type in printer: %T", v))
+        g.Fail(fmt.Sprintf("unknown type in protobuf printer: %T", v))
     }
 }
 
@@ -388,15 +398,15 @@ func (g *Generator) generateHeader() {
 
     g.P()
 
-    syntax := "proto3"
+    syntax := descriptor.Proto3Syntax
     if !g.file.IsProto3() {
-        syntax = "proto2"
+        syntax = descriptor.Proto3Syntax
     }
     g.P("syntax = \"", syntax, "\";")
 
-    if g.file.Package != nil {
+    if len(g.file.GetPackageName()) > 0 {
         g.P()
-        g.P("package ", g.file.Package, ";")
+        g.P("package ", g.file.GetPackageName(), ";")
     } else {
         // error
     }
@@ -451,7 +461,7 @@ func (g *Generator) generateMessage(message *descriptor.Message) {
     printField := func(field *descriptor.Field) {
         g.WriteString(g.indent)
         if field.IsMessageType() {
-            desc := message.GetInnerMessage(field.GetTypeName())
+            desc := message.GetMessage(field.GetTypeName())
             if desc.IsMapEntry() {
                 keyType := desc.Fields[0].GetTypeName()
                 valType := desc.Fields[1].GetTypeName()
@@ -469,42 +479,43 @@ func (g *Generator) generateMessage(message *descriptor.Message) {
             g.S(field.GetTypeName(), " ", field.GetName(), " = ", field.GetNumber())
         }
 
-        if field.HasOption() {
+        if field.HasOptions() {
             fieldOptions := mojo.FieldOptionsExtensions()
             first := true
             buffer := bytes.NewBuffer(nil)
             for _, option := range fieldOptions {
+                if !field.HasOption(option) {
+                    continue
+                }
+
                 switch option.TypeDescriptor().Kind() {
                 case protoreflect.BoolKind:
-                    if v := field.GetBoolOption(option); v != nil {
-                        if !first {
-                            buffer.WriteString(", ")
-                        }
-                        if *v {
-                            buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=true"))
-                        } else {
-                            buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=false"))
-                        }
-                        first = false
+                    v := field.GetBoolOption(option)
+                    if !first {
+                        buffer.WriteString(", ")
                     }
+                    if v {
+                        buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=true"))
+                    } else {
+                        buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=false"))
+                    }
+                    first = false
                 case protoreflect.Int32Kind, protoreflect.Int64Kind,
                     protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind,
                     protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
-                    if v := field.GetInt64Option(option); v != nil {
-                        if !first {
-                            buffer.WriteString(", ")
-                        }
-                        buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=", *v))
-                        first = false
+                    v := field.GetOption(option).(int64)
+                    if !first {
+                        buffer.WriteString(", ")
                     }
+                    buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=", v))
+                    first = false
                 case protoreflect.StringKind:
-                    if v := field.GetStringOption(option); len(v) > 0 {
-                        if !first {
-                            buffer.WriteString(", ")
-                        }
-                        buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=", "\"", v, "\""))
-                        first = false
+                    v := field.GetStringOption(option)
+                    if !first {
+                        buffer.WriteString(", ")
                     }
+                    buffer.WriteString(fmt.Sprint("(", mojo.GetOptionFullName(option), ")=", "\"", v, "\""))
+                    first = false
                 }
             }
             if buffer.Len() > 0 {
@@ -559,8 +570,19 @@ func (g *Generator) generateService(service *descriptor.Service) {
     g.P("service ", service.GetName(), " {")
     g.In()
 
+    pkg := service.GetPackageName()
     for _, method := range service.Methods {
-        g.P("rpc ", method.GetName(), "(", method.GetInput().GetName(), ") returns (", method.GetOutpu().GetName(), ");")
+        input := method.GetInput()
+        inputName := input.GetName()
+        if input.GetPackageName() != pkg {
+            inputName = input.GetFullName()
+        }
+        output := method.GetOutput()
+        outputName := output.GetName()
+        if output.GetPackageName() != pkg {
+            outputName = output.GetFullName()
+        }
+        g.P("rpc ", method.GetName(), "(", inputName, ") returns (", outputName, ");")
     }
 
     g.Out()
