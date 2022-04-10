@@ -57,6 +57,10 @@ func GenerateTemplatedService(sd *types.Service, conf render.Config, tmplPaths [
             if files, err := m.Generate(tmplPath, data); err != nil {
                 logs.Errorw("failed to generate model template files", "err", err.Error())
             } else {
+                if len(files) == 0 {
+                    continue
+                }
+
                 codeGenFiles = append(codeGenFiles, files...)
             }
         }

@@ -212,6 +212,7 @@ github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9G
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/mojo-lang/core/go v0.0.0-20220404102621-f4cf5ec599a6/go.mod h1:ntHsfcFuRj55LnLYZg01mXttV+nPofrV1a2oCivN9cI=
 github.com/mojo-lang/core/go v0.0.0-20220404130715-b693482c3a6a/go.mod h1:ntHsfcFuRj55LnLYZg01mXttV+nPofrV1a2oCivN9cI=
+github.com/mojo-lang/core/go v0.0.0-20220410082624-b8a6b94b78be/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
 github.com/mojo-lang/core/go v0.0.0-20220410090022-9bc91a61816e h1:lSOBEsSRLR2eh1RQ/vKoOSEVyMBibhp7/M05xrFlwc8=
 github.com/mojo-lang/core/go v0.0.0-20220410090022-9bc91a61816e/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
 github.com/mojo-lang/db/go v0.0.0-20220405011511-a8bd7d7c094a h1:cBu14mEcWb01227LuA6pGgWTSyKfSWzGwH/eHxfwmkI=
