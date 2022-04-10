@@ -1,8 +1,9 @@
 package types
 
 type Interface struct {
-    Name    string
-    Methods []*InterfaceMethod
+    Name       string
+    ServerName string
+    Methods    []*InterfaceMethod
 }
 
 type InterfaceMethod struct {
