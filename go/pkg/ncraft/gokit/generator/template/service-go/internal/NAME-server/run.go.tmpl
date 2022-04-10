@@ -10,6 +10,7 @@ import (
     "fmt"
 	"net"
 	"github.com/gorilla/mux"
+	jsoniter "github.com/json-iterator/go"
     "github.com/rs/cors"
     "net/http"
     "net/http/pprof"
@@ -25,7 +26,8 @@ import (
     _ "go.uber.org/automaxprocs"
 
     nclient "github.com/ncraft-io/ncraft-gokit/pkg/client"
-    "github.com/ncraft-io/ncraft-gokit/pkg/logs"
+    "github.com/ncraft-io/ncraft-go/pkg/logs"
+    "github.com/ncraft-io/ncraft-go/pkg/messaging"
     "github.com/ncraft-io/ncraft-gokit/pkg/metrics"
     "github.com/ncraft-io/ncraft-gokit/pkg/sd"
     nserver "github.com/ncraft-io/ncraft-gokit/pkg/server"
@@ -70,7 +72,7 @@ func NewEndpoints(options map[string]interface{}) svc.Endpoints {
 	return endpoints
 }
 
-func RegisterService(cfg nserver.Config, r *mux.Router, s *grpc.Server)  {
+func RegisterService(cfg nserver.Config, r *mux.Router, s *grpc.Server) svc.Endpoints {
     const FullServiceName = "{{.PackageName}}.{{.Interface.Name}}"
 
     // tracing init
@@ -82,31 +84,31 @@ func RegisterService(cfg nserver.Config, r *mux.Router, s *grpc.Server)  {
     // Create a single logger, which we'll use and give to other components.
     logger := logs.KitLogger()
 
+    options := map[string]interface{} {
+        "tracer":  tracer,
+        "logger":  logger,
+    }
+
     metricsConfig := metrics.NewConfig("metrics")
-    fieldKeys := []string{"method", "access_key", "error"}
-    count := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
-        Namespace: metricsConfig.Department,
-        Subsystem: metricsConfig.Project,
-        Name:      "request_count",
-        Help:      "Number of requests received.",
-    }, fieldKeys)
+    if metricsConfig.Enabled() {
+        fieldKeys := []string{"method", "access_key", "error"}
+        count := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+            Namespace: metricsConfig.Department,
+            Subsystem: metricsConfig.Project,
+            Name:      "request_count",
+            Help:      "Number of requests received.",
+        }, fieldKeys)
 
-    latency := kitprometheus.NewHistogramFrom(stdprometheus.HistogramOpts{
-        Namespace: metricsConfig.Department,
-        Subsystem: metricsConfig.Project,
-        Name:      "request_latency_seconds",
-        Help:      "Total duration of requests in seconds.",
-    }, fieldKeys)
+        latency := kitprometheus.NewHistogramFrom(stdprometheus.HistogramOpts{
+            Namespace: metricsConfig.Department,
+            Subsystem: metricsConfig.Project,
+            Name:      "request_latency_seconds",
+            Help:      "Total duration of requests in seconds.",
+        }, fieldKeys)
 
-    //validator := middleware.NewValidator()
-
-    endpoints := NewEndpoints(map[string]interface{}{
-         "tracer": tracer,
-         "logger": logger,
-         "count": count,
-         "latency": latency,
-         //"validator": validator,
-     })
+        options["count"] = count
+        options["latency"] = latency
+    }
 
     sdConfig := sd.NewConfig("sd")
     sdClient := sd.New(sdConfig, logger)
@@ -124,10 +126,12 @@ func RegisterService(cfg nserver.Config, r *mux.Router, s *grpc.Server)  {
     //xxClient := xx_client.New(nclient.NewConfig("xx"), sdClient.Instancer(FullServiceName), tracer, logger)
     //defer xxClient.Close()
 
-	svc.RegisterHttpHandler(r, endpoints, tracer, logger)
+    endpoints := NewEndpoints(options)
 
-	srv := svc.MakeGRPCServer(endpoints, tracer, logger)
-	pb.Register{{.Interface.Name}}Server(s, srv)
+	svc.RegisterHttpHandler(r, endpoints, tracer, logger)
+	pb.Register{{.Interface.Name}}Server(s, svc.MakeGRPCServer(endpoints, tracer, logger))
+
+	return endpoints
 }
 
 // Run starts a new http server, gRPC server, and a debug server with the
@@ -169,7 +173,7 @@ func Run(cfg nserver.Config) {
 
 	s := grpc.NewServer(grpc.UnaryInterceptor(unaryServerFilter))
     r := mux.NewRouter()
-    RegisterService(cfg, r, s)
+    endpoints := RegisterService(cfg, r, s)
 
 	// HTTP transport.
 	go func() {
@@ -195,9 +199,45 @@ func Run(cfg nserver.Config) {
     //    panic(err.Error())
     //}
 
+    client, err := messaging.NewClient()
+    if err != nil {
+        logs.Warnw("Agent Server Run: failed to create the message client", "error", err.Error())
+    }
+
+    for _, sub := range client.GetConfig().GetSubscriptions() {
+        ep := sub.PushEndpoint
+        if len(ep.Service) > 0 && ep.Service != "{{.Interface.Name}}" {
+            continue
+        }
+        go func() {
+            client.Subscribe(sub, func(ctx context.Context, m *messaging.Message) error {
+                switch ep.Method { {{range $i := .Interface.Methods}}
+                        case "{{$i.Name}}":
+                            request := &pb.{{ToCamel $i.Name}}Request{}
+                            if err = jsoniter.ConfigFastest.Unmarshal(m.Data, request); err != nil {
+                                logs.Warnw("failed to unmarshal the queue's message to json", "error", err.Error())
+                                m.Ack()
+                                return err
+                            }
+
+                            if _, err = endpoints.{{ToCamel $i.Name}}(ctx, request); err != nil {
+                                // retry once
+                                if _, err = endpoints.{{ToCamel $i.Name}}(ctx, request); err != nil {
+                                    return nil
+                                }
+                            }
+                            m.Ack(){{end}}
+                }
+                return nil
+            })
+        }()
+    }
+
 	// Run!
 	logs.Info("{{.PackageName}}.{{.Interface.Name}}Server", " started.")
 	logs.Info("{{.PackageName}}.{{.Interface.Name}}Server", <-errc)
+
+	client.Shutdown()
 	logs.Info("{{.PackageName}}.{{.Interface.Name}}Server", " closed.")
 }
 

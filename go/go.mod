@@ -11,8 +11,8 @@ require (
 	github.com/goccy/go-graphviz v0.0.9
 	github.com/json-iterator/go v1.1.12
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/mojo-lang/core/go v0.0.0-20220404130715-b693482c3a6a
-	github.com/mojo-lang/db/go v0.0.0-20220405011511-a8bd7d7c094a
+	github.com/mojo-lang/core/go v0.0.0-20220410090022-9bc91a61816e
+	github.com/mojo-lang/db/go v0.0.0-20220410090202-af2d7d08ff3f
 	github.com/mojo-lang/document/go v0.0.0-20220404103159-b9c7564d0f13
 	github.com/mojo-lang/lang/go v0.0.0-20220404120718-946d0e1214df
 	github.com/mojo-lang/openapi/go v0.0.0-20220404105045-c3435881b737
