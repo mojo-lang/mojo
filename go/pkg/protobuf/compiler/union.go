@@ -22,6 +22,14 @@ func (p *Union) Name() string {
     return core.UnionTypeFullName
 }
 
+func getOneofName(name string) string {
+    n := strcase.ToSnake(name)
+    if n == "value" {
+        return "val"
+    }
+    return n
+}
+
 func (p *Union) Compile(ctx context.Context, t *lang.NominalType) (string, string, error) {
     if s, err := precompiler.CompileUnionToStruct(ctx, t); err != nil {
         return "", "", err
@@ -37,7 +45,7 @@ func (p *Union) Compile(ctx context.Context, t *lang.NominalType) (string, strin
             return "", "", errors.New(fmt.Sprintf("failed to compile struct: %s", err.Error()))
         }
 
-        oneof := descriptor.NewOneof(msgDescriptor, strcase.ToSnake(msgDescriptor.GetName()))
+        oneof := descriptor.NewOneof(msgDescriptor, getOneofName(msgDescriptor.GetName()))
         msgDescriptor.AppendOneof(oneof)
         for _, field := range msgDescriptor.Fields {
             oneof.AppendField(field)
