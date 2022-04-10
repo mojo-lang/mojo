@@ -141,7 +141,7 @@ func ProtocGenGo(path string, pkg *lang.Package, files []*descriptor.File) (util
                 })
             }
 
-            if ignore, _ := valDecl.GetBoolAttribute(db.IgnoreAttributeName); ignore {
+            if ignore, _ := valDecl.GetBoolAttribute(db.IgnoreAttributeFullName); ignore {
                 tags.Set(&structtag.Tag{
                     Key:  "db",
                     Name: "-",
@@ -151,7 +151,7 @@ func ProtocGenGo(path string, pkg *lang.Package, files []*descriptor.File) (util
                     Name: "-",
                 })
             } else {
-                if dbJson, _ := valDecl.GetBoolAttribute(db.JSONAttributeName); dbJson {
+                if dbJson, _ := valDecl.GetBoolAttribute(db.JSONAttributeFullName); dbJson {
                     if tag, _ := tags.Get("db"); tag == nil {
                         tags.Set(&structtag.Tag{
                             Key:  "db",
@@ -160,7 +160,7 @@ func ProtocGenGo(path string, pkg *lang.Package, files []*descriptor.File) (util
                     }
                     tags.AddOptions("db", "json")
                 }
-                if dbExplode, err := valDecl.GetStringAttribute(db.ExplodeAttributeName); err == nil {
+                if dbExplode, err := valDecl.GetStringAttribute(db.ExplodeAttributeFullName); err == nil {
                     if tag, _ := tags.Get("db"); tag == nil {
                         tags.Set(&structtag.Tag{
                             Key:  "db",
@@ -172,6 +172,25 @@ func ProtocGenGo(path string, pkg *lang.Package, files []*descriptor.File) (util
                     } else {
                         tags.AddOptions("db", "explode")
                     }
+                }
+
+                addPrimaryKey := func(key string) {
+                    if tag, _ := tags.Get("db"); tag == nil {
+                        tags.Set(&structtag.Tag{
+                            Key:  "db",
+                            Name: fieldName,
+                        })
+                    }
+                    tags.AddOptions("db", key+"=true")
+                    tags.Set(&structtag.Tag{Key: "gorm", Name: "primaryKey"})
+                }
+
+                if v, err := valDecl.GetBoolAttribute(db.PrimaryKeyAttributeFullName); err == nil && v {
+                    addPrimaryKey("primaryKey")
+                } else if v, err = valDecl.GetBoolAttribute(db.KeyAttributeFullName); err == nil && v {
+                    addPrimaryKey("key")
+                } else if v, err = valDecl.GetBoolAttribute(core.KeyAttributeName); err == nil && v {
+                    addPrimaryKey("key")
                 }
             }
         })
