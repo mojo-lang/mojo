@@ -5,6 +5,7 @@ import (
     "github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
     "go/format"
     "io"
+    "sort"
     "strings"
     "text/template"
 
@@ -64,6 +65,7 @@ func unifyStringArray(array []string) []string {
     for key, _ := range index {
         result = append(result, key)
     }
+    sort.Strings(result)
     return result
 }
 
