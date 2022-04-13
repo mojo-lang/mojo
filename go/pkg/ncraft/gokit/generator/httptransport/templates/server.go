@@ -180,6 +180,15 @@ func errorEncoder(_ context.Context, err error, w http.ResponseWriter) {
 			body = jsonBody
 		}
 	}
+    e, ok := err.(*core.Error)
+    if !ok {
+        e = core.NewErrorFrom(500, err.Error())
+	}
+
+    if jsonBody, marshalErr := jsoniter.ConfigFastest.Marshal(e); marshalErr == nil {
+        body = jsonBody
+    }
+
 	w.Header().Set("Content-Type", contentType)
 	if headerer, ok := err.(httptransport.Headerer); ok {
 		for k := range headerer.Headers() {
@@ -231,7 +240,11 @@ func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.Respon
 // EncodeHTTPGenericResponse is a transport/http.EncodeResponseFunc that encodes
 // the response as JSON to the response writer. Primarily useful in a server.
 func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	if p, ok := response.(pagination.Paginater); ok {
+	if _, ok := response.(*core.Null); ok {
+		return nil 
+	}
+
+    if p, ok := response.(pagination.Paginater); ok {
 		total := p.GetTotalCount()
 		if total > 0 {
 			w.Header().Set("X-Total-Count", strconv.Itoa(int(total)))
