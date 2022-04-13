@@ -31,7 +31,7 @@ func (j *DbJson) CompileStruct(ctx context.Context, decl *lang.StructDecl) error
             GoPackageName:      compiler.GetGoPackage(pkg.FullName),
             Name:               newName,
             UnderlyingTypeName: field.Type.Name,
-            StructType:         false,
+            StructType:         true,
             FullName:           newName,
         }
 
@@ -40,13 +40,13 @@ func (j *DbJson) CompileStruct(ctx context.Context, decl *lang.StructDecl) error
         fieldTypeFullName := field.Type.GetFullName()
         if fieldTypeFullName == core.ArrayTypeFullName || fieldTypeFullName == core.MapTypeFullName {
             dbJSON.UnderlyingTypeName = ""
+            dbJSON.StructType = false
         }
 
         if field.Type.PackageName == pkg.FullName {
             dbJSON.Name = field.Type.Name
             dbJSON.FullName = lang.GetFullName("", field.Type.GetEnclosingNames(), field.Type.Name)
             dbJSON.UnderlyingTypeName = ""
-            dbJSON.StructType = false
         }
 
         j.DbJSONs = append(j.DbJSONs, dbJSON)

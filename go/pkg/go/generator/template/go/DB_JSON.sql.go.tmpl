@@ -24,7 +24,7 @@ import (
 	{{if not .InDbPkg}}"github.com/mojo-lang/db/go/pkg/mojo/db"{{- end}}
 )
 
-func (x *{{.Name}}) Value() (driver.Value, error) {
+func (x {{if .StructType}}*{{end}}{{.Name}}) Value() (driver.Value, error) {
 {{- if .UnderlyingTypeName}}
 	return {{if not .InDbPkg}}db.{{end}}JSONValuer{}.Value(x.{{.UnderlyingTypeName}})
 {{else}}
@@ -40,10 +40,10 @@ func (x *{{.Name}}) Scan(value interface{}) error {
 {{- end}}
 }
 
-func (x *{{.Name}}) GormDBDataType(gdb *gorm.DB, field *schema.Field) string {
+func (x {{if .StructType}}*{{end}}{{.Name}}) GormDBDataType(gdb *gorm.DB, field *schema.Field) string {
 	return {{if not .InDbPkg}}db.{{end}}JSONDbDataType{}.GormDBDataType(gdb, field)
 }
 
-func (x *{{.Name}}) GormDataType() string {
+func (x {{if .StructType}}*{{end}}{{.Name}}) GormDataType() string {
     return "string"
 }

@@ -192,6 +192,17 @@ func ProtocGenGo(path string, pkg *lang.Package, files []*descriptor.File) (util
                 } else if v, err = valDecl.GetBoolAttribute(core.KeyAttributeName); err == nil && v {
                     addPrimaryKey("key")
                 }
+
+                if valDecl.HasAttribute(db.IndexAttributeFullName) {
+                    if tag, _ := tags.Get("db"); tag == nil {
+                        tags.Set(&structtag.Tag{
+                            Key:  "db",
+                            Name: fieldName,
+                        })
+                    }
+                    tags.AddOptions("db", "index=true")
+                    tags.Set(&structtag.Tag{Key: "gorm", Name: "index"})
+                }
             }
         })
 
