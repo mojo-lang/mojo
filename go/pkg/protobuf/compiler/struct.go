@@ -260,7 +260,7 @@ func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDec
             addOptionsDependency(fieldCtx)
         }
         if index, err := lang.GetStringAttribute(field.Type.Attributes, db.IndexAttributeName); err == nil {
-            member.SetStringOption(mojo.E_DbIgnore, index)
+            member.SetStringOption(mojo.E_DbIndex, index)
             addOptionsDependency(fieldCtx)
         }
         if explode, err := lang.GetStringAttribute(field.Type.Attributes, db.ExplodeAttributeName); err == nil {
