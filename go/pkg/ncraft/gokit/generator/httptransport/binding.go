@@ -92,11 +92,13 @@ func NewBinding(i int, meth *types.InterfaceMethod) *Binding {
         }
     }
 
-    if nBinding.BodyField == nil &&
-        len(nBinding.Fields) == 1 &&
-        nBinding.Fields[0].Location == "query" &&
-        httpCanCarryBody(nBinding.Verb) {
-        nBinding.BodyField = nBinding.Fields[0]
+    if nBinding.BodyField == nil && httpCanCarryBody(nBinding.Verb) {
+        for _, field := range nBinding.Fields {
+            if field.Location == "query" && len(compiler.GetPackageName(field.GoType)) > 0 {
+                nBinding.BodyField = field
+                break
+            }
+        }
     }
 
     return &nBinding
