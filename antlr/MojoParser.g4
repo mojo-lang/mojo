@@ -164,6 +164,7 @@ declaration : (document EOL)? (attributes EOL*)?
       | structDeclaration
       | interfaceDeclaration
       | attributeDeclaration
+      | attributeAliasDeclaration
       );
 
 // GRAMMAR OF A CODE BLOCK
@@ -330,6 +331,11 @@ interfaceMethodDeclaration : functionName genericParameterClause? EOL* functionS
 // GRAMMAR OF A ATTRIBUTE DECLARATION
 attributeDeclaration
   : KEYWORD_ATTRIBUTE attributeName genericParameterClause? (structBody | typeAnnotation (EOL* initializer )? followingDocument?);
+
+attributeAliasDeclaration
+  : KEYWORD_ATTRIBUTE attributeName  genericParameterClause? EOL* attributeAliasAssignment;
+
+attributeAliasAssignment : assignmentOperator EOL* attributeName followingDocument?;
 
 // Patterns
 

@@ -323,6 +323,14 @@ func (v *BaseMojoParserVisitor) VisitAttributeDeclaration(ctx *AttributeDeclarat
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitAttributeAliasDeclaration(ctx *AttributeAliasDeclarationContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitAttributeAliasAssignment(ctx *AttributeAliasAssignmentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitPattern(ctx *PatternContext) interface{} {
 	return v.VisitChildren(ctx)
 }

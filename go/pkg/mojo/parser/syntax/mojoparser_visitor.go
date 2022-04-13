@@ -244,6 +244,12 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#attributeDeclaration.
 	VisitAttributeDeclaration(ctx *AttributeDeclarationContext) interface{}
 
+	// Visit a parse tree produced by MojoParser#attributeAliasDeclaration.
+	VisitAttributeAliasDeclaration(ctx *AttributeAliasDeclarationContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#attributeAliasAssignment.
+	VisitAttributeAliasAssignment(ctx *AttributeAliasAssignmentContext) interface{}
+
 	// Visit a parse tree produced by MojoParser#pattern.
 	VisitPattern(ctx *PatternContext) interface{}
 
