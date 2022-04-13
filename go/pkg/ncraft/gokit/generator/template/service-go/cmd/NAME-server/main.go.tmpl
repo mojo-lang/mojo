@@ -21,7 +21,11 @@ func main() {
 	flag.Parse()
 
     var conf nserver.Config
-	err := config.ScanKey("server", &conf)
+    err := config.ScanKey("{{ToLowerCamel .Interface.Name}}Server", &conf)
+    if err != nil {
+        err = config.ScanKey("server", &conf)
+    }
+
 	if err != nil {
 	    logs.Warnw("failed to get the server config", "error", err.Error())
 	}
