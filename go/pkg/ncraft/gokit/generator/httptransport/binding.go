@@ -94,7 +94,8 @@ func NewBinding(i int, meth *types.InterfaceMethod) *Binding {
 
     if nBinding.BodyField == nil && httpCanCarryBody(nBinding.Verb) {
         for _, field := range nBinding.Fields {
-            if field.Location == "query" && len(compiler.GetPackageName(field.GoType)) > 0 {
+            if field.Location == "query" && len(compiler.GetPackageName(field.GoType)) > 0 &&
+                !(strings.HasPrefix(field.GoType, "map[") || strings.HasPrefix(field.GoType, "[]")) {
                 nBinding.BodyField = field
                 break
             }
