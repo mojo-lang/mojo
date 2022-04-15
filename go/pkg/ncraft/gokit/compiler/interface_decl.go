@@ -310,6 +310,10 @@ func compileBindingParameter(decl *lang.ValueDecl, pathParams map[string]bool, e
             if strings.Contains(pathParam, ".") {
                 for _, field := range fieldType.Message.Fields {
                     fullName := param.Field.Name + "." + field.Name
+                    if pathParam != fullName {
+                        fullName = param.Field.Name + "." + strcase.ToSnake(field.Name)
+                    }
+
                     if pathParam == fullName {
                         field.FullName = fullName
                         field.Enclosing = param.Field
