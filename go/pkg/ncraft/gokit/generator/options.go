@@ -110,7 +110,7 @@ func generateTemplateFile(tmplPath string, ds *data.Service, prevFile io.Reader,
     var err error
 
     // Get the actual path to the file rather than the templates file path
-    actualFP := templatePathToActual(tmplPath, ds.PackageName, ds.Interface.Name)
+    actualFP := templatePathToActual(tmplPath, ds.Go.PackageName, ds.Interface.Name)
 
     switch tmplPath {
     case handlers.ServerHandlerPath:
