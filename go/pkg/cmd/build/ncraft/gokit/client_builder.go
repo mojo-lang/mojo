@@ -5,9 +5,8 @@ import (
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/compiler"
     "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit"
-    kitcompiler "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
 )
 
 type ClientBuilder struct {
@@ -20,25 +19,24 @@ type ClientBuilder struct {
 func (b ClientBuilder) Build() error {
     logs.Infow("begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
 
-    compiler := gokit.NewCompiler()
-    pkgs := b.Package.GetAllPackages()
-
     options := make(core.Options)
-    for _, pkg := range pkgs {
+    for _, pkg := range b.Package.GetAllPackages() {
         options[pkg.FullName] = getPackageImport(pkg)
     }
     for _, pkg := range b.Package.ResolvedDependencies {
         options[pkg.FullName] = getPackageImport(pkg)
     }
-    err := compiler.Compile(kitcompiler.WithGoPackageImports(context.Empty(), options), pkgs)
+
+    cmp := gokit.NewCompiler()
+    err := cmp.CompilePackage(compiler.WithGoPackageImports(context.Empty(), options), b.Package)
 
     if err != nil {
         logs.Errorw("failed to compile ncraft gokit", "package", b.Package.FullName, "error", err.Error())
         return err
     }
 
-    services := compiler.Services
-    conf := render.Config{
+    services := cmp.Services
+    conf := gokit.Options{
         Repository: b.Repository,
         Output:     b.Output,
     }

@@ -28,3 +28,54 @@ type EnumCompiler interface {
 type InterfaceCompiler interface {
     CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error
 }
+
+func IsPackageCompiler(c interface{}) bool {
+    if _, ok := c.(PackageCompiler); ok {
+        return true
+    }
+    return false
+}
+
+func IsSourceFileCompiler(c interface{}) bool {
+    if _, ok := c.(SourceFileCompiler); ok {
+        return true
+    }
+    return false
+}
+
+func IsStructCompiler(c interface{}) bool {
+    if _, ok := c.(StructCompiler); ok {
+        return true
+    }
+    return false
+}
+
+func IsTypeAliasCompiler(c interface{}) bool {
+    if _, ok := c.(TypeAliasCompiler); ok {
+        return true
+    }
+    return false
+}
+
+func IsEnumCompiler(c interface{}) bool {
+    if _, ok := c.(EnumCompiler); ok {
+        return true
+    }
+    return false
+}
+
+func IsInterfaceCompiler(c interface{}) bool {
+    if _, ok := c.(InterfaceCompiler); ok {
+        return true
+    }
+    return false
+}
+
+func IsCompiler(c interface{}) bool {
+    return IsPackageCompiler(c) ||
+        IsSourceFileCompiler(c) ||
+        IsStructCompiler(c) ||
+        IsTypeAliasCompiler(c) ||
+        IsEnumCompiler(c) ||
+        IsInterfaceCompiler(c)
+}

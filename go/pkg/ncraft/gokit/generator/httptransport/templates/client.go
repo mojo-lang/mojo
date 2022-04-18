@@ -1,6 +1,6 @@
 package templates
 
-// ClientEncodeTemplate is the template for generating the client-side encoding
+// ClientEncodeTemplate is the templates for generating the client-side encoding
 // function for a particular Binding.
 var ClientEncodeTemplate = `
 {{- with $binding := . -}}
@@ -10,7 +10,7 @@ var ClientEncodeTemplate = `
 	func EncodeHTTP{{$binding.Label}}Request(_ context.Context, r *http.Request, request interface{}) error {
 		strval := ""
 		_ = strval
-		req := request.(*{{PackageName $binding.Parent.RequestType}}.{{GoName $binding.Parent.RequestType}})
+		req := request.(*{{GoPackageName $binding.Parent.RequestType}}.{{GoName $binding.Parent.RequestType}})
 		_ = req
 
 		r.Header.Set("transport", "HTTPJSON")
@@ -52,7 +52,7 @@ var ClientEncodeTemplate = `
 
 		// Set the body parameters
 		var buf bytes.Buffer
-		toRet := request.(*{{PackageName $binding.Parent.RequestType}}.{{GoName $binding.Parent.RequestType}})
+		toRet := request.(*{{GoPackageName $binding.Parent.RequestType}}.{{GoName $binding.Parent.RequestType}})
 		{{- range $field := $binding.Fields -}}
 			{{if eq $field.Location "body"}}
 				{{/* Only set the fields which should be in the body, so all
@@ -114,7 +114,7 @@ var (
 // New returns a service backed by an HTTP server living at the remote
 // instance. We expect instance to come from a service discovery system, so
 // likely of the form "host:port".
-func NewHttpClient(instance string, options ...ClientOption) (pb.{{.Interface.Name}}Server, error) {
+func NewHttpClient(instance string, options ...ClientOption) (pb.{{.Interface.ServerName}}, error) {
 	var cc clientConfig
 
 	for _, f := range options {
@@ -210,7 +210,7 @@ func contextValuesToHttpHeaders(keys []string) http.RequestFunc {
 // HTTP Client Decode
 {{range $method := .HTTPHelper.Methods}}
 	// DecodeHTTP{{$method.Name}}Response is a transport/http.DecodeResponseFunc that decodes
-	// a JSON-encoded {{GoName $method.ResponseType}} response from the HTTP response body.
+	// a JSON-encoded {{GoName $method.Response}} response from the HTTP response body.
 	// If the response has a non-200 status code, we will interpret that as an
 	// error and attempt to decode the specific error message from the response
 	// body. Primarily useful in a client.
@@ -228,7 +228,7 @@ func contextValuesToHttpHeaders(keys []string) http.RequestFunc {
 			return nil, errors.Wrapf(errorDecoder(buf), "status code: '%d'", r.StatusCode)
 		}
 
-		var resp {{PackageName $method.ResponseType}}.{{GoName $method.ResponseType}}
+		var resp {{GoPackageName $method.Response}}.{{GoName $method.Response}}
 		if err = json.Unmarshal(buf, &resp); err != nil {
 			return nil, errorDecoder(buf)
 		}

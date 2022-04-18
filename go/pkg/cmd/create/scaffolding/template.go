@@ -25,16 +25,16 @@ var helloWorldEcho string
 //go:embed template/hello-world/v1/hello_world.mojo
 var helloWorldService string
 
-// ApplyTemplate applies a template with a given name, executor context, and
-// function map. Returns the output of the template on success, returns an
-// error if template failed to execute.
+// ApplyTemplate applies a templates with a given name, executor context, and
+// function map. Returns the output of the templates on success, returns an
+// error if templates failed to execute.
 func ApplyTemplate(name string, tmpl string, executor interface{}, funcMap template.FuncMap) (string, error) {
     codeTemplate := template.Must(template.New(name).Funcs(funcMap).Parse(tmpl))
 
     code := bytes.NewBuffer(nil)
     err := codeTemplate.Execute(code, executor)
     if err != nil {
-        return "", errors.Wrapf(err, "attempting to execute template %q", name)
+        return "", errors.Wrapf(err, "attempting to execute templates %q", name)
     }
     return code.String(), nil
 }

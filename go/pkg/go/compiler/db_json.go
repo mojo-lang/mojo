@@ -7,7 +7,6 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/go/data"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
 )
 
 type DbJson struct {
@@ -28,7 +27,7 @@ func (j *DbJson) CompileStruct(ctx context.Context, decl *lang.StructDecl) error
         newName := decl.Name + strcase.ToCamel(field.Name)
         dbJSON := &data.DbJSON{
             PackageName:        pkg.FullName,
-            GoPackageName:      compiler.GetGoPackage(pkg.FullName),
+            GoPackageName:      lang.GetGoPackageName(pkg.FullName),
             Name:               newName,
             UnderlyingTypeName: field.Type.Name,
             StructType:         true,

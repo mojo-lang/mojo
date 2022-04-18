@@ -15,9 +15,8 @@ import (
     _go "github.com/mojo-lang/mojo/go/pkg/cmd/build/go"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/compiler"
     "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit"
-    kitcompiler "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
     "github.com/pkg/errors"
 )
 
@@ -79,26 +78,25 @@ func (b Builder) Build() error {
         return sb.Build()
     }
 
-    compiler := gokit.NewCompiler()
-    pkgs := b.Package.GetAllPackages()
+    cmp := gokit.NewCompiler()
     options := make(core.Options)
-    for _, pkg := range pkgs {
+    for _, pkg := range b.Package.GetAllPackages() {
         options[pkg.FullName] = getPackageImport(pkg)
     }
     for _, pkg := range b.Package.GetAllDependentPackages() {
         options[pkg.FullName] = getPackageImport(pkg)
     }
 
-    err := compiler.Compile(kitcompiler.WithGoPackageImports(context.Empty(), options), pkgs)
+    err := cmp.CompilePackage(compiler.WithGoPackageImports(context.Empty(), options), b.Package)
     if err != nil {
         logs.Errorw("failed to compile ncraft gokit", "package", b.Package.FullName, "error", err.Error())
         return err
     }
 
-    services := compiler.Services
+    services := cmp.Services
     setDefaultRepository("service-go")
     b.Output = path2.Join(b.Output, path2.Base(b.Repository))
-    conf := render.Config{
+    conf := gokit.Options{
         Repository:    b.Repository,
         ApiRepository: path2.Join(b.Package.Repository.FormatWithoutSchema(), "go"),
         Output:        b.Output,

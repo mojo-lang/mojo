@@ -18,7 +18,7 @@ func (g GenericTypeNamer) NameFrom(name string) string {
 }
 
 // Name
-// typename: typename template
+// typename: typename templates
 // "Cached": "Cached{T}"
 func (g GenericTypeNamer) Name(t *lang.NominalType) string {
     name := t.Name

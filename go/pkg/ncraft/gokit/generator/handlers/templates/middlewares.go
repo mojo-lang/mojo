@@ -9,19 +9,21 @@ import (
 	"github.com/go-kit/kit/tracing/opentracing"
 	stdopentracing "github.com/opentracing/opentracing-go"
 
-	{{range $i := .ExternalMessageImports}}
+	{{range $i := .Go.ImportedTypePaths}}
 	"{{$i}}"
 	{{- end}}
 
-	"{{.RepositoryPath -}}/pkg/{{ToKebab .Interface.Name}}-service/svc"
-	pb "{{.ApiImportPath -}}"
-)
+	"{{.Go.RepositoryPath -}}/pkg/{{ToKebab .Interface.Name}}-service/svc"
 
-var ({{range $name := .ExternalStructs}}
-	_ = {{PackageName $name}}.{{$name}}{}
-{{- end}}{{range $name := .ExternalEnums}}
-	_ = {{PackageName $name}}.{{$name}}(0)
-{{- end}})
+	// this service api
+	pb "{{.Go.ApiImportPath -}}"
+)
+{{if .HasImported}}
+var ({{range $msg := .ImportedMessages}}
+	_ = {{$msg.Go.PackageName}}.{{$msg.Name}}{}
+{{- end}}{{range $enum := .ImportedEnums}}
+	_ = {{$enum.Go.PackageName}}.{{$enum.Name}}(0)
+{{- end}}){{end}}
 
 // WrapEndpoints accepts the service's entire collection of endpoints, so that a
 // set of middlewares can be wrapped around every middleware (e.g., access
@@ -40,7 +42,7 @@ func WrapEndpoints(in svc.Endpoints, options map[string]interface{}) svc.Endpoin
 	// These middlewares get passed the endpoints name as their first argument when applied.
 	// This can be used to write generic metric gathering middlewares that can
 	// report the endpoint name for free.
-	// github.com/frankee/ncraft/_example/middlewares/labeledmiddlewares.go for examples.
+	// github.com/ncraft-io//_example/middlewares/labeledmiddlewares.go for examples.
 	// in.WrapAllLabeledExcept(errorCounter(statsdCounter), "Status", "Ping")
 
 	// How to apply a middleware to a single endpoint.
@@ -80,7 +82,7 @@ func WrapEndpoints(in svc.Endpoints, options map[string]interface{}) svc.Endpoin
 	return in
 }
 
-func WrapService(in pb.{{.Interface.Name}}Server, options map[string]interface{}) pb.{{.Interface.Name}}Server {
+func WrapService(in pb.{{.Interface.ServerName}}, options map[string]interface{}) pb.{{.Interface.ServerName}} {
 	return in
 }
 `

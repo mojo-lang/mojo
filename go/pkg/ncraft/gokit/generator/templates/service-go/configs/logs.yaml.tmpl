@@ -1,0 +1,11 @@
+logs:
+  level: debug
+  encode: console #json or console
+  initFields:
+    package: {{.PackageFullName}}
+    server: {{ToKebab .Interface.ServerName}}
+    version: {{.Version}}
+  file:
+    maxSize: 100
+    maxBackups: 10
+    maxAge: 28

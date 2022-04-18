@@ -4,25 +4,24 @@ package handlers
 
 import (
     "bytes"
+    "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/data"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers/templates"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/render"
+    "github.com/pkg/errors"
     "go/ast"
     "go/parser"
     "go/printer"
     "go/token"
     "io"
-
-    "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
-    "github.com/pkg/errors"
-
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers/templates"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/types"
 )
 
 // NewInterface is an exported func that creates a new service
 // it will not be defined in the service definition but is required
 const ignoredFunc = "NewService"
 
-// ServerHandlerPath is the relative path to the server handler template file
+// ServerHandlerPath is the relative path to the server handler templates file
 const ServerHandlerPath = "pkg/NAME-service/handlers/handlers.go.tmpl"
 
 var (
@@ -47,9 +46,9 @@ func GetHandlersTemplate() string {
     return templates.Handlers + handlerInterface + handlerMethods + handlerExtension
 }
 
-// New returns a ncraft.Renderable capable of updating server handlers.
+// New returns a render.Renderer capable of updating server handlers.
 // New should be passed the previous version of the server handler to parse.
-func New(svc *types.Interface, prev io.Reader) (render.Renderable, error) {
+func New(svc *data.Interface, prev io.Reader) (render.Renderer, error) {
     var h handler
     //logs.WithField("Interface Methods", len(svc.Methods)).Debug("Handler being created")
     h.mMap = newMethodMap(svc.Methods)
@@ -70,9 +69,9 @@ func New(svc *types.Interface, prev io.Reader) (render.Renderable, error) {
 
 // methodMap stores all defined service methods by name and is updated to
 // remove service methods already in the handler file.
-type methodMap map[string]*types.InterfaceMethod
+type methodMap map[string]*data.Method
 
-func newMethodMap(meths []*types.InterfaceMethod) methodMap {
+func newMethodMap(meths []*data.Method) methodMap {
     mMap := make(methodMap, len(meths))
     for _, m := range meths {
         mMap[m.Name] = m
@@ -82,19 +81,19 @@ func newMethodMap(meths []*types.InterfaceMethod) methodMap {
 
 type handler struct {
     fset    *token.FileSet
-    service *types.Interface
+    service *data.Interface
     mMap    methodMap
     ast     *ast.File
 }
 
 type handlerData struct {
     InterfaceName string
-    Methods       []*types.InterfaceMethod
+    Methods       []*data.Method
 }
 
 // Render returns a go code server handler that has functions for all
 // InterfaceMethods in the service definition.
-func (h *handler) Render(alias string, data *render.Data) (io.Reader, error) {
+func (h *handler) Render(alias string, data *data.Service) (io.Reader, error) {
     if alias != ServerHandlerPath {
         return nil, errors.Errorf("cannot render unknown file: %q", alias)
     }
@@ -116,7 +115,7 @@ func (h *handler) Render(alias string, data *render.Data) (io.Reader, error) {
         InterfaceName: data.Interface.Name,
     }
 
-    // If there are no methods to template then exit early
+    // If there are no methods to templates then exit early
     if len(h.mMap) == 0 {
         return h.buffer()
     }
@@ -198,26 +197,26 @@ func (m methodMap) pruneDecls(decls []ast.Decl, svcName string) []ast.Decl {
     return newDecls
 }
 
-// updateParams updates the second param of f to be `X`.(m.RequestType.Name).
-// func ProtoMethod(ctx context.Context, *pb.Old) ...-> func ProtoMethod(ctx context.Context, *pb.(m.RequestType.Name))...
-func updateParams(f *ast.FuncDecl, m *types.InterfaceMethod) {
+// updateParams updates the second param of f to be `X`.(m.Request.Name).
+// func ProtoMethod(ctx context.Context, *pb.Old) ...-> func ProtoMethod(ctx context.Context, *pb.(m.Request.Name))...
+func updateParams(f *ast.FuncDecl, m *data.Method) {
     if f.Type.Params.NumFields() != 2 {
         //log.WithField("Function", f.Name.Name).
         //	Warn("Function params signature should be func NAME(ctx context.Context, in *pb.TYPE), cannot fix")
         return
     }
-    updatePBFieldType(f.Type.Params.List[1].Type, m.RequestType.Name)
+    updatePBFieldType(f.Type.Params.List[1].Type, m.Request.Name)
 }
 
-// updateResults updates the first result of f to be `X`.(m.ResponseType.Name).
-// func ProtoMethod(...) (*pb.Old, error) ->  func ProtoMethod(...) (*pb.(m.ResponseType.Name), error)
-func updateResults(f *ast.FuncDecl, m *types.InterfaceMethod) {
+// updateResults updates the first result of f to be `X`.(m.Response.Name).
+// func ProtoMethod(...) (*pb.Old, error) ->  func ProtoMethod(...) (*pb.(m.Response.Name), error)
+func updateResults(f *ast.FuncDecl, m *data.Method) {
     if f.Type.Results.NumFields() != 2 {
         //log.WithField("Function", f.Name.Name).
         //	Warn("Function results signature should be (*pb.TYPE, error), cannot fix")
         return
     }
-    updatePBFieldType(f.Type.Results.List[0].Type, m.ResponseType.Name)
+    updatePBFieldType(f.Type.Results.List[0].Type, m.Response.Name)
 }
 
 // updatePBFieldType updates t if in the form X.Sel/*X.Sel to X.newType/*X.newType.
@@ -307,15 +306,11 @@ func exprString(e ast.Expr) string {
     return ""
 }
 
-func applyServerTmpl(exec *render.Data) (io.Reader, error) {
+func applyServerTmpl(service *data.Service) (io.Reader, error) {
     //logs.Debug("Rendering handler for the first time")
-    return exec.ApplyTemplate(GetHandlersTemplate(), "ServerTmpl")
+    return util.ApplyTemplate("ServerTmpl", GetHandlersTemplate(), service, service.FuncMap)
 }
 
-//func applyServerMethsTmpl(exec handlerData) (io.Reader, error) {
-//	return render.ApplyTemplate(templates.HandlerMethods, "ServerMethsTmpl", exec, render.FuncMap)
-//}
-
-func applyServerMethsTmpl(exec *render.Data) (io.Reader, error) {
-    return exec.ApplyTemplate(handlerMethods, "ServerMethsTmpl")
+func applyServerMethsTmpl(service *data.Service) (io.Reader, error) {
+    return util.ApplyTemplate("ServerMethsTmpl", handlerMethods, service, service.FuncMap)
 }

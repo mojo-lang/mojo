@@ -14,5 +14,8 @@ var EnumCaseFiles embed.FS
 //go:embed mojo-inherits/*
 var InheritsCaseFiles embed.FS
 
+//go:embed mojo-ncraft/*
+var NCraftCaseFiles embed.FS
+
 //go:embed mojo-package/*
 var PackageCaseFiles embed.FS

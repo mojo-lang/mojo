@@ -1,0 +1,6 @@
+FROM centos:8
+
+ADD {{.PackageName}}-{{ToKebab .Interface.ServerName}} /{{.PackageName}}-{{ToKebab .Interface.ServerName}}
+
+WORKDIR /
+ENTRYPOINT [ "/{{.PackageName}}-{{ToKebab .Interface.ServerName}}" ]

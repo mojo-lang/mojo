@@ -89,7 +89,7 @@ func TestServerMethsTempl(t *testing.T) {
 	`
 	a, b, di := helper.DiffGoCode(string(genBytes), expected)
 	if strings.Compare(a, b) != 0 {
-		t.Fatalf("Server method template output different than expected\n %s", di)
+		t.Fatalf("Server method templates output different than expected\n %s", di)
 	}
 }
 
@@ -162,7 +162,7 @@ func TestApplyServerTempl(t *testing.T) {
 	`
 	a, b, di := helper.DiffGoCode(string(genBytes), expected)
 	if strings.Compare(a, b) != 0 {
-		t.Fatalf("Server template output different than expected\n %s", di)
+		t.Fatalf("Server templates output different than expected\n %s", di)
 	}
 }
 

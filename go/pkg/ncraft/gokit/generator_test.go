@@ -13,7 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/frankee/ncraft/gengokit"
-	templateFileAssets "github.com/frankee/ncraft/gengokit/template"
+	templateFileAssets "github.com/frankee/ncraft/gengokit/templates"
 	"github.com/frankee/ncraft/svcdef"
 
 	"github.com/frankee/ncraft/gengokit/gentesthelper"

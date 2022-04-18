@@ -5,18 +5,17 @@ import (
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/compiler"
     "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit"
-    kitcompiler "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
 )
 
 const HandlerInterface = `
 type {{ToLowerCamel .Interface.Name}} struct{
-	client  pb.{{.Interface.Name}}Server
+	client  pb.{{.Interface.ServerName}}
 }
 
 // NewInterface returns a naive, stateless implementation of Interface.
-func NewService() pb.{{.Interface.Name}}Server {
+func NewService() pb.{{.Interface.ServerName}} {
 	var conf config.Config
 	err := config.ScanKey("service", &conf)
 	if err != nil {
@@ -36,7 +35,7 @@ const HandlerMethods = `
 {{with $te := . }}
 	{{range $i := $te.Interface.Methods}}
 		// {{$i.Name}} implements Interface.
-		func (s {{ToLowerCamel $te.Interface.Name}}) {{ToCamel $i.Name}}(ctx context.Context, in *{{PackageName $i.RequestType.Name}}.{{GoName $i.RequestType.Name}}) (*{{PackageName $i.ResponseType.Name}}.{{GoName $i.ResponseType.Name}}, error){
+		func (s {{ToLowerCamel $te.Interface.Name}}) {{ToCamel $i.Name}}(ctx context.Context, in *{{GoPackageName $i.Request.Name}}.{{GoName $i.Request.Name}}) (*{{GoPackageName $i.Response.Name}}.{{GoName $i.Response.Name}}, error){
 			logs.Debug("create {{ToCamel $i.Name}} request in sidecar")
 			return s.client.{{ToCamel $i.Name}}(ctx, in)
 		}
@@ -59,10 +58,10 @@ const HandlerProxyMethods = `
 {{with $te := . }}
 	{{range $i := $te.Interface.Methods}}
 		// {{$i.Name}} implements Interface.
-		func (s {{ToLowerCamel $te.Interface.Name}}) {{ToCamel $i.Name}}(ctx context.Context, in *{{PackageName $i.RequestType.Name}}.{{GoName $i.RequestType.Name}}) (*{{PackageName $i.ResponseType.Name}}.{{GoName $i.ResponseType.Name}}, error){
-			var resp {{PackageName $i.ResponseType.Name}}.{{GoName $i.ResponseType.Name}}
-			resp = {{PackageName $i.ResponseType.Name}}.{{GoName $i.ResponseType.Name}}{
-				{{range $j := $i.ResponseType.Fields -}}
+		func (s {{ToLowerCamel $te.Interface.Name}}) {{ToCamel $i.Name}}(ctx context.Context, in *{{GoPackageName $i.Request.Name}}.{{GoName $i.Request.Name}}) (*{{GoPackageName $i.Response.Name}}.{{GoName $i.Response.Name}}, error){
+			var resp {{GoPackageName $i.Response.Name}}.{{GoName $i.Response.Name}}
+			resp = {{GoPackageName $i.Response.Name}}.{{GoName $i.Response.Name}}{
+				{{range $j := $i.Response.Fields -}}
 					// {{GoName $j.Name}}:
 				{{end -}}
 			}
@@ -81,25 +80,23 @@ type SidecarBuilder struct {
 func (b SidecarBuilder) Build() error {
     logs.Infow("begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
 
-    compiler := gokit.NewCompiler()
-    pkgs := b.Package.GetAllPackages()
-
     options := make(core.Options)
-    for _, pkg := range pkgs {
+    for _, pkg := range b.Package.GetAllPackages() {
         options[pkg.FullName] = getPackageImport(pkg)
     }
     for _, pkg := range b.Package.ResolvedDependencies {
         options[pkg.FullName] = getPackageImport(pkg)
     }
 
-    err := compiler.Compile(kitcompiler.WithGoPackageImports(context.Empty(), options), pkgs)
+    cmp := gokit.NewCompiler()
+    err := cmp.CompilePackage(compiler.WithGoPackageImports(context.Empty(), options), b.Package)
     if err != nil {
         logs.Errorw("failed to compile ncraft gokit", "package", b.Package.FullName, "error", err.Error())
         return err
     }
 
-    services := compiler.Services
-    conf := render.Config{
+    services := cmp.Services
+    conf := gokit.Options{
         Repository: b.Repository,
         Output:     b.Output,
     }

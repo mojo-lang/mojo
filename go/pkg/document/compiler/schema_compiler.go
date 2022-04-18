@@ -40,12 +40,13 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
             Header:    document.NewTextTableHeader("字段", "类型", "格式类型", "是否必须", "默认值", "说明"),
         }
 
-        fieldNames := decl.GetStructDecl().FieldNames(lang.FieldNamOptionUseAlias)
+        fieldNames := decl.GetStructDecl().GetAllFieldNames(lang.FieldNamOptionUseAlias)
         if decl == nil {
             fieldNames = schema.FieldNames(s.Components.Schemas)
         }
 
         if len(fieldNames) > 0 {
+            //sort.Strings(fieldNames)
             s.compileFields(context.Empty(), fieldNames, schema, table)
             doc.AppendTable(table)
         }

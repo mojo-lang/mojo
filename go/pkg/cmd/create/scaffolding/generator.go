@@ -37,7 +37,7 @@ func (g *Generator) Generate(data *Data, output string) error {
 
     applyTemplate := func(name string, tmpl string, tmplData interface{}, filename string) error {
         if tmplData == nil {
-            return errors.New("the input template data is nil")
+            return errors.New("the input templates data is nil")
         }
 
         str, err := ApplyTemplate(name, tmpl, tmplData, FuncMap)

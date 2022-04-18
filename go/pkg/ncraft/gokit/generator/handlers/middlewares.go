@@ -1,8 +1,9 @@
 package handlers
 
 import (
+    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/data"
     "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers/templates"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
     "github.com/pkg/errors"
     "io"
 )
@@ -10,7 +11,7 @@ import (
 // MiddlewaresPath is the path to the middleware gotemplate file.
 const MiddlewaresPath = "pkg/NAME-service/handlers/middlewares.go.tmpl"
 
-// NewMiddleware returns a Renderable that renders the middlewares.go file.
+// NewMiddlewares returns a Renderable that renders the middlewares.go file.
 func NewMiddlewares() *Middlewares {
     var m Middlewares
 
@@ -31,12 +32,12 @@ func (m *Middlewares) Load(prev io.Reader) {
 // Render creates the middlewares.go file. With no previous version it renders
 // the templates, if there was a previous version loaded in, it passes that
 // through.
-func (m *Middlewares) Render(path string, data *render.Data) (io.Reader, error) {
+func (m *Middlewares) Render(path string, service *data.Service) (io.Reader, error) {
     if path != MiddlewaresPath {
         return nil, errors.Errorf("cannot render unknown file: %q", path)
     }
     if m.prev != nil {
         return m.prev, nil
     }
-    return data.ApplyTemplate(templates.Middlewares, "Middlewares")
+    return util.ApplyTemplate("Middlewares", templates.Middlewares, service, service.FuncMap)
 }

@@ -5,7 +5,6 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/go/data"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
     "strings"
 )
 
@@ -17,7 +16,7 @@ func (b *BoxedUnion) CompileStruct(ctx context.Context, decl *lang.StructDecl) e
 
     bu := &data.BoxedUnion{}
     bu.PackageName = decl.GetPackageName()
-    bu.GoPackageName = compiler.GetGoPackage(decl.GetPackageName())
+    bu.GoPackageName = lang.GetGoPackageName(decl.GetPackageName())
 
     if pkg, _ := lang.GetStringAttribute(decl.Attributes, "go_package_name"); len(pkg) > 0 {
         bu.GoPackageName = pkg
@@ -60,7 +59,7 @@ func (b *BoxedUnion) compileObjectField(field *lang.ValueDecl, bu *data.BoxedUni
     }
 
     if len(bu.Discriminator) > 0 && !strings.HasPrefix(bu.Discriminator, "@") {
-        names := field.GetType().GetTypeDeclaration().GetStructDecl().FieldNames(lang.FieldNamOptionDefault)
+        names := field.GetType().GetTypeDeclaration().GetStructDecl().GetAllFieldNames(lang.FieldNamOptionDefault)
         for _, name := range names {
             if name == bu.Discriminator {
                 unionField.HasDiscriminatorField = true

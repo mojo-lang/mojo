@@ -140,7 +140,7 @@ func (c *EntityCompiler) compileEntityNode(ctx context.Context, decl *lang.Struc
 
 func refineLabel(label string, node *lang.EntityNode) string {
     if decl := node.GetTypeDeclaration().GetStructDecl(); decl != nil {
-        for _, name := range decl.FieldNames(lang.FieldNamOptionDefault) {
+        for _, name := range decl.GetAllFieldNames(lang.FieldNamOptionDefault) {
             suffix := "_" + name
             if strings.HasSuffix(label, suffix) {
                 return strings.TrimSuffix(label, suffix)

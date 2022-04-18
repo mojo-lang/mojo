@@ -3,8 +3,9 @@ package model
 import (
     "bytes"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
+    "github.com/mojo-lang/mojo/go/pkg/ncraft/data"
+    _go "github.com/mojo-lang/mojo/go/pkg/ncraft/go"
     "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/model/templates"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/render"
     "github.com/pkg/errors"
     "io/ioutil"
     "strings"
@@ -16,15 +17,15 @@ const TemplatePath = "internal/model/ENTITY_model.go.tmpl"
 type Model struct {
 }
 
-func (m Model) Generate(path string, data *render.Data) ([]*util.GeneratedFile, error) {
+func (m Model) Generate(path string, service *data.Service) ([]*util.GeneratedFile, error) {
     if path != TemplatePath {
         return nil, errors.Errorf("cannot render unknown file: %q", path)
     }
 
     var files []*util.GeneratedFile
 
-    for k, v := range data.Entities {
-        reader, err := render.ApplyTemplate(templates.EntityModel, "Model", v, render.FuncMap)
+    for _, v := range service.Entities {
+        reader, err := util.ApplyTemplate("Model", templates.EntityModel, v, service.FuncMap)
         if err != nil {
             return nil, err
         }
@@ -34,9 +35,9 @@ func (m Model) Generate(path string, data *render.Data) ([]*util.GeneratedFile, 
             return nil, err
         }
 
-        formattedCode := render.FormatGoCode(codeBytes)
+        formattedCode := _go.FormatCodeBytes(codeBytes)
         files = append(files, &util.GeneratedFile{
-            Name:              strings.Replace(path, "ENTITY", k, 1),
+            Name:              strings.Replace(path, "ENTITY", v.Name, 1),
             Reader:            bytes.NewReader(formattedCode),
             SkipIfExist:       false,
             SkipNoneGenerated: false,

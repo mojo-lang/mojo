@@ -6,7 +6,6 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/go/data"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/compiler"
     "github.com/mojo-lang/mojo/go/pkg/protobuf/precompiler"
 )
 
@@ -34,7 +33,7 @@ func (p *PaginationResult) CompileMethod(ctx context.Context, method *lang.Funct
     } else {
         pr := &data.PaginationResult{}
         pr.PackageName = decl.GetPackageName()
-        pr.GoPackageName = compiler.GetGoPackage(decl.GetPackageName())
+        pr.GoPackageName = lang.GetGoPackageName(decl.GetPackageName())
 
         if pkg, _ := lang.GetStringAttribute(decl.Attributes, "go_package_name"); len(pkg) > 0 {
             pr.GoPackageName = pkg
