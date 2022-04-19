@@ -57,23 +57,28 @@ func (s *Services) CompileInterface(ctx context.Context, decl *lang.InterfaceDec
             Name:       decl.Name,
             BaredName:  data.GetInterfaceBaredName(decl.Name),
             ServerName: data.GetInterfaceServerName(decl.Name),
-            Methods:    nil,
+            Extensions: make(map[string]interface{}),
         },
         FuncMap: template.FuncMap{
-            "ToLower":                    strings.ToLower,
-            "ToUpper":                    strings.ToUpper,
-            "GoName":                     GoName,
-            "ToSnake":                    strcase.ToSnake,
-            "ToKebab":                    strcase.ToKebab,
-            "ToCamel":                    strcase.ToCamel,
-            "ToLowerCamel":               strcase.ToLowerCamel,
-            "Plural":                     transformer.Plural,
-            "GoPackageName":              GoPackageName,
-            "GoFieldArrayElementType":    GoFieldArrayElementType,
-            "GoIsArrayElementStringType": GoIsArrayElementStringType,
+            "ToLower":       strings.ToLower,
+            "ToUpper":       strings.ToUpper,
+            "GoName":        GoName,
+            "ToSnake":       strcase.ToSnake,
+            "ToKebab":       strcase.ToKebab,
+            "ToCamel":       strcase.ToCamel,
+            "ToLowerCamel":  strcase.ToLowerCamel,
+            "Plural":        transformer.Plural,
+            "GoPackageName": GoPackageName,
         },
+        Go: &data.GoService{
+            PackageName: pkgName,
+        },
+        Extensions: make(map[string]interface{}),
     }
-    service.Go.PackageName = pkgName
+
+    if pkg.Version != nil {
+        service.Version = pkg.Version.Format()
+    }
 
     if path, ok := GoPackageImport(ctx, decl.PackageName).(string); ok {
         service.Go.ApiImportPath = path
@@ -111,9 +116,9 @@ func unifyStringArray(array []string) []string {
 func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, service *data.Service) error {
     thisCtx := context.WithType(ctx, decl)
     m := &data.Method{
-        Decl:     decl,
-        Name:     decl.Name,
-        Bindings: nil,
+        Decl:       decl,
+        Name:       decl.Name,
+        Extensions: make(map[string]interface{}),
     }
     registerType := func(t *lang.NominalType) {
         if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() && (len(t.PackageName) > 0 && t.PackageName != service.PackageFullName) {
@@ -128,18 +133,20 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
                         Decl:        t.GetTypeDeclaration().GetEnumDecl(),
                         Name:        t.Name,
                         PackageName: t.PackageName,
-                        Go: data.GoEnum{
+                        Go: &data.GoEnum{
                             PackageName: goPackageName,
                         },
+                        Extensions: make(map[string]interface{}),
                     })
                 } else {
                     service.ImportedMessages = append(service.ImportedMessages, &data.Message{
                         Decl:        t.GetTypeDeclaration().GetStructDecl(),
                         Name:        t.Name,
                         PackageName: t.PackageName,
-                        Go: data.GoMessage{
+                        Go: &data.GoMessage{
                             PackageName: goPackageName,
                         },
+                        Extensions: make(map[string]interface{}),
                     })
                 }
 
@@ -253,7 +260,7 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
                     }
 
                     sort.Sort(binding.Parameters)
-                    
+
                     m.Bindings = append(m.Bindings, binding)
                     index++
                 }
@@ -270,11 +277,16 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
         Decl:        decl,
         PackageName: decl.PackageName,
         Name:        decl.Name,
+        Go:          &data.GoMessage{},
+        Extensions:  make(map[string]interface{}),
     }
 
     decl.EachField(func(f *lang.ValueDecl) error {
         t := f.GetType()
-        fieldType := &data.FieldType{}
+        fieldType := &data.FieldType{
+            Go:         &data.GoFieldType{},
+            Extensions: make(map[string]interface{}),
+        }
 
         switch t.GetFullName() {
         case core.ArrayTypeFullName:
@@ -318,8 +330,8 @@ func (s *Services) compileBindings(ctx context.Context, methodName string, path 
         Verb:       methodName,
         Path:       p,
         Label:      strcase.ToCamel(method.Name) + data.EnglishNumber(index),
-        Extensions: make(map[string]interface{}),
         Parent:     dm,
+        Extensions: make(map[string]interface{}),
     }
 
     if len(method.Signature.GetParameters()) == 1 {
@@ -368,6 +380,9 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
         Name: decl.Name,
 
         Field: s.compileBindingField(ctx, schema, context.Components(compiler.Context).GetSchemas()),
+
+        Go:         &data.GoHTTPParameter{},
+        Extensions: make(map[string]interface{}),
     }
 
     if param.Field == nil {
@@ -435,7 +450,9 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
                                 Enclosing: param.Field,
                                 Decl:      field.Decl,
                             },
-                            Location: "path",
+                            Location:   "path",
+                            Go:         &data.GoHTTPParameter{},
+                            Extensions: make(map[string]interface{}),
                         }
                         parameter.Go.LocalName = fmt.Sprintf("%s%s", strcase.ToLowerCamel(parameter.Name), strcase.ToCamel(binding.Parent.Name))
                         binding.Parameters = append(binding.Parameters, parameter)
@@ -457,11 +474,11 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
     switch schema.Type {
     case openapi.Schema_TYPE_BOOLEAN:
         field.Type = &data.FieldType{
-            Name: "Bool",
-            Go: data.GoFieldType{
-                Name:       "bool",
-                IsBaseType: true,
-                IsPointer:  false,
+            Name:     "Bool",
+            IsScalar: true,
+            Go: &data.GoFieldType{
+                Name:      "bool",
+                IsPointer: false,
             },
         }
     case openapi.Schema_TYPE_INTEGER:
@@ -476,26 +493,26 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
                     Name: schema.Format,
                 }
             }
-            field.Type.Go = data.GoFieldType{
-                Name:       strings.ToLower(field.Type.Name),
-                IsBaseType: true,
-                IsPointer:  false,
+            field.Type.IsScalar = true
+            field.Type.Go = &data.GoFieldType{
+                Name:      strings.ToLower(field.Type.Name),
+                IsPointer: false,
             }
         } else {
             field.Type = &data.FieldType{
-                Name: "Int64",
-                Go: data.GoFieldType{
-                    Name:       "int64",
-                    IsBaseType: true,
+                Name:     "Int64",
+                IsScalar: true,
+                Go: &data.GoFieldType{
+                    Name: "int64",
                 },
             }
         }
     case openapi.Schema_TYPE_NUMBER:
         field.Type = &data.FieldType{
-            Name: "Float64",
-            Go: data.GoFieldType{
-                Name:       "float64",
-                IsBaseType: true,
+            Name:     "Float64",
+            IsScalar: true,
+            Go: &data.GoFieldType{
+                Name: "float64",
             },
         }
     case openapi.Schema_TYPE_STRING:
@@ -504,16 +521,16 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
                 PackageName: lang.GetTypePackageName(schema.Title),
                 Name:        lang.GetTypeTypeName(schema.Title),
                 IsEnum:      true,
-                Go: data.GoFieldType{
+                Go: &data.GoFieldType{
                     Name: getGoTypeName(schema.Title),
                 },
             }
         } else {
             field.Type = &data.FieldType{
-                Name: "String",
-                Go: data.GoFieldType{
-                    Name:       "string",
-                    IsBaseType: true,
+                Name:     "String",
+                IsScalar: true,
+                Go: &data.GoFieldType{
+                    Name: "string",
                 },
             }
         }
@@ -522,13 +539,26 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
         f := s.compileBindingField(ctx, sch, index)
         if f != nil {
             field.Type = &data.FieldType{
-                Name:    f.Type.Name,
-                Enum:    f.Type.Enum,
-                Message: f.Type.Message,
+                Name:    "Array<" + f.Type.Name + ">",
                 IsArray: true,
+                ElementType: &data.FieldType{
+                    Name:        f.Type.Name,
+                    PackageName: f.Type.PackageName,
+                    Enum:        f.Type.Enum,
+                    Message:     f.Type.Message,
+                    KeyType:     f.Type.KeyType,
+                    ElementType: f.Type.ElementType,
+                    IsEnum:      f.Type.IsEnum,
+                    IsMap:       f.Type.IsMap,
+                    IsArray:     f.Type.IsArray,
+                    IsScalar:    f.Type.IsScalar,
+                    Go:          f.Type.Go,
+                    Extensions:  f.Type.Extensions,
+                },
+                Go:         &data.GoFieldType{},
+                Extensions: make(map[string]interface{}),
             }
 
-            field.Type.ElementGo = f.Type.Go
             if f.Type.Go.IsPointer {
                 field.Type.Go.Name = "[]*" + f.Type.Go.Name
             } else {
@@ -539,22 +569,31 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
         if schema.AdditionalProperties != nil { // map
             typ := s.compileBindingField(ctx, schema.GetAdditionalProperties().GetSchema(), index).GetType()
             field.Type = &data.FieldType{
-                PackageName: typ.PackageName,
-                Name:        typ.Name,
-                Enum:        typ.Enum,
-                Message:     typ.Message,
+                Name:  "Map<String," + typ.Name + ">",
+                IsMap: true,
                 KeyType: &data.FieldType{
-                    Name: "String",
-                    Go: data.GoFieldType{
-                        Name:       "string",
-                        IsBaseType: true,
+                    Name:     "String",
+                    IsScalar: true,
+                    Go: &data.GoFieldType{
+                        Name: "string",
                     },
                 },
-                IsMap: true,
-                Go: data.GoFieldType{
-                    IsBaseType: false,
+                ElementType: &data.FieldType{
+                    Name:        typ.Name,
+                    PackageName: typ.PackageName,
+                    Enum:        typ.Enum,
+                    Message:     typ.Message,
+                    KeyType:     typ.KeyType,
+                    ElementType: typ.ElementType,
+                    IsEnum:      typ.IsEnum,
+                    IsMap:       typ.IsMap,
+                    IsArray:     typ.IsArray,
+                    IsScalar:    typ.IsScalar,
+                    Go:          typ.Go,
+                    Extensions:  typ.Extensions,
                 },
-                ElementGo: typ.Go,
+                Go:         &data.GoFieldType{},
+                Extensions: make(map[string]interface{}),
             }
             if field.Type.Go.IsPointer {
                 field.Type.Go.Name = "map[string]*" + typ.Go.Name
@@ -565,15 +604,16 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
             field.Type = &data.FieldType{
                 PackageName: lang.GetTypePackageName(schema.Title),
                 Name:        lang.GetTypeTypeName(schema.Title),
+                IsScalar:    false,
                 Message: &data.Message{
                     PackageName: lang.GetTypePackageName(schema.Title),
                     Name:        lang.GetTypeTypeName(schema.Title),
                 },
-                Go: data.GoFieldType{
-                    Name:       getGoTypeName(schema.Title),
-                    IsBaseType: false,
-                    IsPointer:  true,
+                Go: &data.GoFieldType{
+                    Name:      getGoTypeName(schema.Title),
+                    IsPointer: true,
                 },
+                Extensions: make(map[string]interface{}),
             }
 
             for name, item := range schema.Properties {

@@ -16,36 +16,37 @@ type Service struct {
 
     CombinedAPI bool
 
-    Go struct {
-        PackageName string
-
-        // the service repository path
-        RepositoryPath string
-
-        ApiRepositoryPath string
-
-        // import path for .pb.go files containing service structs
-        ApiImportPath string
-
-        ImportedTypePaths []string
-    }
-
-    Java struct {
-        PackageName string
-    }
-
     ImportedMessages []*Message
     ImportedEnums    []*Enum
-
-    AllInterfaces []*Interface
+    Entities         []*Message
+    AllInterfaces    []*Interface
 
     // GRPC/Protobuf service, with all parameters and return values accessible
     Interface *Interface
 
-    Entities []*Message
+    FuncMap template.FuncMap
 
-    FuncMap    template.FuncMap
+    Go         *GoService
+    Java       *JavaService
     Extensions map[string]interface{}
+}
+
+type GoService struct {
+    PackageName string
+
+    // the service repository path
+    RepositoryPath string
+
+    ApiRepositoryPath string
+
+    // import path for .pb.go files containing service structs
+    ApiImportPath string
+
+    ImportedTypePaths []string
+}
+
+type JavaService struct {
+    PackageName string
 }
 
 func (s *Service) HasImported() bool {

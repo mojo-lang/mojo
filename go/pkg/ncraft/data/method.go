@@ -20,6 +20,29 @@ type Method struct {
     IsBatch     bool
 
     // Bindings contains information for mapping http paths and parameters onto
-    // the fields of this Methods.
+    // the fields of the Methods.
     Bindings []*HTTPBinding
+
+    Extensions map[string]interface{}
+}
+
+func (m *Method) GetRequest() *Message {
+    if m != nil {
+        return m.Request
+    }
+    return nil
+}
+
+func (m *Method) GetResponse() *Message {
+    if m != nil {
+        return m.Response
+    }
+    return nil
+}
+
+func (m *Method) GetEntity() *Message {
+    if m != nil {
+        return m.Entity
+    }
+    return nil
 }

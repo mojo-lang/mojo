@@ -104,7 +104,7 @@ func createDecodeConvertFunc(f *data.HTTPParameter, funcMap template.FuncMap) (s
     }
 
     // Use json unmarshalling for any custom/repeated messages
-    if !f.GetGoType().IsBaseType || f.IsArray() {
+    if !f.GetFieldType().IsScalar || f.IsArray() {
         // Args representing single custom message types are represented as
         // pointers. To do a bare assignment to a pointer, our rvalue must be a
         // pointer as well. So we special case args of a single custom message
@@ -162,8 +162,8 @@ if len({{.Go.LocalName}}Strs) == 1 {
 {{- end}}
 var {{.Go.LocalName}} {{.GetGoTypeName}}
 for _, str := range {{.Go.LocalName}}Strs {
-	{{if .GetElementGoType.IsBaseType}}var v {{GoFieldArrayElementType .GetElementGoTypeName}}{{else}}v := &{{.GetElementGoTypeName}}{}{{end}}
-	err = jsoniter.ConfigFastest.UnmarshalFromString({{if GoIsArrayElementStringType .GetGoTypeName}}"\"" + str + "\""{{else}}str{{end}}, {{if .GetElementGoType.IsBaseType}}&v{{else}}v{{end}})
+	{{if .IsElementScalar}}var v {{.GetElementGoTypeName}}{{else}}v := &{{.GetElementGoTypeName}}{}{{end}}
+	err = jsoniter.ConfigFastest.UnmarshalFromString({{if .GetElementType.IsString}}"\"" + str + "\""{{else}}str{{end}}, {{if .GetElementType.IsScalar}}&v{{else}}v{{end}})
 	if err != nil {
 		return nil, errors.Wrapf(err, "couldn't decode {{.Name}} field from %v", str)
 	}

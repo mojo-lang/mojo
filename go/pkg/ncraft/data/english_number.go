@@ -28,8 +28,8 @@ func EnglishNumber(i int) string {
     n := strconv.Itoa(i)
     rv := ""
     for _, c := range n {
-        if engl, ok := DigitEnglish[rune(c)]; ok {
-            rv += strings.Title(engl)
+        if e, ok := DigitEnglish[rune(c)]; ok {
+            rv += strings.Title(e)
         }
     }
     return rv

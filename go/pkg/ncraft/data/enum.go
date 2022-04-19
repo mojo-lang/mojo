@@ -7,12 +7,18 @@ type Enum struct {
     PackageName string // full package name
     Name        string
 
+    Go         *GoEnum
     Extensions map[string]interface{}
-
-    Go GoEnum
 }
 
 type GoEnum struct {
     PackageName string
     ImportPath  string
+}
+
+func (e *Enum) GetGo() *GoEnum {
+    if e != nil {
+        return e.Go
+    }
+    return nil
 }

@@ -24,6 +24,6 @@ func main() {
 	    logs.Warnw("failed to get the server config", "error", err.Error())
 	}
 
-    logs.Info("starting {{ToCamel .PackageName}}UnifiedServer")
+    logs.Info("starting {{ToCamel .Go.PackageName}}UnifiedServer")
 	server.Run(conf)
 }

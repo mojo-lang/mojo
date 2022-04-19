@@ -5,21 +5,6 @@ import (
     "strings"
 )
 
-func GoFieldArrayElementType(t string) string {
-    if t == "[]byte" {
-        return t
-    }
-
-    if strings.HasPrefix(t, "[]*") {
-        return strings.TrimPrefix(t, "[]*")
-    }
-    return strings.TrimPrefix(t, "[]")
-}
-
-func GoIsArrayElementStringType(t string) bool {
-    return GoFieldArrayElementType(t) == "string"
-}
-
 func GoName(name string) string {
     if len(name) == 0 {
         return ""

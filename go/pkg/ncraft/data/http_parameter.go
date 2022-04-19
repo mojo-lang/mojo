@@ -17,25 +17,28 @@ type HTTPParameter struct {
     // a set of style values are defined.
     Style string
 
-    Go struct {
-        // The go-compatible name for this variable, for use in auto generated go
-        // code.
-        LocalName string
+    Go         *GoHTTPParameter
+    Extensions map[string]interface{}
+}
 
-        // The string form of the function to be used to convert the incoming
-        // string msg from a string into it's intended type.
-        ConvertFunc string
+type GoHTTPParameter struct {
+    // The go-compatible name for this variable, for use in auto generated go
+    // code.
+    LocalName string
 
-        // Used in determining if a convert func will need error checking logic
-        ConvertFuncNeedsErrorCheck bool
+    // The string form of the function to be used to convert the incoming
+    // string msg from a string into it's intended type.
+    ConvertFunc string
 
-        // The string form of a type cast from 64 to 32bit if the GoType is 32bit
-        // as the ConvertFunc will always use return a 64bit type
-        TypeConversion string
+    // Used in determining if a convert func will need error checking logic
+    ConvertFuncNeedsErrorCheck bool
 
-        //
-        QueryUnmarshaler string
-    }
+    // The string form of a type cast from 64 to 32bit if the GoType is 32bit
+    // as the ConvertFunc will always use return a 64bit type
+    TypeConversion string
+
+    //
+    QueryUnmarshaler string
 }
 
 func (p *HTTPParameter) GetField() *Field {
@@ -47,6 +50,10 @@ func (p *HTTPParameter) GetField() *Field {
 
 func (p *HTTPParameter) GetFieldType() *FieldType {
     return p.GetField().GetType()
+}
+
+func (p *HTTPParameter) GetElementType() *FieldType {
+    return p.GetField().GetElementType()
 }
 
 func (p *HTTPParameter) IsEnum() bool {
@@ -71,15 +78,15 @@ func (p *HTTPParameter) IsArray() bool {
 }
 
 func (p *HTTPParameter) IsScalar() bool {
-    if typ := p.GetGoType(); typ != nil {
-        return typ.IsBaseType
+    if typ := p.GetFieldType(); typ != nil {
+        return typ.IsScalar
     }
     return false
 }
 
 func (p *HTTPParameter) IsElementScalar() bool {
-    if typ := p.GetElementGoType(); typ != nil {
-        return typ.IsBaseType
+    if typ := p.GetElementType(); typ != nil {
+        return typ.IsScalar
     }
     return false
 }
@@ -89,11 +96,11 @@ func (p *HTTPParameter) GetEnclosingField() *Field {
 }
 
 func (p *HTTPParameter) GetGoType() *GoFieldType {
-    return p.GetFieldType().GetGo()
+    return p.GetFieldType().GetGoType()
 }
 
 func (p *HTTPParameter) GetElementGoType() *GoFieldType {
-    return p.GetFieldType().GetElementGo()
+    return p.GetFieldType().GetElementGoType()
 }
 
 func (p *HTTPParameter) GetGoTypeName() string {

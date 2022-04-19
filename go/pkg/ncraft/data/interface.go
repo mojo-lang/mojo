@@ -12,6 +12,8 @@ type Interface struct {
     ServerName string
 
     Methods []*Method
+
+    Extensions map[string]interface{}
 }
 
 func GetInterfaceServerName(name string) string {

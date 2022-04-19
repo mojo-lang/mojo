@@ -87,8 +87,8 @@ func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, g
 
         // Re-derive the actual path for this file based on the service output
         // path provided by the ncraft main.go
-        actualPath := templatePathToActual(tmplPath, ds.PackageName, svcName)
-        file, err := generateTemplateFile(tmplPath, ds, o.PreviousFiles[actualPath], getter)
+        actualPath := templatePathToActual(tmplPath, ds.Go.PackageName, svcName)
+        file, err := generateTemplateFile(tmplPath, actualPath, ds, o.PreviousFiles[actualPath], getter)
         if err != nil {
             return nil, logs.NewErrorw("cannot render templates", "error", err.Error())
         }
@@ -105,18 +105,15 @@ func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, g
 }
 
 // generateTemplateFile
-func generateTemplateFile(tmplPath string, ds *data.Service, prevFile io.Reader, getter templates.FileGetter) (io.Reader, error) {
+func generateTemplateFile(tmplPath string, actualPath string, ds *data.Service, prevFile io.Reader, getter templates.FileGetter) (io.Reader, error) {
     var genCode io.Reader
     var err error
-
-    // Get the actual path to the file rather than the templates file path
-    actualFP := templatePathToActual(tmplPath, ds.Go.PackageName, ds.Interface.Name)
 
     switch tmplPath {
     case handlers.ServerHandlerPath:
         h, err := handlers.New(ds.Interface, prevFile)
         if err != nil {
-            return nil, errors.Wrapf(err, "cannot parse previous handler: %q", actualFP)
+            return nil, errors.Wrapf(err, "cannot parse previous handler: %q", actualPath)
         }
 
         if genCode, err = h.Render(tmplPath, ds); err != nil {
@@ -155,7 +152,7 @@ func generateTemplateFile(tmplPath string, ds *data.Service, prevFile io.Reader,
     // ignore error as we want to write the code either way to inspect after
     // writing to disk
     formattedCode := codeBytes
-    if strings.HasSuffix(actualFP, ".go") {
+    if strings.HasSuffix(actualPath, ".go") {
         formattedCode = _go.FormatCodeBytes(codeBytes)
     }
 
@@ -168,12 +165,11 @@ func generateTemplateFile(tmplPath string, ds *data.Service, prevFile io.Reader,
 func templatePathToActual(tmplPath, pkgName string, svcName string) string {
     // Switch "NAME" in path with svcName.
     pkgName = strcase.ToKebab(pkgName)
+    svcName = strcase.ToKebab(svcName)
 
-    // i.e. for svcName = addsvc; /NAME-server -> /addsvc-service/addsvc-server
     actual := strings.Replace(tmplPath, "PKGNAME", pkgName, -1)
     actual = strings.Replace(actual, "NAME", svcName, -1)
-    actual = strings.TrimSuffix(actual, ".tmpl")
-    return actual
+    return strings.TrimSuffix(actual, ".tmpl")
 }
 
 // applyTemplateFromPath calls applyTemplate with the templates at tmplPath

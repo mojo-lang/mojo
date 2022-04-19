@@ -26,11 +26,11 @@ type HTTPBinding struct {
 
     Response *HTTPResponse
 
-    Extensions map[string]interface{}
-
     // A pointer back to the parent method of this binding. Used within some
     // binding methods
     Parent *Method
+
+    Extensions map[string]interface{}
 }
 
 func (b *HTTPBinding) GetResponseBody() *Field {
