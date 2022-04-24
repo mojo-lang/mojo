@@ -155,9 +155,19 @@ func (n *NominalTypeVisitor) VisitArrayType(ctx *ArrayTypeContext) interface{} {
     return nil
 }
 
+func (n *NominalTypeVisitor) VisitKeyAttributes(ctx *KeyAttributesContext) interface{} {
+    return GetAttributes(ctx.Attributes())
+}
+
 func (n *NominalTypeVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
     if len(ctx.AllType_()) != 2 {
         return nil
+    }
+    var keyAttributes []*lang.Attribute
+    if ctx.KeyAttributes() != nil {
+        if attributes, ok := ctx.KeyAttributes().Accept(n).([]*lang.Attribute); ok {
+            keyAttributes = attributes
+        }
     }
 
     if keyTypeCtx := ctx.Type_(0); keyTypeCtx != nil {
@@ -177,7 +187,7 @@ func (n *NominalTypeVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
                                 Implicit:         keyType.Implicit,
                                 Name:             keyType.Name,
                                 GenericArguments: keyType.GenericArguments,
-                                Attributes:       keyType.Attributes,
+                                Attributes:       keyAttributes,
                                 EnclosingType:    keyType.EnclosingType,
                             },
                             {
@@ -188,7 +198,7 @@ func (n *NominalTypeVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
                                 Implicit:         valueType.Implicit,
                                 Name:             valueType.Name,
                                 GenericArguments: valueType.GenericArguments,
-                                Attributes:       valueType.Attributes,
+                                Attributes:       GetAttributes(ctx.Attributes()),
                                 EnclosingType:    valueType.EnclosingType,
                             },
                         },

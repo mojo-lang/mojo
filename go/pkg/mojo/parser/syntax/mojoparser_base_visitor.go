@@ -631,6 +631,10 @@ func (v *BaseMojoParserVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitKeyAttributes(ctx *KeyAttributesContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitTypeInheritanceClause(ctx *TypeInheritanceClauseContext) interface{} {
 	return v.VisitChildren(ctx)
 }

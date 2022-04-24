@@ -40,9 +40,17 @@ func (p *Map) Compile(ctx context.Context, t *lang.NominalType) (string, string,
 
     keyType := t.GenericArguments[0]
     keyType.Attributes = lang.SetIntegerAttribute(keyType.Attributes, core.NumberAttributeName, 1)
+    keyLabel := "key"
+    if label, _ := keyType.GetStringAttribute(core.LabelAttributeName); len(label) > 0 {
+        keyLabel = label
+    }
 
     valType := t.GenericArguments[1]
     valType.Attributes = lang.SetIntegerAttribute(valType.Attributes, core.NumberAttributeName, 2)
+    valLabel := "value"
+    if label, _ := valType.GetStringAttribute(core.LabelAttributeName); len(label) > 0 {
+        valLabel = label
+    }
 
     if len(valType.GenericArguments) > 0 {
         structCtx := context.WithValues(ctx, "register_struct", true)
@@ -55,10 +63,10 @@ func (p *Map) Compile(ctx context.Context, t *lang.NominalType) (string, string,
 
     s.Type = &lang.StructType{
         Fields: []*lang.ValueDecl{{
-            Name: "key",
+            Name: keyLabel,
             Type: keyType,
         }, {
-            Name: "value",
+            Name: valLabel,
             Type: valType,
         }},
     }

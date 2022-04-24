@@ -641,7 +641,7 @@ tupleTypeElement : ( declarationIdentifier COLON? )? type_ attributes? ;
 
 // GRAMMAR OF A FUNCTION TYPE
 functionType
- : functionParameterClause arrowOperator type_
+ : functionParameterClause arrowOperator type_ attributes?
  ;
 
 // GRAMMAR OF AN ARRAY TYPE
@@ -650,7 +650,9 @@ arrayType : LBRACK type_ attributes? RBRACK ;
 
 // GRAMMAR OF A DICTIONARY TYPE
 
-mapType : LCURLY type_ attributes? COLON type_  attributes? RCURLY ;
+mapType : LCURLY type_ keyAttributes? COLON type_  attributes? RCURLY ;
+
+keyAttributes : attributes;
 
 // GRAMMAR OF AN OPTIONAL TYPE
 

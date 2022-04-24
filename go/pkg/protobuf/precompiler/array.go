@@ -2,10 +2,10 @@ package precompiler
 
 import (
     "errors"
+    "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "strings"
 
     "github.com/mojo-lang/core/go/pkg/mojo/core"
-    "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
@@ -40,7 +40,22 @@ func CompileArrayToStruct(ctx context.Context, t *lang.NominalType) (*lang.Struc
             s.Name = name
         }
     } else {
-        s.Name = transformer.Plural(strcase.ToCamel(val.Name))
+        switch val.GetFullName() {
+        case core.BoolTypeFullName:
+            s.Name = core.BoolValuesTypeName
+        case core.Int32TypeFullName:
+            s.Name = core.Int32ValuesTypeName
+        case core.Int64TypeFullName:
+            s.Name = core.Int64ValuesTypeName
+        case core.UInt32TypeFullName:
+            s.Name = core.UInt32ValuesTypeName
+        case core.UInt64TypeFullName:
+            s.Name = core.UInt64ValuesTypeName
+        case core.StringTypeFullName:
+            s.Name = core.StringValuesTypeName
+        default:
+            s.Name = transformer.Plural(strcase.ToCamel(val.Name))
+        }
     }
 
     return s, nil

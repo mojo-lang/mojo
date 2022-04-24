@@ -92,6 +92,47 @@ func TestNominalTypeVisitor_VisitMapType(t *testing.T) {
     assert.Equal(t, "Int", nominalType.GenericArguments[1].Name)
 }
 
+func TestNominalTypeVisitor_VisitMapType2(t *testing.T) {
+    const dictType = `type Val{ val: {String @label("k"): Int @label("v")} }`
+
+    parser := &Parser{}
+    file, err := parser.ParseString(dictType)
+
+    assert.NoError(t, err)
+    nominalType := getNominalType(file)
+    assert.NotNil(t, nominalType)
+    assert.Equal(t, "Map", nominalType.Name)
+    assert.Equal(t, 2, len(nominalType.GenericArguments))
+    assert.Equal(t, "String", nominalType.GenericArguments[0].Name)
+    assert.Equal(t, "Int", nominalType.GenericArguments[1].Name)
+    assert.Equal(t, 1, len(nominalType.GenericArguments[0].Attributes))
+    assert.Equal(t, "label", nominalType.GenericArguments[0].Attributes[0].Name)
+    kv, _ := nominalType.GenericArguments[0].Attributes[0].GetString()
+    assert.Equal(t, "k", kv)
+
+    assert.Equal(t, 1, len(nominalType.GenericArguments[1].Attributes))
+    assert.Equal(t, "label", nominalType.GenericArguments[1].Attributes[0].Name)
+    kv, _ = nominalType.GenericArguments[1].Attributes[0].GetString()
+    assert.Equal(t, "v", kv)
+}
+
+func TestNominalTypeVisitor_VisitMapType3(t *testing.T) {
+    const dictType = `type Val{ val: {String: Int @label("v")} }`
+
+    parser := &Parser{}
+    file, err := parser.ParseString(dictType)
+
+    assert.NoError(t, err)
+    nominalType := getNominalType(file)
+    assert.NotNil(t, nominalType)
+    assert.Equal(t, "Map", nominalType.Name)
+    assert.Equal(t, 2, len(nominalType.GenericArguments))
+    assert.Equal(t, "String", nominalType.GenericArguments[0].Name)
+    assert.Equal(t, "Int", nominalType.GenericArguments[1].Name)
+    assert.Equal(t, 1, len(nominalType.GenericArguments[1].Attributes))
+    assert.Equal(t, "label", nominalType.GenericArguments[1].Attributes[0].Name)
+}
+
 func TestNominalTypeVisitor_VisitUnion(t *testing.T) {
     const unionType = `type Val{ val: String | Int | [String] }`
 

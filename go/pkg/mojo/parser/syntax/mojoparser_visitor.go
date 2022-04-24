@@ -475,6 +475,9 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#mapType.
 	VisitMapType(ctx *MapTypeContext) interface{}
 
+	// Visit a parse tree produced by MojoParser#keyAttributes.
+	VisitKeyAttributes(ctx *KeyAttributesContext) interface{}
+
 	// Visit a parse tree produced by MojoParser#typeInheritanceClause.
 	VisitTypeInheritanceClause(ctx *TypeInheritanceClauseContext) interface{}
 
