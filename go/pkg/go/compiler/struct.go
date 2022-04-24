@@ -15,6 +15,8 @@ type Struct struct {
     *data.Data
 }
 
+var whiteList = map[string]bool{}
+
 func (s *Struct) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
     if len(decl.GenericParameters) > 0 {
         return nil
@@ -135,10 +137,6 @@ func (s *Struct) CompileStruct(ctx context.Context, decl *lang.StructDecl) error
     //}
 
     return nil
-}
-
-var whiteList = map[string]bool{
-    "Strings": true,
 }
 
 func (s *Struct) compileStructField(ctx context.Context, field *lang.ValueDecl) error {

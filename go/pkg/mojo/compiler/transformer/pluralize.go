@@ -8,9 +8,7 @@ import "github.com/gertd/go-pluralize"
 
 var pluralizing *pluralize.Client
 
-var irregularPlurals = map[string]string{
-    "String": "StringValues",
-}
+var irregularPlurals = map[string]string{}
 
 func init() {
     pluralizing = pluralize.NewClient()

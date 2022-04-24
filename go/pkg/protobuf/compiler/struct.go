@@ -85,7 +85,7 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
     }
 
     switch structDescriptor.GetName() {
-    case "Strings", "StringValues", "IntegerValues", "DoubleValues":
+    case "BoolValues", "StringValues", "Int32Values", "UInt32Values", "Int64Values", "UInt64Values", "Float32Values", "Float64Values":
         if file != nil && !strings.HasPrefix(file.GetName(), "mojo/core/boxed") {
             file.AppendDependency("mojo/core/boxed.proto")
             return nil
