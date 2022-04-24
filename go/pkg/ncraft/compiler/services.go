@@ -123,7 +123,7 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
     registerType := func(t *lang.NominalType) {
         if !t.IsScalar() && !t.IsMapType() && !t.IsArrayType() && !t.IsUnionType() && (len(t.PackageName) > 0 && t.PackageName != service.PackageFullName) {
             goPackageName := lang.GetGoPackageName(t.PackageName)
-            if RegisterMessageGoPackageName(t.Name, goPackageName) {
+            if RegisterMessageGoPackageName(service.Interface.Name, t.Name, goPackageName) {
                 return
             }
 

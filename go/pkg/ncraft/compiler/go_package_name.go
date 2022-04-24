@@ -21,21 +21,33 @@ var goStdTypeNames = map[string]bool{
     "string":  true,
 }
 
-var externalMessages map[string]string
-var externalMessagesOnce sync.Once
+var importedMessages map[string]string
+var importedMessagesInService map[string]map[string]bool
+var importedMessagesOnce sync.Once
 
-func RegisterMessageGoPackageName(msg string, pkg string) (existed bool) {
-    externalMessagesOnce.Do(func() {
-        externalMessages = make(map[string]string)
+func RegisterMessageGoPackageName(service string, msg string, pkg string) (existed bool) {
+    importedMessagesOnce.Do(func() {
+        importedMessages = make(map[string]string)
+        importedMessagesInService = make(map[string]map[string]bool)
     })
 
-    _, existed = externalMessages[msg]
-    externalMessages[msg] = pkg
+    var index map[string]bool
+    if i, ok := importedMessagesInService[service]; !ok {
+        index = make(map[string]bool)
+        importedMessagesInService[service] = index
+    } else {
+        index = i
+    }
+
+    importedMessages[msg] = pkg
+
+    _, existed = index[msg]
+    index[msg] = true
     return
 }
 
 func GoPackageName(typename string) string {
-    if pkg, ok := externalMessages[typename]; ok {
+    if pkg, ok := importedMessages[typename]; ok {
         return pkg
     } else if _, ok = goStdTypeNames[typename]; ok {
         return ""
