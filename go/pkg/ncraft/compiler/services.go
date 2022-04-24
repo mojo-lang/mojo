@@ -535,34 +535,47 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
             }
         }
     case openapi.Schema_TYPE_ARRAY:
-        sch := schema.Items.GetSchemaOf(index)
-        f := s.compileBindingField(ctx, sch, index)
-        if f != nil {
+        if schema.Title == core.ValuesTypeName {
             field.Type = &data.FieldType{
-                Name:    "Array<" + f.Type.Name + ">",
-                IsArray: true,
-                ElementType: &data.FieldType{
-                    Name:        f.Type.Name,
-                    PackageName: f.Type.PackageName,
-                    Enum:        f.Type.Enum,
-                    Message:     f.Type.Message,
-                    KeyType:     f.Type.KeyType,
-                    ElementType: f.Type.ElementType,
-                    IsEnum:      f.Type.IsEnum,
-                    IsMap:       f.Type.IsMap,
-                    IsArray:     f.Type.IsArray,
-                    IsScalar:    f.Type.IsScalar,
-                    Go:          f.Type.Go,
-                    Extensions:  f.Type.Extensions,
+                Name:        core.ValuesTypeName,
+                PackageName: "mojo.core",
+                Go: &data.GoFieldType{
+                    Name: "*" + "core.Values",
                 },
-                Go:         &data.GoFieldType{},
                 Extensions: make(map[string]interface{}),
             }
+        } else {
+            sch := schema.Items.GetSchemaOf(index)
+            f := s.compileBindingField(ctx, sch, index)
+            if f != nil {
+                field.Type = &data.FieldType{
+                    Name:    "Array<" + f.Type.Name + ">",
+                    IsArray: true,
+                    ElementType: &data.FieldType{
+                        Name:        f.Type.Name,
+                        PackageName: f.Type.PackageName,
+                        Enum:        f.Type.Enum,
+                        Message:     f.Type.Message,
+                        KeyType:     f.Type.KeyType,
+                        ElementType: f.Type.ElementType,
+                        IsEnum:      f.Type.IsEnum,
+                        IsMap:       f.Type.IsMap,
+                        IsArray:     f.Type.IsArray,
+                        IsScalar:    f.Type.IsScalar,
+                        Go:          f.Type.Go,
+                        Extensions:  f.Type.Extensions,
+                    },
+                    Go:         &data.GoFieldType{},
+                    Extensions: make(map[string]interface{}),
+                }
 
-            if f.Type.Go.IsPointer {
-                field.Type.Go.Name = "[]*" + f.Type.Go.Name
+                if f.Type.Go.IsPointer {
+                    field.Type.Go.Name = "[]*" + f.Type.Go.Name
+                } else {
+                    field.Type.Go.Name = "[]" + f.Type.Go.Name
+                }
             } else {
-                field.Type.Go.Name = "[]" + f.Type.Go.Name
+                logs.Errorw("failed to compile the schema", "schema", schema.Title)
             }
         }
     case openapi.Schema_TYPE_OBJECT:
@@ -622,9 +635,25 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
                 field.Type.Message.Fields = append(field.Type.Message.Fields, f)
             }
         }
+    default:
+        // FIXME add the well known types to here
+        switch schema.Title {
+        case core.ValueTypeName:
+            field.Type = &data.FieldType{
+                Name:        core.ValueTypeName,
+                PackageName: "mojo.core",
+                Go: &data.GoFieldType{
+                    Name: "*" + "core.Value",
+                },
+                Extensions: make(map[string]interface{}),
+            }
+        }
     }
 
-    return field
+    if field.Type != nil {
+        return field
+    }
+    return nil
 }
 
 func getGoTypeName(title string) string {

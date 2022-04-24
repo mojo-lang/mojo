@@ -12,6 +12,32 @@ import (
 
 var schemaCompilers []SchemaCompiler
 
+var (
+    float32Schema = &openapi.Schema{
+        Title:  core.Float32TypeName,
+        Type:   openapi.Schema_TYPE_NUMBER,
+        Format: strings.ToLower(core.Float32TypeName),
+    }
+
+    float64Schema = &openapi.Schema{
+        Title:  core.Float64TypeName,
+        Type:   openapi.Schema_TYPE_NUMBER,
+        Format: strings.ToLower(core.Float64TypeName),
+    }
+
+    int64Schema = &openapi.Schema{
+        Title:  core.Int64TypeName,
+        Type:   openapi.Schema_TYPE_NUMBER,
+        Format: strings.ToLower(core.Int64TypeName),
+    }
+
+    uint64Schema = &openapi.Schema{
+        Title:  core.UInt64TypeName,
+        Type:   openapi.Schema_TYPE_NUMBER,
+        Format: strings.ToLower(core.UInt64TypeName),
+    }
+)
+
 func init() {
     schemaCompilers = append(schemaCompilers,
         &WellKnowTypeCompiler{},
@@ -63,14 +89,18 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
         if nominalType.Name != "Int" && nominalType.Name != "UInt" {
             schema.Format = strings.ToLower(nominalType.Name)
         }
+    case core.PositiveTypeFullName:
+        schema.Title = core.PositiveTypeFullName
+        schema.Type = openapi.Schema_TYPE_NUMBER
+        schema.Format = core.PositiveTypeName
+    case core.NegativeTypeFullName:
+        schema.Title = core.NegativeTypeFullName
+        schema.Type = openapi.Schema_TYPE_NUMBER
+        schema.Format = core.NegativeTypeName
     case core.Float32TypeFullName, core.FloatTypeFullName:
-        schema.Title = core.Float32TypeName
-        schema.Type = openapi.Schema_TYPE_NUMBER
-        schema.Format = strings.ToLower(core.Float32TypeName)
+        schema = float32Schema.Clone()
     case core.Float64TypeFullName, core.DoubleTypeFullName:
-        schema.Title = core.Float64TypeName
-        schema.Type = openapi.Schema_TYPE_NUMBER
-        schema.Format = strings.ToLower(core.Float64TypeName)
+        schema = float64Schema.Clone()
     case core.NullTypeFullName:
         schema.Type = openapi.Schema_TYPE_NULL
     case core.BoolTypeFullName:
@@ -85,6 +115,8 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
     case core.BytesTypeFullName:
         schema.Type = openapi.Schema_TYPE_STRING
         schema.Format = "base64"
+        //schema.Format = core.BytesTypeName
+        //schema.Description = &openapi.CachedDocument{Cache: "the format is: `b64.{base64 encoded bytes}`"}
     case core.ArrayTypeFullName:
         s, err := compileNominalType(ctx, nominalType.GenericArguments[0])
         if err != nil {

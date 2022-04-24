@@ -17,10 +17,23 @@ func (w *WellKnowTypeCompiler) Compile(ctx context.Context, nominalType *lang.No
         Title: core.AnyTypeName,
         Type:  openapi.Schema_TYPE_OBJECT,
     })
+    objectSchema := openapi.NewReferenceableSchema(&openapi.Schema{
+        Title: core.ObjectTypeName,
+        Type:  openapi.Schema_TYPE_OBJECT,
+    })
+    valuesSchema := openapi.NewReferenceableSchema(&openapi.Schema{
+        Title: core.ValuesTypeName,
+        Type:  openapi.Schema_TYPE_ARRAY,
+    })
 
     switch nominalType.GetFullName() {
     case core.AnyTypeFullName:
         return anySchema, nil
+    case core.BoolValueTypeFullName:
+        return openapi.NewReferenceableSchema(&openapi.Schema{
+            Title: core.BoolTypeName,
+            Type:  openapi.Schema_TYPE_BOOLEAN,
+        }), nil
     case core.Int32ValueTypeFullName:
         return openapi.NewReferenceableSchema(&openapi.Schema{
             Title:  core.Int32TypeName,
@@ -100,11 +113,15 @@ func (w *WellKnowTypeCompiler) Compile(ctx context.Context, nominalType *lang.No
             Type:   openapi.Schema_TYPE_STRING,
             Format: core.EmailAddressTypeName,
         }), nil
-    case core.ObjectTypeFullName:
+    case core.FieldMaskTypeFullName:
         return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title: "object",
-            Type:  openapi.Schema_TYPE_OBJECT,
+            Title:       core.FieldMaskTypeName,
+            Type:        openapi.Schema_TYPE_STRING,
+            Format:      core.FieldMaskTypeName,
+            Description: &openapi.CachedDocument{Cache: "field mask support google protobuf format like : 'foo.bar,boo.baz', also support like this: 'foo{bar,baz}'."},
         }), nil
+    case core.ObjectTypeFullName:
+        return objectSchema, nil
     case core.PlatformTypeFullName:
         return openapi.NewReferenceableSchema(&openapi.Schema{
             Title:  core.PlatformTypeName,
@@ -112,20 +129,24 @@ func (w *WellKnowTypeCompiler) Compile(ctx context.Context, nominalType *lang.No
             Format: core.PlatformTypeName,
         }), nil
     case core.ValuesTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title: core.ValuesTypeName,
-            Type:  openapi.Schema_TYPE_ARRAY,
-        }), nil
+        return valuesSchema, nil
     case core.ValueTypeFullName:
         return openapi.NewReferenceableSchema(&openapi.Schema{
             Title: core.ValueTypeName,
             OneOf: []*openapi.ReferenceableSchema{
                 openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_NULL}),
                 openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_BOOLEAN}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_NUMBER}),
                 openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_STRING}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_ARRAY}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_OBJECT}),
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title:       core.BytesTypeFullName,
+                    Type:        openapi.Schema_TYPE_STRING,
+                    Format:      core.BytesTypeName,
+                    Description: &openapi.CachedDocument{Cache: "the format is: `b64.{base64 encoded bytes}`"},
+                }),
+                openapi.NewReferenceableSchema(int64Schema.Clone()),
+                openapi.NewReferenceableSchema(float64Schema.Clone()),
+                valuesSchema,
+                objectSchema,
             },
         }), nil
     case core.ErrorTypeFullName:
@@ -147,14 +168,6 @@ func (w *WellKnowTypeCompiler) Compile(ctx context.Context, nominalType *lang.No
                     Items:       anySchema,
                     Description: &openapi.CachedDocument{Cache: "A list of messages that carry the error details.  There is a common set of message types for APIs to use."},
                 }),
-            },
-            OneOf: []*openapi.ReferenceableSchema{
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_NULL}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_BOOLEAN}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_NUMBER}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_STRING}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_ARRAY}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_OBJECT}),
             },
         }), nil
     default:

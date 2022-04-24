@@ -27,6 +27,10 @@ var PrimeTypes = map[string]bool{
     core.Int64ValueTypeFullName:   true,
     core.IntTypeFullName:          true,
     core.UIntTypeFullName:         true,
+    core.PositiveTypeFullName:     true,
+    core.NegativeTypeFullName:     true,
+    core.ByteTypeFullName:         true,
+    core.SizeTypeFullName:         true,
     core.Float32TypeFullName:      true,
     core.Float32ValueTypeFullName: true,
     core.FloatTypeFullName:        true,
@@ -149,7 +153,7 @@ func compileStructDecl(ctx context.Context, decl *lang.StructDecl) (*openapi.Ref
                 s := schemas[0].GetSchema()
                 s.Title = schema.Title
                 s.Description = schema.Description
-                return schemas[0], nil
+                return openapi.NewReferenceableSchema(s), nil
             }
         } else {
             s := &openapi.Schema{}
