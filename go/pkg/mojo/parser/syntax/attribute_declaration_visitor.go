@@ -25,9 +25,6 @@ func (a *AttributeDeclarationVisitor) VisitAttributeDeclaration(ctx *AttributeDe
                 GenericParameters: GetGenericParameters(ctx.GenericParameterClause()),
             }
 
-            tt := ctx.TypeAnnotation()
-            _ = tt
-
             if nominalType := GetTypeAnnotation(ctx.TypeAnnotation()); nominalType != nil {
                 nominalType.Document = GetFollowingDocument(ctx.FollowingDocument())
                 decl.Type = &lang.AttributeDecl_NominalType{NominalType: nominalType}

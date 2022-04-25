@@ -335,7 +335,7 @@ attributeDeclaration
 attributeAliasDeclaration
   : KEYWORD_ATTRIBUTE attributeName  genericParameterClause? EOL* attributeAliasAssignment;
 
-attributeAliasAssignment : assignmentOperator EOL* attributeName followingDocument?;
+attributeAliasAssignment : assignmentOperator EOL* (packageIdentifier DOT)? attributeName genericArgumentClause? followingDocument?;
 
 // Patterns
 

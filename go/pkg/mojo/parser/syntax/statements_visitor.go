@@ -152,5 +152,14 @@ func (s *StatementsVisitor) VisitDeclaration(ctx *DeclarationContext) interface{
         }
     }
 
+    if attributeAliasDeclaration := ctx.AttributeAliasDeclaration(); attributeAliasDeclaration != nil {
+        if decl, ok := attributeAliasDeclaration.Accept(NewAttributeAliasDeclarationVisitor()).(*lang.AttributeAliasDecl); ok {
+            decl.Document = document
+            decl.Attributes = attributes
+            decl.SetStartPosition(startPosition)
+            return lang.NewAttributeAliasDeclStatement(decl)
+        }
+    }
+
     return nil
 }
