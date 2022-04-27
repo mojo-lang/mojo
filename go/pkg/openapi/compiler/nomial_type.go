@@ -2,8 +2,6 @@ package compiler
 
 import (
     "github.com/mojo-lang/core/go/pkg/logs"
-    "strings"
-
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
@@ -14,27 +12,21 @@ var schemaCompilers []SchemaCompiler
 
 var (
     float32Schema = &openapi.Schema{
-        Title:  core.Float32TypeName,
+        Title:  core.Float32TypeFullName,
         Type:   openapi.Schema_TYPE_NUMBER,
-        Format: strings.ToLower(core.Float32TypeName),
+        Format: core.Float32TypeName,
     }
 
     float64Schema = &openapi.Schema{
-        Title:  core.Float64TypeName,
+        Title:  core.Float64TypeFullName,
         Type:   openapi.Schema_TYPE_NUMBER,
-        Format: strings.ToLower(core.Float64TypeName),
+        Format: core.Float64TypeName,
     }
 
     int64Schema = &openapi.Schema{
-        Title:  core.Int64TypeName,
-        Type:   openapi.Schema_TYPE_NUMBER,
-        Format: strings.ToLower(core.Int64TypeName),
-    }
-
-    uint64Schema = &openapi.Schema{
-        Title:  core.UInt64TypeName,
-        Type:   openapi.Schema_TYPE_NUMBER,
-        Format: strings.ToLower(core.UInt64TypeName),
+        Title:  core.Int64TypeFullName,
+        Type:   openapi.Schema_TYPE_INTEGER,
+        Format: core.Int64TypeName,
     }
 )
 
@@ -81,21 +73,22 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
         return compileNominalType(ctx, attribute.GenericArguments[0])
     }
 
-    switch nominalType.GetFullName() {
+    fullName := nominalType.GetFullName()
+    schema.Title = fullName
+
+    switch fullName {
     case core.UInt8TypeFullName, core.UInt16TypeFullName, core.UInt32TypeFullName, core.UInt64TypeFullName,
         core.Int8TypeFullName, core.Int16TypeFullName, core.Int32TypeFullName, core.Int64TypeFullName,
-        core.IntTypeFullName, core.UIntTypeFullName:
+        core.IntTypeFullName, core.UIntTypeFullName, core.ByteTypeFullName, core.SizeTypeFullName:
         schema.Type = openapi.Schema_TYPE_INTEGER
         if nominalType.Name != "Int" && nominalType.Name != "UInt" {
-            schema.Format = strings.ToLower(nominalType.Name)
+            schema.Format = nominalType.Name
         }
     case core.PositiveTypeFullName:
-        schema.Title = core.PositiveTypeFullName
-        schema.Type = openapi.Schema_TYPE_NUMBER
+        schema.Type = openapi.Schema_TYPE_INTEGER
         schema.Format = core.PositiveTypeName
     case core.NegativeTypeFullName:
-        schema.Title = core.NegativeTypeFullName
-        schema.Type = openapi.Schema_TYPE_NUMBER
+        schema.Type = openapi.Schema_TYPE_INTEGER
         schema.Format = core.NegativeTypeName
     case core.Float32TypeFullName, core.FloatTypeFullName:
         schema = float32Schema.Clone()
@@ -114,7 +107,7 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
         }
     case core.BytesTypeFullName:
         schema.Type = openapi.Schema_TYPE_STRING
-        schema.Format = "base64"
+        schema.Format = core.BytesTypeName
         //schema.Format = core.BytesTypeName
         //schema.Description = &openapi.CachedDocument{Cache: "the format is: `b64.{base64 encoded bytes}`"}
     case core.ArrayTypeFullName:

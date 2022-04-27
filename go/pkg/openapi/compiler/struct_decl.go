@@ -13,42 +13,31 @@ import (
 )
 
 var PrimeTypes = map[string]bool{
-    core.UInt8TypeFullName:        true,
-    core.UInt16TypeFullName:       true,
-    core.UInt32TypeFullName:       true,
-    core.UInt32ValueTypeFullName:  true,
-    core.UInt64TypeFullName:       true,
-    core.UInt64ValueTypeFullName:  true,
-    core.Int8TypeFullName:         true,
-    core.Int16TypeFullName:        true,
-    core.Int32TypeFullName:        true,
-    core.Int32ValueTypeFullName:   true,
-    core.Int64TypeFullName:        true,
-    core.Int64ValueTypeFullName:   true,
-    core.IntTypeFullName:          true,
-    core.UIntTypeFullName:         true,
-    core.PositiveTypeFullName:     true,
-    core.NegativeTypeFullName:     true,
-    core.ByteTypeFullName:         true,
-    core.SizeTypeFullName:         true,
-    core.Float32TypeFullName:      true,
-    core.Float32ValueTypeFullName: true,
-    core.FloatTypeFullName:        true,
-    core.Float64TypeFullName:      true,
-    core.Float64ValueTypeFullName: true,
-    core.DoubleTypeFullName:       true,
-    core.NullTypeFullName:         true,
-    core.BoolTypeFullName:         true,
-    core.StringTypeFullName:       true,
-    core.StringValueTypeFullName:  true,
-    core.BytesTypeFullName:        true,
-    core.BytesValueTypeFullName:   true,
-    core.ArrayTypeFullName:        true,
-    core.MapTypeFullName:          true,
-    core.UnionTypeFullName:        true,
-    core.ObjectTypeFullName:       true,
-    core.ValuesTypeFullName:       true,
-    core.AnyTypeFullName:          true,
+    core.UInt8TypeFullName:    true,
+    core.UInt16TypeFullName:   true,
+    core.UInt32TypeFullName:   true,
+    core.UInt64TypeFullName:   true,
+    core.Int8TypeFullName:     true,
+    core.Int16TypeFullName:    true,
+    core.Int32TypeFullName:    true,
+    core.Int64TypeFullName:    true,
+    core.IntTypeFullName:      true,
+    core.UIntTypeFullName:     true,
+    core.PositiveTypeFullName: true,
+    core.NegativeTypeFullName: true,
+    core.ByteTypeFullName:     true,
+    core.SizeTypeFullName:     true,
+    core.Float32TypeFullName:  true,
+    core.FloatTypeFullName:    true,
+    core.Float64TypeFullName:  true,
+    core.DoubleTypeFullName:   true,
+    core.NullTypeFullName:     true,
+    core.BoolTypeFullName:     true,
+    core.StringTypeFullName:   true,
+    core.BytesTypeFullName:    true,
+    core.ArrayTypeFullName:    true,
+    core.MapTypeFullName:      true,
+    core.UnionTypeFullName:    true,
 }
 
 func IsPrimeType(typeFullName string) bool {
@@ -72,6 +61,10 @@ func CompileStructDecl(ctx context.Context, decl *lang.StructDecl) error {
         }
     }
 
+    //for _, e := range decl.EnumDecls {
+    //    err := compileEnumDecl(thisCtx, e)
+    //}
+
     components := context.Components(thisCtx)
 
     // add an dummy schema first for recursion reference
@@ -90,6 +83,13 @@ func CompileStructDecl(ctx context.Context, decl *lang.StructDecl) error {
 }
 
 func compileStructDecl(ctx context.Context, decl *lang.StructDecl) (*openapi.ReferenceableSchema, error) {
+    wellKnow := &WellKnowTypeCompiler{}
+    if s, err := wellKnow.CompileStruct(ctx, decl); err != nil {
+        return nil, err
+    } else if s != nil {
+        return s, nil
+    }
+
     if decl.Type == nil {
         logs.Warnw("compile an empty object because of the struct has no type" /*, ctx.GetNamesForLogs()...*/)
         return openapi.NewReferenceableSchema(&openapi.Schema{

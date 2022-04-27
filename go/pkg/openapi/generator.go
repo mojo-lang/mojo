@@ -70,6 +70,9 @@ func (g *Generator) generateSchema() error {
         if !strings.HasPrefix(name, g.Package.FullName) {
             continue
         }
+        if schema == nil {
+            continue
+        }
 
         j, err := jsoniter.Marshal(schema)
         if err != nil {

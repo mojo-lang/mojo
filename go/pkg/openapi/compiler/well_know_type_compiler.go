@@ -6,137 +6,135 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-    "strings"
 )
 
 type WellKnowTypeCompiler struct {
 }
 
-func (w *WellKnowTypeCompiler) Compile(ctx context.Context, nominalType *lang.NominalType) (*openapi.ReferenceableSchema, error) {
-    anySchema := openapi.NewReferenceableSchema(&openapi.Schema{
-        Title: core.AnyTypeName,
-        Type:  openapi.Schema_TYPE_OBJECT,
-    })
-    objectSchema := openapi.NewReferenceableSchema(&openapi.Schema{
-        Title: core.ObjectTypeName,
-        Type:  openapi.Schema_TYPE_OBJECT,
-    })
-    valuesSchema := openapi.NewReferenceableSchema(&openapi.Schema{
-        Title: core.ValuesTypeName,
-        Type:  openapi.Schema_TYPE_ARRAY,
-    })
+// Compile some well know types will have different schema when as the nominal type, aka, when in struct field
+func (w *WellKnowTypeCompiler) Compile(ctx context.Context, decl *lang.NominalType) (*openapi.ReferenceableSchema, error) {
+    _ = ctx
 
-    switch nominalType.GetFullName() {
+    fullName := decl.GetFullName()
+    schema := &openapi.Schema{
+        Title: fullName,
+    }
+    switch fullName {
+    case core.ErrorCodeTypeFullName:
+        if !decl.HasAttribute(core.EncodingAsStringAttributeName) {
+            return nil, nil
+        }
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.ErrorCodeTypeName
+    default:
+        return nil, nil
+    }
+    return openapi.NewReferenceableSchema(schema), nil
+}
+
+func (w *WellKnowTypeCompiler) CompileStruct(ctx context.Context, decl *lang.StructDecl) (*openapi.ReferenceableSchema, error) {
+    _ = ctx
+
+    fullName := decl.GetFullName()
+    schema := &openapi.Schema{
+        ExternalDocs: nil,
+        Example:      nil,
+        Title:        fullName,
+        Description:  &openapi.CachedDocument{Cache: decl.GetDocument().GetContent()},
+    }
+
+    switch fullName {
     case core.AnyTypeFullName:
-        return anySchema, nil
+        schema.Type = openapi.Schema_TYPE_OBJECT
+        schema.Properties = map[string]*openapi.ReferenceableSchema{
+            "@type": openapi.NewReferenceableSchema(&openapi.Schema{
+                Title: core.StringTypeFullName,
+                Type:  openapi.Schema_TYPE_STRING,
+            }),
+        }
+        schema.Required = append(schema.Required, "@type")
     case core.BoolValueTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title: core.BoolTypeName,
-            Type:  openapi.Schema_TYPE_BOOLEAN,
-        }), nil
+        schema.Type = openapi.Schema_TYPE_BOOLEAN
     case core.Int32ValueTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.Int32TypeName,
-            Type:   openapi.Schema_TYPE_NUMBER,
-            Format: strings.ToLower(core.Int32TypeName),
-        }), nil
+        schema.Type = openapi.Schema_TYPE_INTEGER
+        schema.Format = core.Int32TypeName
     case core.UInt32ValueTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.UInt32TypeName,
-            Type:   openapi.Schema_TYPE_NUMBER,
-            Format: strings.ToLower(core.UInt32TypeName),
-        }), nil
+        schema.Type = openapi.Schema_TYPE_INTEGER
+        schema.Format = core.UInt32TypeName
     case core.Int64ValueTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.Int64TypeName,
-            Type:   openapi.Schema_TYPE_NUMBER,
-            Format: strings.ToLower(core.Int64TypeName),
-        }), nil
+        schema.Type = openapi.Schema_TYPE_INTEGER
+        schema.Format = core.Int64TypeName
     case core.UInt64ValueTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.UInt64TypeName,
-            Type:   openapi.Schema_TYPE_NUMBER,
-            Format: strings.ToLower(core.UInt64TypeName),
-        }), nil
+        schema.Type = openapi.Schema_TYPE_INTEGER
+        schema.Format = core.UInt64TypeName
+    case core.PercentageTypeFullName:
+        schema.Type = openapi.Schema_TYPE_INTEGER
+        schema.Format = core.PercentageTypeName
     case core.Float32ValueTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.Float32TypeName,
-            Type:   openapi.Schema_TYPE_NUMBER,
-            Format: strings.ToLower(core.Float32TypeName),
-        }), nil
+        schema.Type = openapi.Schema_TYPE_NUMBER
+        schema.Format = core.Float32TypeName
     case core.Float64ValueTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.Float64TypeName,
-            Type:   openapi.Schema_TYPE_NUMBER,
-            Format: strings.ToLower(core.Float64TypeName),
-        }), nil
+        schema.Type = openapi.Schema_TYPE_NUMBER
+        schema.Format = core.Float64TypeName
+    case core.RatioTypeFullName:
+        schema.Type = openapi.Schema_TYPE_NUMBER
+        schema.Format = core.RatioTypeName
     case core.UrlTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.UrlTypeName,
-            Type:   openapi.Schema_TYPE_STRING,
-            Format: core.UrlTypeName,
-        }), nil
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.UrlTypeName
     case core.DurationTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.DurationTypeName,
-            Type:   openapi.Schema_TYPE_STRING,
-            Format: core.DurationTypeName,
-        }), nil
-    case core.TimestampTypeFullName, core.DateTimeTypeFullName, db.DeleteTimeTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.DateTimeTypeName,
-            Type:   openapi.Schema_TYPE_STRING,
-            Format: core.DateTimeTypeName,
-        }), nil
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.DurationTypeName
+    case core.TimestampTypeFullName, db.DeleteTimeTypeFullName:
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.TimestampTypeName
+    case core.DateTimeTypeFullName:
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.DateTimeTypeName
     case core.DateTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.DateTypeName,
-            Type:   openapi.Schema_TYPE_STRING,
-            Format: core.DateTypeName,
-        }), nil
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.DateTypeName
     case core.ColorTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.ColorTypeName,
-            Type:   openapi.Schema_TYPE_STRING,
-            Format: core.ColorTypeName,
-        }), nil
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.ColorTypeName
     case core.ChecksumTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:       core.ChecksumTypeName,
-            Type:        openapi.Schema_TYPE_STRING,
-            Format:      core.ChecksumTypeName,
-            Description: &openapi.CachedDocument{Cache: "the format is: `{algorithm} {value}` and the algorithm should be one of the `MD5`, `SHA1`, `SHA256` and `SHA512`"},
-        }), nil
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.ChecksumTypeName
     case core.EmailAddressTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.EmailAddressTypeName,
-            Type:   openapi.Schema_TYPE_STRING,
-            Format: core.EmailAddressTypeName,
-        }), nil
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.EmailAddressTypeName
     case core.FieldMaskTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:       core.FieldMaskTypeName,
-            Type:        openapi.Schema_TYPE_STRING,
-            Format:      core.FieldMaskTypeName,
-            Description: &openapi.CachedDocument{Cache: "field mask support google protobuf format like : 'foo.bar,boo.baz', also support like this: 'foo{bar,baz}'."},
-        }), nil
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.FieldMaskTypeName
     case core.ObjectTypeFullName:
-        return objectSchema, nil
+        schema.Type = openapi.Schema_TYPE_OBJECT
     case core.PlatformTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title:  core.PlatformTypeName,
-            Type:   openapi.Schema_TYPE_STRING,
-            Format: core.PlatformTypeName,
-        }), nil
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.PlatformTypeName
+    case core.VersionTypeFullName:
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.VersionTypeName
+    case core.UuidTypeFullName:
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.UuidTypeName
     case core.ValuesTypeFullName:
-        return valuesSchema, nil
+        schema.Type = openapi.Schema_TYPE_ARRAY
     case core.ValueTypeFullName:
         return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title: core.ValueTypeName,
+            Title: fullName,
             OneOf: []*openapi.ReferenceableSchema{
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_NULL}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_BOOLEAN}),
-                openapi.NewReferenceableSchema(&openapi.Schema{Type: openapi.Schema_TYPE_STRING}),
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.NullTypeFullName,
+                    Type:  openapi.Schema_TYPE_NULL,
+                }),
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.BoolTypeFullName,
+                    Type:  openapi.Schema_TYPE_BOOLEAN,
+                }),
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.StringTypeFullName,
+                    Type:  openapi.Schema_TYPE_STRING,
+                }),
                 openapi.NewReferenceableSchema(&openapi.Schema{
                     Title:       core.BytesTypeFullName,
                     Type:        openapi.Schema_TYPE_STRING,
@@ -145,32 +143,41 @@ func (w *WellKnowTypeCompiler) Compile(ctx context.Context, nominalType *lang.No
                 }),
                 openapi.NewReferenceableSchema(int64Schema.Clone()),
                 openapi.NewReferenceableSchema(float64Schema.Clone()),
-                valuesSchema,
-                objectSchema,
-            },
-        }), nil
-    case core.ErrorTypeFullName:
-        return openapi.NewReferenceableSchema(&openapi.Schema{
-            Title: core.ErrorTypeName,
-            Type:  openapi.Schema_TYPE_OBJECT,
-            Properties: map[string]*openapi.ReferenceableSchema{
-                "code": openapi.NewReferenceableSchema(&openapi.Schema{
-                    Title:  core.ErrorCodeTypeName,
-                    Type:   openapi.Schema_TYPE_STRING,
-                    Format: core.ErrorCodeTypeName,
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.ObjectTypeFullName,
+                    Type:  openapi.Schema_TYPE_OBJECT,
                 }),
-                "message": openapi.NewReferenceableSchema(&openapi.Schema{
-                    Type:        openapi.Schema_TYPE_STRING,
-                    Description: &openapi.CachedDocument{Cache: "A developer-facing error message, which should be in English."},
-                }),
-                "details": openapi.NewReferenceableSchema(&openapi.Schema{
-                    Type:        openapi.Schema_TYPE_ARRAY,
-                    Items:       anySchema,
-                    Description: &openapi.CachedDocument{Cache: "A list of messages that carry the error details.  There is a common set of message types for APIs to use."},
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.ValuesTypeFullName,
+                    Type:  openapi.Schema_TYPE_ARRAY,
                 }),
             },
         }), nil
+    //case core.ErrorTypeFullName:
+    //    return openapi.NewReferenceableSchema(&openapi.Schema{
+    //        Title: fullName,
+    //        Type:  openapi.Schema_TYPE_OBJECT,
+    //        Properties: map[string]*openapi.ReferenceableSchema{
+    //            "code": openapi.NewReferenceableSchema(&openapi.Schema{
+    //                Title:  core.ErrorCodeTypeFullName,
+    //                Type:   openapi.Schema_TYPE_STRING,
+    //                Format: core.ErrorCodeTypeName,
+    //            }),
+    //            "message": openapi.NewReferenceableSchema(&openapi.Schema{
+    //                Type:        openapi.Schema_TYPE_STRING,
+    //                Description: &openapi.CachedDocument{Cache: "A developer-facing error message, which should be in English."},
+    //            }),
+    //            "details": openapi.NewReferenceableSchema(&openapi.Schema{
+    //                Title:       "Array<" + core.AnyTypeName + ">",
+    //                Type:        openapi.Schema_TYPE_ARRAY,
+    //                Items:       openapi.NewReferenceableSchema(anySchema),
+    //                Description: &openapi.CachedDocument{Cache: "A list of messages that carry the error details.  There is a common set of message types for APIs to use."},
+    //            }),
+    //        },
+    //    }), nil
     default:
         return nil, nil
     }
+
+    return openapi.NewReferenceableSchema(schema), nil
 }
