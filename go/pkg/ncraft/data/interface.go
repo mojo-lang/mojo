@@ -11,7 +11,8 @@ type Interface struct {
     BaredName  string // remove the Service postfix if the interface name is ends with 'Service'
     ServerName string
 
-    Methods []*Method
+    HasSubscription bool
+    Methods         []*Method
 
     Extensions map[string]interface{}
 }

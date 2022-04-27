@@ -84,7 +84,7 @@ func createDecodeConvertFunc(f *data.HTTPParameter, funcMap template.FuncMap) (s
         fType = "%s, err := strconv.ParseInt(%s, 10, 32)"
     case "int64":
         fType = "%s, err := strconv.ParseInt(%s, 10, 64)"
-    case "bool":
+    case "bool", "core.BoolValue":
         fType = "%s, err := strconv.ParseBool(%s)"
     case "float32":
         fType = "%s, err := strconv.ParseFloat(%s, 32)"
@@ -93,6 +93,23 @@ func createDecodeConvertFunc(f *data.HTTPParameter, funcMap template.FuncMap) (s
     case "string":
         fType = "%s := %s"
         needsErrorCheck = false
+    }
+
+    if len(fType) > 0 {
+        pre := ""
+        n := f.Go.LocalName
+        switch f.GetGoTypeName() {
+        case "core.BoolValue":
+            if f.Location == "query" {
+                pre = fmt.Sprintf(`%sStr := ""
+            if len(%sStrs) > 0 {
+                %sStr = %sStrs[0]
+            }
+`, n, n, n, n)
+            }
+        }
+
+        return pre + fmt.Sprintf(fType, f.Go.LocalName, f.Go.LocalName+"Str"), needsErrorCheck
     }
 
     if f.IsArray() {
@@ -186,7 +203,8 @@ for _, str := range {{.Go.LocalName}}Strs {
 
         return string(bs), false
     }
-    return fmt.Sprintf(fType, f.Go.LocalName, f.Go.LocalName+"Str"), needsErrorCheck
+
+    return "", false
 }
 
 // createDecodeTypeConversion creates a go string that converts a 64 bit type
@@ -203,6 +221,8 @@ func createDecodeTypeConversion(f *data.HTTPParameter) string {
     switch f.GetGoTypeName() {
     case "uint32", "int32", "float32":
         fType = f.Field.Type.Go.Name + "(%s)"
+    case "core.BoolValue":
+        fType = "&core.BoolValue{Val: %s}"
     default:
         fType = "%s"
     }

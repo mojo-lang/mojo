@@ -90,6 +90,13 @@ func (s *Services) CompileInterface(ctx context.Context, decl *lang.InterfaceDec
         }
     }
 
+    for _, m := range service.Interface.Methods {
+        if len(m.Subscriptions) > 0 {
+            service.Interface.HasSubscription = true
+            break
+        }
+    }
+
     service.Go.ImportedTypePaths = unifyStringArray(service.Go.ImportedTypePaths)
 
     s.Data = append(s.Data, service)
@@ -268,6 +275,18 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
         }
     }
 
+    for _, attribute := range decl.Attributes {
+        if attribute.IsSameName("messaging.subscription") {
+            subscription := &data.MessagingSubscription{}
+            if len(attribute.Arguments) == 1 {
+                if value, err := attribute.Arguments[0].GetString(); err == nil && len(value) > 0 {
+                    subscription.Topic = value
+                }
+            }
+            m.Subscriptions = append(m.Subscriptions, subscription)
+        }
+    }
+
     service.Interface.Methods = append(service.Interface.Methods, m)
     return nil
 }
@@ -428,6 +447,10 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
     } else {
         param.Location = "query"
     }
+
+    if body := decl.Type.HasAttribute(http.BodyAttributeFullName); body {
+        binding.Body = param
+    }
     binding.Parameters = append(binding.Parameters, param)
 
     if fieldType := param.Field.GetType(); fieldType != nil && fieldType.Message != nil {
@@ -473,13 +496,25 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
     field := &data.Field{}
     switch schema.Type {
     case openapi.Schema_TYPE_BOOLEAN:
-        field.Type = &data.FieldType{
-            Name:     "Bool",
-            IsScalar: true,
-            Go: &data.GoFieldType{
-                Name:      "bool",
-                IsPointer: false,
-            },
+        if schema.Title == core.BoolValueTypeFullName {
+            field.Type = &data.FieldType{
+                Name:        "BoolValue",
+                PackageName: "mojo.core",
+                Go: &data.GoFieldType{
+                    Name:      "core.BoolValue",
+                    IsPointer: true,
+                },
+            }
+        } else {
+            field.Type = &data.FieldType{
+                Name:        "Bool",
+                PackageName: "mojo.core",
+                IsScalar:    true,
+                Go: &data.GoFieldType{
+                    Name:      "bool",
+                    IsPointer: false,
+                },
+            }
         }
     case openapi.Schema_TYPE_INTEGER:
         if len(schema.Format) > 0 {
@@ -535,7 +570,7 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
             }
         }
     case openapi.Schema_TYPE_ARRAY:
-        if schema.Title == core.ValuesTypeName {
+        if schema.Title == core.ValuesTypeFullName {
             field.Type = &data.FieldType{
                 Name:        core.ValuesTypeName,
                 PackageName: "mojo.core",
@@ -631,6 +666,9 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
 
             for name, item := range schema.Properties {
                 f := s.compileBindingField(ctx, item.GetSchemaOf(index), index)
+                if f == nil {
+                    println("")
+                }
                 f.Name = strcase.ToSnake(name)
                 field.Type.Message.Fields = append(field.Type.Message.Fields, f)
             }
@@ -638,7 +676,7 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
     default:
         // FIXME add the well known types to here
         switch schema.Title {
-        case core.ValueTypeName:
+        case core.ValueTypeFullName:
             field.Type = &data.FieldType{
                 Name:        core.ValueTypeName,
                 PackageName: "mojo.core",

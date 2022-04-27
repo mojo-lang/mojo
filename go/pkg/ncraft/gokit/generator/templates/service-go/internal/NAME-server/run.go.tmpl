@@ -10,7 +10,7 @@ import (
     "fmt"
 	"net"
 	"github.com/gorilla/mux"
-	jsoniter "github.com/json-iterator/go"
+	{{if .Interface.HasSubscription}}jsoniter "github.com/json-iterator/go"{{end}}
     "github.com/rs/cors"
     "net/http"
     "net/http/pprof"
@@ -27,8 +27,8 @@ import (
 
     nclient "github.com/ncraft-io/ncraft-gokit/pkg/client"
     "github.com/ncraft-io/ncraft-go/pkg/logs"
-    "github.com/ncraft-io/ncraft-go/pkg/messaging"
-    _ "github.com/ncraft-io/ncraft-go/pkg/messaging/nats"
+    {{if .Interface.HasSubscription}}"github.com/ncraft-io/ncraft-go/pkg/messaging"
+    _ "github.com/ncraft-io/ncraft-go/pkg/messaging/nats"{{end}}
     "github.com/ncraft-io/ncraft-gokit/pkg/metrics"
     "github.com/ncraft-io/ncraft-gokit/pkg/sd"
     nserver "github.com/ncraft-io/ncraft-gokit/pkg/server"
@@ -200,7 +200,7 @@ func Run(cfg nserver.Config) {
     //} else {
     //    panic(err.Error())
     //}
-
+    {{if .Interface.HasSubscription}}
     client, err := messaging.NewClient()
     if err != nil {
         logs.Warnw("Agent Server Run: failed to create the message client", "error", err.Error())
@@ -213,8 +213,11 @@ func Run(cfg nserver.Config) {
         }
         go func() {
             client.Subscribe(sub, func(ctx context.Context, m *messaging.Message) error {
+                ctx = context.WithValue(ctx, messaging.TopicKey, sub.Topic)
+                ctx = context.WithValue(ctx, messaging.MessageIdKey, m.Id)
+                ctx = context.WithValue(ctx, messaging.MessageAttributesKey, m.Attributes)
                 switch ep.Method { {{range $i := .Interface.Methods}}
-                        case "{{$i.Name}}":
+                        {{if $i.Subscriptions}}case "{{$i.Name}}":
                             request := &pb.{{ToCamel $i.Name}}Request{}
                             if err = jsoniter.ConfigFastest.Unmarshal(m.Data, request); err != nil {
                                 logs.Warnw("failed to unmarshal the queue's message to json", "error", err.Error())
@@ -228,18 +231,18 @@ func Run(cfg nserver.Config) {
                                     return nil
                                 }
                             }
-                            m.Ack(){{end}}
+                            m.Ack(){{end}}{{end}}
                 }
                 return nil
             })
         }()
     }
+    {{else}}_ = endpoints{{end}}
 
 	// Run!
 	logs.Info("{{.Go.PackageName}}.{{.Interface.ServerName}}", " started.")
 	logs.Info("{{.Go.PackageName}}.{{.Interface.ServerName}}", <-errc)
-
-	client.Shutdown()
+	{{if .Interface.HasSubscription}}client.Shutdown(){{end}}
 	logs.Info("{{.Go.PackageName}}.{{.Interface.ServerName}}", " closed.")
 }
 

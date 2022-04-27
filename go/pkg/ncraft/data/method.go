@@ -23,6 +23,8 @@ type Method struct {
     // the fields of the Methods.
     Bindings []*HTTPBinding
 
+    Subscriptions []*MessagingSubscription
+
     Extensions map[string]interface{}
 }
 

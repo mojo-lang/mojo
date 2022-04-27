@@ -32,8 +32,8 @@ var ServerDecodeTemplate = `
 			{{- if not $binding.Body}}
 			if err = jsoniter.ConfigFastest.Unmarshal(buf, &req); err != nil {
 			{{else}}
-			req.{{GoName $binding.Body.Name}} = {{if $binding.Body.IsMap}}make({{$binding.Body.GetGoTypeName}}){{else}}&{{$binding.Body.GetGoTypeName}}{}{{end}}
-			if err = jsoniter.ConfigFastest.Unmarshal(buf, req.{{GoName $binding.Body.Field.Name}}); err != nil {
+			req.{{GoName $binding.Body.Name}} = {{if $binding.Body.IsMap}}make({{$binding.Body.GetGoTypeName}}){{else if $binding.Body.IsArray}}{{$binding.Body.GetGoTypeName}}{}{{else}}&{{$binding.Body.GetGoTypeName}}{}{{end}}
+			if err = jsoniter.ConfigFastest.Unmarshal(buf, {{if $binding.Body.IsArray}}&{{end}}req.{{GoName $binding.Body.Field.Name}}); err != nil {
 			{{end -}}
 				const size = 8196
 				if len(buf) > size {
