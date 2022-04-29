@@ -41,6 +41,8 @@ func (p *PaginationResult) CompileMethod(ctx context.Context, method *lang.Funct
         pr.Name = decl.Name
         pr.FullName = GetFullName(pr.EnclosingName, pr.Name)
         pr.FieldName = strcase.ToCamel(decl.Type.Fields[0].Name)
+
+        p.Data.PaginationResults = append(p.Data.PaginationResults, pr)
     }
 
     return nil

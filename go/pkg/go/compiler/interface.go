@@ -1,6 +1,7 @@
 package compiler
 
 import (
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/go/data"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
@@ -16,7 +17,7 @@ func (i *Interface) CompileInterface(ctx context.Context, decl *lang.InterfaceDe
 
     for _, method := range decl.Type.Methods {
         methodCtx := context.WithType(ctx, method)
-        isPagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination")
+        isPagination, _ := lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName)
         if isPagination {
             pagination := &PaginationResult{Data: i.Data}
             if err := pagination.CompileMethod(thisCtx, method); err != nil {
