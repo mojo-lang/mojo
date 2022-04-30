@@ -149,6 +149,27 @@ func TestNominalTypeVisitor_VisitUnion(t *testing.T) {
     assert.Equal(t, "Array", nominalType.GenericArguments[2].Name)
 }
 
+func TestNominalTypeVisitor_VisitUnion2(t *testing.T) {
+    const unionType = `type Val{ val: String @1 //< string doc
+                                    | Int
+                                    | [String] @3 //< strings doc
+}`
+
+    parser := &Parser{}
+    file, err := parser.ParseString(unionType)
+
+    assert.NoError(t, err)
+    nominalType := getNominalType(file)
+    assert.NotNil(t, nominalType)
+    assert.Equal(t, "Union", nominalType.Name)
+    assert.Equal(t, 3, len(nominalType.GenericArguments))
+    assert.Equal(t, "String", nominalType.GenericArguments[0].Name)
+    assert.Equal(t, "string doc", nominalType.GenericArguments[0].Document.Lines[0].Text)
+    assert.Equal(t, "Int", nominalType.GenericArguments[1].Name)
+    assert.Equal(t, "Array", nominalType.GenericArguments[2].Name)
+    assert.Equal(t, "strings doc", nominalType.GenericArguments[2].Document.Lines[0].Text)
+}
+
 func TestNominalTypeVisitor_VisitTupleType(t *testing.T) {
     const tupleType = `type Val{ val: (String, Int) }`
 

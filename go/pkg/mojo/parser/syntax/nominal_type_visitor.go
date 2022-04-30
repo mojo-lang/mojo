@@ -271,14 +271,52 @@ func (n *NominalTypeVisitor) VisitUnion(ctx *UnionContext) interface{} {
     }
 
     typeCtx := ctx.AllBasicType()
-    for i, t := range typeCtx {
+    for _, t := range typeCtx {
         visitor := NewNominalTypeVisitor()
         if nominalType, ok := t.Accept(visitor).(*lang.NominalType); ok {
-            nominalType.Attributes = GetAttributes(ctx.Attributes(i))
             unionType.GenericArguments = append(unionType.GenericArguments, nominalType)
         } else {
             // error
             return nil
+        }
+    }
+
+    arguments := unionType.GenericArguments
+
+    for i, attrCtx := range ctx.AllAttributes() {
+        attrs := GetAttributes(attrCtx)
+        if len(attrs) == 0 {
+            continue
+        }
+
+        pos := lang.Attributes(attrs).GetEndPosition()
+        for j := i + 1; j < len(arguments); j++ {
+            if pos.Compare(arguments[j].StartPosition) < 0 {
+                arguments[j-1].Attributes = attrs
+                break
+            }
+        }
+        lastArgument := arguments[len(arguments)-1]
+        if pos.Compare(lastArgument.EndPosition) > 0 {
+            lastArgument.Attributes = attrs
+        }
+    }
+    for i, docCtx := range ctx.AllFollowingDocument() {
+        doc := GetFollowingDocument(docCtx)
+        if doc == nil {
+            continue
+        }
+
+        pos := doc.GetEndPosition()
+        for j := i + 1; j < len(arguments); j++ {
+            if pos.Compare(arguments[j].StartPosition) < 0 {
+                arguments[j-1].Document = doc
+                break
+            }
+        }
+        lastArgument := arguments[len(arguments)-1]
+        if pos.Compare(lastArgument.EndPosition) > 0 {
+            lastArgument.Document = doc
         }
     }
 
