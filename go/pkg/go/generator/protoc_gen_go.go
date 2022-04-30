@@ -203,6 +203,17 @@ func ProtocGenGo(path string, pkg *lang.Package, files []*descriptor.File) (util
                     tags.AddOptions("db", "index=true")
                     tags.Set(&structtag.Tag{Key: "gorm", Name: "index"})
                 }
+
+                if foreignKey, _ := valDecl.GetStringAttribute(db.ForeignKeyAttributeFullName); len(foreignKey) > 0 {
+                    if tag, _ := tags.Get("db"); tag == nil {
+                        tags.Set(&structtag.Tag{
+                            Key:  "db",
+                            Name: fieldName,
+                        })
+                    }
+                    tags.AddOptions("db", "foreignKey="+foreignKey)
+                    tags.Set(&structtag.Tag{Key: "gorm", Name: "foreignKey:" + strcase.ToCamel(foreignKey)})
+                }
             }
         })
 

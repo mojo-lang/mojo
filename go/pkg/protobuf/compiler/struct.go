@@ -267,6 +267,10 @@ func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDec
             member.SetStringOption(mojo.E_DbExplode, explode)
             addOptionsDependency(fieldCtx)
         }
+        if foreignKey, err := lang.GetStringAttribute(field.Type.Attributes, db.ForeignKeyAttributeName); err == nil {
+            member.SetStringOption(mojo.E_DbForeignKey, foreignKey)
+            addOptionsDependency(fieldCtx)
+        }
 
         msgDescriptor.AppendField(member)
     }
