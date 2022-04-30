@@ -58,9 +58,10 @@ func (c *Compiler) Compile() (Documents, error) {
         if err != nil {
             return nil, err
         }
-
-        name = lang.TypeNameToFileName(name)
-        c.Documents[name] = document
+        if document != nil {
+            name = lang.TypeNameToFileName(name)
+            c.Documents[name] = document
+        }
     }
 
     return c.Documents, nil

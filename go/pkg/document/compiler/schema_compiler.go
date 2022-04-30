@@ -8,6 +8,8 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+    "sort"
+    "strings"
 )
 
 type SchemaCompiler struct {
@@ -37,24 +39,29 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
         table := &document.Table{
             Caption:   nil,
             Alignment: 0,
-            Header:    document.NewTextTableHeader("字段", "类型", "格式类型", "是否必须", "默认值", "说明"),
+            Header:    document.NewTextTableHeader("field", "type", "format", "required", "default", "description"),
         }
 
         fieldNames := decl.GetStructDecl().GetAllFieldNames(lang.FieldNamOptionUseAlias)
-        if decl == nil {
+        if len(fieldNames) == 0 {
             fieldNames = schema.FieldNames(s.Components.Schemas)
+            sort.Strings(fieldNames)
         }
 
         if len(fieldNames) > 0 {
-            //sort.Strings(fieldNames)
             s.compileFields(context.Empty(), fieldNames, schema, table)
             doc.AppendTable(table)
         }
     } else if schema.Type == openapi.Schema_TYPE_ARRAY {
+        if schema.Items == nil {
+            logs.Infow("do not generate the document for empty array", "type", schema.Title)
+            return nil, nil
+        }
+
         table := &document.Table{
             Caption:   nil,
             Alignment: 0,
-            Header:    document.NewTextTableHeader("类型", "说明"),
+            Header:    document.NewTextTableHeader("type", "description"),
         }
         row := &document.Table_Row{}
 
@@ -63,8 +70,8 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
         typeName := schema.GetTypeName(s.Components.Schemas)
         row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
-        // 说明
-        d := schema.Items.GetDescription(s.Components)
+        // description
+        d := schema.Items.GetDescription(s.Components.Schemas)
         if d != nil {
             row.Vals = append(row.Vals, &document.Table_Cell{Vals: doc.Blocks})
         }
@@ -75,7 +82,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
         table := &document.Table{
             Caption:   nil,
             Alignment: 0,
-            Header:    document.NewTextTableHeader("类型", "说明"),
+            Header:    document.NewTextTableHeader("type", "format", "description"),
         }
 
         for _, item := range schema.OneOf {
@@ -84,8 +91,11 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
             typeName := item.GetTypeName(s.Components.Schemas)
             row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
-            // 说明
-            summary := item.GetSummary(s.Components)
+            typeFormat := item.GetFormat(s.Components.Schemas)
+            row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // format
+
+            // description
+            summary := item.GetSummary(s.Components.Schemas)
             row.Vals = append(row.Vals, document.NewTextTableCell(summary))
 
             table.Rows = append(table.Rows, row)
@@ -120,7 +130,12 @@ func (s *SchemaCompiler) compileFields(ctx context.Context, fieldNames []string,
     }
 
     for _, fieldName := range fieldNames {
-        fieldName = strcase.ToLowerCamel(fieldName)
+        if strings.HasPrefix(fieldName, "@") {
+            fieldName = "@" + strcase.ToLowerCamel(fieldName)
+        } else {
+            fieldName = strcase.ToLowerCamel(fieldName)
+        }
+
         property := schema.Properties[fieldName]
         if property == nil {
             continue
@@ -133,15 +148,15 @@ func (s *SchemaCompiler) compileFields(ctx context.Context, fieldNames []string,
         row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
         typeFormat := property.GetFormat(s.Components.Schemas)
-        row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // 格式类型
+        row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // format
 
-        required := "否"
+        required := "N"
         if schema.IsPropertyRequired(fieldName) {
-            required = "是"
+            required = "Y"
         }
-        row.Vals = append(row.Vals, document.NewTextTableCell(required)) // 是否必须
+        row.Vals = append(row.Vals, document.NewTextTableCell(required)) // required
 
-        row.Vals = append(row.Vals, document.NewTextTableCell("")) // 默认值
+        row.Vals = append(row.Vals, document.NewTextTableCell("")) // default
 
         // const
         constVal := ""
@@ -152,8 +167,8 @@ func (s *SchemaCompiler) compileFields(ctx context.Context, fieldNames []string,
             }
         }
 
-        // 说明
-        doc := property.GetDescription(s.Components)
+        // description
+        doc := property.GetDescription(s.Components.Schemas)
         if doc != nil {
             if len(constVal) > 0 {
                 doc.Blocks = append(doc.Blocks, document.NewTextPlainBlock(constVal))
