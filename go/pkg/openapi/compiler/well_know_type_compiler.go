@@ -32,6 +32,48 @@ func (w *WellKnowTypeCompiler) Compile(ctx context.Context, decl *lang.NominalTy
     return openapi.NewReferenceableSchema(schema), nil
 }
 
+func (w *WellKnowTypeCompiler) CompileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl) (*openapi.ReferenceableSchema, error) {
+    _ = ctx
+    fullName := decl.GetFullName()
+    switch fullName {
+    case core.ValueTypeFullName:
+        return openapi.NewReferenceableSchema(&openapi.Schema{
+            Title: fullName,
+            OneOf: []*openapi.ReferenceableSchema{
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.NullTypeFullName,
+                    Type:  openapi.Schema_TYPE_NULL,
+                }),
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.BoolTypeFullName,
+                    Type:  openapi.Schema_TYPE_BOOLEAN,
+                }),
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.StringTypeFullName,
+                    Type:  openapi.Schema_TYPE_STRING,
+                }),
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title:       core.BytesTypeFullName,
+                    Type:        openapi.Schema_TYPE_STRING,
+                    Format:      core.BytesTypeName,
+                    Description: &openapi.CachedDocument{Cache: "the format is: `b64.{base64 encoded bytes}`"},
+                }),
+                openapi.NewReferenceableSchema(int64Schema.Clone()),
+                openapi.NewReferenceableSchema(float64Schema.Clone()),
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.ObjectTypeFullName,
+                    Type:  openapi.Schema_TYPE_OBJECT,
+                }),
+                openapi.NewReferenceableSchema(&openapi.Schema{
+                    Title: core.ValuesTypeFullName,
+                    Type:  openapi.Schema_TYPE_ARRAY,
+                }),
+            },
+        }), nil
+    }
+    return nil, nil
+}
+
 func (w *WellKnowTypeCompiler) CompileStruct(ctx context.Context, decl *lang.StructDecl) (*openapi.ReferenceableSchema, error) {
     _ = ctx
 
@@ -79,6 +121,11 @@ func (w *WellKnowTypeCompiler) CompileStruct(ctx context.Context, decl *lang.Str
     case core.RatioTypeFullName:
         schema.Type = openapi.Schema_TYPE_NUMBER
         schema.Format = core.RatioTypeName
+    case core.StringValueTypeFullName:
+        schema.Type = openapi.Schema_TYPE_STRING
+    case core.BytesValueTypeFullName:
+        schema.Type = openapi.Schema_TYPE_STRING
+        schema.Format = core.BytesTypeName
     case core.UrlTypeFullName:
         schema.Type = openapi.Schema_TYPE_STRING
         schema.Format = core.UrlTypeName
@@ -106,8 +153,6 @@ func (w *WellKnowTypeCompiler) CompileStruct(ctx context.Context, decl *lang.Str
     case core.FieldMaskTypeFullName:
         schema.Type = openapi.Schema_TYPE_STRING
         schema.Format = core.FieldMaskTypeName
-    case core.ObjectTypeFullName:
-        schema.Type = openapi.Schema_TYPE_OBJECT
     case core.PlatformTypeFullName:
         schema.Type = openapi.Schema_TYPE_STRING
         schema.Format = core.PlatformTypeName
@@ -117,41 +162,12 @@ func (w *WellKnowTypeCompiler) CompileStruct(ctx context.Context, decl *lang.Str
     case core.UuidTypeFullName:
         schema.Type = openapi.Schema_TYPE_STRING
         schema.Format = core.UuidTypeName
+    case core.ObjectTypeFullName:
+        schema.Type = openapi.Schema_TYPE_OBJECT
     case core.ValuesTypeFullName:
-        schema.Type = openapi.Schema_TYPE_ARRAY
-    case core.ValueTypeFullName:
         return openapi.NewReferenceableSchema(&openapi.Schema{
             Title: fullName,
-            OneOf: []*openapi.ReferenceableSchema{
-                openapi.NewReferenceableSchema(&openapi.Schema{
-                    Title: core.NullTypeFullName,
-                    Type:  openapi.Schema_TYPE_NULL,
-                }),
-                openapi.NewReferenceableSchema(&openapi.Schema{
-                    Title: core.BoolTypeFullName,
-                    Type:  openapi.Schema_TYPE_BOOLEAN,
-                }),
-                openapi.NewReferenceableSchema(&openapi.Schema{
-                    Title: core.StringTypeFullName,
-                    Type:  openapi.Schema_TYPE_STRING,
-                }),
-                openapi.NewReferenceableSchema(&openapi.Schema{
-                    Title:       core.BytesTypeFullName,
-                    Type:        openapi.Schema_TYPE_STRING,
-                    Format:      core.BytesTypeName,
-                    Description: &openapi.CachedDocument{Cache: "the format is: `b64.{base64 encoded bytes}`"},
-                }),
-                openapi.NewReferenceableSchema(int64Schema.Clone()),
-                openapi.NewReferenceableSchema(float64Schema.Clone()),
-                openapi.NewReferenceableSchema(&openapi.Schema{
-                    Title: core.ObjectTypeFullName,
-                    Type:  openapi.Schema_TYPE_OBJECT,
-                }),
-                openapi.NewReferenceableSchema(&openapi.Schema{
-                    Title: core.ValuesTypeFullName,
-                    Type:  openapi.Schema_TYPE_ARRAY,
-                }),
-            },
+            Type:  openapi.Schema_TYPE_ARRAY,
         }), nil
     //case core.ErrorTypeFullName:
     //    return openapi.NewReferenceableSchema(&openapi.Schema{

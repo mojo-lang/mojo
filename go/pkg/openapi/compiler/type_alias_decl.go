@@ -47,6 +47,13 @@ func CompileTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDecl) (*opena
 }
 
 func compileTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDecl) (*openapi.ReferenceableSchema, error) {
+    wellKnow := &WellKnowTypeCompiler{}
+    if s, err := wellKnow.CompileTypeAlias(ctx, decl); err != nil {
+        return nil, err
+    } else if s != nil {
+        return s, nil
+    }
+
     if decl.Type == nil {
         logs.Warnw("compile an empty object because of the struct has no type" /*, ctx.GetNamesForLogs()...*/)
         return openapi.NewReferenceableSchema(&openapi.Schema{
