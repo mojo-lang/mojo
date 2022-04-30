@@ -12,12 +12,12 @@ require (
 	github.com/goccy/go-graphviz v0.0.9
 	github.com/json-iterator/go v1.1.12
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/mojo-lang/core/go v0.0.0-20220424072844-95c9e87e8a7a
-	github.com/mojo-lang/db/go v0.0.0-20220410090202-af2d7d08ff3f
-	github.com/mojo-lang/document/go v0.0.0-20220404103159-b9c7564d0f13
-	github.com/mojo-lang/http/go v0.0.0-20220424075724-fe7edaa3cd0e
-	github.com/mojo-lang/lang/go v0.0.0-20220425014841-c737e38957a3
-	github.com/mojo-lang/openapi/go v0.0.0-20220427011036-ccbcd0a22722
+	github.com/mojo-lang/core/go v0.0.0-20220430095901-cfad7058b7c4
+	github.com/mojo-lang/db/go v0.0.0-20220430114533-45cc8a55f5c3
+	github.com/mojo-lang/document/go v0.0.0-20220430100748-6dc3d9d3a59a
+	github.com/mojo-lang/http/go v0.0.0-20220430115119-c6c4078dc688
+	github.com/mojo-lang/lang/go v0.0.0-20220430110523-371d2eaa93d9
+	github.com/mojo-lang/openapi/go v0.0.0-20220430102052-d930280bab5f
 	github.com/mojo-lang/protobuf/go v0.0.0-20220424074904-d251d97c00d1
 	github.com/mojo-lang/yaml v0.0.0-20210912132100-a6a60fbf6f20
 	github.com/otiai10/copy v1.6.0

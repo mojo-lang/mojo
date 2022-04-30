@@ -40,6 +40,10 @@ func (x {{.FullName}}) Format() string {
 	return strconv.Itoa(int(x))
 }
 
+func (x {{.FullName}}) ToString() string {
+    return x.Format()
+}
+
 {{$FirstItem := index .Items 0}}
 
 func (x *{{.FullName}}) Parse(value string) error {
