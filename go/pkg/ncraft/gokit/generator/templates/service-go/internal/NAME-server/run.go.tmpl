@@ -211,7 +211,8 @@ func Run(cfg nserver.Config) {
         if len(ep.Service) > 0 && ep.Service != "{{.Interface.Name}}" {
             continue
         }
-        go func() {
+        go func(sub *messaging.Subscription) {
+            logs.Infof("{{.Go.PackageName}}.{{.Interface.ServerName}} subscribed the %s topic", sub.Topic)
             client.Subscribe(sub, func(ctx context.Context, m *messaging.Message) error {
                 ctx = context.WithValue(ctx, messaging.TopicKey, sub.Topic)
                 ctx = context.WithValue(ctx, messaging.MessageIdKey, m.Id)
@@ -235,7 +236,7 @@ func Run(cfg nserver.Config) {
                 }
                 return nil
             })
-        }()
+        }(sub)
     }
     {{else}}_ = endpoints{{end}}
 
