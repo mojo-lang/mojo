@@ -1,7 +1,6 @@
 package compiler
 
 import (
-    "fmt"
     "sort"
     "strings"
     "text/template"
@@ -439,8 +438,6 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
         }
     }
 
-    param.Go.LocalName = fmt.Sprintf("%s%s", strcase.ToLowerCamel(decl.Name), strcase.ToCamel(binding.Parent.Name))
-
     //TODO update sync with openapi, add request body
     if pathParams[param.Field.Name] || pathParams[param.Field.FullName] {
         param.Location = "path"
@@ -477,7 +474,6 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
                             Go:         &data.GoHTTPParameter{},
                             Extensions: make(map[string]interface{}),
                         }
-                        parameter.Go.LocalName = fmt.Sprintf("%s%s", strcase.ToLowerCamel(parameter.Name), strcase.ToCamel(binding.Parent.Name))
                         binding.Parameters = append(binding.Parameters, parameter)
                     }
                 }

@@ -49,7 +49,7 @@ var ServerDecodeTemplate = `
 		pathParams := mux.Vars(r)
 		_ = pathParams
 
-		queryParams := r.URL.Query()
+		queryParams := core.NewUrlQueryFrom(r.URL.Query())
 		_ = queryParams
 
 		parsedQueryParams := make(map[string]bool)
@@ -57,7 +57,7 @@ var ServerDecodeTemplate = `
 
 		{{range $param := $binding.Parameters}}
 			{{if ne $param.Location "body"}}
-				{{$param.Go.QueryUnmarshaler}}
+				{{$param.Go.ParamUnmarshaler}}
 			{{end}}
 		{{end}}
 		return &req, err
@@ -102,6 +102,7 @@ import (
 	pagination "github.com/ncraft-io/ncraft-gokit/pkg/pagination"
 	nhttp "github.com/ncraft-io/ncraft-gokit/pkg/transport/http"
 	stdopentracing "github.com/opentracing/opentracing-go"
+    mjhttp "github.com/mojo-lang/http/go/pkg/mojo/http"
 
     {{$corePackage := "github.com/mojo-lang/core/go/pkg/mojo/core"}}
     "{{$corePackage}}"
@@ -124,6 +125,7 @@ var (
 	_ = pb.New{{.Interface.BaredName}}Client
 	_ = io.Copy
 	_ = errors.Wrap
+    _ = mjhttp.UnmarshalQueryParam
 )
 {{if .HasImported}}
 var ({{range $msg := .ImportedMessages}}
@@ -294,20 +296,5 @@ func headersToContext(ctx context.Context, r *http.Request) context.Context {
 	ctx = context.WithValue(ctx, "transport", "HTTPJSON")
 
 	return ctx
-}
-
-// json array value: []
-// delimiter based string: ,
-func ParseArrayStr(str string, delimiter string) []string {
-	if len(str) == 0 {
-		return []string{}
-	}
-
-	str = strings.TrimSpace(str)
-	if str[0] == '[' {
-		str = str[1:len(str)-1]
-	}
-
-	return strings.Split(str, delimiter)
 }
 `

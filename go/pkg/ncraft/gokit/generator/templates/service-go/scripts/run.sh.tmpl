@@ -4,15 +4,13 @@
 cmd=$1
 service=$2
 
+
 control_service() {
     pushd kubernetes >/dev/null
 
     echo $cmd-$service
 
-    go run ../scripts/kubes.go -cmd $cmd -config -t config/fips-$service-server-config.template.yaml -v values/fips-$service-server-values.yaml
-    go run ../scripts/kubes.go -cmd $cmd -t templates/fips-deployment-template.yaml -v values/fips-$service-server-values.yaml
-    go run ../scripts/kubes.go -cmd $cmd -t templates/fips-ingress-template.yaml -v values/fips-$service-server-values.yaml
-    go run ../scripts/kubes.go -cmd $cmd -t templates/fips-service-template.yaml -v values/fips-$service-server-values.yaml
+    go run ../scripts/kubes.go -cmd $cmd -config -t config/$service-server-config.template.yaml -v values/$service-server-values.yaml
 
     popd >/dev/null
 }
@@ -20,32 +18,14 @@ control_service() {
 control() {
 	if [ -z $service ]; then
 
-        service="suvey-tile"
-	    control_service $cmd
-
-        service="sandbox"
-	    control_service $cmd
-
-	    service="learning"
-	    control_service $cmd
-
-	    service="lookup"
+        service="{{.Interface.ServerName}}"
 	    control_service $cmd
 
 		return
 	fi
 
     case $service in
-    survey-tile)
-    control_service $cmd
-       ;;
-    sandbox)
-    control_service $cmd
-       ;;
-    learning)
-    control_service $cmd
-       ;;
-    lookup)
+    {{.Interface.ServerName}})
     control_service $cmd
        ;;
     esac
