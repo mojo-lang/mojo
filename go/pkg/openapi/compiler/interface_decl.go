@@ -5,6 +5,7 @@ import (
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/document/go/pkg/markdown"
+    "github.com/mojo-lang/http/go/pkg/mojo/http"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
@@ -194,7 +195,7 @@ func compileParameter(ctx context.Context, decl *lang.ValueDecl, method *lang.Fu
     }
     parameter.Schema = schema
 
-    if v, e := decl.GetBoolAttribute("required"); e == nil && v {
+    if v, e := decl.GetBoolAttribute(core.RequiredAttributeName); e == nil && v {
         parameter.Required = true
     }
     if v, e := decl.GetBoolAttribute("deprecated"); e == nil && v {
@@ -238,12 +239,14 @@ func CompileParameters(ctx context.Context, method *lang.FunctionDecl, httpMetho
     var parameters []*openapi.ReferenceableParameter
 
     params := method.Signature.GetParameters()
-    if pagination, _ := lang.GetBoolAttribute(method.Attributes, "pagination"); pagination {
+    if pagination, _ := lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName); pagination {
         params = append(params, langcompiler.PaginationRequestFields()...)
     }
 
     for _, param := range params {
-        if v, err := param.GetBoolAttribute("unwrap"); err == nil && v {
+        if param.HasAttribute(http.BodyAttributeFullName) {
+            continue
+        } else if v, err := param.GetBoolAttribute("unwrap"); err == nil && v {
 
             if decl := param.Type.GetTypeDeclaration().GetStructDecl(); decl != nil {
                 declCtx := context.WithValues(thisCtx, "unwrappedField", param.Name)
@@ -262,7 +265,9 @@ func CompileParameters(ctx context.Context, method *lang.FunctionDecl, httpMetho
             if err != nil {
                 return nil, err
             }
-            parameters = append(parameters, openapi.NewReferenceableParameter(parameter))
+            if parameter != nil {
+                parameters = append(parameters, openapi.NewReferenceableParameter(parameter))
+            }
         }
     }
     return parameters, nil
@@ -273,7 +278,7 @@ func compileRequestBody(ctx context.Context, method *lang.FunctionDecl) *openapi
     thisCtx := context.WithType(ctx, method)
     var body *lang.ValueDecl
     for _, parameter := range method.Signature.GetParameters() {
-        if parameter.HasAttribute("http.body") {
+        if parameter.HasAttribute(http.BodyAttributeFullName) {
             body = parameter
         }
     }

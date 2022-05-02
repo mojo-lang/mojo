@@ -38,11 +38,13 @@ func (c *PaginationCompiler) CompileInterface(ctx context.Context, decl *lang.In
     logs.Infow("enter the plugin", "plugin", c.Name, "method", "CompilePackage", "pkg", pkg.FullName, "interface", decl.Name)
 
     for _, method := range decl.GetType().GetMethods() {
-        name := method.Name
-        resultTypeName := method.GetSignature().GetResultType().GetFullName()
-        if resultTypeName == core.ArrayTypeFullName &&
-            (strings.HasPrefix(name, "list_") || !strings.HasPrefix(name, "batch_")) {
-            method.SetBoolAttribute(core.PaginationAttributeName, true)
+        if !method.HasAttribute(core.PaginationAttributeName) {
+            name := method.Name
+            resultTypeName := method.GetSignature().GetResultType().GetFullName()
+            if resultTypeName == core.ArrayTypeFullName &&
+                (strings.HasPrefix(name, "list_") || !strings.HasPrefix(name, "batch_")) {
+                method.SetBoolAttribute(core.PaginationAttributeName, true)
+            }
         }
     }
     return nil
