@@ -26,10 +26,11 @@ import (
     _ "go.uber.org/automaxprocs"
 
     nclient "github.com/ncraft-io/ncraft-gokit/pkg/client"
-    "github.com/ncraft-io/ncraft-go/pkg/logs"
-    {{if .Interface.HasSubscription}}"github.com/ncraft-io/ncraft-go/pkg/messaging"
-    _ "github.com/ncraft-io/ncraft-go/pkg/messaging/nats"{{end}}
+    "github.com/ncraft-io/ncraft/go/pkg/ncraft/logs"
+    {{if .Interface.HasSubscription}}"github.com/ncraft-io/ncraft/go/pkg/ncraft/messaging"
+    _ "github.com/ncraft-io/ncraft/go/pkg/ncraft/messaging/nats"{{end}}
     "github.com/ncraft-io/ncraft-gokit/pkg/metrics"
+    "github.com/ncraft-io/ncraft-gokit/pkg/kit"
     "github.com/ncraft-io/ncraft-gokit/pkg/sd"
     nserver "github.com/ncraft-io/ncraft-gokit/pkg/server"
     "github.com/ncraft-io/ncraft-gokit/pkg/tracing"
@@ -84,7 +85,7 @@ func RegisterService(cfg nserver.Config, r *mux.Router, s *grpc.Server) svc.Endp
     }
 
     // Create a single logger, which we'll use and give to other components.
-    logger := logs.KitLogger()
+    logger := kit.Logger()
 
     options := map[string]interface{} {
         "tracer":  tracer,
@@ -207,13 +208,13 @@ func Run(cfg nserver.Config) {
     }
 
     for _, sub := range client.GetConfig().GetSubscriptions() {
-        ep := sub.PushEndpoint
+        ep := sub.Endpoint
         if len(ep.Service) > 0 && ep.Service != "{{.Interface.Name}}" {
             continue
         }
         go func(sub *messaging.Subscription) {
             logs.Infof("{{.Go.PackageName}}.{{.Interface.ServerName}} subscribed the %s topic", sub.Topic)
-            client.Subscribe(sub, func(ctx context.Context, m *messaging.Message) error {
+            client.Subscribe(sub, func(ctx context.Context, m *messaging.SubMessage) error {
                 ctx = context.WithValue(ctx, messaging.TopicKey, sub.Topic)
                 ctx = context.WithValue(ctx, messaging.MessageIdKey, m.Id)
                 ctx = context.WithValue(ctx, messaging.MessageAttributesKey, m.Attributes)
