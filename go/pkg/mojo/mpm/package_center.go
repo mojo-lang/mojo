@@ -4,6 +4,7 @@ import (
     "os"
     "os/exec"
     "path"
+    "strings"
 
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
@@ -48,6 +49,30 @@ func (p *PackageCenter) Get(name string, requirement *lang.Package_Requirement) 
     return p.Install(name, requirement)
 }
 
+func GetGitLatestCommit(dir string) *lang.Package_Requirement_Commit {
+    cmd := exec.Command("git", "log", "-n", "1", `--format=format:"%H %cI"`)
+    cmd.Dir = dir
+    out, err := cmd.CombinedOutput()
+    if err != nil {
+        logs.Errorw("failed to run git cmd", "error", string(out), "cmd", cmd.String())
+        return nil
+    }
+    logs.Debugw("finish to get git log", "workDir", dir, "cmd", cmd.String())
+    segments := strings.Split(core.RemoveQuote(string(out), `"`), " ")
+    if len(segments) == 2 {
+        commit := &lang.Package_Requirement_Commit{
+            Hash: segments[0],
+        }
+        t, err := core.ParseTimestamp(segments[1])
+        if err != nil {
+            return nil
+        }
+        commit.Date = t
+        return commit
+    }
+    return nil
+}
+
 func (p *PackageCenter) Install(name string, requirement *lang.Package_Requirement) (string, error) {
     url := proto.Clone(requirement.Repository).(*core.Url)
     if len(url.Scheme) == 0 {
@@ -81,6 +106,14 @@ func (p *PackageCenter) Install(name string, requirement *lang.Package_Requireme
 
 func (p *PackageCenter) Update(name string, requirement *lang.Package_Requirement) (string, error) {
     repoPath := p.getPkgPath(requirement)
+
+    commit := GetGitLatestCommit(repoPath)
+    if commit != nil && requirement.Commit != nil && len(requirement.Commit.Hash) > 0 {
+        if strings.HasPrefix(commit.Hash, requirement.Commit.Hash) {
+            logs.Debugw("the mojo package are already latest", "package", name)
+            return repoPath, nil
+        }
+    }
 
     cmd := exec.Command("git", "pull")
     cmd.Dir = repoPath

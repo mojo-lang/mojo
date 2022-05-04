@@ -23,6 +23,7 @@ import (
     "os"
     "path"
     "path/filepath"
+    "sort"
     "strings"
     "sync"
 )
@@ -338,9 +339,16 @@ func (f *BinaryFile) Encode() []byte {
         return nil
     }
 
+    var names []string
+    for k := range f.Parts {
+        names = append(names, k)
+    }
+    sort.Strings(names)
+
     var binary []byte
-    for k, v := range f.Parts {
+    for _, k := range names {
         var buf []byte
+        v := f.Parts[k]
         buf = protowire.AppendTag(buf, 1, protowire.BytesType)
         buf = protowire.AppendString(buf, k)
         buf = protowire.AppendTag(buf, 2, protowire.BytesType)
