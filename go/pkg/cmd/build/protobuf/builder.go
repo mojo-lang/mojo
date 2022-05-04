@@ -1,6 +1,7 @@
 package protobuf
 
 import (
+    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     path2 "path"
 
     "github.com/mojo-lang/core/go/pkg/logs"
@@ -18,7 +19,7 @@ func (b Builder) Build() ([]*descriptor.File, error) {
     logs.Infow("begin to build protobuf.", "package", b.Package.FullName, "path", b.Path)
 
     compiler := protobuf.NewCompiler()
-    err := compiler.CompilePackages(b.Package.GetAllPackages())
+    err := compiler.CompilePackage(context.Empty(), b.Package)
     if err != nil {
         logs.Errorw("failed to compile protobuf", "package", b.Package.FullName, "error", err.Error())
         return nil, err

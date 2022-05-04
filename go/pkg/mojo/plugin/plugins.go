@@ -56,7 +56,7 @@ func (p *Plugins) sort() *Plugins {
     return p
 }
 
-func (p *Plugins) copy() *Plugins {
+func (p *Plugins) Copy() *Plugins {
     return &Plugins{
         plugins:        p.plugins,
         parsedPackages: p.parsedPackages,
@@ -81,7 +81,7 @@ func (p *Plugins) ParsePackagePath(ctx context.Context, pkgPath string, fileSys 
     for _, dep := range pkg.ResolvedDependencies {
         logs.Infow("begin to parse dependency", "dependency", dep.FullName)
 
-        cloned := p.copy()
+        cloned := p.Copy()
         if err = cloned.ParsePackage(WithPlugins(thisCtx, cloned), dep); err != nil && !errors.Is(err, SkipError{}) {
             return nil, err
         }

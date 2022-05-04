@@ -8,6 +8,7 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
 )
 
 const resolverName = "semantic.identifier-resolver"
@@ -35,7 +36,7 @@ func NewResolver(options core.Options) *Resolver {
 }
 
 func (p *Resolver) ParsePackage(ctx context.Context, pkg *lang.Package) error {
-    if pkg.GetExtraBool(p.Name) {
+    if util.IsPackageProcessed(pkg, resolverName) {
         logs.Infow("already processed, skip the plugin", "plugin", p.Name, "method", "ParsePackage", "pkg", pkg.FullName)
         return nil
     } else {
@@ -65,7 +66,7 @@ func (p *Resolver) ParsePackage(ctx context.Context, pkg *lang.Package) error {
     }
 
     if !pkg.IsPadding() {
-        pkg.SetExtraBool(resolverName, true)
+        util.SetPackageProcessed(pkg, resolverName)
     }
     return nil
 }
@@ -173,18 +174,27 @@ func (p *Resolver) ParseStruct(ctx context.Context, decl *lang.StructDecl) error
     }
 
     for _, structDecl := range decl.StructDecls {
+        if structDecl.EnclosingType != nil {
+            structDecl.EnclosingType.TypeDeclaration = lang.NewStructTypeDeclaration(decl)
+        }
         if err := p.ParseStruct(thisCtx, structDecl); err != nil {
             return err
         }
     }
 
     for _, enumDecl := range decl.EnumDecls {
+        if enumDecl.EnclosingType != nil {
+            enumDecl.EnclosingType.TypeDeclaration = lang.NewStructTypeDeclaration(decl)
+        }
         if err := p.ParseEnum(thisCtx, enumDecl); err != nil {
             return err
         }
     }
 
     for _, aliasDecl := range decl.TypeAliasDecls {
+        if aliasDecl.EnclosingType != nil {
+            aliasDecl.EnclosingType.TypeDeclaration = lang.NewStructTypeDeclaration(decl)
+        }
         if err := p.ParseTypeAlias(thisCtx, aliasDecl); err != nil {
             return err
         }

@@ -2,6 +2,7 @@ package mpm
 
 import (
     "errors"
+    "fmt"
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -16,6 +17,8 @@ import (
     "strings"
 )
 
+const pluginName = "mpm.dependency-parser"
+
 func init() {
     plugin.RegisterPlugin(NewDependencyParser(nil))
 }
@@ -29,7 +32,7 @@ type DependencyParser struct {
 func NewDependencyParser(options core.Options) *DependencyParser {
     return &DependencyParser{
         BasicPlugin: plugin.BasicPlugin{
-            Name:          "mpm.dependency-parser",
+            Name:          pluginName,
             Group:         "mpm",
             GroupPriority: 0,
             Priority:      1,
@@ -42,12 +45,16 @@ func NewDependencyParser(options core.Options) *DependencyParser {
 }
 
 //ParseFile
-//TODO implement
+//TODO implement the imports
 func (p *DependencyParser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
     return nil, nil
 }
 
 func (p *DependencyParser) ParsePackage(ctx context.Context, pkg *lang.Package) error {
+    if util.IsPackageProcessed(pkg, pluginName) {
+        return nil
+    }
+
     logs.Infow("enter the plugin", "plugin", p.Name, "method", "ParsePackage", "pkg", pkg.FullName)
 
     pkgPath := pkg.GetExtraString("path")
@@ -61,9 +68,19 @@ func (p *DependencyParser) ParsePackage(ctx context.Context, pkg *lang.Package) 
             if _, err := plugins.ParsePackagePath(parser.WithDeclaredPackage(ctx, pkg), pkgPath, fsCache[pkg.FullName]); err != nil {
                 return err
             }
+        } else if strings.HasPrefix(pkg.FullName, "mojo.") {
+            for _, dep := range pkg.ResolvedDependencies {
+                logs.Infow("begin to parse mojo dependency", "dependency", dep.FullName)
+
+                cloned := plugins.Copy()
+                if err := cloned.ParsePackage(plugin.WithPlugins(ctx, cloned), dep); err != nil && !errors.Is(err, plugin.SkipError{}) {
+                    return err
+                }
+            }
         }
     }
 
+    util.SetPackageProcessed(pkg, pluginName)
     return nil
 }
 
@@ -92,6 +109,15 @@ func (p *DependencyParser) ParsePackagePath(ctx context.Context, pkgPath string,
 
     // parse the dependency
     for name, d := range pkg.Dependencies {
+        if strings.HasPrefix(name, "mojo.") {
+            depPkg := GetMojoPackage(name)
+            if depPkg == nil {
+                return nil, fmt.Errorf("failed to found the required package %s", name)
+            }
+            pkg.ResolvedDependencies[depPkg.FullName] = depPkg
+            continue
+        }
+
         depPath := d.Path
         if len(depPath) == 0 {
             depPath, err = GetPackageCenter().Get(name, d)
@@ -109,6 +135,18 @@ func (p *DependencyParser) ParsePackagePath(ctx context.Context, pkgPath string,
         }
 
         pkg.ResolvedDependencies[depPkg.FullName] = depPkg
+    }
+
+    // add mojo default packages
+    if !strings.HasPrefix(pkg.FullName, "mojo.") {
+        if pkg.ResolvedDependencies == nil {
+            pkg.ResolvedDependencies = make(map[string]*lang.Package)
+        }
+
+        mojoPkgs := GetMojoPackages()
+        for _, mp := range mojoPkgs {
+            pkg.ResolvedDependencies[mp.FullName] = mp
+        }
     }
 
     p.parsedPackages[fullPath] = pkg

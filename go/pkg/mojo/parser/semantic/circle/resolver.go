@@ -6,6 +6,7 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     path2 "path"
 )
 
@@ -36,7 +37,7 @@ func NewResolver(options core.Options) *Resolver {
 }
 
 func (r *Resolver) ParsePackage(ctx context.Context, pkg *lang.Package) error {
-    if !r.Force && pkg.GetExtraBool(r.Name) {
+    if !r.Force && util.IsPackageProcessed(pkg, pluginName) {
         logs.Infow("already processed, skip the plugin", "plugin", r.Name, "method", "ParsePackage", "pkg", pkg.FullName)
         return nil
     } else {
@@ -56,7 +57,7 @@ func (r *Resolver) ParsePackage(ctx context.Context, pkg *lang.Package) error {
     }
 
     if !pkg.IsPadding() && !r.Force {
-        pkg.SetExtraBool(pluginName, true)
+        util.SetPackageProcessed(pkg, pluginName)
     }
     return nil
 }

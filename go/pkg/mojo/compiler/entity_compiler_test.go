@@ -1,8 +1,6 @@
 package compiler
 
 import (
-    "github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
-    "github.com/mojo-lang/mojo/go/pkg/cmd/graph"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     _ "github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
     _ "github.com/mojo-lang/mojo/go/pkg/mojo/parser/semantic"
@@ -19,8 +17,8 @@ func TestEntityCompiler_CompilePackage(t *testing.T) {
     plugins := plugin.NewPlugins("mpm", "syntax", "semantic", "compiler")
     pkg, err := plugins.ParsePackagePath(context.Empty(), "mojo-entity", test.EntityCaseFiles)
 
-    graph.Builder{Builder: builder.Builder{Package: pkg}}.Build()
-
+    //Fixme
+    //graph.Builder{Builder: builder.Builder{Package: pkg}}.Build()
     assert.NoError(t, err)
     assert.NotNil(t, pkg)
 }

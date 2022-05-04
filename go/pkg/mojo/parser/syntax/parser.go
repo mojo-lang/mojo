@@ -9,6 +9,7 @@ import (
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
     "github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "io/fs"
     "path"
     "strings"
@@ -103,7 +104,7 @@ func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs
     currentPkg := parser.ContextDeclaredPackage(ctx)
     currentPkgName := ""
     if currentPkg != nil {
-        if currentPkg.GetExtraBool(pluginName) {
+        if util.IsPackageProcessed(currentPkg, pluginName) {
             return currentPkg, nil
         }
         currentPkgName = currentPkg.FullName
@@ -163,6 +164,6 @@ func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs
         }
     }
 
-    currentPkg.SetExtraBool(pluginName, true)
+    util.SetPackageProcessed(currentPkg, pluginName)
     return currentPkg, nil
 }

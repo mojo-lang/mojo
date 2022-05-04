@@ -34,8 +34,26 @@ func (c *Compiler) CompilePackages(packages map[string]*lang.Package) error {
     return nil
 }
 
-func (c *Compiler) CompilePackage(pkg *lang.Package) error {
-    return c.compilePackage(context.Empty(), pkg)
+func (c *Compiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
+    thisCtx := context.WithType(ctx, pkg)
+
+    for _, sourceFile := range pkg.SourceFiles {
+        descriptor, err := c.compileFile(thisCtx, sourceFile)
+        if err != nil {
+            return err
+        }
+        if descriptor != nil {
+            c.Descriptors.AddFile(descriptor)
+        }
+    }
+
+    for _, child := range pkg.Children {
+        if err := c.CompilePackage(thisCtx, child); err != nil {
+            return err
+        }
+    }
+    
+    return nil
 }
 
 func (c *Compiler) CompileFile(file *lang.SourceFile) (*descriptor.File, error) {

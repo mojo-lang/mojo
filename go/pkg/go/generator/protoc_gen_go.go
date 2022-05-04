@@ -2,7 +2,6 @@ package generator
 
 import (
     "bytes"
-    "context"
     "fmt"
     "github.com/fatih/structtag"
     "github.com/mojo-lang/core/go/pkg/logs"
@@ -11,6 +10,8 @@ import (
     "github.com/mojo-lang/db/go/pkg/mojo/db"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/go/injection"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
+    "github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
     "go/ast"
@@ -18,10 +19,35 @@ import (
     "io/ioutil"
     "os"
     "os/exec"
-    path2 "path"
+    "path"
     "path/filepath"
     "strings"
 )
+
+func GenerateMojoPackageProtobuf(pkg *lang.Package) (string, error) {
+    dir, err := os.MkdirTemp("", "protobuf-mojo-"+pkg.Name)
+    if err != nil {
+        return "", err
+    }
+
+    files := mpm.GetMojoPbFile(pkg.Name)
+    if files == nil {
+        return "", nil
+    }
+
+    for name, file := range files.Parts {
+        fileName := path.Join(dir, name)
+        err = core.CreateDir(path.Dir(fileName))
+        if err != nil {
+            return "", err
+        }
+
+        if err = ioutil.WriteFile(fileName, file, fs.ModePerm); err != nil {
+            return "", err
+        }
+    }
+    return dir, nil
+}
 
 func isGoCommandExist(command string) bool {
     cmd := exec.Command("which", command)
@@ -52,21 +78,39 @@ func prepareEnv() error {
     return nil
 }
 
-func ProtocGenGo(path string, pkg *lang.Package, files []*descriptor.File) (util.GeneratedFiles, error) {
+func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.GeneratedFiles, error) {
     if err := prepareEnv(); err != nil {
         return nil, err
     }
 
+    var tempPbDirs []string
     cmd := exec.Command("protoc", "-I.")
     for _, dep := range pkg.ResolvedDependencies {
         wd := dep.GetExtraString("workingDir")
         p := dep.GetExtraString("path")
-        cmd.Args = append(cmd.Args, "--proto_path="+path2.Join(wd, p, "protobuf"))
+        if len(wd) == 0 && len(p) == 0 {
+            pbDir, err := GenerateMojoPackageProtobuf(dep)
+            if err != nil {
+                logs.Errorw("failed to generate mojo package's protobuf files", "package", dep.FullName, "error", err)
+                return nil, err
+            }
+            if len(pbDir) > 0 {
+                tempPbDirs = append(tempPbDirs, pbDir)
+                cmd.Args = append(cmd.Args, "--proto_path="+pbDir)
+            }
+        } else {
+            cmd.Args = append(cmd.Args, "--proto_path="+path.Join(wd, p, "protobuf"))
+        }
     }
+    defer func() {
+        for _, d := range tempPbDirs {
+            os.RemoveAll(d)
+        }
+    }()
 
-    cmd.Dir = path2.Join(path, "protobuf")
+    cmd.Dir = path.Join(dir, "protobuf")
 
-    outDir := filepath.Join(path, "go.out")
+    outDir := filepath.Join(dir, "go.out")
     if core.IsExist(outDir) {
         if err := os.RemoveAll(outDir); err != nil {
             return nil, err

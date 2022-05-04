@@ -17,6 +17,9 @@ func TestServices_CompileInterface(t *testing.T) {
     pkg, err := plugins.ParsePackagePath(context.Empty(), "mojo-ncraft", test.NCraftCaseFiles)
     assert.NoError(t, err)
     assert.NotNil(t, pkg)
+    if pkg == nil {
+        return
+    }
 
     options := make(core.Options)
     for _, p := range pkg.GetAllPackages() {

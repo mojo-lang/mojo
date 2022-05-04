@@ -34,8 +34,8 @@ func (s *StructDeclarationVisitor) VisitStructDeclaration(ctx *StructDeclaration
             }
 
             enclosingType := &lang.NominalType{
-                Name:            name,
-                TypeDeclaration: lang.NewStructTypeDeclaration(decl), // may cause reference circle
+                Name: name,
+                //TypeDeclaration: lang.NewStructTypeDeclaration(decl), // may cause reference circle
             }
 
             if structType := ctx.StructType(); structType != nil {

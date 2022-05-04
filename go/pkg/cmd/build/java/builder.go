@@ -5,13 +5,14 @@ import (
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
+    "github.com/mojo-lang/mojo/go/pkg/go/generator"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
     "github.com/otiai10/copy"
     "io/ioutil"
     "os"
     "os/exec"
-    path2 "path"
+    "path"
 )
 
 type Builder struct {
@@ -30,14 +31,27 @@ func (b Builder) protocJava() error {
         return errors.New("")
     }
 
+    var tempPbDirs []string
     cmd := exec.Command("protoc", "-I.")
     for _, dep := range b.Package.ResolvedDependencies {
         wd := dep.GetExtraString("workingDir")
-        path := dep.GetExtraString("path")
-        cmd.Args = append(cmd.Args, "--proto_path="+path2.Join(wd, path, "protobuf"))
+        p := dep.GetExtraString("path")
+        if len(wd) == 0 && len(p) == 0 {
+            pbDir, err := generator.GenerateMojoPackageProtobuf(dep)
+            if err != nil {
+                logs.Errorw("failed to generate mojo package's protobuf files", "package", dep.FullName, "error", err)
+                return err
+            }
+            if len(pbDir) > 0 {
+                tempPbDirs = append(tempPbDirs, pbDir)
+                cmd.Args = append(cmd.Args, "--proto_path="+pbDir)
+            }
+        } else {
+            cmd.Args = append(cmd.Args, "--proto_path="+path.Join(wd, p, "protobuf"))
+        }
     }
 
-    cmd.Dir = path2.Join(b.GetAbsolutePath(), "protobuf")
+    cmd.Dir = path.Join(b.GetAbsolutePath(), "protobuf")
 
     //cmd.Args = append(cmd.Args, "--go_out=.")
     cmd.Args = append(cmd.Args, "--java_out=.")
@@ -54,9 +68,14 @@ func (b Builder) protocJava() error {
             return err
         }
     }
+    defer func() {
+        for _, d := range tempPbDirs {
+            os.RemoveAll(d)
+        }
+    }()
 
     // move the generated files to destinations
-    destDir := path2.Join(b.GetAbsolutePath(), "java/src/main/java")
+    destDir := path.Join(b.GetAbsolutePath(), "java/src/main/java")
     if !core.IsExist(destDir) {
         core.CreateDir(destDir)
     }
@@ -64,10 +83,10 @@ func (b Builder) protocJava() error {
     util.DeepClearFiles(destDir, ".pb.java")
 
     for _, domain := range []string{"ai", "biz", "cn", "com", "edu", "gov", "net", "org", "info", "io", "tech"} {
-        srcDir := path2.Join(b.GetAbsolutePath(), "protobuf", domain)
+        srcDir := path.Join(b.GetAbsolutePath(), "protobuf", domain)
         _, err := ioutil.ReadDir(srcDir)
         if err == nil {
-            err = copy.Copy(srcDir, path2.Join(destDir, domain))
+            err = copy.Copy(srcDir, path.Join(destDir, domain))
             if err != nil {
                 return err
             }

@@ -5,7 +5,7 @@ import (
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-    "github.com/mojo-lang/yaml/go/pkg/yaml"
+    "github.com/mojo-lang/yaml/go/pkg/mojo/yaml"
     "strings"
 )
 
