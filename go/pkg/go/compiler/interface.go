@@ -18,9 +18,10 @@ func (i *Interface) CompileInterface(ctx context.Context, decl *lang.InterfaceDe
     for _, method := range decl.Type.Methods {
         methodCtx := context.WithType(ctx, method)
         isPagination, _ := lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName)
-        if isPagination {
-            pagination := &PaginationResult{Data: i.Data}
-            if err := pagination.CompileMethod(thisCtx, method); err != nil {
+        result := method.GetSignature().GetResult().GetType()
+        if isPagination || result.GetFullName() == core.ArrayTypeFullName {
+            ar := &ArrayResponse{Data: i.Data}
+            if err := ar.CompileMethod(thisCtx, method); err != nil {
                 return err
             }
         } else {
@@ -33,8 +34,21 @@ func (i *Interface) CompileInterface(ctx context.Context, decl *lang.InterfaceDe
             if err = s.CompileStruct(methodCtx, req); err != nil {
                 return err
             }
-            if err = s.CompileStruct(methodCtx, resp); err != nil {
-                return err
+
+            if result.GetFullName() == core.MapTypeFullName {
+                bm := &BoxedMap{Data: i.Data}
+                if err = bm.CompileStruct(thisCtx, resp); err != nil {
+                    return err
+                }
+            } else if result.GetFullName() == core.UnionTypeFullName {
+                bu := &BoxedUnion{Data: i.Data}
+                if err = bu.CompileStruct(thisCtx, resp); err != nil {
+                    return err
+                }
+            } else {
+                if err = s.CompileStruct(methodCtx, resp); err != nil {
+                    return err
+                }
             }
         }
     }

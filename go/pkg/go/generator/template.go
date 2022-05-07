@@ -37,8 +37,8 @@ var goEnumJsonFile string
 //go:embed template/go/DB_JSON.sql.go.tmpl
 var goDbJSONSqlFile string
 
-//go:embed template/go/PAGINATION_RESULT.json.go.tmpl
-var goPaginationJsonFile string
+//go:embed template/go/ARRAY_RESPONSE.json.go.tmpl
+var goArrayResponseJsonFile string
 
 //go:embed template/go.mod.tmpl
 var goModFile string

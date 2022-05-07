@@ -48,8 +48,8 @@ func (g *Generator) Generate(data *data.Data) error {
         g.generateDecl(decl, "sql", goDbJSONSqlFile)
     }
 
-    for _, decl := range data.PaginationResults {
-        g.generateDecl(decl, "json", goPaginationJsonFile)
+    for _, decl := range data.ArrayResponses {
+        g.generateDecl(decl, "json", goArrayResponseJsonFile)
     }
 
     if data.GoMod != nil {

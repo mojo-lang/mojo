@@ -9,11 +9,11 @@ import (
     "github.com/mojo-lang/mojo/go/pkg/protobuf/precompiler"
 )
 
-type PaginationResult struct {
+type ArrayResponse struct {
     *data.Data
 }
 
-func (p *PaginationResult) CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
+func (p *ArrayResponse) CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
     for _, method := range decl.Type.Methods {
         if err := p.CompileMethod(ctx, method); err != nil {
             return err
@@ -22,16 +22,19 @@ func (p *PaginationResult) CompileInterface(ctx context.Context, decl *lang.Inte
     return nil
 }
 
-func (p *PaginationResult) CompileMethod(ctx context.Context, method *lang.FunctionDecl) error {
+func (p *ArrayResponse) CompileMethod(ctx context.Context, method *lang.FunctionDecl) error {
     pagination, _ := lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName)
     if !pagination {
-        return nil
+        result := method.GetSignature().GetResult().GetType()
+        if result.GetFullName() != core.ArrayTypeFullName {
+            return nil
+        }
     }
 
     if decl, err := precompiler.CompileMethodResponse(ctx, method); err != nil {
         return err
     } else {
-        pr := &data.PaginationResult{}
+        pr := &data.ArrayResponse{}
         pr.PackageName = decl.GetPackageName()
         pr.GoPackageName = lang.GetGoPackageName(decl.GetPackageName())
 
@@ -42,7 +45,7 @@ func (p *PaginationResult) CompileMethod(ctx context.Context, method *lang.Funct
         pr.FullName = GetFullName(pr.EnclosingName, pr.Name)
         pr.FieldName = strcase.ToCamel(decl.Type.Fields[0].Name)
 
-        p.Data.PaginationResults = append(p.Data.PaginationResults, pr)
+        p.Data.ArrayResponses = append(p.Data.ArrayResponses, pr)
     }
 
     return nil

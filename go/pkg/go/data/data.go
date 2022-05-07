@@ -1,13 +1,13 @@
 package data
 
 type Data struct {
-    BoxedArrays       []*BoxedArray
-    BoxedMaps         []*BoxedMap
-    BoxedUnions       []*BoxedUnion
-    Enums             []*Enum
-    DbJSONs           []*DbJSON
-    PaginationResults []*PaginationResult
-    GoMod             *GoMod
+    BoxedArrays    []*BoxedArray
+    BoxedMaps      []*BoxedMap
+    BoxedUnions    []*BoxedUnion
+    Enums          []*Enum
+    DbJSONs        []*DbJSON
+    ArrayResponses []*ArrayResponse
+    GoMod          *GoMod
 
     NameIndex map[string]bool
 }
