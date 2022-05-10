@@ -12,7 +12,7 @@ import (
 )
 
 func CompileArrayToStruct(ctx context.Context, t *lang.NominalType) (*lang.StructDecl, error) {
-    if t.Name != "Array" {
+    if t.GetFullName() != core.ArrayTypeFullName {
         return nil, errors.New("")
     }
 

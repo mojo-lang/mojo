@@ -204,18 +204,21 @@ func (c *TypeAliasCompiler) compileNominalType(ctx context.Context, nominalType 
         return nil, nil, nil
     }
 
-    if len(aliasDecl.Type.GenericArguments) > 0 {
+    if len(aliasDecl.GenericParameters) > 0 {
         return nil, nil, nil
     }
 
     aliasType := &lang.NominalType{
-        StartPosition:   aliasDecl.Type.StartPosition,
-        EndPosition:     aliasDecl.Type.EndPosition,
-        PackageName:     aliasDecl.Type.PackageName,
-        Name:            aliasDecl.Type.Name,
-        TypeDeclaration: aliasDecl.Type.TypeDeclaration,
-        Attributes:      aliasDecl.Type.Attributes,
-        EnclosingType:   aliasDecl.Type.EnclosingType,
+        StartPosition:    aliasDecl.Type.StartPosition,
+        EndPosition:      aliasDecl.Type.EndPosition,
+        Document:         aliasDecl.Type.Document,
+        PackageName:      aliasDecl.Type.PackageName,
+        Name:             aliasDecl.Type.Name,
+        Implicit:         aliasDecl.Type.Implicit,
+        TypeDeclaration:  aliasDecl.Type.TypeDeclaration,
+        Attributes:       aliasDecl.Type.Attributes,
+        EnclosingType:    aliasDecl.Type.EnclosingType,
+        GenericArguments: aliasDecl.Type.GenericArguments,
     }
 
     for _, attribute := range nominalType.Attributes {
@@ -225,10 +228,14 @@ func (c *TypeAliasCompiler) compileNominalType(ctx context.Context, nominalType 
     // set or transmit the original type alias name to the end
     aliasName, err := lang.GetStringAttribute(nominalType.Attributes, lang.OriginalTypeAliasName)
     if err != nil {
-        aliasName = nominalType.Name
+        if lang.IsGenericTypeName(nominalType.Name) {
+            aliasName = nominalType.Name
+        }
     }
-    aliasType.Attributes = lang.SetStringAttribute(aliasType.Attributes, lang.OriginalTypeAliasName, aliasName)
-    aliasType.Attributes = append(aliasType.Attributes, aliasDecl.Attributes...)
+    if len(aliasName) > 0 {
+        aliasType.Attributes = lang.SetStringAttribute(aliasType.Attributes, lang.OriginalTypeAliasName, aliasName)
+        aliasType.Attributes = append(aliasType.Attributes, aliasDecl.Attributes...)
+    }
 
     if aliasType.IsTypeAlias() {
         ids, nt, err := c.compileNominalType(ctx, aliasType)

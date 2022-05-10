@@ -74,17 +74,7 @@ func (p *Plugins) ParsePackagePath(ctx context.Context, pkgPath string, fileSys 
             }
             break
         }
-
         p.Next()
-    }
-
-    for _, dep := range pkg.ResolvedDependencies {
-        logs.Infow("begin to parse dependency", "dependency", dep.FullName)
-
-        cloned := p.Copy()
-        if err = cloned.ParsePackage(WithPlugins(thisCtx, cloned), dep); err != nil && !errors.Is(err, SkipError{}) {
-            return nil, err
-        }
     }
 
     if err = p.ParsePackage(thisCtx, pkg); err != nil {

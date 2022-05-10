@@ -11,6 +11,7 @@ import (
     "github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
     "github.com/mojo-lang/mojo/go/pkg/mojo/util"
     "io/fs"
+    "os"
     "path"
     "strings"
 )
@@ -98,6 +99,33 @@ func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (
             return sourceFile, nil
         }
     }
+}
+
+func (p Parser) ParsePackage(ctx context.Context, pkg *lang.Package) (err error) {
+    if util.IsPackageProcessed(pkg, pluginName) {
+        return nil
+    }
+
+    pkgPath := pkg.GetExtraString("path")
+    if !strings.HasPrefix(pkg.FullName, "mojo.") {
+        pkgPath = path.Join(pkgPath, "mojo")
+    }
+
+    var files fs.FS
+    if fsCache := parser.ContextFsCache(ctx); fsCache != nil {
+        files = fsCache[pkg.FullName]
+    }
+    if files == nil {
+        workingDir := pkg.GetExtraString("workingDir")
+        if len(workingDir) == 0 {
+            workingDir = "."
+        }
+        files = os.DirFS(workingDir)
+    }
+
+    _, err = p.ParsePackagePath(parser.WithDeclaredPackage(ctx, pkg), pkgPath, files)
+    util.SetPackageProcessed(pkg, pluginName)
+    return
 }
 
 func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs.FS) (*lang.Package, error) {

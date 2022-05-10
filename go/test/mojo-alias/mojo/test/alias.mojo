@@ -38,3 +38,6 @@ type Foo2<T> {
 type Bar = Foo2<String>
 
 type FooBar: Foo2<Bar>
+
+
+

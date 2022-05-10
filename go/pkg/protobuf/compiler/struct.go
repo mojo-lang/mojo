@@ -56,7 +56,7 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
         if decl.IsBoxed() {
             valueType := decl.Type.Inherits[0]
             valueName := "val"
-            if fullName := valueType.GetFullName(); fullName == "mojo.core.Array" || fullName == "mojo.core.Map" {
+            if fullName := valueType.GetFullName(); fullName == core.ArrayTypeFullName || fullName == core.MapTypeFullName {
                 valueName = "vals"
             }
             valueDecl := &lang.ValueDecl{
@@ -85,7 +85,10 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
     }
 
     switch structDescriptor.GetName() {
-    case "BoolValues", "StringValues", "Int32Values", "UInt32Values", "Int64Values", "UInt64Values", "Float32Values", "Float64Values":
+    case core.BoolValuesTypeName, core.StringValuesTypeName,
+        core.Int32ValuesTypeName, core.UInt32ValuesTypeName,
+        core.Int64ValuesTypeName, core.UInt64ValuesTypeName,
+        core.Float32ValuesTypeName, core.Float64ValuesTypeName:
         if file != nil && !strings.HasPrefix(file.GetName(), "mojo/core/boxed") {
             file.AppendDependency("mojo/core/boxed.proto")
             return nil

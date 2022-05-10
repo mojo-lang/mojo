@@ -14,7 +14,7 @@ func CompileNominalType(ctx context.Context, t *lang.NominalType) (*lang.StructD
         case core.ArrayTypeFullName:
             return CompileArrayToStruct(ctx, t)
         case core.MapTypeFullName:
-            //return CompileMapToStruct(ctx, t)
+            return CompileMapToStruct(ctx, t)
         case core.TupleTypeFullName:
             return CompileUnionToStruct(ctx, t)
         }
