@@ -59,3 +59,11 @@ func (x *{{.FullName}}) Parse(value string) error {
 	}
 	return nil
 }
+
+func Parse{{.FullName}}(value string) ({{.FullName}}, error) {
+    var v {{.FullName}}
+    if err := (&v).Parse(value); err != nil {
+        return v, err
+    }
+    return v, nil
+}
