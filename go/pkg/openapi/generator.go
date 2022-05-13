@@ -74,7 +74,7 @@ func (g *Generator) generateSchema() error {
             continue
         }
 
-        j, err := jsoniter.Marshal(schema)
+        j, err := jsoniter.MarshalIndent(schema, "", "    ")
         if err != nil {
             return err
         }
