@@ -18,6 +18,7 @@
 package {{.GoPackageName}}
 
 import (
+    "fmt"
 	"unsafe"
 
     jsoniter "github.com/json-iterator/go"
@@ -36,11 +37,15 @@ func (codec *{{CompactFullName .FullName}}Codec) Decode(ptr unsafe.Pointer, iter
 	any := iter.ReadAny()
 	e := (*{{.FullName}})(ptr)
 	if any.ValueType() == jsoniter.StringValue {
-		e.Parse(any.ToString())
+		if err := e.Parse(any.ToString()); err != nil {
+		    iter.ReportError("{{CompactFullName .FullName}}Codec.Decode", err.Error())
+		}
 	} else if any.ValueType() == jsoniter.NumberValue {
         value := any.ToInt32()
         if _, ok := {{CompactFullName .FullName}}Names[value]; ok {
             *e = {{.FullName}}(value)
+        } else {
+            iter.ReportError("{{CompactFullName .FullName}}Codec.Decode", fmt.Sprintf("invalid enum value %d for {{.FullName}}", value))
         }
     }
 }
