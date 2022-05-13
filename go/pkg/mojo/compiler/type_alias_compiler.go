@@ -207,6 +207,9 @@ func (c *TypeAliasCompiler) compileNominalType(ctx context.Context, nominalType 
     if len(aliasDecl.GenericParameters) > 0 {
         return nil, nil, nil
     }
+    if aliasDecl.Type.GetTypeDeclaration().GetStructDecl() != nil && len(aliasDecl.Type.GenericArguments) > 0 {
+        return nil, nil, nil
+    }
 
     aliasType := &lang.NominalType{
         StartPosition:    aliasDecl.Type.StartPosition,
