@@ -37,12 +37,12 @@ func ParsePackage(p interface{}, ctx context.Context, pkg *lang.Package) error {
 
     if !ContainsAnyMethod(p, parsePackageMethod, parseSourceFileMethod, parseStructMethod,
         parseInterfaceMethod, parseEnumMethod, parseTypeAliasMethod) {
-        return SkipError{}
+        return core.NewSkipError()
     }
 
     if hk, ok := p.(hook.PackagePreHook); ok {
         err := hk.PrePackage(ctx, pkg)
-        if errors.Is(err, SkipError{}) {
+        if core.IsSkipError(err) {
             return nil
         } else {
             return err
@@ -81,12 +81,12 @@ func ParseSourceFile(p interface{}, ctx context.Context, file *lang.SourceFile) 
 
     if !ContainsAnyMethod(p, parseSourceFileMethod, parseStructMethod,
         parseInterfaceMethod, parseEnumMethod, parseTypeAliasMethod) {
-        return SkipError{}
+        return core.NewSkipError()
     }
 
     if hk, ok := p.(hook.SourceFilePreHook); ok {
         err := hk.PreSourceFile(ctx, file)
-        if errors.Is(err, SkipError{}) {
+        if core.IsSkipError(err) {
             return nil
         } else {
             return err

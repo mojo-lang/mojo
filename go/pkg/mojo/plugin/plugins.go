@@ -1,7 +1,6 @@
 package plugin
 
 import (
-    "errors"
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -99,7 +98,7 @@ func (p *Plugins) ParseFile(ctx context.Context, fileName string, fileSys fs.FS)
             }
         }
 
-        if err = ParseSourceFile(p.plugin(), thisCtx, file); err != nil && !errors.Is(err, SkipError{}) {
+        if err = ParseSourceFile(p.plugin(), thisCtx, file); err != nil && !core.IsSkipError(err) {
             return nil, err
         }
         p.Next()
@@ -119,11 +118,11 @@ func (p *Plugins) ParsePackage(ctx context.Context, pkg *lang.Package) error {
     }
 
     for p.plugin() != nil {
-        if err := ParsePackage(p.plugin(), ctx, pkg); err != nil && !errors.Is(err, SkipError{}) {
+        if err := ParsePackage(p.plugin(), ctx, pkg); err != nil && !core.IsSkipError(err) {
             return err
         }
 
-        if err := CompilePackage(p.plugin(), ctx, pkg); err != nil && !errors.Is(err, SkipError{}) {
+        if err := CompilePackage(p.plugin(), ctx, pkg); err != nil && !core.IsSkipError(err) {
             return err
         }
 
@@ -138,7 +137,7 @@ func (p *Plugins) ParsePackage(ctx context.Context, pkg *lang.Package) error {
 
 func (p *Plugins) CompilePackage(ctx context.Context, pkg *lang.Package) error {
     for p.plugin() != nil {
-        if err := CompilePackage(p.plugin(), ctx, pkg); err != nil && !errors.Is(err, SkipError{}) {
+        if err := CompilePackage(p.plugin(), ctx, pkg); err != nil && !core.IsSkipError(err) {
             return err
         }
 

@@ -1,7 +1,7 @@
 package plugin
 
 import (
-    "errors"
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
     "github.com/mojo-lang/mojo/go/pkg/mojo/context"
     "github.com/mojo-lang/mojo/go/pkg/mojo/plugin/compiler"
@@ -24,12 +24,12 @@ func CompilePackage(p interface{}, ctx context.Context, pkg *lang.Package) error
 
     if !ContainsAnyMethod(p, compilePackageMethod, compileSourceFileMethod, compileStructMethod,
         compileInterfaceMethod, compileEnumMethod, compileTypeAliasMethod) {
-        return SkipError{}
+        return core.NewSkipError()
     }
 
     if hk, ok := p.(hook.PackagePreHook); ok {
         err := hk.PrePackage(ctx, pkg)
-        if errors.Is(err, SkipError{}) {
+        if core.IsSkipError(err) {
             return nil
         } else {
             return err
@@ -48,13 +48,13 @@ func CompilePackage(p interface{}, ctx context.Context, pkg *lang.Package) error
 
     thisCtx := context.WithType(ctx, pkg)
     for _, file := range pkg.SourceFiles {
-        if err := CompileSourceFile(p, thisCtx, file); err != nil && !errors.Is(err, SkipError{}) {
+        if err := CompileSourceFile(p, thisCtx, file); err != nil && !core.IsSkipError(err) {
             return err
         }
     }
 
     for _, child := range pkg.Children {
-        if err := CompilePackage(p, thisCtx, child); err != nil && !errors.Is(err, SkipError{}) {
+        if err := CompilePackage(p, thisCtx, child); err != nil && !core.IsSkipError(err) {
             return err
         }
     }
@@ -68,12 +68,12 @@ func CompileSourceFile(p interface{}, ctx context.Context, file *lang.SourceFile
 
     if !ContainsAnyMethod(p, compileSourceFileMethod, compileStructMethod,
         compileInterfaceMethod, compileEnumMethod, compileTypeAliasMethod) {
-        return SkipError{}
+        return core.NewSkipError()
     }
 
     if hk, ok := p.(hook.SourceFilePreHook); ok {
         err := hk.PreSourceFile(ctx, file)
-        if errors.Is(err, SkipError{}) {
+        if core.IsSkipError(err) {
             return nil
         } else {
             return err
@@ -122,12 +122,12 @@ func CompileInterface(p interface{}, ctx context.Context, decl *lang.InterfaceDe
     }
 
     if !ContainsAnyMethod(p, compileInterfaceMethod) {
-        return SkipError{}
+        return core.NewSkipError()
     }
 
     if hk, ok := p.(hook.InterfacePreHook); ok {
         err := hk.PreInterface(ctx, decl)
-        if errors.Is(err, SkipError{}) {
+        if core.IsSkipError(err) {
             return nil
         } else {
             return err
@@ -152,15 +152,16 @@ func CompileStruct(p interface{}, ctx context.Context, decl *lang.StructDecl) er
     }
 
     if !ContainsAnyMethod(p, compileStructMethod) {
-        return SkipError{}
+        return core.NewSkipError()
     }
 
     if hk, ok := p.(hook.StructPreHook); ok {
-        err := hk.PreStruct(ctx, decl)
-        if errors.Is(err, SkipError{}) {
-            return nil
-        } else {
-            return err
+        if err := hk.PreStruct(ctx, decl); err != nil {
+            if core.IsSkipError(err) {
+                return nil
+            } else {
+                return err
+            }
         }
     }
     defer func() {
@@ -182,12 +183,12 @@ func CompileTypeAlias(p interface{}, ctx context.Context, decl *lang.TypeAliasDe
     }
 
     if !ContainsAnyMethod(p, compileTypeAliasMethod) {
-        return SkipError{}
+        return core.NewSkipError()
     }
 
     if hk, ok := p.(hook.TypeAliasPreHook); ok {
         err := hk.PreTypeAlias(ctx, decl)
-        if errors.Is(err, SkipError{}) {
+        if core.IsSkipError(err) {
             return nil
         } else {
             return err
@@ -212,12 +213,12 @@ func CompileEnum(p interface{}, ctx context.Context, decl *lang.EnumDecl) error 
     }
 
     if !ContainsAnyMethod(p, compileEnumMethod) {
-        return SkipError{}
+        return core.NewSkipError()
     }
 
     if hk, ok := p.(hook.EnumPreHook); ok {
         err := hk.PreEnum(ctx, decl)
-        if errors.Is(err, SkipError{}) {
+        if core.IsSkipError(err) {
             return nil
         } else {
             return err

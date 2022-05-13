@@ -61,7 +61,7 @@ func (p *DependencyParser) ParsePackage(ctx context.Context, pkg *lang.Package) 
             logs.Infow("begin to parse mojo dependency", "dependency", dep.FullName)
 
             cloned := plugins.Copy()
-            if err := cloned.ParsePackage(plugin.WithPlugins(ctx, cloned), dep); err != nil && !errors.Is(err, plugin.SkipError{}) {
+            if err := cloned.ParsePackage(plugin.WithPlugins(ctx, cloned), dep); err != nil && !core.IsSkipError(err) {
                 return err
             }
         }

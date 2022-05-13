@@ -303,6 +303,8 @@ github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9G
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/mojo-lang/core/go v0.0.0-20220504064051-1b3f33899289 h1:Zwh88gMK7OrUkjjY/E+GCP3kI8eI2fL5i8nBBqeZ4D0=
 github.com/mojo-lang/core/go v0.0.0-20220504064051-1b3f33899289/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
+github.com/mojo-lang/core/go v0.0.0-20220513050141-9b799ed81558 h1:JiEXwS9fqPhYtig7P/4FlDBeZm6g1hVWtDiTt8lKI5Y=
+github.com/mojo-lang/core/go v0.0.0-20220513050141-9b799ed81558/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
 github.com/mojo-lang/db/go v0.0.0-20220504071050-5a8b9c78e2cd h1:fBnw6LeXgypIX7lqICNN/SG5XOhAvumD/cwOz3vXPBE=
 github.com/mojo-lang/db/go v0.0.0-20220504071050-5a8b9c78e2cd/go.mod h1:bnkkB0ELp4t1j+AK2B/xR4ipkZmhYh6bKNgsZn/JM2k=
 github.com/mojo-lang/document/go v0.0.0-20220504064505-9e47a78ac0ec h1:MFqKQlgazArM6EV/p+fPQ/tzUPfTZJ3QQ5LXaJKF9uM=
