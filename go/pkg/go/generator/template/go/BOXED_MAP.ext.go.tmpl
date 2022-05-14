@@ -31,7 +31,7 @@ func (x *{{.FullName}}) IsEmpty() int {
     return true
 }
 
-func (x *{{.FullName}}) Append(value {{.Value}}) {
+func (x *{{.FullName}}) Insert(key string, value {{.Value}}) {
     if x != nil {
         x.Vals = append(x.Vals, value)
     }

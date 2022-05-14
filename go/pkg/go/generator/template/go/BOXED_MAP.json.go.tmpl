@@ -47,14 +47,5 @@ func (codec *{{CompactFullName .FullName}}Codec) IsEmpty(ptr unsafe.Pointer) boo
 
 func (codec *{{CompactFullName .FullName}}Codec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
 	{{ToLowerCamel .Name}} := (*{{.FullName}})(ptr)
-
-    stream.WriteObjectStart()
-    for k, v := range {{ToLowerCamel .Name}}.Vals {
-        if i > 0 {
-            stream.WriteMore()
-        }
-        stream.WriteObjectField(k)
-        stream.WriteVal(v)
-    }
-    stream.WriteObjectEnd()
+    stream.WriteVal({{ToLowerCamel .Name}}.{{.FieldName}})
 }
