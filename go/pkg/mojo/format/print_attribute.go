@@ -43,9 +43,9 @@ func (p *Printer) PrintAttribute(ctx context.Context, attribute *lang.Attribute)
     }
 }
 
-func (p *Printer) PrintAttributes(ctx context.Context, attributes lang.Attributes) {
+func (p *Printer) PrintAttributes(ctx context.Context, attributes lang.Attributes) *Printer {
     if p == nil || p.Error != nil {
-        return
+        return p
     }
 
     if attribute := attributes.GetRequiredAttribute(); attribute != nil {
@@ -61,7 +61,7 @@ func (p *Printer) PrintAttributes(ctx context.Context, attributes lang.Attribute
     if attribute := attributes.GetNumberAttribute(); attribute != nil {
         if val, err := attribute.GetInteger(); err != nil {
             p.Error = err
-            return
+            return p
         } else {
             p.PrintRaw(" @", val)
         }
@@ -75,4 +75,5 @@ func (p *Printer) PrintAttributes(ctx context.Context, attributes lang.Attribute
         p.PrintRaw(" ")
         p.PrintAttribute(ctx, attribute)
     }
+    return p
 }

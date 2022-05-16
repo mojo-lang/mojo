@@ -42,8 +42,8 @@ attribute mailbox: Box  //< following document - 1
 // comment2
 
 // comment3
-attribute mailbox Box //< following document - 1
-                      //< following document - 2
+attribute mailbox: Box //< following document - 1
+                       //< following document - 2
 `
 
     decl := parseAttributeDecl(t, typeDecl)

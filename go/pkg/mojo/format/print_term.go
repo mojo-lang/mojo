@@ -15,6 +15,10 @@ func (p *Printer) PrintTerm(ctx context.Context, term *lang.Term) *Printer {
         p.PrintComments(ctx, comments...)
     }
 
+    if p.IsNewLine() {
+        p.PrintIndent()
+    }
+
     p.PrintRaw(term.Value)
 
     return p

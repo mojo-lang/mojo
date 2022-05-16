@@ -50,7 +50,7 @@ box @2
 enum Mailbox {
     none @1 //< following document - 1
             //< following document - 2
-    box @2
+    box  @2
 }`
 
     decl := parseEnumDecl(t, typeDecl)

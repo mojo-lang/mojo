@@ -78,6 +78,10 @@ func NewPrinter(config Config, writer io.Writer) *Printer {
     return printer
 }
 
+func (p *Printer) GetIndent() int {
+    return p.indent.Width * p.indent.Count
+}
+
 func (p *Printer) Indent() *Printer {
     if p != nil {
         p.indent.Indent()
@@ -119,9 +123,9 @@ func (p *Printer) PrintRaw(values ...interface{}) *Printer {
     return p
 }
 
-func (p *Printer) PrintLine(values ...interface{}) *Printer {
-    if p.Cursor.Column > 0 {
-        p.BreakLine()
+func (p *Printer) PrintIndent() *Printer {
+    if p == nil || p.Error != nil {
+        return p
     }
 
     if n, err := p.Writer.Write(p.indent.IndentSpace()); err != nil {
@@ -130,6 +134,15 @@ func (p *Printer) PrintLine(values ...interface{}) *Printer {
     } else {
         p.Cursor.Column += n
     }
+    return p
+}
+
+func (p *Printer) PrintLine(values ...interface{}) *Printer {
+    if p.Cursor.Column > 0 {
+        p.BreakLine()
+    }
+
+    p.PrintIndent()
 
     if n, err := p.Writer.Write([]byte(fmt.Sprint(values...))); err != nil {
         p.Error = err

@@ -25,17 +25,25 @@ func (p *Printer) PrintSourceFile(ctx context.Context, file *lang.SourceFile) {
         statements = append(statements, statement)
     }
 
+    firstLineNoneBreaker := NewFirstLineNoneBreaker(p)
     if packageDecl != nil {
         p.PrintPackageDecl(ctx, packageDecl)
     }
+
     if len(importDecls) > 0 {
-        p.BreakLine()
+        firstLineNoneBreaker.Break()
         for _, importDecl := range importDecls {
             p.PrintImportDecl(ctx, importDecl)
         }
     }
 
-    for _, statement := range statements {
-        p.PrintStatement(ctx, statement)
+    if len(statements) > 0 {
+        firstLineNoneBreaker.Break()
+        for i, statement := range statements {
+            if i > 0 {
+                p.BreakLine()
+            }
+            p.PrintStatement(ctx, statement)
+        }
     }
 }

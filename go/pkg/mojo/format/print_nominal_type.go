@@ -8,9 +8,9 @@ import (
 
 const ignoreDocument = "ignore-document"
 
-func (p *Printer) PrintNominalType(ctx context.Context, nominalType *lang.NominalType) {
+func (p *Printer) PrintNominalType(ctx context.Context, nominalType *lang.NominalType) *Printer {
     if nominalType == nil || p == nil || p.Error != nil {
-        return
+        return p
     }
 
     switch nominalType.GetFullName() {
@@ -34,9 +34,21 @@ func (p *Printer) PrintNominalType(ctx context.Context, nominalType *lang.Nomina
         }
         p.PrintRaw(")")
     case core.UnionTypeFullName:
+        column := p.Cursor.Column
+        if column > 3 {
+            column = column - 3
+        } else {
+            column = 0
+        }
         for i, element := range nominalType.GenericArguments {
             if i > 0 {
-                p.PrintRaw("| ")
+                if p.IsNewLine() {
+                    p.PrintTo(Cursor{
+                        Line:   p.Cursor.Line,
+                        Column: column,
+                    })
+                }
+                p.PrintRaw(" | ")
             }
             p.PrintNominalType(ctx, element)
         }
@@ -69,17 +81,7 @@ func (p *Printer) PrintNominalType(ctx context.Context, nominalType *lang.Nomina
         } else {
             p.PrintRaw(nominalType.GetFullName())
         }
-
-        if len(nominalType.GenericArguments) > 0 {
-            p.PrintRaw("<")
-            for i, argument := range nominalType.GenericArguments {
-                if i > 0 {
-                    p.PrintRaw(", ")
-                    p.PrintNominalType(ctx, argument)
-                }
-            }
-            p.PrintRaw(">")
-        }
+        p.PrintGenericArguments(ctx, nominalType.GenericArguments)
     }
 
     p.PrintAttributes(ctx, nominalType.Attributes)
@@ -87,4 +89,23 @@ func (p *Printer) PrintNominalType(ctx context.Context, nominalType *lang.Nomina
     if nominalType.Document != nil && nominalType.Document.Following && !context.GetBool(ctx, ignoreDocument) {
         p.PrintDocument(ctx, nominalType.Document)
     }
+
+    return p
+}
+
+func (p *Printer) PrintGenericArguments(ctx context.Context, genericArguments []*lang.NominalType) *Printer {
+    if p == nil || p.Error != nil || len(genericArguments) == 0 {
+        return p
+    }
+
+    p.PrintRaw("<")
+    for i, argument := range genericArguments {
+        if i > 0 {
+            p.PrintRaw(", ")
+        }
+        p.PrintNominalType(ctx, argument)
+    }
+    p.PrintRaw(">")
+
+    return p
 }

@@ -33,6 +33,8 @@ func (p *Printer) PrintExpression(ctx context.Context, expr *lang.Expression) *P
         p.PrintMapLiteralExpr(ctx, e.MapLiteralExpr)
     case *lang.Expression_ObjectLiteralExpr:
         p.PrintObjectLiteralExpr(ctx, e.ObjectLiteralExpr)
+    case *lang.Expression_IdentifierExpr:
+        p.PrintIdentifyExpr(ctx, e.IdentifierExpr)
     default:
         p.Error = errors.New("not support expr in this printer")
     }
@@ -92,5 +94,26 @@ func (p *Printer) PrintObjectLiteralExpr(ctx context.Context, expr *lang.ObjectL
     p.Outdent()
     p.PrintLine("}")
 
+    return p
+}
+
+func (p *Printer) PrintIdentifyExpr(ctx context.Context, expr *lang.IdentifierExpr) *Printer {
+    if expr == nil || p == nil || p.Error != nil || expr.Identifier == nil {
+        return p
+    }
+
+    identifier := expr.Identifier
+    if len(identifier.PackageName) > 0 {
+        p.PrintRaw(identifier.PackageName, ".")
+    }
+
+    if len(identifier.EnclosingTypeNames) > 0 {
+        for _, name := range identifier.EnclosingTypeNames {
+            p.PrintRaw(name, ".")
+        }
+    }
+
+    p.PrintRaw(identifier.Name)
+    p.PrintGenericArguments(ctx, expr.GenericArguments)
     return p
 }

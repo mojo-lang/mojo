@@ -15,7 +15,7 @@ func (p *Printer) PrintAttributeDecl(ctx context.Context, decl *lang.AttributeDe
         Break(p).
         PrintLine("attribute", " ", decl.Name).
         printDeclGenericParameters(ctx, decl.GenericParameters).
-        PrintRaw(" ")
+        PrintRaw(": ")
 
     if nominalType := decl.GetNominalType(); nominalType != nil {
         p.PrintNominalType(ctx, decl.GetNominalType())

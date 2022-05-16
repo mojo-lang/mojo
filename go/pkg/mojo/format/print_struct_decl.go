@@ -33,32 +33,56 @@ func (p *Printer) PrintStructDecl(ctx context.Context, decl *lang.StructDecl) {
             p.PrintTerm(ctx, lang.NewSymbolTerm(decl.Type.StartPosition, lang.TermTypeStart, " {"))
             if lastInheritDocument != nil {
                 p.PrintDocument(ctx, lastInheritDocument)
+                p.BreakLine()
             }
-            p.BreakLine()
 
             p.Indent()
 
+            hasDecl := false
             for _, d := range decl.TypeAliasDecls {
+                if hasDecl {
+                    p.BreakLine()
+                } else {
+                    hasDecl = true
+                }
+
                 p.PrintTypeAliasDecl(ctx, d)
-                p.BreakLine()
             }
 
             for _, d := range decl.EnumDecls {
+                if hasDecl {
+                    p.BreakLine()
+                } else {
+                    hasDecl = true
+                }
+
                 p.PrintEnumDecl(ctx, d)
-                p.BreakLine()
             }
 
             for _, d := range decl.StructDecls {
+                if hasDecl {
+                    p.BreakLine()
+                } else {
+                    hasDecl = true
+                }
+
                 p.PrintStructDecl(ctx, d)
-                p.BreakLine()
             }
 
             for _, field := range decl.Type.Fields {
+                if hasDecl {
+                    p.BreakLine()
+                } else {
+                    hasDecl = true
+                }
+
                 p.PrintStructField(ctx, field)
-                p.BreakLine()
             }
 
             p.Outdent()
+            if !p.IsNewLine() {
+                p.BreakLine()
+            }
             p.PrintTerm(ctx, lang.NewSymbolTerm(decl.Type.EndPosition, lang.TermTypeEnd, "}"))
         } else {
             if lastInheritDocument != nil {
@@ -80,7 +104,7 @@ func (p *Printer) PrintStructField(ctx context.Context, decl *lang.ValueDecl) *P
     breaker := &OnceLineBreaker{}
     p.printPreDecl(ctx, decl, breaker).
         Break(p).
-        PrintLine(decl.Name, " ").
+        PrintLine(decl.Name, ": ").
         PrintNominalType(ctx, decl.Type)
 
     if decl.Document != nil && decl.Document.Following {

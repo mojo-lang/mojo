@@ -53,18 +53,16 @@ type Mailbox {
 
 // comment3
 type Mailbox {
-
     // free floating comment
-    address String
+    address: String
 
     /* block comment
     */
 
     //comment4
     // comment5
-    following Bool //< following document - 1
-                   //< following document - 2
-
+    following: Bool //< following document - 1
+                    //< following document - 2
 }`
 
     decl := parseStructDecl(t, typeDecl)
