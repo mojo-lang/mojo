@@ -135,6 +135,7 @@ func (n *NominalTypeVisitor) VisitArrayType(ctx *ArrayTypeContext) interface{} {
         return &lang.NominalType{
             StartPosition: GetPosition(ctx.GetStart()),
             EndPosition:   GetPosition(ctx.GetStop()),
+            PackageName:   "mojo.core",
             Name:          "Array",
             GenericArguments: []*lang.NominalType{
                 {
@@ -177,6 +178,7 @@ func (n *NominalTypeVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
                     return &lang.NominalType{
                         StartPosition: GetPosition(ctx.GetStart()),
                         EndPosition:   GetPosition(ctx.GetStop()),
+                        PackageName:   "mojo.core",
                         Name:          "Map",
                         GenericArguments: []*lang.NominalType{
                             {
@@ -226,6 +228,7 @@ func (n *NominalTypeVisitor) VisitTupleTypeElements(ctx *TupleTypeElementsContex
     tupleType := &lang.NominalType{
         StartPosition: GetPosition(ctx.GetStart()),
         EndPosition:   GetPosition(ctx.GetStop()),
+        PackageName:   "mojo.core",
         Name:          "Tuple",
     }
 
@@ -267,6 +270,7 @@ func (n *NominalTypeVisitor) VisitUnion(ctx *UnionContext) interface{} {
     unionType := &lang.NominalType{
         StartPosition: GetPosition(ctx.GetStart()),
         EndPosition:   GetPosition(ctx.GetStop()),
+        PackageName:   "mojo.core",
         Name:          "Union",
     }
 
