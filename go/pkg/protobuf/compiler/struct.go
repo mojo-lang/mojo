@@ -89,9 +89,14 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
         core.Int32ValuesTypeName, core.UInt32ValuesTypeName,
         core.Int64ValuesTypeName, core.UInt64ValuesTypeName,
         core.Float32ValuesTypeName, core.Float64ValuesTypeName:
-        if file != nil && !strings.HasPrefix(file.GetName(), "mojo/core/boxed") {
-            file.AppendDependency("mojo/core/boxed.proto")
-            return nil
+        if file != nil {
+            if !strings.HasPrefix(file.GetName(), "mojo/core/boxed") {
+                file.AppendDependency("mojo/core/boxed.proto")
+                return nil
+            }
+            if msg := context.MessageDescriptor(ctx); msg != nil { // enclosed
+                return nil
+            }
         }
     }
 

@@ -21,3 +21,7 @@ func CompileNominalType(ctx context.Context, t *lang.NominalType) (*lang.StructD
     }
     return nil, nil
 }
+
+//func CompileInherits(ctx context.Context, inherits ...*lang.NominalType) (*lang.StructDecl, error) {
+//
+//}

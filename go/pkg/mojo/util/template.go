@@ -2,6 +2,7 @@ package util
 
 import (
     "bytes"
+    "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
     "github.com/pkg/errors"
     "io"
     "text/template"
@@ -21,4 +22,14 @@ func ApplyTemplate(tmplName string, tmpl string, data interface{}, funcMap templ
     }
 
     return buffer, nil
+}
+
+func GoLocalName(name string, blacklist ...string) string {
+    n := strcase.ToLowerCamel(name)
+    for _, b := range blacklist {
+        if n == b {
+            n += "Var"
+        }
+    }
+    return n
 }

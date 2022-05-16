@@ -6,6 +6,7 @@ type Data struct {
     BoxedUnions    []*BoxedUnion
     Enums          []*Enum
     DbJSONs        []*DbJSON
+    FormatJSONs    []*FormatJSON
     ArrayResponses []*ArrayResponse
     GoMod          *GoMod
 

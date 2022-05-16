@@ -73,6 +73,9 @@ func (c *Compiler) compilePackage(ctx context.Context, pkg *lang.Package) error 
                 if decl := statement.GetDeclaration(); decl != nil {
                     var err error
                     switch decl.Declaration.(type) {
+                    case *lang.Declaration_TypeAliasDecl:
+                        s := compiler.TypeAlias{Data: c.Data}
+                        err = s.CompileTypeAlias(fileCtx, decl.GetTypeAliasDecl())
                     case *lang.Declaration_StructDecl:
                         s := compiler.Struct{Data: c.Data}
                         err = s.CompileStruct(fileCtx, decl.GetStructDecl())
