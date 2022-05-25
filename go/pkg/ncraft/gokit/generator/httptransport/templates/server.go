@@ -220,7 +220,7 @@ type errorWrapper struct {
 	    {{if $binding.GetResponseBody}}
 func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	r := response.(*{{GoPackageName $method.Response.Body.Name}}.{{$method.Response.Body.Name}})
-
+    
 	{{range $h, $v := $method.Response.Headers}}
 	w.Header().Set("{{$h}}", "{{$v}}")
 	{{end}}
@@ -245,6 +245,9 @@ func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.Respon
 func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	if _, ok := response.(*core.Null); ok {
 		return nil 
+	}
+    if writer, ok := response.(nhttp.ResponseWriter); ok {
+		return writer.WriteHttpResponse(w)
 	}
 
     if p, ok := response.(pagination.Paginater); ok {
