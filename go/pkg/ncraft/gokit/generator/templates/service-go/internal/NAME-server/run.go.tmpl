@@ -226,6 +226,7 @@ func Run(cfg nserver.Config) {
                                 m.Ack()
                                 return err
                             }
+                            logs.Infow("received the message", "topic", sub.Topic, "id", m.Id)
 
                             if _, err = endpoints.{{ToCamel $i.Name}}(ctx, request); err != nil {
                                 // retry once

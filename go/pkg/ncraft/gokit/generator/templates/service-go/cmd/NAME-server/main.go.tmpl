@@ -17,14 +17,22 @@ import (
 )
 
 func main() {
+    flag.String("http_addr", ":20171", "default ip address for http server")
+    flag.String("grpc_addr", ":20172", "default ip address for grpc server")
+    flag.String("debug_addr", ":20173", "default ip address for debug server")
+
 	// Update addresses if they have been overwritten by flags
 	flag.Parse()
+	config.LoadFlag()
 
     var conf nserver.Config
     err := config.ScanKey("{{ToLowerCamel .Interface.ServerName}}", &conf)
     if err != nil {
         err = config.ScanKey("server", &conf)
     }
+    config.ScanKey("httpAddr", &conf.HttpAddr)
+    config.ScanKey("grpcAddr", &conf.GrpcAddr)
+    config.ScanKey("debugAddr", &conf.DebugAddr)
 
 	if err != nil {
 	    logs.Warnw("failed to get the server config", "error", err.Error())
