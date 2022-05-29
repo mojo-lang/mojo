@@ -10,11 +10,11 @@ require (
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/goccy/go-graphviz v0.0.9
 	github.com/json-iterator/go v1.1.12
-	github.com/mojo-lang/core/go v0.0.0-20220514121011-d34ba80903c5
+	github.com/mojo-lang/core/go v0.0.0-20220520092744-d044478f0e2a
 	github.com/mojo-lang/db/go v0.0.0-20220504071050-5a8b9c78e2cd
 	github.com/mojo-lang/document/go v0.0.0-20220504064505-9e47a78ac0ec
 	github.com/mojo-lang/geom/go v0.0.0-20220504072234-fd97fb89c547
-	github.com/mojo-lang/http/go v0.0.0-20220516005455-d779d5e68723
+	github.com/mojo-lang/http/go v0.0.0-20220524115554-fc19f03dd3de
 	github.com/mojo-lang/lang/go v0.0.0-20220516003303-71c9d23d7e38
 	github.com/mojo-lang/openapi/go v0.0.0-20220504071403-44d2e722f238
 	github.com/mojo-lang/protobuf/go v0.0.0-20220504071509-5bf0a646ba25

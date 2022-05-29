@@ -60,7 +60,7 @@ var ServerDecodeTemplate = `
 				{{$param.Go.ParamUnmarshaler}}
 			{{end}}
 		{{end}}
-		return &req, err
+		return &req, nil
 	}
 {{- end -}}
 `

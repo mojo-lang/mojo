@@ -14,18 +14,46 @@ func createParamUnmarshaler(parameter *data.HTTPParameter, funcMap template.Func
 		req.{{GoName .GetEnclosingField.FullName}} = &{{.GetEnclosingField.GetGoTypeName}}{}
 	}{{end}}
 {{end}}
-{{if .GetGoType.IsPointer}}if req.{{GoName .GetField.Name}} == nil {
-    req.{{GoName .GetField.Name}} = &{{.GetGoType.Name}}{}
-}{{end}}
-{{template "init_parent" .}}`
+{{template "init_parent" .}}
+{{if .GetGoType.IsPointer}}{{ToLowerCamel .Field.FullName}}Initialized := false
+if req.{{GoName .Field.FullName}} == nil {
+    {{ToLowerCamel .Field.FullName}}Initialized = true
+    req.{{GoName .Field.FullName}} = &{{.GetGoType.Name}}{}
+}
+{{end}}`
 
-    query := `if err = mjhttp.UnmarshalQueryParam(queryParams, {{if not .GetGoType.IsPointer}}&{{end}}req.{{GoName .Field.FullName}}, "{{.Name}}"{{if ne .Name .FullName}}, "{{.FullName}}"{{end}}); err != nil {
-    return nil, nhttp.WrapError(err, 400, "cannot unmarshal the {{.Name}} {{if ne .Name .FullName}}or {{.FullName}}{{end}} query parameter")
-}
+    query := `err = mjhttp.UnmarshalQueryParam(queryParams, {{if not .GetGoType.IsPointer}}&{{end}}req.{{GoName .Field.FullName}}, "{{.Name}}"{{if ne .Name .FullName}}, "{{.FullName}}"{{end}})
+    {{if .GetGoType.IsPointer}}if err != nil {
+        if core.IsNotFoundError(err) {
+            if {{ToLowerCamel .Field.FullName}}Initialized {
+                req.{{GoName .GetField.Name}} = nil
+            }
+        } else {
+            return nil, nhttp.WrapError(err, 400, "cannot unmarshal the {{.Name}} {{if ne .Name .FullName}}or {{.FullName}}{{end}} query parameter")
+        }
+    }
+    {{- else -}}
+    if err != nil && !core.IsNotFoundError(err) {
+        return nil, nhttp.WrapError(err, 400, "cannot unmarshal the {{.Name}} {{if ne .Name .FullName}}or {{.FullName}}{{end}} query parameter")
+    }
+    {{end}}
 `
-    path := `if err = mjhttp.UnmarshalPathParam(pathParams, {{if not .GetGoType.IsPointer}}&{{end}}req.{{GoName .Field.FullName}}, "{{.Name}}"{{if ne .Name .FullName}}, "{{.FullName}}"{{end}}); err != nil {
-    return nil, nhttp.WrapError(err, 400, "cannot unmarshal the {{.Name}} {{if ne .Name .FullName}}or {{.FullName}}{{end}} path parameter")
-}
+    path := `err = mjhttp.UnmarshalPathParam(pathParams, {{if not .GetGoType.IsPointer}}&{{end}}req.{{GoName .Field.FullName}}, "{{.Name}}"{{if ne .Name .FullName}}, "{{.FullName}}"{{end}})
+    {{if .GetGoType.IsPointer}}
+     if err != nil {
+        if core.IsNotFoundError(err) {
+            {{ToLowerCamel .Field.FullName}}Initialized {
+                req.{{GoName .GetField.Name}} = nil
+            }
+        } else {
+            return nil, nhttp.WrapError(err, 400, "cannot unmarshal the {{.Name}} {{if ne .Name .FullName}}or {{.FullName}}{{end}} query parameter")
+        }
+    }
+    {{- else -}}
+    if err != nil && !core.IsNotFoundError(err) {
+        return nil, nhttp.WrapError(err, 400, "cannot unmarshal the {{.Name}} {{if ne .Name .FullName}}or {{.FullName}}{{end}} query parameter")
+    }
+    {{end}}
 `
     tmpl := ""
     if parameter.Location == "path" {
