@@ -212,33 +212,27 @@ func Run(cfg nserver.Config) {
         if len(ep.Service) > 0 && ep.Service != "{{.Interface.Name}}" {
             continue
         }
-        go func(sub *messaging.Subscription) {
-            logs.Infof("{{.Go.PackageName}}.{{.Interface.ServerName}} subscribed the %s topic", sub.Topic)
-            client.Subscribe(sub, func(ctx context.Context, m *messaging.SubMessage) error {
-                ctx = context.WithValue(ctx, messaging.TopicKey, sub.Topic)
-                ctx = context.WithValue(ctx, messaging.MessageIdKey, m.Id)
-                ctx = context.WithValue(ctx, messaging.MessageAttributesKey, m.Attributes)
-                switch ep.Method { {{range $i := .Interface.Methods}}
-                        {{if $i.Subscriptions}}case "{{$i.Name}}":
-                            request := &pb.{{ToCamel $i.Name}}Request{}
-                            if err = jsoniter.ConfigFastest.Unmarshal(m.Data, request); err != nil {
-                                logs.Warnw("failed to unmarshal the queue's message to json", "error", err.Error())
-                                m.Ack()
-                                return err
-                            }
-                            logs.Infow("received the message", "topic", sub.Topic, "id", m.Id)
-
-                            if _, err = endpoints.{{ToCamel $i.Name}}(ctx, request); err != nil {
-                                // retry once
-                                if _, err = endpoints.{{ToCamel $i.Name}}(ctx, request); err != nil {
-                                    return nil
-                                }
-                            }
-                            m.Ack(){{end}}{{end}}
+        logs.Infof("{{.Go.PackageName}}.{{.Interface.ServerName}} subscribed the %s topic", sub.Topic)
+        client.Subscribe(sub, func(ctx context.Context, s *messaging.Subscription, m *messaging.SubMessage) error {
+            ctx = context.WithValue(ctx, messaging.TopicKey, s.Topic)
+            ctx = context.WithValue(ctx, messaging.MessageKey, m)
+            ctx = context.WithValue(ctx, messaging.MessageIdKey, m.Id)
+            ctx = context.WithValue(ctx, messaging.MessageAttributesKey, m.Attributes)
+            switch ep.Method { {{range $i := .Interface.Methods}}
+            {{if $i.Subscriptions}}case "{{$i.Name}}":
+                request := &pb.{{ToCamel $i.Name}}Request{}
+                if err = jsoniter.ConfigFastest.UnmarshalFromString(m.Data, request); err != nil {
+                    logs.Warnw("failed to unmarshal the queue's message to json", "error", err.Error())
+                    m.Term()
+                    return err
                 }
-                return nil
-            })
-        }(sub)
+                logs.Infow("received the message", "topic", s.Topic, "id", m.Id)
+                endpoints.{{ToCamel $i.Name}}(ctx, request)
+                m.Ack(){{end}}
+                {{- end}}
+            }
+            return nil
+        })
     }
     {{else}}_ = endpoints{{end}}
 
