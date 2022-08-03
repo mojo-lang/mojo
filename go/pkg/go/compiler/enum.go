@@ -33,31 +33,32 @@ func (e *Enum) CompileEnum(ctx context.Context, decl *lang.EnumDecl) error {
         enum.WrapName = enum.Name
     }
 
-    caseStyle, _ := lang.GetStringAttribute(decl.Attributes, core.CaseStyleAttributeName)
-    //if len(caseStyle) == 0 {
-    //	caseStyle = "kebab"
-    //}
+    enum.CaseStyle, _ = lang.GetStringAttribute(decl.Attributes, core.CaseStyleAttributeName)
 
     for i, value := range decl.Type.Enumerators {
-        if value.Name == "unspecified" {
-            continue
-        }
+        //if value.Name == "unspecified" {
+        //    continue
+        //}
 
         item := data.EnumItem{
             RawValue: value.Name,
             Value:    value.Name,
         }
 
-        if number, err := lang.GetIntegerAttribute(value.Attributes, core.NumberAttributeName); err == nil {
+        if number, err := value.GetIntegerAttribute(core.NumberAttributeName); err == nil {
             item.Number = int(number)
         } else {
             item.Number = i
         }
 
-        if alias, err := lang.GetStringAttribute(value.Attributes, "alias"); err == nil && len(alias) > 0 {
+        if alias, err := value.GetStringAttribute(core.AliasAttributeName); err == nil && len(alias) > 0 {
             item.Value = alias
         } else {
-            item.Value = core.CaseStyler(caseStyle)(item.Value)
+            item.Value = core.CaseStyler(enum.CaseStyle)(item.Value)
+        }
+
+        if value.HasAttribute("default") {
+            enum.DefaultItem = i
         }
 
         enum.Items = append(enum.Items, item)

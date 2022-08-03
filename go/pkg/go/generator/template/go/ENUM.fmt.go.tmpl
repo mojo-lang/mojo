@@ -18,7 +18,12 @@
 package {{.GoPackageName}}
 
 import (
-	"strconv"
+	"fmt"
+    "strconv"
+    "strings"{{if ne .PackageName "mojo.core"}}
+
+    "github.com/mojo-lang/core/go/pkg/mojo/core"
+    {{end}}
 )
 
 var {{CompactFullName .FullName}}Names = map[int32]string{ {{range .Items}}
@@ -30,32 +35,37 @@ var {{CompactFullName .FullName}}Values = map[string]{{.FullName}}{ {{range .Ite
 }
 
 func (x {{.FullName}}) Format() string {
-	s, ok := {{CompactFullName .FullName}}Names[int32(x)]
-	if ok {
+    v := int32(x)
+	if s, ok := {{CompactFullName .FullName}}Names[v]; ok {
+	    if v == 0 && "unspecified" == strings.ToLower(s) {
+	        return ""
+	    }
 		return s
 	}
-	if int(x) == 0 {
-	    return "unspecified"
+	if v == 0 {
+	    return ""
 	}
-	return strconv.Itoa(int(x))
+	return strconv.Itoa(int(v))
 }
 
 func (x {{.FullName}}) ToString() string {
     return x.Format()
 }
 
-{{$FirstItem := index .Items 0}}
+{{$DefaultItem := index .Items .DefaultItem}}
 
 func (x *{{.FullName}}) Parse(value string) error {
-	if x != nil {
-		s, ok := {{CompactFullName .FullName}}Values[value]
-		if ok {
-			*x = s
-		} else {
-			*x = {{$.WrapName}}_{{ToScreamingSnake $.Name}}_{{ToScreamingSnake $FirstItem.RawValue}}
-		}
-	} else {
-		*x = {{$.WrapName}}_{{ToScreamingSnake $.Name}}_{{ToScreamingSnake $FirstItem.RawValue}}
+	if x != nil && len(value) > 0 {
+        if s, ok := {{CompactFullName .FullName}}Values[value]; ok {
+            *x = s
+        } else {
+            v := {{if ne .PackageName "mojo.core"}}core.{{end}}CaseStyler("{{if .CaseStyle}}{{.CaseStyle}}{{else}}snake{{end}}")(value)
+            if s, ok = {{CompactFullName .FullName}}Values[v]; ok {
+                *x = s
+            } else {
+                return fmt.Errorf("invalid {{.FullName}}: %s", value)
+            }
+        }
 	}
 	return nil
 }

@@ -13,8 +13,10 @@ type Enum struct {
     FullName      string
     EnclosingName string
     WrapName      string
+    CaseStyle     string
 
-    Items []EnumItem
+    DefaultItem int
+    Items       []EnumItem
 }
 
 func (e *Enum) GetPackageName() string {
