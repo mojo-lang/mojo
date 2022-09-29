@@ -1,3 +1,0 @@
-
-
-type Opacity : Float32
