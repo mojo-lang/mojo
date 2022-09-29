@@ -29,7 +29,9 @@
  * Converted from Apple's doc, http://tinyurl.com/n8rkoue, to ANTLR's
  * meta-language.
  */
-
+/*
+ *
+ */
 parser grammar MojoParser;
 
 options {
