@@ -86,6 +86,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+    "reflect"
 	"strconv"
 	"strings"
 	"io"
@@ -243,11 +244,14 @@ func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.Respon
 // EncodeHTTPGenericResponse is a transport/http.EncodeResponseFunc that encodes
 // the response as JSON to the response writer. Primarily useful in a server.
 func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	if _, ok := response.(*core.Null); ok {
+	if reflect.ValueOf(response).IsNil() {
+		return nil
+	}
+    if _, ok := response.(*core.Null); ok {
 		return nil 
 	}
     if writer, ok := response.(nhttp.ResponseWriter); ok {
-		return writer.WriteHttpResponse(w)
+		return writer.WriteHttpResponse(ctx, w)
 	}
 
     if p, ok := response.(pagination.Paginater); ok {
@@ -270,9 +274,7 @@ func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, respo
 		}
 	}
 
-	encoder := jsoniter.ConfigFastest.NewEncoder(w)
-	encoder.SetEscapeHTML(false)
-	return encoder.Encode(response)
+    return nhttp.NewResponseJsonWriter(response).WriteHttpResponse(ctx, w)
 }
 
 // Helper functions

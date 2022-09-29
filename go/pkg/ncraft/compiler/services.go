@@ -282,6 +282,10 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
                     subscription.Topic = value
                 }
             }
+            if len(subscription.Topic) == 0 {
+                subscription.Topic = m.Name
+            }
+
             m.Subscriptions = append(m.Subscriptions, subscription)
         }
     }
@@ -322,6 +326,10 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
             }
         default:
             fieldType.Name = t.Name
+        }
+
+        if t.TypeDeclaration.GetStructDecl() != nil {
+            fieldType.Go.IsPointer = true
         }
 
         msg.Fields = append(msg.Fields, &data.Field{
@@ -571,7 +579,8 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
                 Name:        core.ValuesTypeName,
                 PackageName: "mojo.core",
                 Go: &data.GoFieldType{
-                    Name: "*" + "core.Values",
+                    Name:      "core.Values",
+                    IsPointer: true,
                 },
                 Extensions: make(map[string]interface{}),
             }
@@ -611,7 +620,7 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
         }
     case openapi.Schema_TYPE_OBJECT:
         if schema.AdditionalProperties != nil { // map
-            typ := s.compileBindingField(ctx, schema.GetAdditionalProperties().GetSchema(), index).GetType()
+            typ := s.compileBindingField(ctx, schema.GetAdditionalProperties().GetSchemaOf(index), index).GetType()
             field.Type = &data.FieldType{
                 Name:  "Map<String," + typ.Name + ">",
                 IsMap: true,
@@ -669,18 +678,109 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
                 field.Type.Message.Fields = append(field.Type.Message.Fields, f)
             }
         }
-    default:
-        // FIXME add the well known types to here
-        switch schema.Title {
-        case core.ValueTypeFullName:
-            field.Type = &data.FieldType{
-                Name:        core.ValueTypeName,
-                PackageName: "mojo.core",
-                Go: &data.GoFieldType{
-                    Name: "*" + "core.Value",
-                },
-                Extensions: make(map[string]interface{}),
-            }
+    }
+
+    // FIXME add the well known types to here
+    switch schema.Title {
+    case core.ValueTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.ValueTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.Value",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
+        }
+    case core.DomainTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.DomainTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.Domain",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
+        }
+    case core.EmailAddressTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.EmailAddressTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.EmailAddress",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
+        }
+    case core.FieldMaskTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.FieldMaskTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.FieldMask",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
+        }
+    case core.MediaTypeTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.MediaTypeTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.MediaType",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
+        }
+    case core.OrderingTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.OrderingTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.Ordering",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
+        }
+    case core.PlatformTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.PlatformTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.Platform",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
+        }
+    case core.TimestampTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.TimestampTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.Timestamp",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
+        }
+    case core.UrlTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.UrlTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.Url",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
+        }
+    case core.VersionTypeFullName:
+        field.Type = &data.FieldType{
+            Name:        core.VersionTypeName,
+            PackageName: "mojo.core",
+            Go: &data.GoFieldType{
+                Name:      "core.Version",
+                IsPointer: true,
+            },
+            Extensions: make(map[string]interface{}),
         }
     }
 
