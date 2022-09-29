@@ -30,10 +30,10 @@ func (s *StructDeclarationVisitor) VisitStructDeclaration(ctx *StructDeclaration
                 Name:              name,
                 NamePosition:      GetPosition(structName.GetStart()),
                 GenericParameters: GetGenericParameters(ctx.GenericParameterClause()),
-                EnclosingType:     nil,
+                Enclosing:         nil,
             }
 
-            enclosingType := &lang.NominalType{
+            enclosing := &lang.NominalType{
                 Name: name,
                 //TypeDeclaration: lang.NewStructTypeDeclaration(decl), // may cause reference circle
             }
@@ -48,23 +48,23 @@ func (s *StructDeclarationVisitor) VisitStructDeclaration(ctx *StructDeclaration
                         decl.SetEndPosition(d.EndPosition)
 
                         for _, enumDecl := range decl.EnumDecls {
-                            enumDecl.EnclosingType = enclosingType
+                            enumDecl.Enclosing = enclosing
                         }
                         for _, structDecl := range decl.StructDecls {
-                            structDecl.EnclosingType = enclosingType
+                            structDecl.Enclosing = enclosing
 
                             for _, eDecl := range structDecl.EnumDecls {
-                                eDecl.EnclosingType.EnclosingType = enclosingType
+                                eDecl.Enclosing.Enclosing = enclosing
                             }
                             for _, sDecl := range structDecl.StructDecls {
-                                sDecl.EnclosingType.EnclosingType = enclosingType
+                                sDecl.Enclosing.Enclosing = enclosing
                             }
                             for _, aDecl := range structDecl.TypeAliasDecls {
-                                aDecl.EnclosingType.EnclosingType = enclosingType
+                                aDecl.Enclosing.Enclosing = enclosing
                             }
                         }
                         for _, typeAliasDecl := range decl.TypeAliasDecls {
-                            typeAliasDecl.EnclosingType = enclosingType
+                            typeAliasDecl.Enclosing = enclosing
                         }
                         if d.Type == nil {
                             logs.Warnw("declaration an opaque struct", "struct", name)

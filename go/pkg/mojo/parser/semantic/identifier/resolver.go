@@ -174,8 +174,8 @@ func (p *Resolver) ParseStruct(ctx context.Context, decl *lang.StructDecl) error
     }
 
     for _, structDecl := range decl.StructDecls {
-        if structDecl.EnclosingType != nil {
-            structDecl.EnclosingType.TypeDeclaration = lang.NewStructTypeDeclaration(decl)
+        if structDecl.Enclosing != nil {
+            structDecl.Enclosing.TypeDeclaration = lang.NewStructTypeDeclaration(decl)
         }
         if err := p.ParseStruct(thisCtx, structDecl); err != nil {
             return err
@@ -183,8 +183,8 @@ func (p *Resolver) ParseStruct(ctx context.Context, decl *lang.StructDecl) error
     }
 
     for _, enumDecl := range decl.EnumDecls {
-        if enumDecl.EnclosingType != nil {
-            enumDecl.EnclosingType.TypeDeclaration = lang.NewStructTypeDeclaration(decl)
+        if enumDecl.Enclosing != nil {
+            enumDecl.Enclosing.TypeDeclaration = lang.NewStructTypeDeclaration(decl)
         }
         if err := p.ParseEnum(thisCtx, enumDecl); err != nil {
             return err
@@ -192,8 +192,8 @@ func (p *Resolver) ParseStruct(ctx context.Context, decl *lang.StructDecl) error
     }
 
     for _, aliasDecl := range decl.TypeAliasDecls {
-        if aliasDecl.EnclosingType != nil {
-            aliasDecl.EnclosingType.TypeDeclaration = lang.NewStructTypeDeclaration(decl)
+        if aliasDecl.Enclosing != nil {
+            aliasDecl.Enclosing.TypeDeclaration = lang.NewStructTypeDeclaration(decl)
         }
         if err := p.ParseTypeAlias(thisCtx, aliasDecl); err != nil {
             return err
@@ -328,7 +328,7 @@ func (p *Resolver) ParseImport(ctx context.Context, decl *lang.ImportDecl) error
 
 func resolveNominalType(ctx context.Context, t *lang.NominalType) ([]*lang.Identifier, []*lang.Identifier) {
     fullName := t.Name
-    enclosingNames := lang.GetEnclosingNames(t.EnclosingType)
+    enclosingNames := lang.GetEnclosingNames(t.Enclosing)
     var identifier *lang.Identifier
     if len(t.PackageName) > 0 {
         fullName = lang.GetFullName(t.PackageName, enclosingNames, t.Name)
@@ -345,7 +345,7 @@ func resolveNominalType(ctx context.Context, t *lang.NominalType) ([]*lang.Ident
     if identifier != nil {
         t.PackageName = identifier.PackageName
         t.TypeDeclaration = lang.NewTypeDeclarationFromDeclaration(identifier.Declaration)
-        t.EnclosingType = identifier.Declaration.GetEnclosingType()
+        t.Enclosing = identifier.Declaration.GetEnclosingType()
         resolveds = append(resolveds, identifier)
     } else {
         ident := &lang.Identifier{

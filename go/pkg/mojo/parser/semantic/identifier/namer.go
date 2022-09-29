@@ -230,7 +230,7 @@ func (p *Namer) ParseInterface(ctx context.Context, decl *lang.InterfaceDecl) er
     for _, method := range decl.GetType().GetMethods() {
         method.PackageName = decl.PackageName
         method.SourceFileName = decl.SourceFileName
-        method.EnclosingType = &lang.NominalType{
+        method.Enclosing = &lang.NominalType{
             Name: decl.Name,
         }
     }

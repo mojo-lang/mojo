@@ -107,8 +107,9 @@ func (p *Printer) PrintIdentifyExpr(ctx context.Context, expr *lang.IdentifierEx
         p.PrintRaw(identifier.PackageName, ".")
     }
 
-    if len(identifier.EnclosingTypeNames) > 0 {
-        for _, name := range identifier.EnclosingTypeNames {
+    enclosingNames := identifier.EnclosingNames()
+    if len(enclosingNames) > 0 {
+        for _, name := range enclosingNames {
             p.PrintRaw(name, ".")
         }
     }

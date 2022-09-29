@@ -36,7 +36,7 @@ func (t *TypeIdentifierVisitor) VisitTypeIdentifier(ctx *TypeIdentifierContext) 
         if nominalType == nil {
             nominalType = typ
         } else {
-            typ.EnclosingType = nominalType
+            typ.Enclosing = nominalType
             nominalType = typ
         }
     }

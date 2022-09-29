@@ -57,13 +57,13 @@ type Mailbox {
     decl := parseStructDecl(t, typeDecl)
 
     assert.Equal(t, "Mailbox", decl.Name)
-    assert.Equal(t, "Mailbox", decl.StructDecls[0].EnclosingType.Name)
+    assert.Equal(t, "Mailbox", decl.StructDecls[0].Enclosing.Name)
 
-    assert.Equal(t, "Mail", decl.StructDecls[0].StructDecls[0].EnclosingType.Name)
-    assert.Equal(t, "Mail", decl.StructDecls[0].StructDecls[1].EnclosingType.Name)
+    assert.Equal(t, "Mail", decl.StructDecls[0].StructDecls[0].Enclosing.Name)
+    assert.Equal(t, "Mail", decl.StructDecls[0].StructDecls[1].Enclosing.Name)
 
     assert.Equal(t, "Inner", decl.StructDecls[0].StructDecls[0].StructDecls[0].Name)
-    assert.Equal(t, "Box", decl.StructDecls[0].StructDecls[0].StructDecls[0].EnclosingType.Name)
+    assert.Equal(t, "Box", decl.StructDecls[0].StructDecls[0].StructDecls[0].Enclosing.Name)
 }
 
 func TestStructDeclarationVisitor_VisitStructDeclaration_Enclosing2(t *testing.T) {
@@ -107,6 +107,6 @@ type Package {
     decl := parseStructDecl(t, typeDecl)
 
     assert.Equal(t, "Package", decl.Name)
-    assert.Equal(t, "Requirement", decl.StructDecls[0].StructDecls[0].EnclosingType.Name)
-    assert.Equal(t, "Package", decl.StructDecls[0].StructDecls[0].EnumDecls[0].EnclosingType.EnclosingType.EnclosingType.Name)
+    assert.Equal(t, "Requirement", decl.StructDecls[0].StructDecls[0].Enclosing.Name)
+    assert.Equal(t, "Package", decl.StructDecls[0].StructDecls[0].EnumDecls[0].Enclosing.Enclosing.Enclosing.Name)
 }

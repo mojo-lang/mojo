@@ -21,8 +21,8 @@ func (j *FormatJson) CompileStruct(ctx context.Context, decl *lang.StructDecl) e
         PackageName:       pkg.FullName,
         GoPackageName:     lang.GetGoPackageName(pkg.FullName),
         Name:              decl.Name,
-        EnclosingName:     decl.EnclosingType.GetName(),
-        EnclosingFullName: decl.EnclosingType.GetFullName(),
+        EnclosingName:     decl.Enclosing.GetName(),
+        EnclosingFullName: decl.Enclosing.GetFullName(),
     }
 
     if decl.HasAttribute(core.EncodingAsStructAttributeName) {
@@ -47,8 +47,8 @@ func (j *FormatJson) CompileTypeAlias(ctx context.Context, decl *lang.TypeAliasD
         PackageName:       pkg.FullName,
         GoPackageName:     lang.GetGoPackageName(pkg.FullName),
         Name:              decl.Name,
-        EnclosingName:     decl.EnclosingType.GetName(),
-        EnclosingFullName: decl.EnclosingType.GetFullName(),
+        EnclosingName:     decl.Enclosing.GetName(),
+        EnclosingFullName: decl.Enclosing.GetFullName(),
     }
 
     if decl.HasAttribute(core.EncodingAsStructAttributeName) {

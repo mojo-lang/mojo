@@ -23,7 +23,7 @@ func (e *Enum) CompileEnum(ctx context.Context, decl *lang.EnumDecl) error {
 
     enum.PackageName = decl.PackageName
     enum.GoPackageName = GetGoPackage(decl.PackageName)
-    enum.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), "_")
+    enum.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.Enclosing), "_")
     enum.Name = decl.Name
     enum.FullName = enum.Name
     if len(enum.EnclosingName) > 0 {

@@ -105,7 +105,7 @@ func (s *Struct) CompileStruct(ctx context.Context, decl *lang.StructDecl) error
                 SourceFileName: decl.SourceFileName,
                 Implicit:       true,
                 Name:           decl.Name,
-                EnclosingType:  decl.EnclosingType,
+                Enclosing:      decl.Enclosing,
                 Type: &lang.StructType{
                     Fields: []*lang.ValueDecl{valueDecl},
                 },

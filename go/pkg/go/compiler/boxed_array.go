@@ -24,7 +24,7 @@ func (b *BoxedArray) CompileStruct(ctx context.Context, decl *lang.StructDecl) e
     }
 
     ba.Name = decl.Name
-    ba.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), ".")
+    ba.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.Enclosing), ".")
     ba.FullName = GetFullName(ba.EnclosingName, ba.Name)
     ba.FieldName = strcase.ToCamel(decl.Type.Fields[0].Name)
 

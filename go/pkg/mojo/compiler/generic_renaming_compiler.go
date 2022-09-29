@@ -273,7 +273,7 @@ func (c *GenericRenamingCompiler) Renaming(ctx context.Context) error {
                                 Implicit:              true,
                                 Name:                  decl.Name,
                                 Attributes:            decls[0].Attributes,
-                                EnclosingType:         decl.EnclosingType,
+                                Enclosing:             decl.Enclosing,
                                 Group:                 decls[0].Group,
                                 ResolvedIdentifiers:   decls[0].ResolvedIdentifiers,
                                 UnresolvedIdentifiers: decls[0].UnresolvedIdentifiers,
@@ -283,7 +283,7 @@ func (c *GenericRenamingCompiler) Renaming(ctx context.Context) error {
                             newDeclaration := lang.NewStructDeclaration(newDecl)
                             f.Statements[i] = lang.NewDeclarationStatement(newDeclaration)
 
-                            enclosing := decl.EnclosingType
+                            enclosing := decl.Enclosing
                             for enclosing != nil {
                                 declaration := enclosing.TypeDeclaration.GetStructDecl()
                                 for _, id := range declaration.GetScope().GetIdentifiers() {
@@ -291,7 +291,7 @@ func (c *GenericRenamingCompiler) Renaming(ctx context.Context) error {
                                         id.Declaration = f.Statements[i].GetDeclaration()
                                     }
                                 }
-                                enclosing = declaration.EnclosingType
+                                enclosing = declaration.Enclosing
                             }
 
                             for _, id := range f.Scope.Identifiers {
@@ -311,7 +311,7 @@ func (c *GenericRenamingCompiler) Renaming(ctx context.Context) error {
                     for _, types := range ref.Types {
                         for _, nt := range types {
                             nt.Name = newDecl.Name
-                            nt.EnclosingType = newDecl.EnclosingType
+                            nt.Enclosing = newDecl.Enclosing
                             nt.TypeDeclaration = lang.NewStructTypeDeclaration(newDecl)
                         }
                     }

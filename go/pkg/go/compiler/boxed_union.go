@@ -27,7 +27,7 @@ func (b *BoxedUnion) CompileStruct(ctx context.Context, decl *lang.StructDecl) e
     }
 
     bu.Name = decl.Name
-    bu.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), ".")
+    bu.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.Enclosing), ".")
     bu.FullName = GetFullName(bu.EnclosingName, bu.Name)
 
     for _, field := range decl.Type.Fields {

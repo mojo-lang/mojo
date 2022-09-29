@@ -189,8 +189,7 @@ func (e *ExpressionVisitor) VisitPrimaryExpression(ctx *PrimaryExpressionContext
             arguments := GetGenericArguments(ctx.GenericArgumentClause())
             enclosing := GetTypeIdentifier(ctx.TypeIdentifier())
             if enclosing != nil {
-                identifier.EnclosingTypeNames = append(identifier.EnclosingTypeNames, enclosing.Name)
-                identifier.EnclosingTypeNames = append(identifier.EnclosingTypeNames, enclosing.GetEnclosingNames()...)
+                identifier.Enclosing = enclosing.ToIdentifier()
             }
 
             return lang.NewIdentifierExpression(&lang.IdentifierExpr{

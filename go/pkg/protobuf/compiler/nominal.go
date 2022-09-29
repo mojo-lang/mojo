@@ -23,12 +23,12 @@ func (n Nominal) Compile(ctx context.Context, t *lang.NominalType) (string, stri
     getName := func() string {
         if pkg != nil && pkg.FullName == t.PackageName {
             if decl := t.TypeDeclaration; decl != nil {
-                if s := decl.GetStructDecl(); s != nil && s.EnclosingType != nil {
+                if s := decl.GetStructDecl(); s != nil && s.Enclosing != nil {
                     if scope == nil || scope.Identifiers == nil || scope.Identifiers[s.Name] == nil {
                         return lang.GetFullName("", t.GetEnclosingNames(), t.Name)
                     }
                     return s.Name
-                } else if e := decl.GetEnumDecl(); e != nil && e.EnclosingType != nil {
+                } else if e := decl.GetEnumDecl(); e != nil && e.Enclosing != nil {
                     if scope == nil || scope.Identifiers == nil || scope.Identifiers[e.Name] == nil {
                         return lang.GetFullName("", t.GetEnclosingNames(), t.Name)
                     }

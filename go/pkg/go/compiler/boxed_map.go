@@ -17,7 +17,7 @@ func (b *BoxedMap) CompileStruct(ctx context.Context, decl *lang.StructDecl) err
     bm.PackageName = decl.GetPackageName()
     bm.GoPackageName = GetGoPackage(decl.GetPackageName())
     bm.Name = decl.Name
-    bm.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.EnclosingType), ".")
+    bm.EnclosingName = strings.Join(lang.GetEnclosingNames(decl.Enclosing), ".")
     bm.FullName = GetFullName(bm.EnclosingName, bm.Name)
     bm.FieldName = strcase.ToCamel(decl.Type.Fields[0].Name)
 

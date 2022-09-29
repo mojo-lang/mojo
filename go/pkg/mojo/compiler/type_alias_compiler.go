@@ -220,7 +220,7 @@ func (c *TypeAliasCompiler) compileNominalType(ctx context.Context, nominalType 
         Implicit:         aliasDecl.Type.Implicit,
         TypeDeclaration:  aliasDecl.Type.TypeDeclaration,
         Attributes:       aliasDecl.Type.Attributes,
-        EnclosingType:    aliasDecl.Type.EnclosingType,
+        Enclosing:        aliasDecl.Type.Enclosing,
         GenericArguments: aliasDecl.Type.GenericArguments,
     }
 

@@ -19,7 +19,7 @@ func (p *Printer) PrintStructDecl(ctx context.Context, decl *lang.StructDecl) {
     if decl.Type != nil {
         var lastInheritDocument *lang.Document
         if len(decl.Type.Inherits) > 0 {
-            p.PrintTerm(ctx, lang.NewSymbolTerm(decl.Type.InheritePosition, lang.TermTypeSymbol, ": "))
+            p.PrintTerm(ctx, lang.NewSymbolTerm(decl.Type.InheritPosition, lang.TermTypeSymbol, ": "))
 
             for i, inherit := range decl.Type.Inherits {
                 if i > 0 {

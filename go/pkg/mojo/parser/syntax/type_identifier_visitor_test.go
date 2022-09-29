@@ -30,8 +30,8 @@ func TestGetTypeIdentifier_Package_Enclosing(t *testing.T) {
     assert.Equal(t, "Mail", decl.Type.Inherits[0].Name)
     assert.Equal(t, "T", decl.Type.Inherits[0].GenericArguments[0].Name)
     assert.Equal(t, "some.pkg", decl.Type.Inherits[0].PackageName)
-    assert.Equal(t, "Box", decl.Type.Inherits[0].EnclosingType.Name)
-    assert.Equal(t, "T", decl.Type.Inherits[0].EnclosingType.GenericArguments[0].Name)
+    assert.Equal(t, "Box", decl.Type.Inherits[0].Enclosing.Name)
+    assert.Equal(t, "T", decl.Type.Inherits[0].Enclosing.GenericArguments[0].Name)
 
     assert.Equal(t, "some.pkg.Box<T>.Mail<T>", decl.Type.Inherits[0].GetGenericFullName())
 }

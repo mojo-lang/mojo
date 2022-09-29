@@ -152,7 +152,7 @@ func (c *GenericCompiler) CompileStruct(ctx context.Context, decl *lang.StructDe
 
         addIdentifiers(identifiers, ids)
         if structDecl != nil {
-            structDecl.EnclosingType = &lang.NominalType{
+            structDecl.Enclosing = &lang.NominalType{
                 PackageName:     decl.PackageName,
                 Name:            decl.Name,
                 TypeDeclaration: lang.NewStructTypeDeclaration(decl),
@@ -289,7 +289,7 @@ func (c *GenericCompiler) instantiateNominalType(ctx context.Context, nominalTyp
             PackageName:     instantiate.PackageName,
             TypeDeclaration: instantiate.TypeDeclaration,
             Attributes:      nominalType.Attributes,
-            EnclosingType:   instantiate.EnclosingType,
+            Enclosing:       instantiate.Enclosing,
         }
     }
 
@@ -298,7 +298,7 @@ func (c *GenericCompiler) instantiateNominalType(ctx context.Context, nominalTyp
         PackageName:     nominalType.PackageName,
         TypeDeclaration: nominalType.TypeDeclaration,
         Attributes:      nominalType.Attributes,
-        EnclosingType:   nominalType.EnclosingType,
+        Enclosing:       nominalType.Enclosing,
     }
 
     for _, argument := range nominalType.GenericArguments {
@@ -420,7 +420,7 @@ func (c *GenericCompiler) updateStructIdentifier(compiledDecl *lang.StructDecl, 
     id := &lang.Identifier{
         PackageName:    compiledDecl.PackageName,
         Name:           compiledDecl.Name,
-        FullName:       lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
+        FullName:       lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.Enclosing), compiledDecl.Name),
         SourceFileName: file.FullName,
         Kind:           lang.Identifier_KIND_STRUCT,
         Declaration:    lang.NewStructDeclaration(compiledDecl),
@@ -557,7 +557,7 @@ func (c *GenericCompiler) compileTypeAlias(ctx context.Context, nominalType *lan
         id := &lang.Identifier{
             PackageName:    compiledDecl.PackageName,
             Name:           compiledDecl.Name,
-            FullName:       lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.EnclosingType), compiledDecl.Name),
+            FullName:       lang.GetFullName(compiledDecl.PackageName, lang.GetEnclosingNames(compiledDecl.Enclosing), compiledDecl.Name),
             SourceFileName: file.FullName,
             Kind:           lang.Identifier_KIND_TYPE_ALIAS,
             Declaration:    lang.NewTypeAliasDeclaration(compiledDecl),

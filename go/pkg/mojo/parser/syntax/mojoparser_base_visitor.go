@@ -1,7 +1,7 @@
-// Code generated from MojoParser.g4 by ANTLR 4.9.3. DO NOT EDIT.
+// Code generated from java-escape by ANTLR 4.11.1. DO NOT EDIT.
 
 package syntax // MojoParser
-import "github.com/antlr/antlr4/runtime/Go/antlr"
+import "github.com/antlr/antlr4/runtime/Go/antlr/v4"
 
 type BaseMojoParserVisitor struct {
 	*antlr.BaseParseTreeVisitor

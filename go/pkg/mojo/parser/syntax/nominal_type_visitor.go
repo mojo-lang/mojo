@@ -147,7 +147,7 @@ func (n *NominalTypeVisitor) VisitArrayType(ctx *ArrayTypeContext) interface{} {
                     Name:             nominalType.Name,
                     GenericArguments: nominalType.GenericArguments,
                     Attributes:       nominalType.Attributes,
-                    EnclosingType:    nominalType.EnclosingType,
+                    Enclosing:        nominalType.Enclosing,
                 },
             },
         }
@@ -190,7 +190,7 @@ func (n *NominalTypeVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
                                 Name:             keyType.Name,
                                 GenericArguments: keyType.GenericArguments,
                                 Attributes:       keyAttributes,
-                                EnclosingType:    keyType.EnclosingType,
+                                Enclosing:        keyType.Enclosing,
                             },
                             {
                                 StartPosition:    valueType.StartPosition,
@@ -201,7 +201,7 @@ func (n *NominalTypeVisitor) VisitMapType(ctx *MapTypeContext) interface{} {
                                 Name:             valueType.Name,
                                 GenericArguments: valueType.GenericArguments,
                                 Attributes:       GetAttributes(ctx.Attributes()),
-                                EnclosingType:    valueType.EnclosingType,
+                                Enclosing:        valueType.Enclosing,
                             },
                         },
                     }

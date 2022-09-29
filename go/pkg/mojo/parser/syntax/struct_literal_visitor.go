@@ -26,7 +26,7 @@ func (s *StructLiteralVisitor) VisitStructLiteral(ctx *StructLiteralContext) int
         return nil
     }
 
-    expr.Callee = lang.NewIdentifierExpression(lang.NewTypeIdentifierExpr(identifier))
+    expr.Callee = lang.NewIdentifierExpression(lang.NewIdentifierExprFromType(identifier))
 
     object := GetObjectLiteral(ctx.ObjectLiteral())
     if object != nil {

@@ -2,7 +2,7 @@ package syntax
 
 import (
     "errors"
-    "github.com/antlr/antlr4/runtime/Go/antlr"
+    "github.com/antlr/antlr4/runtime/Go/antlr/v4"
     "github.com/mojo-lang/core/go/pkg/logs"
     "github.com/mojo-lang/core/go/pkg/mojo/core"
     "github.com/mojo-lang/lang/go/pkg/mojo/lang"
