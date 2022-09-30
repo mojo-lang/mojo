@@ -2,7 +2,7 @@ package handlers
 
 /*
 import (
-	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/test"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/test_data"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/types"
 	"io/ioutil"
 	"os"
@@ -65,7 +65,7 @@ func TestRenderPrevEndpoints(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	wantFormatted, endpointFormatted, diff := test.DiffGoCode(wantEndpoints, string(endpointsBytes))
+	wantFormatted, endpointFormatted, diff := test_data.DiffGoCode(wantEndpoints, string(endpointsBytes))
 	if wantFormatted != endpointFormatted {
 		t.Fatalf("Endpoints middleware modified unexpectedly:\n\n%s", diff)
 	}

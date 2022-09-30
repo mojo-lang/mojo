@@ -4,7 +4,7 @@ package maps {
     authors: [{
         author: 'Frankee'
         email: 'frankee.zhou@gmail.com'
-        organization: 'mojolang.org'
+        organization: 'mojo-lang.org'
     }]
 
     repository: 'https://github.com/mojo-lang/test'
