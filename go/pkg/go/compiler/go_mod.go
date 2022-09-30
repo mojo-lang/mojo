@@ -26,7 +26,7 @@ func (g *GoMod) CompilePackage(ctx context.Context, pkg *lang.Package) error {
             dep.Version = "v0.0.0-00010101000000-000000000000"
             dep.Path = path2.Join("..", d.Path, "go")
         } else {
-            minVersion := d.GetVersion().GetRange().GetMin().Format()
+            minVersion := d.GetVersion().GetRange().GetStart().Format()
             if len(minVersion) == 0 {
                 minVersion = "0.0.0"
             }

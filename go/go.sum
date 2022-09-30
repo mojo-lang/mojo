@@ -308,6 +308,8 @@ github.com/mojo-lang/core/go v0.0.0-20220520092744-d044478f0e2a/go.mod h1:MdE3mb
 github.com/mojo-lang/core/go v0.0.0-20220629081054-072afb32ce52/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
 github.com/mojo-lang/core/go v0.0.0-20220909081037-a971c08096fb h1:5ZngiMqa/nPRagTjsYheC9brOemqAQ/Jw3kySqu1CVk=
 github.com/mojo-lang/core/go v0.0.0-20220909081037-a971c08096fb/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
+github.com/mojo-lang/core/go v0.0.0-20220929135212-3562b42bfff9 h1:KrmReR7Shdyi7Y1V95HieGxsqugaFjYCDU9Y9AjALlU=
+github.com/mojo-lang/core/go v0.0.0-20220929135212-3562b42bfff9/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
 github.com/mojo-lang/db/go v0.0.0-20220708073636-d85468d4ceca h1:GsqEhUU7ek/7xYo+DitG/HvEKT0ceC+C1coMxltugtE=
 github.com/mojo-lang/db/go v0.0.0-20220708073636-d85468d4ceca/go.mod h1:4WYSNwFZBwfeneAWzpvFJB2WCj/iGbdUanWw9XhvCYY=
 github.com/mojo-lang/document/go v0.0.0-20220504064505-9e47a78ac0ec h1:MFqKQlgazArM6EV/p+fPQ/tzUPfTZJ3QQ5LXaJKF9uM=
