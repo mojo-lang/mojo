@@ -80,7 +80,7 @@ func TestNewClientInterfaceArgs(t *testing.T) {
 		},
 	}
 	if got, want := csa, expected; !reflect.DeepEqual(got, want) {
-		t.Errorf(test_data.DiffStrings(spw.Sdump(got), spw.Sdump(want)))
+		t.Errorf(test-data.DiffStrings(spw.Sdump(got), spw.Sdump(want)))
 	}
 }
 */

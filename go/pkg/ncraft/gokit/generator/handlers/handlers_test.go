@@ -2,7 +2,7 @@ package handlers
 
 /*
 import (
-	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/test_data"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/test-data"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -22,8 +22,8 @@ import (
 )
 
 var gopath []string
-var diff = test_data.DiffStrings
-var testFormat = test_data.TestFormat
+var diff = test-data.DiffStrings
+var testFormat = test-data.TestFormat
 
 func init() {
 	gopath = filepath.SplitList(os.Getenv("GOPATH"))

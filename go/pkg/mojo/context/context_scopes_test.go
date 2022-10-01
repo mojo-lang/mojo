@@ -8,10 +8,10 @@ import (
 
 func TestLookupIdentifier(t *testing.T) {
 	ctx := WithScope(Empty())
-	Scope(ctx).Declare(lang.NewTypeAliasDeclaration(&lang.TypeAliasDecl{Name: "Test", PackageName: "test_data"}))
+	Scope(ctx).Declare(lang.NewTypeAliasDeclaration(&lang.TypeAliasDecl{Name: "Test", PackageName: "test-data"}))
 
 	ctx2 := WithScope(ctx)
-	Scope(ctx2).Declare(lang.NewTypeAliasDeclaration(&lang.TypeAliasDecl{Name: "Test2", PackageName: "test_data"}))
+	Scope(ctx2).Declare(lang.NewTypeAliasDeclaration(&lang.TypeAliasDecl{Name: "Test2", PackageName: "test-data"}))
 
 	ctx3 := WithScope(ctx)
 	Scope(ctx3).Declare(lang.NewTypeAliasDeclaration(&lang.TypeAliasDecl{Name: "Test2", PackageName: "test3"}))

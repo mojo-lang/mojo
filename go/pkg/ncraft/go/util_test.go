@@ -9,23 +9,23 @@ func TestDiffGoCode(t *testing.T) {
 	code := []string{
 		// Normal
 		`func Foo() {
-			println("test_data")
+			println("test-data")
 		}`,
 		// Leading and trailing whitespace
 		`
 		
 		func Foo () {
-			println("test_data")
+			println("test-data")
 		}
 		
 		`,
 		// Indentation differences, tabs
 		`				func Foo() {
-										println("test_data")
+										println("test-data")
 			}`,
 		// Indentation differences, spaces
 		`    func Foo() {
-		                                                    println("test_data")
+		                                                    println("test-data")
 				    				            }
 	                  `,
 	}

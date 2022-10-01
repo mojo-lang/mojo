@@ -7,7 +7,7 @@ import (
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/test_data"
+	"github.com/mojo-lang/mojo/go/test-data"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

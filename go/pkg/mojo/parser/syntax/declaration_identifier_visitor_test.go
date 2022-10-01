@@ -6,9 +6,9 @@ import (
 )
 
 func TestDeclarationIdentifierVisitor_VisitDeclarationIdentifier(t *testing.T) {
-	const identifier = `var type = "test_data"`
+	const identifier = `var type = "test-data"`
 
 	decl := ParseVariableDecl(t, identifier)
 	assert.Equal(t, "type", decl.Name)
-	assert.Equal(t, "test_data", decl.GetInitialValue().GetStringLiteralExpr().GetValue())
+	assert.Equal(t, "test-data", decl.GetInitialValue().GetStringLiteralExpr().GetValue())
 }

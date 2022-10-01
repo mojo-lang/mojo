@@ -5,5 +5,5 @@ import (
 )
 
 func TestIsGeneratedFile(t *testing.T) {
-	//file, err := ioutil.TempFile("", "mojo.test_data.*")
+	//file, err := ioutil.TempFile("", "mojo.test-data.*")
 }

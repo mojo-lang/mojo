@@ -8,7 +8,7 @@ import (
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser/semantic/identifier"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser/syntax"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/test_data"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/test-data"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

@@ -38,8 +38,8 @@ func TestExpressionVisitor_VisitExpression_Wildcard(t *testing.T) {
 
 func TestExpressionVisitor_VisitExpression_String(t *testing.T) {
 	stringCases := map[string]string{
-		`"test_data"`: `test_data`,
-		`'test_data'`: `test_data`,
+		`"test-data"`: `test-data`,
+		`'test-data'`: `test-data`,
 	}
 
 	for k, v := range stringCases {

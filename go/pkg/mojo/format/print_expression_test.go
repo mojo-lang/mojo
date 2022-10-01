@@ -29,9 +29,9 @@ func parseExpression(t *testing.T, str string) *lang.Expression {
 
 func TestPrinter_PrintExpression(t *testing.T) {
 	const expr = `
-"test_data"
+"test-data"
 `
-	const expect = `"test_data"`
+	const expect = `"test-data"`
 
 	decl := parseExpression(t, expr)
 	buffer := bytes.NewBuffer(nil)

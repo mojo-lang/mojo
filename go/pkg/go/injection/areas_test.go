@@ -11,12 +11,12 @@ func TestSort(t *testing.T) {
 		&TextArea{
 			Start:   100,
 			End:     105,
-			Content: "test_data-2",
+			Content: "test-data-2",
 		},
 		&TextArea{
 			Start:   90,
 			End:     95,
-			Content: "test_data-1",
+			Content: "test-data-1",
 		},
 	}
 
