@@ -3,15 +3,15 @@ package generator
 import (
 	"github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
+	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 type Generator struct {
 	Data  *data.Data
-	Files util.GeneratedFiles
+	Files util2.GeneratedFiles
 }
 
-func NewGenerator(files util.GeneratedFiles, data *data.Data) *Generator {
+func NewGenerator(files util2.GeneratedFiles, data *data.Data) *Generator {
 	return &Generator{
 		Files: files,
 		Data:  data,
@@ -26,7 +26,7 @@ func (g *Generator) Generate(output string) error {
 	}
 	g.Files = append(g.Files, generator.Files...)
 
-	guard := &util.PathGuard{
+	guard := &util2.PathGuard{
 		OnlyClearGenerated: true,
 		Suffixes:           []string{".go"},
 	}

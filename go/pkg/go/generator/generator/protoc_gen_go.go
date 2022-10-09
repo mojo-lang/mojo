@@ -12,7 +12,7 @@ import (
 	injection2 "github.com/mojo-lang/mojo/go/pkg/go/generator/injection"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"go/ast"
 	"io/fs"

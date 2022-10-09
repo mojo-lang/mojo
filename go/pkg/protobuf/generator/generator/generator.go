@@ -3,6 +3,7 @@ package generator
 import (
 	"bytes"
 	"fmt"
+	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 	"log"
 	"os"
 	path2 "path"
@@ -12,7 +13,6 @@ import (
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -233,7 +233,7 @@ func (g *Generator) removeGeneratedDir(dir string) {
 		if len(rootPath) == 0 || !strings.HasPrefix(path, rootPath) {
 			rootPath = path
 			if core.IsExist(rootPath) {
-				util.ClearFiles(rootPath, ".proto")
+				util2.ClearFiles(rootPath, ".proto")
 			}
 		}
 	}
@@ -244,10 +244,10 @@ func (g *Generator) WriteAllFiles(dir string) error {
 		return nil
 	}
 
-	var files util.GeneratedFiles
+	var files util2.GeneratedFiles
 	for _, file := range g.Response.File {
 		if file.Name != nil && file.Content != nil {
-			files = append(files, &util.GeneratedFile{
+			files = append(files, &util2.GeneratedFile{
 				Name:              *file.Name,
 				Content:           *file.Content,
 				SkipNoneGenerated: true,
@@ -256,7 +256,7 @@ func (g *Generator) WriteAllFiles(dir string) error {
 			logs.Warn("meet an empty file!")
 		}
 	}
-	guard := &util.PathGuard{
+	guard := &util2.PathGuard{
 		OnlyClearGenerated: true,
 		Suffixes:           []string{".proto"},
 	}

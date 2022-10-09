@@ -6,7 +6,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	generator2 "github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 

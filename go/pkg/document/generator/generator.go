@@ -2,12 +2,12 @@ package generator
 
 import (
 	"github.com/mojo-lang/document/go/pkg/markdown"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
+	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 type Generator struct {
 	Documents Documents
-	Files     []*util.GeneratedFile
+	Files     []*util2.GeneratedFile
 }
 
 func NewGenerator(documents Documents) *Generator {
@@ -35,7 +35,7 @@ func (g *Generator) generateMarkdown() error {
 		if err != nil {
 			return err
 		}
-		g.Files = append(g.Files, &util.GeneratedFile{
+		g.Files = append(g.Files, &util2.GeneratedFile{
 			Name:    name + ".md",
 			Content: m,
 		})
@@ -44,7 +44,7 @@ func (g *Generator) generateMarkdown() error {
 }
 
 func (g *Generator) writeFiles(dir string) error {
-	guard := &util.PathGuard{
+	guard := &util2.PathGuard{
 		Suffixes: []string{".md"},
 	}
 

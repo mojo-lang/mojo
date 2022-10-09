@@ -6,7 +6,7 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"github.com/otiai10/copy"
 	"io/ioutil"

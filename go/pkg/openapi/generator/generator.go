@@ -3,7 +3,7 @@ package generator
 import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
+	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"github.com/mojo-lang/yaml/go/pkg/mojo/yaml"
 	"strings"
@@ -17,7 +17,7 @@ type Generator struct {
 	*openapi.OpenAPIs
 
 	Package *lang.Package
-	Files   []*util.GeneratedFile
+	Files   []*util2.GeneratedFile
 }
 
 func NewGenerator(pkg *lang.Package, apis map[string]*openapi.OpenAPI, components *openapi.Components) *Generator {
@@ -53,7 +53,7 @@ func (g *Generator) generateApi() error {
 			return err
 		}
 
-		g.Files = append(g.Files, &util.GeneratedFile{
+		g.Files = append(g.Files, &util2.GeneratedFile{
 			Name:    lang.TypeNameToFileName(name) + ".yaml",
 			Content: string(y),
 		})
@@ -79,7 +79,7 @@ func (g *Generator) generateSchema() error {
 			return err
 		}
 
-		g.Files = append(g.Files, &util.GeneratedFile{
+		g.Files = append(g.Files, &util2.GeneratedFile{
 			Name:    toSchemaFileName(name),
 			Content: string(j),
 		})
@@ -92,7 +92,7 @@ func (g *Generator) cleanFiles() error {
 }
 
 func (g *Generator) writeFiles(dir string) error {
-	guard := &util.PathGuard{
+	guard := &util2.PathGuard{
 		Suffixes: []string{".yaml", ".schema.json"},
 	}
 

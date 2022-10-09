@@ -1,14 +1,14 @@
 package httptransport
 
 import (
-    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/data"
-    _go "github.com/mojo-lang/mojo/go/pkg/ncraft/go"
-    "text/template"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
+	_go "github.com/mojo-lang/mojo/go/pkg/ncraft/go"
+	"github.com/mojo-lang/mojo/go/pkg/util"
+	"text/template"
 )
 
 func createParamUnmarshaler(parameter *data.HTTPParameter, funcMap template.FuncMap) (string, error) {
-    initParent := `{{define "init_parent"}}{{if .GetEnclosingField}}
+	initParent := `{{define "init_parent"}}{{if .GetEnclosingField}}
 	{{template "init_parent" .GetEnclosingField}}
 	if req.{{GoName .GetEnclosingField.FullName}} == nil {
 		req.{{GoName .GetEnclosingField.FullName}} = &{{.GetEnclosingField.GetGoTypeName}}{}
@@ -22,7 +22,7 @@ if req.{{GoName .Field.FullName}} == nil {
 }
 {{end}}`
 
-    query := `err = mjhttp.UnmarshalQueryParam(queryParams, {{if not .GetGoType.IsPointer}}&{{end}}req.{{GoName .Field.FullName}}, "{{.Name}}"{{if ne .Name .FullName}}, "{{.FullName}}"{{end}})
+	query := `err = mjhttp.UnmarshalQueryParam(queryParams, {{if not .GetGoType.IsPointer}}&{{end}}req.{{GoName .Field.FullName}}, "{{.Name}}"{{if ne .Name .FullName}}, "{{.FullName}}"{{end}})
     {{if .GetGoType.IsPointer}}if err != nil {
         if core.IsNotFoundError(err) {
             if {{ToLowerCamel .Field.FullName}}Initialized {
@@ -38,7 +38,7 @@ if req.{{GoName .Field.FullName}} == nil {
     }
     {{end}}
 `
-    path := `err = mjhttp.UnmarshalPathParam(pathParams, {{if not .GetGoType.IsPointer}}&{{end}}req.{{GoName .Field.FullName}}, "{{.Name}}"{{if ne .Name .FullName}}, "{{.FullName}}"{{end}})
+	path := `err = mjhttp.UnmarshalPathParam(pathParams, {{if not .GetGoType.IsPointer}}&{{end}}req.{{GoName .Field.FullName}}, "{{.Name}}"{{if ne .Name .FullName}}, "{{.FullName}}"{{end}})
     {{if .GetGoType.IsPointer}}
      if err != nil {
         if core.IsNotFoundError(err) {
@@ -55,22 +55,22 @@ if req.{{GoName .Field.FullName}} == nil {
     }
     {{end}}
 `
-    tmpl := ""
-    if parameter.Location == "path" {
-        tmpl = initParent + path
-    } else {
-        tmpl = initParent + query
-    }
+	tmpl := ""
+	if parameter.Location == "path" {
+		tmpl = initParent + path
+	} else {
+		tmpl = initParent + query
+	}
 
-    code, err := util.ApplyTemplate("Field Unmarshal", tmpl, parameter, funcMap)
-    if err != nil {
-        return "", err
-    }
+	code, err := util.ApplyTemplate("Field Unmarshal", tmpl, parameter, funcMap)
+	if err != nil {
+		return "", err
+	}
 
-    bytes, err := _go.FormatCode(code)
-    if err != nil {
-        return "", err
-    }
+	bytes, err := _go.FormatCode(code)
+	if err != nil {
+		return "", err
+	}
 
-    return string(bytes), nil
+	return string(bytes), nil
 }

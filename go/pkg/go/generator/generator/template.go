@@ -3,7 +3,7 @@ package generator
 import (
 	"bytes"
 	_ "embed"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 	"strings"
 	"text/template"
 
