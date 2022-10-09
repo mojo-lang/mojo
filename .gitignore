@@ -69,9 +69,17 @@ _deps
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
+antlr/c/.antlr
+antlr/c/gen/
+antlr/cpp/.antlr
+antlr/cpp/gen/
 antlr/mojo/.antlr
 antlr/mojo/gen/
 antlr/mojo/MojoLexer.tokens
+antlr/protobuf2/.antlr
+antlr/protobuf2/gen/
+antlr/protobuf3/.antlr
+antlr/protobuf3/gen/
 
 # User-specific stuff
 .idea/**/workspace.xml

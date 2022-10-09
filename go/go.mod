@@ -7,6 +7,7 @@ require (
 	github.com/edwin-luijten/go_mod_parser v0.0.0-20190307065647-27b9ee14b099
 	github.com/fatih/structtag v1.2.0
 	github.com/gertd/go-pluralize v0.1.7
+	github.com/go-clang/clang-v13 v1.0.1 // indirect
 	github.com/goccy/go-graphviz v0.0.9
 	github.com/json-iterator/go v1.1.12
 	github.com/mojo-lang/core/go v0.0.0-20220929135212-3562b42bfff9

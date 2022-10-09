@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+package extend;
+
+message Outer {
+  message Inner {   // Level 2
+    required int64 ival = 1;
+  }
+  map<int32, string> my_map = 2;
+  extensions 20 to 30;
+}
+
+extend Outer {
+  optional int32 bar = 21;
+}
