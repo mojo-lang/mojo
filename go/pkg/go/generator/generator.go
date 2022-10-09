@@ -1,76 +1,41 @@
 package generator
 
 import (
-    "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
-    "github.com/mojo-lang/lang/go/pkg/mojo/lang"
-    "github.com/mojo-lang/mojo/go/pkg/go/data"
-    "github.com/mojo-lang/mojo/go/pkg/mojo/util"
-    path2 "path"
+	"github.com/mojo-lang/mojo/go/pkg/go/generator/data"
+	"github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/util"
 )
 
 type Generator struct {
-    Files util.GeneratedFiles
+	Data  *data.Data
+	Files util.GeneratedFiles
 }
 
-func packageToPath(pkg string) string {
-    return path2.Join("pkg", lang.PackageNameToPath(pkg))
+func NewGenerator(files util.GeneratedFiles, data *data.Data) *Generator {
+	return &Generator{
+		Files: files,
+		Data:  data,
+	}
 }
 
-func (g *Generator) generateDecl(decl data.Decl, fileType string, template string) error {
-    if len(template) > 0 {
-        str, err := ApplyTemplate("goFile"+fileType, template, decl, FuncMap)
-        if err != nil {
-            return err
-        }
-        g.Files = append(g.Files, &util.GeneratedFile{
-            Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+"."+fileType+".go"),
-            Content: FormatCode(str),
-        })
-    }
-    return nil
-}
+func (g *Generator) Generate(output string) error {
+	generator := &generator.Generator{}
+	err := generator.Generate(g.Data)
+	if err != nil {
+		return err
+	}
+	g.Files = append(g.Files, generator.Files...)
 
-func (g *Generator) Generate(data *data.Data) error {
-    for _, decl := range data.BoxedArrays {
-        g.generateDecl(decl, "json", goArrayJsonFile)
-    }
+	guard := &util.PathGuard{
+		OnlyClearGenerated: true,
+		Suffixes:           []string{".go"},
+	}
 
-    for _, decl := range data.BoxedMaps {
-        g.generateDecl(decl, "json", goMapJsonFile)
-    }
-
-    for _, decl := range data.Enums {
-        g.generateDecl(decl, "fmt", goEnumFmtFile)
-        g.generateDecl(decl, "json", goEnumJsonFile)
-    }
-
-    for _, decl := range data.BoxedUnions {
-        g.generateDecl(decl, "json", goUnionJsonFile)
-    }
-
-    for _, decl := range data.DbJSONs {
-        g.generateDecl(decl, "sql", goDbJSONSqlFile)
-    }
-
-    for _, decl := range data.FormatJSONs {
-        g.generateDecl(decl, "json", goFormatJSONFile)
-    }
-
-    for _, decl := range data.ArrayResponses {
-        g.generateDecl(decl, "json", goArrayResponseJsonFile)
-    }
-
-    if data.GoMod != nil {
-        str, err := ApplyTemplate("goModFile", goModFile, data.GoMod, FuncMap)
-        if err != nil {
-            return err
-        }
-        g.Files = append(g.Files, &util.GeneratedFile{
-            Name:        "go.mod",
-            Content:     str,
-            SkipIfExist: true,
-        })
-    }
-
-    return nil
+	for _, f := range g.Files {
+		f.SkipNoneGenerated = true
+		if err = f.WriteTo(output, guard); err != nil {
+			return err
+		}
+	}
+	return nil
 }
