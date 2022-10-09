@@ -1,4 +1,4 @@
-package document
+package generator
 
 import "github.com/mojo-lang/document/go/pkg/mojo/document"
 
