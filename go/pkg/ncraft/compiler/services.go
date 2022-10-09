@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"github.com/mojo-lang/mojo/go/pkg/openapi/generator/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
 	"sort"
 	"strings"
@@ -15,7 +16,6 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
-	apicompiler "github.com/mojo-lang/mojo/go/pkg/openapi/compiler"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
 )
@@ -345,7 +345,7 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 
 func (s *Services) compileBindings(ctx context.Context, methodName string, path string, method *lang.FunctionDecl) (*data.HTTPBinding, error) {
 	dm := DataMethod(ctx)
-	p, pathParams := apicompiler.CompilePath(path)
+	p, pathParams := compiler.CompilePath(path)
 
 	index := 0
 	if value, ok := ctx.Value("index").(int); ok {
@@ -395,7 +395,7 @@ func (s *Services) compileBindings(ctx context.Context, methodName string, path 
 }
 
 func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.ValueDecl, pathParams map[string]bool, enclosing *data.HTTPParameter, binding *data.HTTPBinding) error {
-	compiler := &apicompiler.NominalTypeCompiler{}
+	compiler := &compiler.NominalTypeCompiler{}
 
 	schema, err := compiler.Compile(decl.Type)
 	if err != nil {
