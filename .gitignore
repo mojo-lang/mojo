@@ -69,9 +69,9 @@ _deps
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
-antlr/.antlr
-antlr/gen/
-antlr/MojoLexer.tokens
+antlr/mojo/.antlr
+antlr/mojo/gen/
+antlr/mojo/MojoLexer.tokens
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -194,6 +194,6 @@ hs_err_pid*
 .DS_Store
 
 java/target/
-java/mojo-parser/target/
+java/mojo/target/
 
 # End of https://www.gitignore.io/api/go,c++,java,cmake,intellij+all,visualstudiocode
