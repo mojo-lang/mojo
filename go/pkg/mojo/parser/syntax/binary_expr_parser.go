@@ -46,15 +46,15 @@ func (b BinaryExprParser) Parse(prefix *lang.Expression, binaries []*lang.Binary
 
     if len(binaries) == 1 {
         binary := binaries[0]
-        if binary.Operator.Symbol == "?" && binary.RightHandArgument.GetConditionalExpr() != nil {
-            conditional := binary.RightHandArgument.GetConditionalExpr()
+        if binary.GetOperator().GetSymbol() == "?" && binary.RightArgument.GetConditionalExpr() != nil {
+            conditional := binary.RightArgument.GetConditionalExpr()
             conditional.Condition = prefix
-            return binary.RightHandArgument
+            return binary.RightArgument
         }
     }
 
     bins := []*lang.BinaryExpr{
-        {Operator: &lang.Operator{}, RightHandArgument: prefix},
+        lang.NewBinaryExpr(&lang.Operator{}, nil, prefix),
     }
     bins = append(bins, binaries...)
     binaries = bins
@@ -64,11 +64,11 @@ func (b BinaryExprParser) Parse(prefix *lang.Expression, binaries []*lang.Binary
 
         bins = []*lang.BinaryExpr{}
         for i, binary := range binaries {
-            if binary.Operator.Precedence == highest {
+            if binary.GetOperator().GetPrecedence() == highest {
                 if i > 0 {
                     last := bins[len(bins)-1]
-                    binary.LeftHandArgument = last.RightHandArgument
-                    last.RightHandArgument = lang.NewBinaryExpression(binary)
+                    binary.LeftArgument = last.RightArgument
+                    last.RightArgument = lang.NewBinaryExpression(binary)
                 } else {
                     bins = append(bins, binary)
                 }
@@ -80,14 +80,14 @@ func (b BinaryExprParser) Parse(prefix *lang.Expression, binaries []*lang.Binary
         binaries = bins
     }
 
-    return binaries[0].RightHandArgument
+    return binaries[0].RightArgument
 }
 
 func (b BinaryExprParser) highestPrecedence(binaries []*lang.BinaryExpr) int32 {
     var highest int32
     for _, binary := range binaries {
-        precedence := precedenceIndex[binary.Operator.Symbol]
-        binary.Operator.Precedence = precedence
+        precedence := precedenceIndex[binary.GetOperator().GetSymbol()]
+        binary.GetOperator().Precedence = precedence
 
         if precedence > highest {
             highest = precedence

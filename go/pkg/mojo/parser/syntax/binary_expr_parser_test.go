@@ -11,5 +11,5 @@ func TestBinaryExprParser_Parse(t *testing.T) {
 
     expr := parseExpression(t, exprStr)
     binary := expr.GetBinaryExpr()
-    assert.Equal(t, "+", binary.Operator.Symbol)
+    assert.Equal(t, "+", binary.GetOperator().Symbol)
 }

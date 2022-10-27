@@ -457,11 +457,18 @@ literalExpression
  | objectLiteral
  ;
 
-numericOperatorLiteral : numericLiteral postfixLiteralOperator ;
-stringOperatorLiteral : prefixLiteralOperator stringLiteral;
+numericOperatorLiteral : numericLiteral suffixLiteralOperator ;
+stringOperatorLiteral
+  : prefixLiteralOperator {p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS}? stringLiteral suffixLiteralOperator?
+  | stringLiteral suffixLiteralOperator
+  ;
 
-postfixLiteralOperator : TYPE_IDENTIFIER | VALUE_IDENTIFIER ;
-prefixLiteralOperator : VALUE_IDENTIFIER;
+suffixLiteralOperator
+  : {p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS}? (TYPE_IDENTIFIER | VALUE_IDENTIFIER)
+  ;
+
+prefixLiteralOperator
+  : VALUE_IDENTIFIER;
 
 arrayLiteral : LBRACK (EOL* arrayLiteralItems)? EOL* RBRACK ;
 
@@ -581,6 +588,7 @@ functionCallSuffix
 functionCallArgumentClause
  : LPAREN RPAREN
  | LPAREN functionCallArguments RPAREN
+ //| expression
  ;
 
 functionCallArguments : functionCallArgument ( COMMA functionCallArgument )* ;
@@ -722,16 +730,18 @@ keywordAsIdentifierInDeclarations
     : KEYWORD_AND
     | KEYWORD_AS
     | KEYWORD_ATTRIBUTE
-    | 'break'
+    | KEYWORD_BREAK
     | 'const'
     | 'enum'
     | 'func'
     | 'import'
     | 'in'
     | 'interface'
+    | KEYWORD_IS
     | 'match'
     | 'not'
     | 'null'
+    | 'or'
     | 'package'
     | 'repeat'
     | 'struct'
@@ -879,7 +889,6 @@ operator
   ;
 
 operator_characters: (
-		//{_input.get(_input.index()-1).getType()!=WS}? operator_character
 		{p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS}? operator_character
 )+;
 

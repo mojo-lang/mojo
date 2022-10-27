@@ -70,13 +70,15 @@ func (e *ExpressionVisitor) VisitBinaryExpression(ctx *BinaryExpressionContext) 
                 return &lang.BinaryExpr{
                     StartPosition: GetPosition(ctx.GetStart()),
                     EndPosition:   GetPosition(ctx.GetStop()),
-                    Operator: &lang.Operator{
-                        StartPosition: GetPosition(binaryOperator.GetStart()),
-                        EndPosition:   GetPosition(binaryOperator.GetStop()),
-                        Symbol:        binaryOperator.GetText(),
+                    Callee: &lang.BinaryExpr_Operator{
+                        &lang.Operator{
+                            StartPosition: GetPosition(binaryOperator.GetStart()),
+                            EndPosition:   GetPosition(binaryOperator.GetStop()),
+                            Symbol:        binaryOperator.GetText(),
+                        },
                     },
-                    LeftHandArgument:  nil,
-                    RightHandArgument: expression,
+                    LeftArgument:  nil,
+                    RightArgument: expression,
                 }
             }
         } else if conditionalOperator := ctx.ConditionalOperator(); conditionalOperator != nil {
@@ -95,13 +97,15 @@ func (e *ExpressionVisitor) VisitBinaryExpression(ctx *BinaryExpressionContext) 
                 return &lang.BinaryExpr{
                     StartPosition: GetPosition(ctx.GetStart()),
                     EndPosition:   GetPosition(ctx.GetStop()),
-                    Operator: &lang.Operator{
-                        StartPosition: GetPosition(conditionalOperator.GetStart()),
-                        EndPosition:   GetPosition(conditionalOperator.GetStop()),
-                        Symbol:        "?",
+                    Callee: &lang.BinaryExpr_Operator{
+                        Operator: &lang.Operator{
+                            StartPosition: GetPosition(conditionalOperator.GetStart()),
+                            EndPosition:   GetPosition(conditionalOperator.GetStop()),
+                            Symbol:        "?",
+                        },
                     },
-                    LeftHandArgument:  nil,
-                    RightHandArgument: lang.NewConditionalExpression(conditionalExpr),
+                    LeftArgument:  nil,
+                    RightArgument: lang.NewConditionalExpression(conditionalExpr),
                 }
             }
         }
@@ -130,10 +134,12 @@ func (e *ExpressionVisitor) VisitPrefixExpression(ctx *PrefixExpressionContext) 
                 return lang.NewPrefixUnaryExpression(&lang.PrefixUnaryExpr{
                     StartPosition: GetPosition(ctx.GetStart()),
                     EndPosition:   GetPosition(ctx.GetStop()),
-                    Operator: &lang.Operator{
-                        StartPosition: GetPosition(operator.GetStart()),
-                        EndPosition:   GetPosition(operator.GetStop()),
-                        Symbol:        operator.GetText(),
+                    Callee: &lang.PrefixUnaryExpr_Operator{
+                        Operator: &lang.Operator{
+                            StartPosition: GetPosition(operator.GetStart()),
+                            EndPosition:   GetPosition(operator.GetStop()),
+                            Symbol:        operator.GetText(),
+                        },
                     },
                     Argument: expression,
                 })
@@ -163,10 +169,12 @@ func (e *ExpressionVisitor) VisitPostfixExpression(ctx *PostfixExpressionContext
                 return lang.NewPostfixUnaryExpression(&lang.PostfixUnaryExpr{
                     StartPosition: GetPosition(ctx.GetStart()),
                     EndPosition:   GetPosition(ctx.GetStop()),
-                    Operator: &lang.Operator{
-                        StartPosition: GetPosition(operator.GetStart()),
-                        EndPosition:   GetPosition(operator.GetStop()),
-                        Symbol:        operator.GetText(),
+                    Callee: &lang.PostfixUnaryExpr_Operator{
+                        Operator: &lang.Operator{
+                            StartPosition: GetPosition(operator.GetStart()),
+                            EndPosition:   GetPosition(operator.GetStop()),
+                            Symbol:        operator.GetText(),
+                        },
                     },
                     Argument: expression,
                 })

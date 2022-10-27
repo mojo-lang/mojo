@@ -13,7 +13,7 @@ func TestSuffixExpressionVisitor_VisitFunctionCallSuffix(t *testing.T) {
     funcCallExpr := expr.GetFunctionCallExpr()
     assert.NotNil(t, funcCallExpr)
 
-    assert.Equal(t, "a", funcCallExpr.Callee.GetIdentifierExpr().Identifier.Name)
+    assert.Equal(t, "a", funcCallExpr.GetExpression().GetIdentifierExpr().Identifier.Name)
     assert.Equal(t, 3, len(funcCallExpr.Arguments))
     assert.Equal(t, "b", funcCallExpr.Arguments[0].Value.GetIdentifierExpr().Identifier.Name)
 }
@@ -24,7 +24,7 @@ func TestSuffixExpressionVisitor_VisitSubscriptSuffix(t *testing.T) {
 
     subscriptExpr := expr.GetSubscriptExpr()
     assert.NotNil(t, subscriptExpr)
-    assert.Equal(t, "a", subscriptExpr.Callee.GetIdentifierExpr().Identifier.Name)
+    assert.Equal(t, "a", subscriptExpr.GetExpression().GetIdentifierExpr().Identifier.Name)
     assert.Equal(t, 1, len(subscriptExpr.Arguments))
     assert.Equal(t, "b", subscriptExpr.Arguments[0].Value.GetIdentifierExpr().Identifier.Name)
 }
@@ -36,9 +36,9 @@ func TestSuffixExpressionVisitor_VisitExplicitMemberSuffix(t *testing.T) {
     explicitMemberExpr := expr.GetExplicitMemberExpr()
     assert.NotNil(t, explicitMemberExpr)
 
-    callee := explicitMemberExpr.Callee.GetExplicitMemberExpr()
+    callee := explicitMemberExpr.GetExpression().GetExplicitMemberExpr()
 
-    assert.Equal(t, "a", callee.Callee.GetIdentifierExpr().Identifier.Name)
+    assert.Equal(t, "a", callee.GetExpression().GetIdentifierExpr().Identifier.Name)
     assert.Equal(t, "b", callee.Member)
     assert.Equal(t, "c", explicitMemberExpr.Member)
 }

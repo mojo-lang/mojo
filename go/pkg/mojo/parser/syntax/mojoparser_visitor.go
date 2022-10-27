@@ -328,8 +328,8 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#stringOperatorLiteral.
 	VisitStringOperatorLiteral(ctx *StringOperatorLiteralContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#postfixLiteralOperator.
-	VisitPostfixLiteralOperator(ctx *PostfixLiteralOperatorContext) interface{}
+	// Visit a parse tree produced by MojoParser#suffixLiteralOperator.
+	VisitSuffixLiteralOperator(ctx *SuffixLiteralOperatorContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#prefixLiteralOperator.
 	VisitPrefixLiteralOperator(ctx *PrefixLiteralOperatorContext) interface{}

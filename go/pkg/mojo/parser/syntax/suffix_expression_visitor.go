@@ -10,21 +10,21 @@ type SuffixExpressionVisitor struct {
 func (e *SuffixExpressionVisitor) VisitSuffixExpression(ctx *SuffixExpressionContext) interface{} {
     if functionCall := ctx.FunctionCallSuffix(); functionCall != nil {
         if expr, ok := functionCall.Accept(e).(*lang.FunctionCallExpr); ok {
-            expr.Callee = e.PrimaryExpression
+            expr.SetCallee(e.PrimaryExpression)
             return lang.NewFunctionCallExpression(expr)
         }
     }
 
     if explicitMember := ctx.ExplicitMemberSuffix(); explicitMember != nil {
         if expr, ok := explicitMember.Accept(e).(*lang.ExplicitMemberExpr); ok {
-            expr.Callee = e.PrimaryExpression
+            expr.SetCallee(e.PrimaryExpression)
             return lang.NewExplicitMemberExpression(expr)
         }
     }
 
     if subscript := ctx.SubscriptSuffix(); subscript != nil {
         if expr, ok := subscript.Accept(e).(*lang.SubscriptExpr); ok {
-            expr.Callee = e.PrimaryExpression
+            expr.SetCallee(e.PrimaryExpression)
             return lang.NewSubscriptExpression(expr)
         }
     }

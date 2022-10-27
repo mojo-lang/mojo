@@ -435,7 +435,7 @@ func (v *BaseMojoParserVisitor) VisitStringOperatorLiteral(ctx *StringOperatorLi
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitPostfixLiteralOperator(ctx *PostfixLiteralOperatorContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitSuffixLiteralOperator(ctx *SuffixLiteralOperatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

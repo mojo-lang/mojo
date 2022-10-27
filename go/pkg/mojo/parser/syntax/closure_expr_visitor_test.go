@@ -16,5 +16,5 @@ func TestClosureExprVisitor_VisitClosureExpression(t *testing.T) {
     assert.Equal(t, 1, len(closure.Body.Statements))
 
     closureExpr := closure.Body.Statements[0].GetExpression().GetBinaryExpr()
-    assert.Equal(t, "+", closureExpr.Operator.Symbol)
+    assert.Equal(t, "+", closureExpr.GetOperator().Symbol)
 }

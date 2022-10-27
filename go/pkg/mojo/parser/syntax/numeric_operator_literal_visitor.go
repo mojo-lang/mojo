@@ -12,21 +12,23 @@ func NewNumericOperatorLiteralVisitor() *NumericOperatorLiteralVisitor {
 }
 
 func (s *NumericOperatorLiteralVisitor) VisitNumericOperatorLiteral(ctx *NumericOperatorLiteralContext) interface{} {
-    expr := &lang.NumericLiteralUnaryExpr{
+    expr := &lang.NumericSuffixLiteralExpr{
         StartPosition: GetPosition(ctx.GetStart()),
         EndPosition:   GetPosition(ctx.GetStop()),
     }
 
-    if operatorCtx := ctx.PostfixLiteralOperator(); operatorCtx != nil {
-        expr.Operator = &lang.Operator{
-            StartPosition: GetPosition(operatorCtx.GetStart()),
-            EndPosition:   GetPosition(operatorCtx.GetStop()),
-            Symbol:        operatorCtx.GetText(),
+    if operatorCtx := ctx.SuffixLiteralOperator(); operatorCtx != nil {
+        expr.Callee = &lang.NumericSuffixLiteralExpr_Operator{
+            Operator: &lang.Operator{
+                StartPosition: GetPosition(operatorCtx.GetStart()),
+                EndPosition:   GetPosition(operatorCtx.GetStop()),
+                Symbol:        operatorCtx.GetText(),
+            },
         }
         if literalCtx := ctx.NumericLiteral(); literalCtx != nil {
             if expression, ok := literalCtx.Accept(NewExpressionVisitor()).(*lang.Expression); ok {
                 expr.Argument = expression
-                return lang.NewNumericLiteralUnaryExpression(expr)
+                return lang.NewNumericSuffixLiteralExpression(expr)
             }
         }
     }

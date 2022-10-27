@@ -653,11 +653,11 @@ public interface MojoParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStringOperatorLiteral(MojoParser.StringOperatorLiteralContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MojoParser#postfixLiteralOperator}.
+	 * Visit a parse tree produced by {@link MojoParser#suffixLiteralOperator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPostfixLiteralOperator(MojoParser.PostfixLiteralOperatorContext ctx);
+	T visitSuffixLiteralOperator(MojoParser.SuffixLiteralOperatorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MojoParser#prefixLiteralOperator}.
 	 * @param ctx the parse tree
