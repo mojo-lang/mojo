@@ -80,6 +80,9 @@ antlr/protobuf2/.antlr
 antlr/protobuf2/gen/
 antlr/protobuf3/.antlr
 antlr/protobuf3/gen/
+antlr/sql/sqlite/.antlr
+antlr/sql/sqlite/gen/
+gen/
 
 # User-specific stuff
 .idea/**/workspace.xml
