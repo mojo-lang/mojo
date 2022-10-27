@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-//go:embed test_data/func_call_with_var_args.c
+//go:embed testdata/func_call_with_var_args.c
 var funcCallWithVarArgsFile string
 
 func TestParser_ParseString(t *testing.T) {

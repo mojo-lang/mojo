@@ -8,14 +8,14 @@ import (
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser/semantic/identifier"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser/syntax"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/test-data"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/testdata"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestEntityCompiler_CompilePackage(t *testing.T) {
 	plugins := plugin.NewPlugins("mpm", "syntax", "semantic", "compiler")
-	pkg, err := plugins.ParsePackagePath(context.Empty(), "mojo-entity", test_data.EntityCaseFiles)
+	pkg, err := plugins.ParsePackagePath(context.Empty(), "mojo-entity", testdata.EntityCaseFiles)
 
 	//Fixme
 	//graph.Builder{Builder: builder.Builder{Package: pkg}}.Build()

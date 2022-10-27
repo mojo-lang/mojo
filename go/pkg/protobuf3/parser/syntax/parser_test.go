@@ -2,12 +2,12 @@ package syntax
 
 import (
 	"github.com/alecthomas/assert"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf3/parser/syntax/test_data"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf3/parser/syntax/testdata"
 	"testing"
 )
 
 func TestParser_ParseString_AddressBook(t *testing.T) {
-	file, err := New(nil).ParseString(test_data.AddressBookProto)
+	file, err := New(nil).ParseString(testdata.AddressBookProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 
@@ -32,13 +32,13 @@ func TestParser_ParseString_AddressBook(t *testing.T) {
 }
 
 func TestParser_ParseString_Conformance(t *testing.T) {
-	file, err := New(nil).ParseString(test_data.ConformanceProto)
+	file, err := New(nil).ParseString(testdata.ConformanceProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }
 
 func TestParser_ParseString_Example(t *testing.T) {
-	file, err := New(nil).ParseString(test_data.ExampleProto)
+	file, err := New(nil).ParseString(testdata.ExampleProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 
@@ -58,13 +58,13 @@ func TestParser_ParseString_Example(t *testing.T) {
 }
 
 func TestParser_ParseString_HelloWorld(t *testing.T) {
-	file, err := New(nil).ParseString(test_data.HelloWorldProto)
+	file, err := New(nil).ParseString(testdata.HelloWorldProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }
 
 func TestParser_ParseString_HelloWorldReserved(t *testing.T) {
-	file, err := New(nil).ParseString(test_data.HelloWorldReservedProto)
+	file, err := New(nil).ParseString(testdata.HelloWorldReservedProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }

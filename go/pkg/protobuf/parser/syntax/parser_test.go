@@ -2,8 +2,8 @@ package syntax
 
 import (
 	"github.com/alecthomas/assert"
-	proto2 "github.com/mojo-lang/mojo/go/pkg/protobuf2/parser/syntax/test_data"
-	proto3 "github.com/mojo-lang/mojo/go/pkg/protobuf3/parser/syntax/test_data"
+	proto2 "github.com/mojo-lang/mojo/go/pkg/protobuf2/parser/syntax/testdata"
+	proto3 "github.com/mojo-lang/mojo/go/pkg/protobuf3/parser/syntax/testdata"
 	"testing"
 )
 
