@@ -1,9 +1,9 @@
 package util
 
 import (
-	"testing"
+    "testing"
 )
 
 func TestIsGeneratedFile(t *testing.T) {
-	//file, err := ioutil.TempFile("", "mojo.test-data.*")
+    //file, err := ioutil.TempFile("", "mojo.testdata.*")
 }

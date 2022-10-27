@@ -139,10 +139,10 @@ func TestEnglishNumber(t *testing.T) {
 		{23, "TwoThree"},
 	}
 
-	for _, test-data := range cases {
-		got := EnglishNumber(test-data.i)
-		if got != test-data.want {
-			t.Errorf("Got %v, want %v\n", got, test-data.want)
+	for _, testdata := range cases {
+		got := EnglishNumber(testdata.i)
+		if got != testdata.want {
+			t.Errorf("Got %v, want %v\n", got, testdata.want)
 		}
 	}
 }
@@ -159,10 +159,10 @@ func TestLowCamelName(t *testing.T) {
 		{"a", "a"},
 	}
 
-	for _, test-data := range cases {
-		got := LowCamelName(test-data.name)
-		if got != test-data.want {
-			t.Errorf("Got %v, want %v\n", got, test-data.want)
+	for _, testdata := range cases {
+		got := LowCamelName(testdata.name)
+		if got != testdata.want {
+			t.Errorf("Got %v, want %v\n", got, testdata.want)
 		}
 	}
 }

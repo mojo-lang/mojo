@@ -32,7 +32,7 @@ func init() {
 func TestTemplatePathToActual(t *testing.T) {
 	pathToWants := map[string]string{
 		"NAME-service/":                "package-service/",
-		"NAME-service/test-data.gotemplate": "package-service/test-data.go",
+		"NAME-service/testdata.gotemplate": "package-service/testdata.go",
 		"NAME-service/NAME-server":     "package-service/package-server",
 	}
 
