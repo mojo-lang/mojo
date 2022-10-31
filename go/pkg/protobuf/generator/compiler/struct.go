@@ -3,17 +3,19 @@ package compiler
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/db/go/pkg/mojo/db"
 	"google.golang.org/protobuf/runtime/protoimpl"
-	"strings"
 
 	"github.com/mojo-lang/core/go/pkg/mojo"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type Struct struct {
@@ -70,12 +72,12 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
 			}
 		} else {
 			for _, inherit := range decl.Type.Inherits {
-				//ctx.SetOption(inheritSourceFileKey, make(map[string]bool))
+				// ctx.SetOption(inheritSourceFileKey, make(map[string]bool))
 				if err := s.compileStructInherit(thisCtx, inherit, structDescriptor); err != nil {
-					//ctx.DeleteOption(inheritSourceFileKey)
+					// ctx.DeleteOption(inheritSourceFileKey)
 					return err
 				}
-				//ctx.DeleteOption(inheritSourceFileKey)
+				// ctx.DeleteOption(inheritSourceFileKey)
 			}
 
 			if err := s.compileStructFields(thisCtx, decl.Type.Fields, structDescriptor); err != nil {
@@ -115,7 +117,7 @@ func (s Struct) Compile(ctx context.Context, decl *lang.StructDecl, structDescri
 	return nil
 }
 
-//TODO 不在相同的package下的inherit不需要进行Boxed类型的处理
+// TODO 不在相同的package下的inherit不需要进行Boxed类型的处理
 func (s Struct) compileStructInherit(ctx context.Context, inherit *lang.NominalType, msgDescriptor *descriptor.Message) error {
 	decl := inherit.TypeDeclaration.GetStructDecl()
 	if decl == nil || decl.Type == nil {
@@ -137,12 +139,12 @@ func (s Struct) compileStructInherit(ctx context.Context, inherit *lang.NominalT
 	}
 
 	file := context.FileDescriptor(ctx)
-	//FIXME remove the inherit dependency file to protobuf file imports
-	//sourceFiles, ok := ctx.GetOption(inheritSourceFileKey).(map[string]bool)
-	//if !ok {
+	// FIXME remove the inherit dependency file to protobuf file imports
+	// sourceFiles, ok := ctx.GetOption(inheritSourceFileKey).(map[string]bool)
+	// if !ok {
 	//	sourceFiles = make(map[string]bool)
-	//}
-	//sourceFiles[unifyFileName(decl.SourceFileName)] = true
+	// }
+	// sourceFiles[unifyFileName(decl.SourceFileName)] = true
 
 	for _, dependency := range decl.ResolvedIdentifiers {
 		fileName := unifyFileName(dependency.SourceFileName)
@@ -176,7 +178,7 @@ func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDec
 				return errors.New(fmt.Sprintf("unexpect array type of %s", field.Type.Name))
 			}
 		case "Union":
-			///TODO GenericArguments == 1
+			// /TODO GenericArguments == 1
 			// TODO 如果number标号在Union类型上，则需要将该Union转换成message；如果不是则使用oneof
 			if len(field.Type.GenericArguments) > 0 {
 				if _, err := field.GetIntegerAttribute(core.NumberAttributeName); err == nil {

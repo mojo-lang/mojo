@@ -1,5 +1,5 @@
 package data
 
 type MessagingSubscription struct {
-    Topic string
+	Topic string
 }

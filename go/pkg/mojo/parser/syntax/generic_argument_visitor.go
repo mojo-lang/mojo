@@ -1,17 +1,17 @@
 package syntax
 
 type GenericArgumentVisitor struct {
-    *BaseMojoParserVisitor
+	*BaseMojoParserVisitor
 }
 
 func NewGenericArgumentVisitor() *GenericArgumentVisitor {
-    return &GenericArgumentVisitor{}
+	return &GenericArgumentVisitor{}
 }
 
 func (g *GenericArgumentVisitor) VisitGenericArgument(ctx *GenericArgumentContext) interface{} {
-    nominalType := GetType(ctx.Type_())
-    if nominalType != nil {
-        nominalType.Attributes = GetAttributes(ctx.Attributes())
-    }
-    return nominalType
+	nominalType := GetType(ctx.Type_())
+	if nominalType != nil {
+		nominalType.Attributes = GetAttributes(ctx.Attributes())
+	}
+	return nominalType
 }

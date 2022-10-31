@@ -1,54 +1,54 @@
 package data
 
 import (
-    "text/template"
+	"text/template"
 )
 
 // Service is passed to templates as the executing struct; its fields
 // and methods are used to modify the templates
 type Service struct {
-    Version     string
-    VersionDate string
+	Version     string
+	VersionDate string
 
-    // PackageName is the name of the package containing the service definition
-    PackageName     string
-    PackageFullName string
+	// PackageName is the name of the package containing the service definition
+	PackageName     string
+	PackageFullName string
 
-    CombinedAPI bool
+	CombinedAPI bool
 
-    ImportedMessages []*Message
-    ImportedEnums    []*Enum
-    Entities         []*Message
-    AllInterfaces    []*Interface
+	ImportedMessages []*Message
+	ImportedEnums    []*Enum
+	Entities         []*Message
+	AllInterfaces    []*Interface
 
-    // GRPC/Protobuf service, with all parameters and return values accessible
-    Interface *Interface
+	// GRPC/Protobuf service, with all parameters and return values accessible
+	Interface *Interface
 
-    FuncMap template.FuncMap
+	FuncMap template.FuncMap
 
-    Go         *GoService
-    Java       *JavaService
-    Extensions map[string]interface{}
+	Go         *GoService
+	Java       *JavaService
+	Extensions map[string]interface{}
 }
 
 type GoService struct {
-    PackageName string
+	PackageName string
 
-    // the service repository path
-    RepositoryPath string
+	// the service repository path
+	RepositoryPath string
 
-    ApiRepositoryPath string
+	ApiRepositoryPath string
 
-    // import path for .pb.go files containing service structs
-    ApiImportPath string
+	// import path for .pb.go files containing service structs
+	ApiImportPath string
 
-    ImportedTypePaths []string
+	ImportedTypePaths []string
 }
 
 type JavaService struct {
-    PackageName string
+	PackageName string
 }
 
 func (s *Service) HasImported() bool {
-    return s != nil && (len(s.ImportedMessages) > 0 || len(s.ImportedEnums) > 0)
+	return s != nil && (len(s.ImportedMessages) > 0 || len(s.ImportedEnums) > 0)
 }

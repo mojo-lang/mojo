@@ -2,10 +2,10 @@ module github.com/mojo-lang/mojo/go
 
 go 1.16
 
-//replace (
-//	github.com/mojo-lang/lang/go => ../../lang/go
-//	github.com/mojo-lang/db/go => ../../db/go
-//)
+replace (
+	github.com/mojo-lang/lang/go => ../../lang/go
+	github.com/mojo-lang/db/go => ../../db/go
+)
 
 require (
 	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20220911224424-aa1f1f12a846

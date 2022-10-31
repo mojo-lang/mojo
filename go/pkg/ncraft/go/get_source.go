@@ -1,54 +1,53 @@
 package _go
 
 import (
-    "bytes"
-    "fmt"
-    "reflect"
-    "runtime"
-    "strings"
-
-    "go/ast"
-    "go/parser"
-    "go/printer"
-    "go/token"
+	"bytes"
+	"fmt"
+	"go/ast"
+	"go/parser"
+	"go/printer"
+	"go/token"
+	"reflect"
+	"runtime"
+	"strings"
 )
 
 // FuncSourceCode returns a string representing the source code of the function
 // provided to it.
 func FuncSourceCode(val interface{}) (string, error) {
-    ptr := reflect.ValueOf(val).Pointer()
-    fpath, _ := runtime.FuncForPC(ptr).FileLine(ptr)
+	ptr := reflect.ValueOf(val).Pointer()
+	fpath, _ := runtime.FuncForPC(ptr).FileLine(ptr)
 
-    funcName := runtime.FuncForPC(ptr).Name()
-    parts := strings.Split(funcName, ".")
-    funcName = parts[len(parts)-1]
+	funcName := runtime.FuncForPC(ptr).Name()
+	parts := strings.Split(funcName, ".")
+	funcName = parts[len(parts)-1]
 
-    // Parse the go file into the ast
-    fset := token.NewFileSet()
-    fileAst, err := parser.ParseFile(fset, fpath, nil, parser.ParseComments)
-    if err != nil {
-        return "", fmt.Errorf("ERROR: go parser couldn't parse file '%v'\n", fpath)
-    }
+	// Parse the go file into the ast
+	fset := token.NewFileSet()
+	fileAst, err := parser.ParseFile(fset, fpath, nil, parser.ParseComments)
+	if err != nil {
+		return "", fmt.Errorf("ERROR: go parser couldn't parse file '%v'\n", fpath)
+	}
 
-    // Search ast for function declaration with name of function passed
-    var fAst *ast.FuncDecl
-    for _, decs := range fileAst.Decls {
-        switch decs.(type) {
-        case *ast.FuncDecl:
-            f := decs.(*ast.FuncDecl)
-            if f.Name.String() == funcName {
-                fAst = f
-            }
-        }
-    }
-    code := bytes.NewBuffer(nil)
-    err = printer.Fprint(code, fset, fAst)
+	// Search ast for function declaration with name of function passed
+	var fAst *ast.FuncDecl
+	for _, decs := range fileAst.Decls {
+		switch decs.(type) {
+		case *ast.FuncDecl:
+			f := decs.(*ast.FuncDecl)
+			if f.Name.String() == funcName {
+				fAst = f
+			}
+		}
+	}
+	code := bytes.NewBuffer(nil)
+	err = printer.Fprint(code, fset, fAst)
 
-    if err != nil {
-        return "", fmt.Errorf("couldn't print code for func '%v': %v\n", funcName, err)
-    }
+	if err != nil {
+		return "", fmt.Errorf("couldn't print code for func '%v': %v\n", funcName, err)
+	}
 
-    return code.String(), nil
+	return code.String(), nil
 }
 
 // AllFuncSourceCode returns the the source code for all the functions defined
@@ -56,41 +55,41 @@ func FuncSourceCode(val interface{}) (string, error) {
 // provided.
 func AllFuncSourceCode(val interface{}) (string, error) {
 
-    ptr := reflect.ValueOf(val).Pointer()
-    fpath, _ := runtime.FuncForPC(ptr).FileLine(ptr)
+	ptr := reflect.ValueOf(val).Pointer()
+	fpath, _ := runtime.FuncForPC(ptr).FileLine(ptr)
 
-    funcName := runtime.FuncForPC(ptr).Name()
-    parts := strings.Split(funcName, ".")
-    funcName = parts[len(parts)-1]
+	funcName := runtime.FuncForPC(ptr).Name()
+	parts := strings.Split(funcName, ".")
+	funcName = parts[len(parts)-1]
 
-    // Parse the go file into the ast
-    fset := token.NewFileSet()
-    fileAst, err := parser.ParseFile(fset, fpath, nil, parser.ParseComments)
-    if err != nil {
-        return "", fmt.Errorf("ERROR: go parser couldn't parse file '%v'\n", fpath)
-    }
+	// Parse the go file into the ast
+	fset := token.NewFileSet()
+	fileAst, err := parser.ParseFile(fset, fpath, nil, parser.ParseComments)
+	if err != nil {
+		return "", fmt.Errorf("ERROR: go parser couldn't parse file '%v'\n", fpath)
+	}
 
-    // Search ast for all function declarations
-    fncSlc := []*ast.FuncDecl{}
-    for _, decs := range fileAst.Decls {
-        switch decs.(type) {
-        case *ast.FuncDecl:
-            f := decs.(*ast.FuncDecl)
-            fncSlc = append(fncSlc, f)
-        }
-    }
+	// Search ast for all function declarations
+	fncSlc := []*ast.FuncDecl{}
+	for _, decs := range fileAst.Decls {
+		switch decs.(type) {
+		case *ast.FuncDecl:
+			f := decs.(*ast.FuncDecl)
+			fncSlc = append(fncSlc, f)
+		}
+	}
 
-    rv := ""
-    // Append source of each function to rv
-    for _, fnc := range fncSlc {
-        code := bytes.NewBuffer(nil)
-        err = printer.Fprint(code, fset, fnc)
+	rv := ""
+	// Append source of each function to rv
+	for _, fnc := range fncSlc {
+		code := bytes.NewBuffer(nil)
+		err = printer.Fprint(code, fset, fnc)
 
-        if err != nil {
-            return "", fmt.Errorf("couldn't print code for func '%v': %v\n", fnc.Name.String(), err)
-        }
-        rv += code.String() + "\n"
-    }
+		if err != nil {
+			return "", fmt.Errorf("couldn't print code for func '%v': %v\n", fnc.Name.String(), err)
+		}
+		rv += code.String() + "\n"
+	}
 
-    return rv, nil
+	return rv, nil
 }

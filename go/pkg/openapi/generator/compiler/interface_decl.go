@@ -2,15 +2,17 @@ package compiler
 
 import (
 	"bytes"
+	"strings"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/document/go/pkg/markdown"
 	"github.com/mojo-lang/http/go/pkg/mojo/http"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+
 	langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
-	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-	"strings"
 )
 
 var methods = []string{"http.get", "http.post", "http.put", "http.delete", "http.patch", "http.options", "http.head", "http.trace"}
@@ -209,7 +211,7 @@ func compileParameter(ctx context.Context, decl *lang.ValueDecl, method *lang.Fu
 		parameter.Name = unwrappedField + "_" + decl.Name
 		if pathParams[fullName] {
 			parameter.In = openapi.Parameter_LOCATION_PATH
-			//TODO the required param should get from ValueDecl from Context
+			// TODO the required param should get from ValueDecl from Context
 			parameter.Required = true
 		} else {
 			parameter.In = openapi.Parameter_LOCATION_QUERY

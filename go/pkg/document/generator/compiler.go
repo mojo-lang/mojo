@@ -1,8 +1,9 @@
 package generator
 
 import (
-	compiler2 "github.com/mojo-lang/mojo/go/pkg/document/generator/compiler"
 	"strings"
+
+	compiler2 "github.com/mojo-lang/mojo/go/pkg/document/generator/compiler"
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
@@ -45,7 +46,7 @@ func (c *Compiler) Compile() (Documents, error) {
 	}
 	for name, schema := range c.OpenAPIs.Components.Schemas {
 		if schema == nil {
-			//FIXME make sure scheme here should NOT be nil
+			// FIXME make sure scheme here should NOT be nil
 			continue
 		}
 

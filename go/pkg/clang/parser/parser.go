@@ -32,7 +32,7 @@ func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, 
 		Name: fileName, // tu.File(fileName).Name()
 	}
 
-	//tu.FindIncludesInFile(tu.File(fileName))
+	// tu.FindIncludesInFile(tu.File(fileName))
 
 	cursor := tu.TranslationUnitCursor()
 	cursor.Visit(func(cursor, parent clang.Cursor) clang.ChildVisitResult {
@@ -51,7 +51,7 @@ func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, 
 		case clang.Cursor_ClassDecl, clang.Cursor_EnumDecl, clang.Cursor_StructDecl, clang.Cursor_Namespace, clang.Cursor_UnionDecl:
 			return clang.ChildVisit_Recurse
 		case clang.Cursor_InclusionDirective:
-			//FIXME currently the include directive can't hit
+			// FIXME currently the include directive can't hit
 		case clang.Cursor_FunctionDecl:
 			decl := &lang.FunctionDecl{
 				Name:      cursor.Spelling(),
@@ -93,9 +93,9 @@ func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, 
 	return sourceFile, nil
 }
 
-//func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
+// func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
 //    if bytes, err := fs.ReadFile(fileSys, fileName); err != nil {
 //        return nil, err
 //    } else {
 //    }
-//}
+// }

@@ -3,12 +3,13 @@ package generator
 import (
 	"bytes"
 	"fmt"
-	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 	"log"
 	"os"
 	path2 "path"
 	"sort"
 	"strings"
+
+	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo"
@@ -172,16 +173,16 @@ func (g *Generator) PrintComments(path string) bool {
 
 // makeComments generates the comment string for the field, no "\n" at the end
 func (g *Generator) makeComments(path string) (string, bool) {
-	//loc, ok := g.file.Comments[path]
-	//if !ok {
-	//return "", false
-	//}
+	// loc, ok := g.file.Comments[path]
+	// if !ok {
+	// return "", false
+	// }
 	w := new(bytes.Buffer)
-	//nl := ""
-	//for _, line := range strings.Split(strings.TrimSuffix(loc.GetLeadingComments(), "\n"), "\n") {
+	// nl := ""
+	// for _, line := range strings.Split(strings.TrimSuffix(loc.GetLeadingComments(), "\n"), "\n") {
 	//    fmt.Fprintf(w, "%s//%s", nl, line)
 	//    nl = "\n"
-	//}
+	// }
 	return w.String(), true
 }
 
@@ -334,7 +335,7 @@ func (g *Generator) generate(file *descriptor.File) bool {
 	}
 
 	// Run the plugins before the imports so we know which imports are necessary.
-	//g.runPlugins(file)
+	// g.runPlugins(file)
 
 	// Generate header and imports last, though they appear first in the output.
 	rem := g.Buffer
@@ -529,16 +530,16 @@ func (g *Generator) generateMessage(message *descriptor.Message) {
 			g.S(";\n")
 		}
 
-		//fieldDeprecated := ""
-		//if field.GetOptions().IsDeprecated() {
+		// fieldDeprecated := ""
+		// if field.GetOptions().IsDeprecated() {
 		//	fieldDeprecated = deprecationComment
-		//}
+		// }
 
-		//fieldFullPath := fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i)
-		//c, ok := g.makeComments(fieldFullPath)
-		//if ok {
+		// fieldFullPath := fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i)
+		// c, ok := g.makeComments(fieldFullPath)
+		// if ok {
 		//	c += "\n"
-		//}
+		// }
 	}
 
 	printedOneofs := make(map[string]bool)

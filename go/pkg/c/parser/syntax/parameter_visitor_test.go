@@ -1,8 +1,9 @@
 package syntax
 
 import (
-	"github.com/alecthomas/assert"
 	"testing"
+
+	"github.com/alecthomas/assert"
 )
 
 func TestParser_VisitParameterTypeList1(t *testing.T) {
@@ -45,7 +46,7 @@ func TestParser_VisitParameterTypeList3(t *testing.T) {
 	assert.Equal(t, 3, len(decl.GetSignature().GetParameters()))
 	assert.Equal(t, "param1", decl.GetSignature().GetParameters()[0].GetName())
 	assert.Equal(t, "int", decl.GetSignature().GetParameters()[0].GetType().GetName())
-	//assert.Equal(t, "param2", decl.GetSignature().GetParameters()[1].GetName())
+	// assert.Equal(t, "param2", decl.GetSignature().GetParameters()[1].GetName())
 	assert.Equal(t, "...", decl.GetSignature().GetParameters()[2].GetName())
 }
 

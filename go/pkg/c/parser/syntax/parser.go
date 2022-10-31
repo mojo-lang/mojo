@@ -2,13 +2,15 @@ package syntax
 
 import (
 	"context"
+	"io/fs"
+	"path"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"io/fs"
-	"path"
 )
 
 type Parser struct {
@@ -62,7 +64,7 @@ func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (
 	}
 }
 
-//func (p Parser) ParsePackage(ctx context.Context, pkg *lang.Package) (err error) {
+// func (p Parser) ParsePackage(ctx context.Context, pkg *lang.Package) (err error) {
 //    if util.IsPackageProcessed(pkg, pluginName) {
 //        return nil
 //    }
@@ -87,9 +89,9 @@ func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (
 //    _, err = p.ParsePackagePath(parser.WithDeclaredPackage(ctx, pkg), pkgPath, files)
 //    util.SetPackageProcessed(pkg, pluginName)
 //    return
-//}
+// }
 
-//func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs.FS) (*lang.Package, error) {
+// func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs.FS) (*lang.Package, error) {
 //    currentPkg := parser.ContextDeclaredPackage(ctx)
 //    currentPkgName := ""
 //    if currentPkg != nil {
@@ -155,4 +157,4 @@ func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (
 //
 //    util.SetPackageProcessed(currentPkg, pluginName)
 //    return currentPkg, nil
-//}
+// }

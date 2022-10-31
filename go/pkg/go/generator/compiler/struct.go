@@ -4,11 +4,12 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/pkg/errors"
+
 	"github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
-	"github.com/pkg/errors"
 )
 
 type Struct struct {
@@ -138,7 +139,7 @@ func (s *Struct) compileStructField(ctx context.Context, field *lang.ValueDecl) 
 			return errors.Errorf("unexpect array type of %s", field.Type.Name)
 		}
 	case core.UnionTypeName:
-		///TODO GenericArguments == 1
+		// /TODO GenericArguments == 1
 		if len(field.Type.GenericArguments) > 0 {
 			for _, argument := range field.Type.GenericArguments {
 				_, err := s.compileNominalType(thisCtx, argument)
@@ -162,7 +163,7 @@ func (s *Struct) compileStructField(ctx context.Context, field *lang.ValueDecl) 
 	default:
 	}
 
-	//alias, err := lang.GetStringAttribute(field.Type.Attributes, "alias")
+	// alias, err := lang.GetStringAttribute(field.Type.Attributes, "alias")
 
 	return nil
 }
@@ -216,7 +217,7 @@ func (s *Struct) compileNominalType(ctx context.Context, t *lang.NominalType) (s
 
 		setAttributes(decl)
 
-		//TODO set to be boxed type
+		// TODO set to be boxed type
 		err := s.CompileStruct(ctx, decl)
 		if err != nil {
 			return "", errors.Wrapf(err, "failed to compile the arry field in %s", decl.Name)

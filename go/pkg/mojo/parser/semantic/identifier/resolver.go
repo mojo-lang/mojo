@@ -3,9 +3,11 @@ package identifier
 import (
 	"errors"
 	"fmt"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/util"
@@ -87,11 +89,11 @@ func (p *Resolver) ParserSourceFile(ctx context.Context, file *lang.SourceFile) 
 		file.UnresolvedIdentifiers = unresolveds
 
 		// push to parent
-		//switch value := ctx.CurrentValue().(type) {
-		//case *lang.Package:
+		// switch value := ctx.CurrentValue().(type) {
+		// case *lang.Package:
 		//	value.ResolvedIdentifiers = append(value.ResolvedIdentifiers, resolveds...)
 		//	value.UnresolvedIdentifiers = append(value.UnresolvedIdentifiers, unresolveds...)
-		//}
+		// }
 	}()
 
 	for _, statement := range file.Statements {
@@ -278,7 +280,7 @@ func (p *Resolver) ParseInterface(ctx context.Context, decl *lang.InterfaceDecl)
 		unresolveds = append(unresolveds, urs...)
 	}
 
-	//for _, aliasDecl := range decl.TypeAliasDecls {
+	// for _, aliasDecl := range decl.TypeAliasDecls {
 	//	if err := resolveNominalType(thisCtx, aliasDecl.Type); err != nil {
 	//		return err
 	//	}
@@ -288,7 +290,7 @@ func (p *Resolver) ParseInterface(ctx context.Context, decl *lang.InterfaceDecl)
 	//			return err
 	//		}
 	//	}
-	//}
+	// }
 
 	return nil
 }

@@ -1,14 +1,15 @@
 package scaffolding
 
 import (
-    "github.com/mojo-lang/mojo/go/pkg/cmd/create/scaffolding/types"
-    "strings"
+	"strings"
+
+	"github.com/mojo-lang/mojo/go/pkg/cmd/create/scaffolding/types"
 )
 
 type Data struct {
-    Package *types.MojoPackage
+	Package *types.MojoPackage
 }
 
 func (d *Data) IsMojoPackage() bool {
-    return d != nil && strings.HasPrefix(d.Package.FullName, "mojo.")
+	return d != nil && strings.HasPrefix(d.Package.FullName, "mojo.")
 }

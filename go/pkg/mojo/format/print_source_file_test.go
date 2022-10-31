@@ -1,15 +1,17 @@
 package format
 
 import (
-    "bytes"
-    "github.com/mojo-lang/mojo/go/pkg/mojo/context"
-    "github.com/mojo-lang/mojo/go/pkg/mojo/parser/syntax"
-    "github.com/stretchr/testify/assert"
-    "testing"
+	"bytes"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/parser/syntax"
 )
 
 func TestPrinter_PrintSourceFile(t *testing.T) {
-    const file = `
+	const file = `
 // Copyright 2021 Mojo-lang.org
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +35,7 @@ type ApplyExpr : Expr {
 }
 
 `
-    const expect = `// Copyright 2021 Mojo-lang.org
+	const expect = `// Copyright 2021 Mojo-lang.org
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,11 +57,11 @@ type ApplyExpr: Expr {
     callee: Expression @10
 }`
 
-    parser := &syntax.Parser{}
-    sourceFile, err := parser.ParseString(file)
-    assert.NoError(t, err)
+	parser := &syntax.Parser{}
+	sourceFile, err := parser.ParseString(file)
+	assert.NoError(t, err)
 
-    buffer := bytes.NewBuffer(nil)
-    NewPrinter(Config{}, buffer).PrintSourceFile(context.Empty(), sourceFile)
-    assert.Equal(t, expect, buffer.String())
+	buffer := bytes.NewBuffer(nil)
+	NewPrinter(Config{}, buffer).PrintSourceFile(context.Empty(), sourceFile)
+	assert.Equal(t, expect, buffer.String())
 }

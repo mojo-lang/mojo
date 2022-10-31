@@ -1,21 +1,21 @@
 package data
 
 import (
-    "strconv"
-    "strings"
+	"strconv"
+	"strings"
 )
 
 var DigitEnglish = map[rune]string{
-    '0': "zero",
-    '1': "one",
-    '2': "two",
-    '3': "three",
-    '4': "four",
-    '5': "five",
-    '6': "six",
-    '7': "seven",
-    '8': "eight",
-    '9': "nine",
+	'0': "zero",
+	'1': "one",
+	'2': "two",
+	'3': "three",
+	'4': "four",
+	'5': "five",
+	'6': "six",
+	'7': "seven",
+	'8': "eight",
+	'9': "nine",
 }
 
 // EnglishNumber takes an integer and returns the english words that represents
@@ -25,12 +25,12 @@ var DigitEnglish = map[rune]string{
 //     10 -> "OneZero"
 //     48 -> "FourEight"
 func EnglishNumber(i int) string {
-    n := strconv.Itoa(i)
-    rv := ""
-    for _, c := range n {
-        if e, ok := DigitEnglish[rune(c)]; ok {
-            rv += strings.Title(e)
-        }
-    }
-    return rv
+	n := strconv.Itoa(i)
+	rv := ""
+	for _, c := range n {
+		if e, ok := DigitEnglish[rune(c)]; ok {
+			rv += strings.Title(e)
+		}
+	}
+	return rv
 }

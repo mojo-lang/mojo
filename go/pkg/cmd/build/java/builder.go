@@ -2,17 +2,19 @@ package java
 
 import (
 	"errors"
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
-	"github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
-	"github.com/mojo-lang/mojo/go/pkg/util"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
-	"github.com/otiai10/copy"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
+
+	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"github.com/otiai10/copy"
+
+	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
+	"github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 type Builder struct {
@@ -53,7 +55,7 @@ func (b Builder) protocJava() error {
 
 	cmd.Dir = path.Join(b.GetAbsolutePath(), "protobuf")
 
-	//cmd.Args = append(cmd.Args, "--go_out=.")
+	// cmd.Args = append(cmd.Args, "--go_out=.")
 	cmd.Args = append(cmd.Args, "--java_out=.")
 	for _, file := range b.Files {
 		fileCmd := &exec.Cmd{

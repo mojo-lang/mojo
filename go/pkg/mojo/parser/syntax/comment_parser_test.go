@@ -1,24 +1,25 @@
 package syntax
 
 import (
-    "github.com/antlr/antlr4/runtime/Go/antlr/v4"
-    "github.com/mojo-lang/lang/go/pkg/mojo/lang"
-    "testing"
+	"testing"
 
-    "github.com/stretchr/testify/assert"
+	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func getComments(str string) []*lang.Comment {
-    stream := antlr.NewCommonTokenStream(NewMojoLexer(antlr.NewInputStream(str)), 0)
-    parser := NewMojoParser(stream)
-    parser.BuildParseTrees = true
-    parser.MojoFile()
+	stream := antlr.NewCommonTokenStream(NewMojoLexer(antlr.NewInputStream(str)), 0)
+	parser := NewMojoParser(stream)
+	parser.BuildParseTrees = true
+	parser.MojoFile()
 
-    return CommentParser{}.Parse(stream)
+	return CommentParser{}.Parse(stream)
 }
 
 func TestCommentParser_Parse(t *testing.T) {
-    const typeDecl = `
+	const typeDecl = `
 // comment1
 // comment2
 
@@ -34,12 +35,12 @@ type Mailbox {
 	following: Bool // following comment
 }
 `
-    comments := getComments(typeDecl)
-    assert.NotEmpty(t, comments)
+	comments := getComments(typeDecl)
+	assert.NotEmpty(t, comments)
 }
 
 func TestCommentParser_Parse2(t *testing.T) {
-    const typeDecl = `
+	const typeDecl = `
 // Copyright 2021 Mojo-lang.org
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,7 +63,7 @@ type Mailbox {
 }
 `
 
-    comments := getComments(typeDecl)
-    assert.NotEmpty(t, comments)
-    assert.Equal(t, 2, len(comments))
+	comments := getComments(typeDecl)
+	assert.NotEmpty(t, comments)
+	assert.Equal(t, 2, len(comments))
 }

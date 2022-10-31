@@ -3,18 +3,20 @@ package mpm
 import (
 	"errors"
 	"fmt"
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
-	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 	"io/fs"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
+	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 const pluginName = "mpm.dependency-parser"
@@ -44,8 +46,8 @@ func NewDependencyParser(options core.Options) *DependencyParser {
 	}
 }
 
-//ParseFile
-//TODO implement the imports
+// ParseFile
+// TODO implement the imports
 func (p *DependencyParser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
 	return nil, nil
 }

@@ -3,6 +3,7 @@ package precompiler
 import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
@@ -22,6 +23,6 @@ func CompileNominalType(ctx context.Context, t *lang.NominalType) (*lang.StructD
 	return nil, nil
 }
 
-//func CompileInherits(ctx context.Context, inherits ...*lang.NominalType) (*lang.StructDecl, error) {
+// func CompileInherits(ctx context.Context, inherits ...*lang.NominalType) (*lang.StructDecl, error) {
 //
-//}
+// }

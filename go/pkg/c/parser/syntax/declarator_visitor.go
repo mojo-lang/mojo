@@ -39,11 +39,11 @@ func (v *DeclaratorVisitor) VisitDeclarator(ctx *DeclaratorContext) interface{} 
 		return dd.Accept(v)
 	}
 
-	//if pointer := ctx.Pointer(); pointer != nil {
+	// if pointer := ctx.Pointer(); pointer != nil {
 	//    if attributes, ok := pointer.Accept(v).([]*lang.Attribute); ok {
 	//
 	//    }
-	//}
+	// }
 	return nil
 }
 

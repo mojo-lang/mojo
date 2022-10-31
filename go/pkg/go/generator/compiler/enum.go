@@ -1,11 +1,13 @@
 package compiler
 
 import (
-	data2 "github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	"strings"
+
+	data2 "github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
@@ -36,9 +38,9 @@ func (e *Enum) CompileEnum(ctx context.Context, decl *lang.EnumDecl) error {
 	enum.CaseStyle, _ = lang.GetStringAttribute(decl.Attributes, core.CaseStyleAttributeName)
 
 	for i, value := range decl.Type.Enumerators {
-		//if value.Name == "unspecified" {
+		// if value.Name == "unspecified" {
 		//    continue
-		//}
+		// }
 
 		item := data2.EnumItem{
 			RawValue: value.Name,

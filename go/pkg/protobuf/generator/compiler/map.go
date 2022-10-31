@@ -3,12 +3,14 @@ package compiler
 import (
 	"errors"
 	"fmt"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type Map struct {
@@ -75,8 +77,8 @@ func (p *Map) Compile(ctx context.Context, t *lang.NominalType) (string, string,
 	err := Struct{}.Compile(ctx, s, msgDescriptor)
 	if err != nil {
 		return "", "", errors.New(fmt.Sprintf("failed to compile the map field entry in %s.%s: %s",
-			"", //ctx.Message.Name,
-			"", //ctx.FieldName,
+			"", // ctx.Message.Name,
+			"", // ctx.FieldName,
 			err.Error()))
 	}
 

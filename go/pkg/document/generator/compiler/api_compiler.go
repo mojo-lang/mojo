@@ -1,12 +1,14 @@
 package compiler
 
 import (
+	"net/http"
+
 	"github.com/mojo-lang/document/go/pkg/markdown"
 	"github.com/mojo-lang/document/go/pkg/mojo/document"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-	"net/http"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type ApiCompiler struct {
@@ -149,16 +151,16 @@ func (a *ApiCompiler) compilePathItem(ctx context.Context, path string, item *op
 	return doc, nil
 }
 
-//## {{.Name}}
+// ## {{.Name}}
 //
-//{{.Description}}
+// {{.Description}}
 //
 //
-//### 请求路径
+// ### 请求路径
 //
-//```http
-//{{.HttpMethod}} {{.HttpPath}}
-//```
+// ```http
+// {{.HttpMethod}} {{.HttpPath}}
+// ```
 func (a *ApiCompiler) compileMethod(ctx context.Context, path string, method string, operation *openapi.Operation) (*document.Document, error) {
 	if operation == nil {
 		return nil, nil

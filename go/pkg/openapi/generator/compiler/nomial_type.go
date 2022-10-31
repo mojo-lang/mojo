@@ -4,8 +4,9 @@ import (
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 var schemaCompilers []SchemaCompiler
@@ -108,8 +109,8 @@ func compileNominalType(ctx context.Context, nominalType *lang.NominalType) (*op
 	case core.BytesTypeFullName:
 		schema.Type = openapi.Schema_TYPE_STRING
 		schema.Format = core.BytesTypeName
-		//schema.Format = core.BytesTypeName
-		//schema.Description = &openapi.CachedDocument{Cache: "the format is: `b64.{base64 encoded bytes}`"}
+		// schema.Format = core.BytesTypeName
+		// schema.Description = &openapi.CachedDocument{Cache: "the format is: `b64.{base64 encoded bytes}`"}
 	case core.ArrayTypeFullName:
 		s, err := compileNominalType(ctx, nominalType.GenericArguments[0])
 		if err != nil {

@@ -3,9 +3,10 @@ package compiler
 import (
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
 type Interface struct {
@@ -15,16 +16,16 @@ func (i Interface) Compile(ctx context.Context, decl *lang.InterfaceDecl, descri
 	thisCtx := context.WithDescriptor(context.WithType(ctx, decl), descriptor)
 	descriptor.SetName(decl.Name)
 
-	//if i.Document != nil {
+	// if i.Document != nil {
 	//	for _, l := range i.Document.Lines {
 	//		service.Document = append(service.Document, l.Line)
 	//	}
-	//}
+	// }
 
 	var methods []*lang.FunctionDecl
-	//if ms := decl.GetInheritMethods(); len(ms) > 0 {
+	// if ms := decl.GetInheritMethods(); len(ms) > 0 {
 	//    methods = append(methods, ms...)
-	//}
+	// }
 	if decl.Type != nil && len(decl.Type.Methods) > 0 {
 		methods = append(methods, decl.Type.Methods...)
 	}

@@ -2,14 +2,16 @@ package compiler
 
 import (
 	"fmt"
+	"sort"
+	"strings"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/document/go/pkg/mojo/document"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-	"sort"
-	"strings"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type SchemaCompiler struct {
@@ -32,7 +34,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 
 	if schema.Type == openapi.Schema_TYPE_OBJECT || len(schema.AllOf) > 0 {
 		if schema.AdditionalProperties != nil {
-			//FIXME for the map type
+			// FIXME for the map type
 			return doc, nil
 		}
 
@@ -65,7 +67,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 		}
 		row := &document.Table_Row{}
 
-		//row.Vals = append(row.Vals, document.NewTextTableCell(""))
+		// row.Vals = append(row.Vals, document.NewTextTableCell(""))
 
 		typeName := schema.GetTypeName(s.Components.Schemas)
 		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))

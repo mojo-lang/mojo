@@ -1,7 +1,7 @@
 package templates
 
-//const HandlerMethods = `
-//{{ with $te := .}}
+// const HandlerMethods = `
+// {{ with $te := .}}
 //		{{range $i := .Methods}}
 //		// {{.Name}} implements Interface.
 //		func (s *{{ToLowerCamel $te.InterfaceName}}Interface) {{ToCamel .Name}}(ctx context.Context, in *{{GoPackageName $i.Request.Name}}.{{GoName .Request.Name}}) (*{{GoPackageName $i.Response.Name}}.{{GoName .Response.Name}}, error){
@@ -14,8 +14,8 @@ package templates
 //			return &resp, nil
 //		}
 //		{{end}}
-//{{- end}}
-//`
+// {{- end}}
+// `
 
 const Handlers = `
 package handlers

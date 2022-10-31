@@ -4,17 +4,19 @@ package handlers
 
 import (
 	"bytes"
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
-	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
-	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers/templates"
-	"github.com/mojo-lang/mojo/go/pkg/ncraft/render"
-	"github.com/mojo-lang/mojo/go/pkg/util"
-	"github.com/pkg/errors"
 	"go/ast"
 	"go/parser"
 	"go/printer"
 	"go/token"
 	"io"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/pkg/errors"
+
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers/templates"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/render"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 // NewInterface is an exported func that creates a new service
@@ -50,7 +52,7 @@ func GetHandlersTemplate() string {
 // New should be passed the previous version of the server handler to parse.
 func New(svc *data.Interface, prev io.Reader) (render.Renderer, error) {
 	var h handler
-	//logs.WithField("Interface Methods", len(svc.Methods)).Debug("Handler being created")
+	// logs.WithField("Interface Methods", len(svc.Methods)).Debug("Handler being created")
 	h.mMap = newMethodMap(svc.Methods)
 	h.service = svc
 
@@ -103,12 +105,12 @@ func (h *handler) Render(alias string, data *data.Service) (io.Reader, error) {
 
 	// Remove exported methods not defined in service definition
 	// and remove methods defined in the previous file from methodMap
-	//log.WithField("Interface Methods", len(h.mMap)).Debug("Before prune")
+	// log.WithField("Interface Methods", len(h.mMap)).Debug("Before prune")
 	// Lowercase the service name before pruning because the templates all
 	// lowercase the service name when generating code to ensure Identifiers
 	// incorporating the service name remain unexported.
 	h.ast.Decls = h.mMap.pruneDecls(h.ast.Decls, strcase.ToLowerCamel(data.Interface.Name))
-	//log.WithField("Interface Methods", len(h.mMap)).Debug("After prune")
+	// log.WithField("Interface Methods", len(h.mMap)).Debug("After prune")
 
 	// create a new handlerData, and add all methods not defined in the previous file
 	ex := handlerData{
@@ -121,7 +123,7 @@ func (h *handler) Render(alias string, data *data.Service) (io.Reader, error) {
 	}
 
 	for _, v := range h.mMap {
-		//log.WithField("Method", k).
+		// log.WithField("Method", k).
 		//	Info("Generating handler from rpc definition")
 		ex.Methods = append(ex.Methods, v)
 	}
@@ -133,7 +135,7 @@ func (h *handler) Render(alias string, data *data.Service) (io.Reader, error) {
 	}
 
 	// render the server for all methods not already defined
-	//FIXME 使用ex构造一个data
+	// FIXME 使用ex构造一个data
 	newCode, err := applyServerMethsTmpl(data)
 
 	if err != nil {
@@ -177,7 +179,7 @@ func (m methodMap) pruneDecls(decls []ast.Decl, svcName string) []ast.Decl {
 			name := x.Name.Name
 			// Special case NewInterface and ignore unexported
 			if name == ignoredFunc || !ast.IsExported(name) {
-				//log.WithField("Func", name).
+				// log.WithField("Func", name).
 				//	Debug("Ignoring")
 				newDecls = append(newDecls, x)
 				continue
@@ -201,7 +203,7 @@ func (m methodMap) pruneDecls(decls []ast.Decl, svcName string) []ast.Decl {
 // func ProtoMethod(ctx context.Context, *pb.Old) ...-> func ProtoMethod(ctx context.Context, *pb.(m.Request.Name))...
 func updateParams(f *ast.FuncDecl, m *data.Method) {
 	if f.Type.Params.NumFields() != 2 {
-		//log.WithField("Function", f.Name.Name).
+		// log.WithField("Function", f.Name.Name).
 		//	Warn("Function params signature should be func NAME(ctx context.Context, in *pb.TYPE), cannot fix")
 		return
 	}
@@ -212,7 +214,7 @@ func updateParams(f *ast.FuncDecl, m *data.Method) {
 // func ProtoMethod(...) (*pb.Old, error) ->  func ProtoMethod(...) (*pb.(m.Response.Name), error)
 func updateResults(f *ast.FuncDecl, m *data.Method) {
 	if f.Type.Results.NumFields() != 2 {
-		//log.WithField("Function", f.Name.Name).
+		// log.WithField("Function", f.Name.Name).
 		//	Warn("Function results signature should be (*pb.TYPE, error), cannot fix")
 		return
 	}
@@ -227,7 +229,7 @@ func updatePBFieldType(t ast.Expr, newType string) {
 	}
 	// pb.TYPE -> TYPE
 	if sel, _ := t.(*ast.SelectorExpr); sel != nil {
-		//pb.SOMETYPE -> pb.newType
+		// pb.SOMETYPE -> pb.newType
 		sel.Sel.Name = newType
 	}
 }
@@ -237,26 +239,26 @@ func updatePBFieldType(t ast.Expr, newType string) {
 func isValidFunc(f *ast.FuncDecl, m methodMap, svcName string) bool {
 	name := f.Name.String()
 	if !ast.IsExported(name) {
-		//log.WithField("Func", name).
+		// log.WithField("Func", name).
 		//	Debug("Unexported function; ignoring")
 		return true
 	}
 
 	v := m[strcase.ToSnake(name)]
 	if v == nil {
-		//log.WithField("Method", name).
+		// log.WithField("Method", name).
 		//	Info("Method does not exist in service definition as an rpc; removing")
 		return false
 	}
 
 	rName := recvTypeToString(f.Recv)
 	if rName != svcName {
-		//log.WithField("Func", name).WithField("Receiver", rName).
+		// log.WithField("Func", name).WithField("Receiver", rName).
 		//	Info("Func is exported with improper receiver; removing")
 		return false
 	}
 
-	//log.WithField("Func", name).
+	// log.WithField("Func", name).
 	//	Debug("Method already exists in service definition; ignoring")
 
 	return true
@@ -268,7 +270,7 @@ func isValidFunc(f *ast.FuncDecl, m methodMap, svcName string) bool {
 func recvTypeToString(recv *ast.FieldList) string {
 	if recv == nil ||
 		recv.List[0].Type == nil {
-		//log.Debug("Function has no reciever")
+		// log.Debug("Function has no reciever")
 		return ""
 	}
 
@@ -307,7 +309,7 @@ func exprString(e ast.Expr) string {
 }
 
 func applyServerTmpl(service *data.Service) (io.Reader, error) {
-	//logs.Debug("Rendering handler for the first time")
+	// logs.Debug("Rendering handler for the first time")
 	return util.ApplyTemplate("ServerTmpl", GetHandlersTemplate(), service, service.FuncMap)
 }
 

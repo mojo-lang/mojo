@@ -92,7 +92,7 @@ func (i Injector) parseFile(fileName string, content []byte) (areas []Area, err 
 		}
 	}
 
-	//logs.Infof("parsed file %s, number of fields to injection custom tags: %d", fileName, len(areas))
+	// logs.Infof("parsed file %s, number of fields to injection custom tags: %d", fileName, len(areas))
 	return
 }
 
@@ -102,7 +102,7 @@ func injectFile(input []byte, areas []Area) []byte {
 	// injection custom tags from tail of file first to preserve order
 	for j := range areas {
 		area := areas[len(areas)-j-1]
-		//logs.Debugf("injection custom tag %q to expression %q", area.InjectTag, string(input[area.Start-1:area.End-1]))
+		// logs.Debugf("injection custom tag %q to expression %q", area.InjectTag, string(input[area.Start-1:area.End-1]))
 		input = injectArea(input, area)
 	}
 

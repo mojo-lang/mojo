@@ -5,15 +5,16 @@
 package client
 
 import (
-    "bytes"
-    "fmt"
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/data"
-    "html/template"
-    "strings"
-    "unicode"
+	"bytes"
+	"fmt"
+	"html/template"
+	"strings"
+	"unicode"
 
-    "github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
-    "github.com/pkg/errors"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/pkg/errors"
 )
 
 // A collection of the necessary information for generating basic business
@@ -27,50 +28,50 @@ import (
 // message) then the developer is going to have to write a handler for that
 // themselves.
 type ClientArgument struct {
-    // Name contains the name of the arg as it appeared in the original
-    // protobuf definition.
-    Name string
+	// Name contains the name of the arg as it appeared in the original
+	// protobuf definition.
+	Name string
 
-    // FlagName is the name of the command line flag to be passed to set this
-    // argument.
-    FlagName string
-    // FlagArg is the name of the Go variable that will hold the result of
-    // parsing the command line flag.
-    FlagArg string
-    // FlagType is the the type provided to the flag library and determines the
-    // Go type of the variable named FlagArg.
-    FlagType string
-    // FlagConvertFunc is the code for invoking the flag library to parse the
-    // command line parameter named FlagName and store it in the Go variable
-    // FlagArg.
-    FlagConvertFunc string
+	// FlagName is the name of the command line flag to be passed to set this
+	// argument.
+	FlagName string
+	// FlagArg is the name of the Go variable that will hold the result of
+	// parsing the command line flag.
+	FlagArg string
+	// FlagType is the the type provided to the flag library and determines the
+	// Go type of the variable named FlagArg.
+	FlagType string
+	// FlagConvertFunc is the code for invoking the flag library to parse the
+	// command line parameter named FlagName and store it in the Go variable
+	// FlagArg.
+	FlagConvertFunc string
 
-    // GoArg is the Go variable that is of the same type as the corresponding
-    // field of the message struct.
-    GoArg string
-    // GoType is the type of this arg's field on the message struct.
-    GoType string
-    // GoConvertInvoc is the code for initializing GoArg with either a typecast
-    // from FlagArg or the invocation of a json unmarshal function.
-    GoConvertInvoc string
+	// GoArg is the Go variable that is of the same type as the corresponding
+	// field of the message struct.
+	GoArg string
+	// GoType is the type of this arg's field on the message struct.
+	GoType string
+	// GoConvertInvoc is the code for initializing GoArg with either a typecast
+	// from FlagArg or the invocation of a json unmarshal function.
+	GoConvertInvoc string
 
-    // IsBaseType is true if this arg corresponds to a protobuf field which is
-    // any of the basic types, or a basic type but repeated. If this the field
-    // was a nested message or a map, IsBaseType is false.
-    IsBaseType bool
-    // Repeated is true if this arg corresponds to a protobuf field which is
-    // given an identifier of "repeated", meaning it will represented in Go as
-    // a slice of it's type.
-    Repeated bool
-    // Enum is true if this arg corresponds to a protobuf field which is an
-    // enum type.
-    Enum bool
+	// IsBaseType is true if this arg corresponds to a protobuf field which is
+	// any of the basic types, or a basic type but repeated. If this the field
+	// was a nested message or a map, IsBaseType is false.
+	IsBaseType bool
+	// Repeated is true if this arg corresponds to a protobuf field which is
+	// given an identifier of "repeated", meaning it will represented in Go as
+	// a slice of it's type.
+	Repeated bool
+	// Enum is true if this arg corresponds to a protobuf field which is an
+	// enum type.
+	Enum bool
 }
 
 // MethodArguments is a struct containing a slice of all the ClientArgs for this
 // Method.
 type MethodArguments struct {
-    Args []*ClientArgument
+	Args []*ClientArgument
 }
 
 // FunctionArgs returns a string for the arguments of the function signature
@@ -81,11 +82,11 @@ type MethodArguments struct {
 //     func Sum(ASum int64, BSum int64) (pb.SumRequest, error) {
 //              └────────────────────┘
 func (m *MethodArguments) FunctionArgs() string {
-    tmp := []string{}
-    for _, a := range m.Args {
-        tmp = append(tmp, fmt.Sprintf("%s %s", a.GoArg, a.GoType))
-    }
-    return strings.Join(tmp, ", ")
+	tmp := []string{}
+	for _, a := range m.Args {
+		tmp = append(tmp, fmt.Sprintf("%s %s", a.GoArg, a.GoType))
+	}
+	return strings.Join(tmp, ", ")
 }
 
 // CallArgs returns a string for the variables to pass to a function
@@ -94,11 +95,11 @@ func (m *MethodArguments) FunctionArgs() string {
 //     request, _ := clientHandler.Sum(ASum,  BSum)
 //                                     └──────────┘
 func (m *MethodArguments) CallArgs() string {
-    tmp := []string{}
-    for _, a := range m.Args {
-        tmp = append(tmp, a.GoArg)
-    }
-    return strings.Join(tmp, ", ")
+	tmp := []string{}
+	for _, a := range m.Args {
+		tmp = append(tmp, a.GoArg)
+	}
+	return strings.Join(tmp, ", ")
 }
 
 // MarshalFlags returns the code for intantiating the GoArgs for this method
@@ -108,17 +109,17 @@ func (m *MethodArguments) CallArgs() string {
 //     ASum := int32(flagASum)
 //     └─────────────────────┘
 func (m *MethodArguments) MarshalFlags() string {
-    tmp := []string{}
-    for _, a := range m.Args {
-        tmp = append(tmp, a.GoConvertInvoc)
-    }
-    return strings.Join(tmp, "\n")
+	tmp := []string{}
+	for _, a := range m.Args {
+		tmp = append(tmp, a.GoConvertInvoc)
+	}
+	return strings.Join(tmp, "\n")
 }
 
 // ClientArguments is a map from the name of a method to a slice of all the
 // ClientArgs for that method.
 type ClientArguments struct {
-    MethArgs map[string]*MethodArguments
+	MethArgs map[string]*MethodArguments
 }
 
 // AllFlags returns a string that is all the flag declarations for all
@@ -127,111 +128,111 @@ type ClientArguments struct {
 // doing all this iteration in a templates where it would be much less
 // understandable.
 func (c *ClientArguments) AllFlags() string {
-    tmp := []string{}
-    for _, m := range c.MethArgs {
-        for _, a := range m.Args {
-            tmp = append(tmp, a.FlagConvertFunc)
-        }
-    }
-    return strings.Join(tmp, "\n")
+	tmp := []string{}
+	for _, m := range c.MethArgs {
+		for _, a := range m.Args {
+			tmp = append(tmp, a.FlagConvertFunc)
+		}
+	}
+	return strings.Join(tmp, "\n")
 }
 
 var ProtoToGoTypeMap = map[string]string{
-    "TYPE_DOUBLE":   "float64",
-    "TYPE_FLOAT":    "float32",
-    "TYPE_INT64":    "int64",
-    "TYPE_UINT64":   "uint64",
-    "TYPE_INT32":    "int32",
-    "TYPE_UINT32":   "uint32",
-    "TYPE_FIXED64":  "uint64",
-    "TYPE_FIXED32":  "uint32",
-    "TYPE_BOOL":     "bool",
-    "TYPE_STRING":   "string",
-    "TYPE_SFIXED32": "int32",
-    "TYPE_SFIXED64": "int64",
-    "TYPE_SINT32":   "int32",
-    "TYPE_SINT64":   "int64",
+	"TYPE_DOUBLE":   "float64",
+	"TYPE_FLOAT":    "float32",
+	"TYPE_INT64":    "int64",
+	"TYPE_UINT64":   "uint64",
+	"TYPE_INT32":    "int32",
+	"TYPE_UINT32":   "uint32",
+	"TYPE_FIXED64":  "uint64",
+	"TYPE_FIXED32":  "uint32",
+	"TYPE_BOOL":     "bool",
+	"TYPE_STRING":   "string",
+	"TYPE_SFIXED32": "int32",
+	"TYPE_SFIXED64": "int64",
+	"TYPE_SINT32":   "int32",
+	"TYPE_SINT64":   "int64",
 }
 
 // New creates a ClientArguments struct containing all the arguments for all
 // the methods of a given RPC.
 func NewClientArguments(svc *data.Interface) *ClientArguments {
-    svcArgs := ClientArguments{
-        MethArgs: make(map[string]*MethodArguments),
-    }
-    for _, meth := range svc.Methods {
-        m := MethodArguments{}
-        // TODO implement correct map support in client argument generation
-        for _, field := range meth.Request.Fields {
-            if field.Type.IsMap {
-                continue
-            }
-            newArg := newClientArgument(meth.Name, field)
-            m.Args = append(m.Args, newArg)
-        }
-        svcArgs.MethArgs[meth.Name] = &m
-    }
+	svcArgs := ClientArguments{
+		MethArgs: make(map[string]*MethodArguments),
+	}
+	for _, meth := range svc.Methods {
+		m := MethodArguments{}
+		// TODO implement correct map support in client argument generation
+		for _, field := range meth.Request.Fields {
+			if field.Type.IsMap {
+				continue
+			}
+			newArg := newClientArgument(meth.Name, field)
+			m.Args = append(m.Args, newArg)
+		}
+		svcArgs.MethArgs[meth.Name] = &m
+	}
 
-    return &svcArgs
+	return &svcArgs
 }
 
 // newClientArgument returns a ClientArgument generated from the provided method name and MessageField
 func newClientArgument(methName string, field *data.Field) *ClientArgument {
-    newArg := ClientArgument{}
-    newArg.Name = lowCamelName(field.Name)
+	newArg := ClientArgument{}
+	newArg.Name = lowCamelName(field.Name)
 
-    if field.Type.IsArray {
-        newArg.Repeated = true
-    }
+	if field.Type.IsArray {
+		newArg.Repeated = true
+	}
 
-    newArg.FlagName = fmt.Sprintf("%s", strings.ToLower(field.Name))
-    newArg.FlagArg = fmt.Sprintf("flag%s%s", strcase.ToCamel(field.Name), strcase.ToCamel(methName))
+	newArg.FlagName = fmt.Sprintf("%s", strings.ToLower(field.Name))
+	newArg.FlagArg = fmt.Sprintf("flag%s%s", strcase.ToCamel(field.Name), strcase.ToCamel(methName))
 
-    if field.Type.Enum != nil {
-        newArg.Enum = true
-    }
-    // Determine the FlagType and flag invocation
-    var ft string
-    if field.Type.Message == nil && field.Type.Enum == nil && !field.Type.IsMap {
-        ft = field.Type.Name
-        newArg.IsBaseType = true
-    } else {
-        // For types outside the base types, have flag treat them as strings
-        ft = "string"
-        newArg.IsBaseType = false
-    }
-    if newArg.Repeated {
-        ft = "string"
-    }
-    newArg.FlagType = ft
-    newArg.FlagConvertFunc = createFlagConvertFunc(newArg, methName)
+	if field.Type.Enum != nil {
+		newArg.Enum = true
+	}
+	// Determine the FlagType and flag invocation
+	var ft string
+	if field.Type.Message == nil && field.Type.Enum == nil && !field.Type.IsMap {
+		ft = field.Type.Name
+		newArg.IsBaseType = true
+	} else {
+		// For types outside the base types, have flag treat them as strings
+		ft = "string"
+		newArg.IsBaseType = false
+	}
+	if newArg.Repeated {
+		ft = "string"
+	}
+	newArg.FlagType = ft
+	newArg.FlagConvertFunc = createFlagConvertFunc(newArg, methName)
 
-    newArg.GoArg = fmt.Sprintf("%s%s", strcase.ToCamel(newArg.Name), strcase.ToCamel(methName))
-    // For types outside the base types, treat them as strings
-    if newArg.IsBaseType {
-        //newArg.GoType = ProtoToGoTypeMap[field.Type.GetName()]
-        newArg.GoType = field.Type.Name
-    } else {
-        newArg.GoType = "pb." + field.Type.Name
-    }
-    // The GoType is a slice of the GoType if it's a repeated field
-    if newArg.Repeated {
-        if newArg.IsBaseType || newArg.Enum {
-            newArg.GoType = "[]" + newArg.GoType
-        } else {
-            newArg.GoType = "[]*" + newArg.GoType
-        }
-    }
+	newArg.GoArg = fmt.Sprintf("%s%s", strcase.ToCamel(newArg.Name), strcase.ToCamel(methName))
+	// For types outside the base types, treat them as strings
+	if newArg.IsBaseType {
+		// newArg.GoType = ProtoToGoTypeMap[field.Type.GetName()]
+		newArg.GoType = field.Type.Name
+	} else {
+		newArg.GoType = "pb." + field.Type.Name
+	}
+	// The GoType is a slice of the GoType if it's a repeated field
+	if newArg.Repeated {
+		if newArg.IsBaseType || newArg.Enum {
+			newArg.GoType = "[]" + newArg.GoType
+		} else {
+			newArg.GoType = "[]*" + newArg.GoType
+		}
+	}
 
-    newArg.GoConvertInvoc = goConvInvoc(newArg)
+	newArg.GoConvertInvoc = goConvInvoc(newArg)
 
-    return &newArg
+	return &newArg
 }
 
 // goConvInvoc returns the code for converting from the flagArg to the goArg,
 // either via a simple flagTypeConversion or via JSON unmarshalling
 func goConvInvoc(a ClientArgument) string {
-    jsonConvTmpl := `
+	jsonConvTmpl := `
 var {{.GoArg}} {{.GoType}}
 if {{.FlagArg}} != nil && len(*{{.FlagArg}}) > 0 {
 	err = json.Unmarshal([]byte(*{{.FlagArg}}), &{{.GoArg}})
@@ -240,41 +241,41 @@ if {{.FlagArg}} != nil && len(*{{.FlagArg}}) > 0 {
 	}
 }
 `
-    if a.Repeated || !a.IsBaseType {
-        code, err := applyTemplate("UnmarshalCliArgs", jsonConvTmpl, a, nil)
-        if err != nil {
-            panic(fmt.Sprintf("Couldn't apply templates: %v", err))
-        }
-        return code
-    }
-    return fmt.Sprintf(`%s := %s`, a.GoArg, flagTypeConversion(a))
+	if a.Repeated || !a.IsBaseType {
+		code, err := applyTemplate("UnmarshalCliArgs", jsonConvTmpl, a, nil)
+		if err != nil {
+			panic(fmt.Sprintf("Couldn't apply templates: %v", err))
+		}
+		return code
+	}
+	return fmt.Sprintf(`%s := %s`, a.GoArg, flagTypeConversion(a))
 }
 
 // createFlagConvertFunc creates the go string for the flag invocation to parse
 // a command line argument into it's nearest available type that the flag
 // package provides.
 func createFlagConvertFunc(a ClientArgument, methName string) string {
-    fType := ""
-    switch {
-    case strings.Contains(a.FlagType, "uint32"):
-        fType = `%s = fs%s.Uint("%s", 0, %s)`
-    case strings.Contains(a.FlagType, "uint64"):
-        fType = `%s = fs%s.Uint64("%s", 0, %s)`
-    case strings.Contains(a.FlagType, "int32"):
-        fType = `%s = fs%s.Int("%s", 0, %s)`
-    case strings.Contains(a.FlagType, "int64"):
-        fType = `%s = fs%s.Int64("%s", 0, %s)`
-    case strings.Contains(a.FlagType, "bool"):
-        fType = `%s = fs%s.Bool("%s", false, %s)`
-    case strings.Contains(a.FlagType, "float32"):
-        fType = `%s = fs%s.Float64("%s", 0.0, %s)`
-    case strings.Contains(a.FlagType, "float64"):
-        fType = `%s = fs%s.Float64("%s", 0.0, %s)`
-    case strings.Contains(a.FlagType, "string"):
-        fType = `%s = fs%s.String("%s", "", %s)`
-    }
+	fType := ""
+	switch {
+	case strings.Contains(a.FlagType, "uint32"):
+		fType = `%s = fs%s.Uint("%s", 0, %s)`
+	case strings.Contains(a.FlagType, "uint64"):
+		fType = `%s = fs%s.Uint64("%s", 0, %s)`
+	case strings.Contains(a.FlagType, "int32"):
+		fType = `%s = fs%s.Int("%s", 0, %s)`
+	case strings.Contains(a.FlagType, "int64"):
+		fType = `%s = fs%s.Int64("%s", 0, %s)`
+	case strings.Contains(a.FlagType, "bool"):
+		fType = `%s = fs%s.Bool("%s", false, %s)`
+	case strings.Contains(a.FlagType, "float32"):
+		fType = `%s = fs%s.Float64("%s", 0.0, %s)`
+	case strings.Contains(a.FlagType, "float64"):
+		fType = `%s = fs%s.Float64("%s", 0.0, %s)`
+	case strings.Contains(a.FlagType, "string"):
+		fType = `%s = fs%s.String("%s", "", %s)`
+	}
 
-    return fmt.Sprintf(fType, a.FlagArg, methName, a.FlagName, `""`)
+	return fmt.Sprintf(fType, a.FlagArg, methName, a.FlagName, `""`)
 }
 
 // flagTypeConversion creates the proper syntax for converting a flag into
@@ -283,44 +284,44 @@ func createFlagConvertFunc(a ClientArgument, methName string) string {
 // exist to convert the subset of types which the flag package provides into
 // other golang types, and the dereferencing is just a side effect of that.
 func flagTypeConversion(a ClientArgument) string {
-    fType := ""
-    switch {
-    case strings.Contains(a.FlagType, "uint32"):
-        fType = "uint32(*%s)"
-    case strings.Contains(a.FlagType, "int32"):
-        fType = "int32(*%s)"
-    case strings.Contains(a.FlagType, "float32"):
-        fType = "float32(*%s)"
-    default:
-        fType = "*%s"
-    }
-    return fmt.Sprintf(fType, a.FlagArg)
+	fType := ""
+	switch {
+	case strings.Contains(a.FlagType, "uint32"):
+		fType = "uint32(*%s)"
+	case strings.Contains(a.FlagType, "int32"):
+		fType = "int32(*%s)"
+	case strings.Contains(a.FlagType, "float32"):
+		fType = "float32(*%s)"
+	default:
+		fType = "*%s"
+	}
+	return fmt.Sprintf(fType, a.FlagArg)
 }
 
 // applyTemplate applies a templates with a given name, executor context, and
 // function map. Returns the output of the templates on success, returns an
 // error if templates failed to execute.
 func applyTemplate(name string, tmpl string, executor interface{}, fncs template.FuncMap) (string, error) {
-    codeTemplate := template.Must(template.New(name).Funcs(fncs).Parse(tmpl))
+	codeTemplate := template.Must(template.New(name).Funcs(fncs).Parse(tmpl))
 
-    code := bytes.NewBuffer(nil)
-    err := codeTemplate.Execute(code, executor)
-    if err != nil {
-        return "", errors.Wrapf(err, "attempting to execute templates %q", name)
-    }
-    return code.String(), nil
+	code := bytes.NewBuffer(nil)
+	err := codeTemplate.Execute(code, executor)
+	if err != nil {
+		return "", errors.Wrapf(err, "attempting to execute templates %q", name)
+	}
+	return code.String(), nil
 }
 
 // lowCamelName returns a CamelCased string, but with the first letter
 // lowercased. "example_name" becomes "exampleName".
 func lowCamelName(s string) string {
-    s = strcase.ToCamel(s)
-    new := []rune(s)
-    if len(new) < 1 {
-        return s
-    }
-    rv := []rune{}
-    rv = append(rv, unicode.ToLower(new[0]))
-    rv = append(rv, new[1:]...)
-    return string(rv)
+	s = strcase.ToCamel(s)
+	new := []rune(s)
+	if len(new) < 1 {
+		return s
+	}
+	rv := []rune{}
+	rv = append(rv, unicode.ToLower(new[0]))
+	rv = append(rv, new[1:]...)
+	return string(rv)
 }

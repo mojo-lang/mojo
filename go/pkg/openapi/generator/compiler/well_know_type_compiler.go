@@ -4,8 +4,9 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/db/go/pkg/mojo/db"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type WellKnowTypeCompiler struct {
@@ -169,7 +170,7 @@ func (w *WellKnowTypeCompiler) CompileStruct(ctx context.Context, decl *lang.Str
 			Title: fullName,
 			Type:  openapi.Schema_TYPE_ARRAY,
 		}), nil
-	//case core.ErrorTypeFullName:
+	// case core.ErrorTypeFullName:
 	//    return openapi.NewReferenceableSchema(&openapi.Schema{
 	//        Title: fullName,
 	//        Type:  openapi.Schema_TYPE_OBJECT,

@@ -2,10 +2,12 @@ package generator
 
 import (
 	"errors"
+
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	compiler2 "github.com/mojo-lang/mojo/go/pkg/openapi/generator/compiler"
-	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 )
 
 type Compiler struct {
@@ -121,7 +123,7 @@ func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDec
 	}
 
 	api.Components = context.Components(thisCtx)
-	//key := lang.TypeNameToFileName(decl.GetFullName())
+	// key := lang.TypeNameToFileName(decl.GetFullName())
 	c.APIs[decl.GetFullName()] = api
 	return nil
 }

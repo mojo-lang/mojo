@@ -1,11 +1,12 @@
 package mpm
 
 import (
-    "github.com/stretchr/testify/assert"
-    "testing"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetGitLastCommit(t *testing.T) {
-    commit := GetGitLatestCommit(".")
-    assert.NotNil(t, commit)
+	commit := GetGitLatestCommit(".")
+	assert.NotNil(t, commit)
 }

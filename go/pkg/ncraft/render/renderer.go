@@ -1,11 +1,11 @@
 package render
 
 import (
-    "io"
+	"io"
 
-    "github.com/mojo-lang/mojo/go/pkg/ncraft/data"
+	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 )
 
 type Renderer interface {
-    Render(string, *data.Service) (io.Reader, error)
+	Render(string, *data.Service) (io.Reader, error)
 }

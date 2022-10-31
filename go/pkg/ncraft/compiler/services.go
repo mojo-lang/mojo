@@ -1,23 +1,25 @@
 package compiler
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/openapi/generator/compiler"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
 	"sort"
 	"strings"
 	"text/template"
+
+	"github.com/mojo-lang/mojo/go/pkg/openapi/generator/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/http/go/pkg/mojo/http"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
+
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
-	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
 )
 
 type Services struct {
@@ -112,7 +114,7 @@ func unifyStringArray(array []string) []string {
 		}
 	}
 	var result []string
-	for key, _ := range index {
+	for key := range index {
 		result = append(result, key)
 	}
 	sort.Strings(result)
@@ -222,7 +224,7 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
 		registerType(result)
 	}
 
-	//if len(decl.PackageName) > 0 && decl.PackageName != service.PackageFullName {
+	// if len(decl.PackageName) > 0 && decl.PackageName != service.PackageFullName {
 	//    goPackageName := lang.GetGoPackageName(decl.PackageName)
 	//    if !RegisterMessageGoPackageName(decl.Name, goPackageName) && result != nil && len(result.GenericArguments) == 0 {
 	//        if result.TypeDeclaration != nil && result.TypeDeclaration.GetEnumDecl() != nil {
@@ -246,7 +248,7 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
 	//            service.Go.ImportedTypePaths = append(service.Go.ImportedTypePaths, path)
 	//        }
 	//    }
-	//}
+	// }
 
 	index := 0
 	for _, attribute := range decl.Attributes {
@@ -446,7 +448,7 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
 		}
 	}
 
-	//TODO update sync with openapi, add request body
+	// TODO update sync with openapi, add request body
 	if pathParams[param.Field.Name] || pathParams[param.Field.FullName] {
 		param.Location = "path"
 	} else {

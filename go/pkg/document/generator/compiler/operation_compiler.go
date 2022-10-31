@@ -4,8 +4,9 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/document/go/pkg/mojo/document"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type OperationCompiler struct {
@@ -13,43 +14,43 @@ type OperationCompiler struct {
 	Components *openapi.Components
 }
 
-//### 请求参数
+// ### 请求参数
 //
-//#### Path 参数
+// #### Path 参数
 //
-//#### Query 参数
+// #### Query 参数
 //
-//| 参数 | 类型 | 是否必须 | 默认值 | 说明 |
-//|:---  |:----|:-----   | :---- | :----|
-//{{range .TableList}}| {{.Index}}|[ {{.TableName}}](#{{.Index}}{{.TableName}})       |{{.Comment}}| |
-//{{end}}
+// | 参数 | 类型 | 是否必须 | 默认值 | 说明 |
+// |:---  |:----|:-----   | :---- | :----|
+// {{range .TableList}}| {{.Index}}|[ {{.TableName}}](#{{.Index}}{{.TableName}})       |{{.Comment}}| |
+// {{end}}
 //
-//#### Body 请求对象
+// #### Body 请求对象
 //
-//##### Body 请求示例
+// ##### Body 请求示例
 //
-//{{ range .Schemas}}
-//{{end}}
+// {{ range .Schemas}}
+// {{end}}
 //
-//#### 完整请求示例
+// #### 完整请求示例
 //
-//### 返回值
+// ### 返回值
 //
-//#### 返回对象
+// #### 返回对象
 //
-//{{ range .Schemas}}
-//#### {{}}
+// {{ range .Schemas}}
+// #### {{}}
 //
-//| 参数 | 类型 | 是否必须 | 默认值 | 说明 |
-//|:---  |:----|:-----   | :---- | :----|
-//{{range .TableList}}| {{.Index}}|[ {{.TableName}}](#{{.Index}}{{.TableName}})       |{{.Comment}}| |
-//{{end}}
+// | 参数 | 类型 | 是否必须 | 默认值 | 说明 |
+// |:---  |:----|:-----   | :---- | :----|
+// {{range .TableList}}| {{.Index}}|[ {{.TableName}}](#{{.Index}}{{.TableName}})       |{{.Comment}}| |
+// {{end}}
 //
-//#####
+// #####
 //
-//{{end}}
+// {{end}}
 //
-//### API示例
+// ### API示例
 
 func (o *OperationCompiler) Compile(operation *openapi.Operation) (*document.Document, error) {
 	doc := &document.Document{}

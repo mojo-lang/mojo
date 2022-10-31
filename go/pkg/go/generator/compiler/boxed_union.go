@@ -1,11 +1,13 @@
 package compiler
 
 import (
+	"strings"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	data2 "github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
-	"strings"
 )
 
 type BoxedUnion struct {
@@ -31,7 +33,7 @@ func (b *BoxedUnion) CompileStruct(ctx context.Context, decl *lang.StructDecl) e
 	bu.FullName = GetFullName(bu.EnclosingName, bu.Name)
 
 	for _, field := range decl.Type.Fields {
-		//FIXME need to process boxed type, formatted type
+		// FIXME need to process boxed type, formatted type
 		switch field.Type.GetFullName() {
 		case core.BoolTypeFullName:
 		case core.IntTypeFullName:

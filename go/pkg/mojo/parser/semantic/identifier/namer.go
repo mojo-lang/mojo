@@ -2,13 +2,15 @@ package identifier
 
 import (
 	"errors"
+	"strings"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"strings"
 )
 
 const namerName = "semantic.identifier-namer"
@@ -235,12 +237,12 @@ func (p *Namer) ParseInterface(ctx context.Context, decl *lang.InterfaceDecl) er
 		}
 	}
 
-	//for _, declaration := range decl.TypeAliasDecls {
+	// for _, declaration := range decl.TypeAliasDecls {
 	//	identifier := ctx.Declare(lang.NewTypeAliasDecl(declaration))
 	//	ctx.Current().Identifiers[identifier.Name] = identifier
 	//
 	//	p.ParseTypeAlias(ctx, declaration)
-	//}
+	// }
 
 	for key, value := range thisScope.Identifiers {
 		context.Scope(ctx).Identifiers[decl.Name+"."+key] = value

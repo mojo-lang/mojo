@@ -8,8 +8,9 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 var PrimeTypes = map[string]bool{
@@ -61,9 +62,9 @@ func CompileStructDecl(ctx context.Context, decl *lang.StructDecl) error {
 		}
 	}
 
-	//for _, e := range decl.EnumDecls {
+	// for _, e := range decl.EnumDecls {
 	//    err := compileEnumDecl(thisCtx, e)
-	//}
+	// }
 
 	components := context.Components(thisCtx)
 
