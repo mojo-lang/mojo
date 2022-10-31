@@ -394,7 +394,7 @@ attributeArgumentClause
     : LPAREN (EOL* attributeArguments)? EOL* RPAREN
     ;
 
-attributeArgument : (labelIdentifier COLON?)? expression;
+attributeArgument : (labelIdentifier COLON)? expression;
 attributeArguments : attributeArgument (eov EOL* attributeArgument)* eov?;
 
 // GRAMMAR OF AN ATTRIBUTES
@@ -552,7 +552,7 @@ tupleExpression
 
 tupleElement
  : expression
- | labelIdentifier COLON? expression
+ | labelIdentifier COLON expression
  ;
 
 // GRAMMAR OF A WILDCARD EXPRESSION
@@ -595,9 +595,9 @@ functionCallArguments : functionCallArgument ( COMMA functionCallArgument )* ;
 
 functionCallArgument
  : expression
- | labelIdentifier COLON? expression
+ | labelIdentifier COLON expression
  | operator
- | labelIdentifier COLON? operator
+ | labelIdentifier COLON operator
  ;
 
 trailingClosures:
@@ -660,7 +660,7 @@ arrayType : LBRACK type_ attributes? RBRACK ;
 
 // GRAMMAR OF A DICTIONARY TYPE
 
-mapType : LCURLY type_ keyAttributes? COLON type_  attributes? RCURLY ;
+mapType : LCURLY type_ keyAttributes? COLON? type_  attributes? RCURLY ;
 
 keyAttributes : attributes;
 
@@ -734,6 +734,8 @@ keywordAsIdentifierInDeclarations
     | 'const'
     | 'enum'
     | 'func'
+    | KEYWORD_IF
+    | KEYWORD_ELSE
     | 'import'
     | 'in'
     | 'interface'
@@ -761,7 +763,8 @@ keywordAsIdentifierInLabels
     | 'false'
     | 'for'
     | 'func'
-    | 'if'
+    | KEYWORD_IF
+    | KEYWORD_ELSE
     | 'import'
     | 'in'
     | 'interface'
