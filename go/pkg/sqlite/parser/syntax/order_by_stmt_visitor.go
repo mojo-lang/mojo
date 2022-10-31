@@ -1,8 +1,9 @@
 package syntax
 
 import (
-	"github.com/mojo-lang/db/go/pkg/mojo/db/sql"
 	"strings"
+
+	"github.com/mojo-lang/db/go/pkg/mojo/db/sql"
 )
 
 type OrderBySmtVisitor struct {

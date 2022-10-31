@@ -1,12 +1,14 @@
 package openapi
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/openapi/generator"
 	path2 "path"
 
+	"github.com/mojo-lang/mojo/go/pkg/openapi/generator"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 	api "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+
+	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 )
 
 type Builder struct {

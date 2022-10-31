@@ -3,7 +3,6 @@ package util
 import (
 	"bufio"
 	"bytes"
-
 	"io/fs"
 	"io/ioutil"
 	"os"

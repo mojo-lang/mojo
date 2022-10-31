@@ -1,11 +1,13 @@
 package generator
 
 import (
+	path2 "path"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	data2 "github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	path2 "path"
 )
 
 type Generator struct {

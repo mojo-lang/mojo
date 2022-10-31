@@ -1,9 +1,10 @@
 package syntax
 
 import (
+	"strconv"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"strconv"
 )
 
 type MessageDefVisitor struct {

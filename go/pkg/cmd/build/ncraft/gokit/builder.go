@@ -2,22 +2,24 @@ package gokit
 
 import (
 	"fmt"
-	"github.com/mojo-lang/mojo/go/pkg/util"
 	"io"
 	"os"
 	path2 "path"
 	"path/filepath"
 	"strings"
 
+	"github.com/mojo-lang/mojo/go/pkg/util"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/pkg/errors"
+
 	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 	_go "github.com/mojo-lang/mojo/go/pkg/cmd/build/go"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit"
-	"github.com/pkg/errors"
 )
 
 type Builder struct {

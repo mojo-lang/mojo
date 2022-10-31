@@ -2,11 +2,12 @@ package util
 
 import (
 	"errors"
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"io"
 	"io/ioutil"
 	path2 "path"
+
+	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
 )
 
 type GeneratedFile struct {

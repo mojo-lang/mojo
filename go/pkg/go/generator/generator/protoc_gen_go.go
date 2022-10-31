@@ -3,17 +3,6 @@ package generator
 import (
 	"bytes"
 	"fmt"
-	"github.com/fatih/structtag"
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
-	"github.com/mojo-lang/db/go/pkg/mojo/db"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	injection2 "github.com/mojo-lang/mojo/go/pkg/go/generator/injection"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
-	"github.com/mojo-lang/mojo/go/pkg/util"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"go/ast"
 	"io/fs"
 	"io/ioutil"
@@ -22,6 +11,19 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/fatih/structtag"
+	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/db/go/pkg/mojo/db"
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+
+	injection2 "github.com/mojo-lang/mojo/go/pkg/go/generator/injection"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 func GenerateMojoPackageProtobuf(pkg *lang.Package) (string, error) {

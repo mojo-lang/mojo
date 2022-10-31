@@ -1,14 +1,16 @@
 package _go
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/go/generator"
-	"github.com/mojo-lang/mojo/go/pkg/util"
 	"os/exec"
 	path2 "path"
 
+	"github.com/mojo-lang/mojo/go/pkg/go/generator"
+	"github.com/mojo-lang/mojo/go/pkg/util"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 	desc "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+
+	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 )
 
 type Builder struct {

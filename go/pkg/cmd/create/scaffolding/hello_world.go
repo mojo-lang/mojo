@@ -1,10 +1,12 @@
 package scaffolding
 
 import (
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/mojo/go/pkg/util"
 	"io/ioutil"
 	path2 "path"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
+
+	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 const HelloWorldPackageName = "hello_world"

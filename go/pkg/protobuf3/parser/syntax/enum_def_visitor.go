@@ -1,8 +1,9 @@
 package syntax
 
 import (
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"strconv"
+
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
 
 type EnumDefVisitor struct {

@@ -1,12 +1,14 @@
 package generator
 
 import (
+	"strings"
+
 	jsoniter "github.com/json-iterator/go"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"github.com/mojo-lang/yaml/go/pkg/mojo/yaml"
-	"strings"
+
+	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 // Generator

@@ -1,11 +1,13 @@
 package compiler
 
 import (
+	"strings"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-	"strings"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 func compileEnumDecl(ctx context.Context, decl *lang.EnumDecl) (*openapi.ReferenceableSchema, error) {

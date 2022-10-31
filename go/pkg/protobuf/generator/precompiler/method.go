@@ -5,11 +5,12 @@ import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
+	"github.com/pkg/errors"
+
 	langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
-	"github.com/pkg/errors"
 )
 
 func CompileMethod(ctx context.Context, method *lang.FunctionDecl) (request *lang.StructDecl, response *lang.StructDecl, err error) {

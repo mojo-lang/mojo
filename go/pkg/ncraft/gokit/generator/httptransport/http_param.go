@@ -1,10 +1,11 @@
 package httptransport
 
 import (
+	"text/template"
+
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 	_go "github.com/mojo-lang/mojo/go/pkg/ncraft/go"
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"text/template"
 )
 
 func createParamUnmarshaler(parameter *data.HTTPParameter, funcMap template.FuncMap) (string, error) {

@@ -2,9 +2,10 @@ package injection
 
 import (
 	"context"
+	"go/ast"
+
 	"github.com/fatih/structtag"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"go/ast"
 )
 
 type DbJSONInjector struct {

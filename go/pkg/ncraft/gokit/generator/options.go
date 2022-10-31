@@ -2,8 +2,14 @@ package generator
 
 import (
 	"bytes"
+	"io"
+	"io/ioutil"
+	"strings"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/pkg/errors"
+
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 	_go "github.com/mojo-lang/mojo/go/pkg/ncraft/go"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers"
@@ -11,10 +17,6 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/model"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/templates"
 	util2 "github.com/mojo-lang/mojo/go/pkg/util"
-	"github.com/pkg/errors"
-	"io"
-	"io/ioutil"
-	"strings"
 )
 
 type HandlerTemplate struct {

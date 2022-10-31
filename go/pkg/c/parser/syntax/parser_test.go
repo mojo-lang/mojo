@@ -2,8 +2,9 @@ package syntax
 
 import (
 	_ "embed"
-	"github.com/alecthomas/assert"
 	"testing"
+
+	"github.com/alecthomas/assert"
 )
 
 //go:embed testdata/func_call_with_var_args.c

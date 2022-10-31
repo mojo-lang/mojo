@@ -1,8 +1,9 @@
 package syntax
 
 import (
-	"github.com/alecthomas/assert"
 	"testing"
+
+	"github.com/alecthomas/assert"
 )
 
 func TestServiceDefVisitor_VisitRpc_Stream(t *testing.T) {

@@ -3,12 +3,14 @@ package scaffolding
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+	path2 "path"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"io/ioutil"
-	path2 "path"
 )
 
 func GetPackageDirName(data *Data) string {

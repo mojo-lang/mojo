@@ -1,11 +1,13 @@
 package document
 
 import (
+	path2 "path"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+
 	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 	"github.com/mojo-lang/mojo/go/pkg/document/generator"
-	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
-	path2 "path"
 )
 
 type Builder struct {

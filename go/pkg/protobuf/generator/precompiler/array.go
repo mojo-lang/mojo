@@ -2,11 +2,13 @@ package precompiler
 
 import (
 	"errors"
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"strings"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )

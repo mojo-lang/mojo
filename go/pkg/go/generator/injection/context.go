@@ -2,9 +2,10 @@ package injection
 
 import (
 	"context"
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"go/ast"
 	"strings"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 )
 
 const (

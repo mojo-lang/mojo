@@ -1,9 +1,11 @@
 package syntax
 
 import (
-	"github.com/alecthomas/assert"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf3/parser/syntax/testdata"
 	"testing"
+
+	"github.com/alecthomas/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/protobuf3/parser/syntax/testdata"
 )
 
 func TestParser_ParseString_AddressBook(t *testing.T) {

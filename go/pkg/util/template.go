@@ -2,10 +2,11 @@ package util
 
 import (
 	"bytes"
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
-	"github.com/pkg/errors"
 	"io"
 	"text/template"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/pkg/errors"
 )
 
 // ApplyTemplate is a helper methods that packages can call to render a

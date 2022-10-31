@@ -1,13 +1,15 @@
 package circle
 
 import (
+	path2 "path"
+
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	path2 "path"
 )
 
 const DependencyCircle = "dependency_circle"

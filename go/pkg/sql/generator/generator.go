@@ -2,6 +2,7 @@ package generator
 
 import (
 	"context"
+
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
 

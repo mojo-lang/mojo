@@ -1,15 +1,17 @@
 package compiler
 
 import (
+	"testing"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/stretchr/testify/assert"
+
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/testdata"
-	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestServices_CompileInterface(t *testing.T) {

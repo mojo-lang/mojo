@@ -2,13 +2,15 @@ package model
 
 import (
 	"bytes"
+	"io/ioutil"
+	"strings"
+
+	"github.com/pkg/errors"
+
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 	_go "github.com/mojo-lang/mojo/go/pkg/ncraft/go"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/model/templates"
 	util2 "github.com/mojo-lang/mojo/go/pkg/util"
-	"github.com/pkg/errors"
-	"io/ioutil"
-	"strings"
 )
 
 // TemplatePath is the path to the entity gotemplate file.

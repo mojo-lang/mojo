@@ -28,11 +28,12 @@ package injection
 
 import (
 	"context"
-	"github.com/fatih/structtag"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"go/ast"
 	"strings"
 	"unicode"
+
+	"github.com/fatih/structtag"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
 )
 
 type TagChanger = func(ctx context.Context, field *ast.Field, tags *structtag.Tags)

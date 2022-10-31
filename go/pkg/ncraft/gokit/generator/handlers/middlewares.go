@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"io"
+
+	"github.com/pkg/errors"
+
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers/templates"
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"github.com/pkg/errors"
-	"io"
 )
 
 // MiddlewaresPath is the path to the middleware gotemplate file.

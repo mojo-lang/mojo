@@ -1,8 +1,9 @@
 package generator
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/generator"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+
+	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/generator"
 )
 
 type Generator struct {

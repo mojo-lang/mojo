@@ -1,9 +1,10 @@
 package syntax
 
 import (
+	"testing"
+
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestPackageDeclarationVisitor_VisitPackageDeclaration(t *testing.T) {

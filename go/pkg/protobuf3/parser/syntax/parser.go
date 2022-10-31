@@ -2,14 +2,16 @@ package syntax
 
 import (
 	"context"
+	"io/fs"
+	"path"
+	"regexp"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"io/fs"
-	"path"
-	"regexp"
 )
 
 type Parser struct {

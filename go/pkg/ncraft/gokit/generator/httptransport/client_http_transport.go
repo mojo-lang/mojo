@@ -2,12 +2,13 @@ package httptransport
 
 import (
 	"bytes"
+	"io"
+	"text/template"
+
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 	_go "github.com/mojo-lang/mojo/go/pkg/ncraft/go"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/httptransport/templates"
 	"github.com/mojo-lang/mojo/go/pkg/util"
-	"io"
-	"text/template"
 )
 
 type ClientHttpTransport struct {

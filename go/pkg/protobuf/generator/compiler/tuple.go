@@ -3,10 +3,12 @@ package compiler
 import (
 	"errors"
 	"fmt"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+
+	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type Tuple struct {

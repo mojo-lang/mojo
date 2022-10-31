@@ -2,6 +2,7 @@ package generator
 
 import (
 	"github.com/mojo-lang/document/go/pkg/markdown"
+
 	util2 "github.com/mojo-lang/mojo/go/pkg/util"
 )
 

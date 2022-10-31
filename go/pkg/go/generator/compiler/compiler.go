@@ -1,8 +1,9 @@
 package compiler
 
 import (
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"strings"
+
+	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
 
 func GetGoPackage(pkg string) string {
