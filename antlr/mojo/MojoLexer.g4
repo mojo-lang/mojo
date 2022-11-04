@@ -26,7 +26,7 @@ KEYWORD_NOT       : 'not';
 KEYWORD_NULL      : 'null';
 KEYWORD_OR        : 'or';
 KEYWORD_PACKAGE   : 'package';
-KEYWORD_REPEATE   : 'repeat';
+//KEYWORD_REPEATE   : 'repeat';
 KEYWORD_RETURN    : 'return';
 KEYWORD_STRUCT    : 'struct';       // reserved
 KEYWORD_TRUE      : 'true';

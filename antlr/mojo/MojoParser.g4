@@ -731,57 +731,58 @@ keywordAsIdentifierInDeclarations
     | KEYWORD_AS
     | KEYWORD_ATTRIBUTE
     | KEYWORD_BREAK
-    | 'const'
-    | 'enum'
-    | 'func'
-    | KEYWORD_IF
+    | KEYWORD_CONST
+    | KEYWORD_CONTINUE
     | KEYWORD_ELSE
-    | 'import'
-    | 'in'
-    | 'interface'
+    | KEYWORD_ENUM
+    | KEYWORD_FALSE
+    | KEYWORD_FUNC
+    | KEYWORD_IF
+    | KEYWORD_IMPORT
+    | KEYWORD_IN
+    | KEYWORD_INTERFACE
     | KEYWORD_IS
-    | 'match'
-    | 'not'
-    | 'null'
-    | 'or'
-    | 'package'
-    | 'repeat'
-    | 'struct'
-    | 'type'
-    | 'xor'
+    | KEYWORD_MATCH
+    | KEYWORD_NOT
+    | KEYWORD_NULL
+    | KEYWORD_OR
+    | KEYWORD_PACKAGE
+    | KEYWORD_STRUCT
+    | KEYWORD_TRUE
+    | KEYWORD_TYPE
+    | KEYWORD_XOR
     ;
 
 keywordAsIdentifierInLabels
-    : 'and'
+    : KEYWORD_AND
     | KEYWORD_AS
-    | 'attribute'
-    | 'break'
-    | 'const'
-    | 'continue'
-    | 'else'
-    | 'enum'
-    | 'false'
-    | 'for'
-    | 'func'
+    | KEYWORD_ATTRIBUTE
+    | KEYWORD_BREAK
+    | KEYWORD_CONST
+    | KEYWORD_CONTINUE
+    | KEYWORD_ELSE
+    | KEYWORD_ENUM
+    | KEYWORD_FALSE
+    | KEYWORD_FOR
+    | KEYWORD_FUNC
     | KEYWORD_IF
     | KEYWORD_ELSE
-    | 'import'
-    | 'in'
-    | 'interface'
+    | KEYWORD_IMPORT
+    | KEYWORD_IN
+    | KEYWORD_INTERFACE
     | KEYWORD_IS
-    | 'match'
-    | 'not'
-    | 'null'
-    | 'or'
-    | 'package'
-    | 'repeat'
-    | 'return'
-    | 'struct'
-    | 'true'
-    | 'type'
-    | 'var'
-    | 'while'
-    | 'xor'
+    | KEYWORD_MATCH
+    | KEYWORD_NOT
+    | KEYWORD_NULL
+    | KEYWORD_OR
+    | KEYWORD_PACKAGE
+    | KEYWORD_RETURN
+    | KEYWORD_STRUCT
+    | KEYWORD_TRUE
+    | KEYWORD_TYPE
+    | KEYWORD_VAR
+    | KEYWORD_WHILE
+    | KEYWORD_XOR
     ;
 
 // GRAMMAR A DOCUMENT_COMMENT
