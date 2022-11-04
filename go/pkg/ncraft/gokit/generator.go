@@ -3,7 +3,7 @@ package gokit
 import (
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator"
-	util2 "github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 type Options = generator.Options
@@ -26,8 +26,8 @@ func GenerateService(ds *data.Service, options Options) error {
 	return generateFiles(files, options.Output)
 }
 
-func generateFiles(files []*util2.GeneratedFile, output string) error {
-	guard := &util2.PathGuard{
+func generateFiles(files []*util.GeneratedFile, output string) error {
+	guard := &util.PathGuard{
 		OnlyClearGenerated: true,
 		Suffixes:           []string{".go", ".mod", ".md", ".sh", ".yaml"},
 	}
