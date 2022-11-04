@@ -227,8 +227,11 @@ func Run(cfg nserver.Config) {
                     return err
                 }
                 logs.Infow("received the message", "topic", s.Topic, "id", m.Id)
-                endpoints.{{ToCamel $i.Name}}(ctx, request)
-                m.Ack(){{end}}
+                if _, err = endpoints.{{ToCamel $i.Name}}(ctx, request); err != nil {
+                    m.Nak()
+                } else {
+                    m.Ack()
+                }{{end}}
                 {{- end}}
             }
             return nil
