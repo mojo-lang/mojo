@@ -1,8 +1,6 @@
 package util
 
 import (
-	"strings"
-
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 )
 
@@ -49,7 +47,7 @@ func (g *PathGuard) Clear(path string) error {
 
 func (g *PathGuard) cleared(path string) bool {
 	for _, p := range g.paths {
-		if strings.HasPrefix(path, p) {
+		if path == p {
 			return true
 		}
 	}
