@@ -43,7 +43,7 @@ func (n Nominal) Compile(ctx context.Context, t *lang.NominalType) (string, stri
 	}
 
 	if t.IsScalar() {
-		return "Scalar", t.Name, nil
+		return "Scalar", t.GetFullName(), nil
 	}
 
 	tp := "Struct"
