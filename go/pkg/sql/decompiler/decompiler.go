@@ -2,20 +2,22 @@ package decompiler
 
 import (
 	"github.com/mojo-lang/db/go/pkg/mojo/db/sql"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+
+	"github.com/mojo-lang/mojo/go/pkg/sql/decompiler/ansi"
 )
 
 // Decompiler decompile the Mojo AST to Mojo AST for SQL
 type Decompiler struct {
+	ExpressionDecompiler
 }
 
-func (d *Decompiler) Compile(expr *lang.Expression) (*sql.Expression, error) {
-	switch expression := expr.Expression.(type) {
-	case *lang.Expression_StringPrefixLiteralExpr:
-	case *lang.Expression_BinaryExpr:
-	case *lang.Expression_FunctionCallExpr:
-	case *lang.Expression_TupleExpr:
-		_ = expression
+func New(dialect sql.Dialect) *Decompiler {
+	c := &Decompiler{}
+	switch dialect {
+	case sql.Dialect_DIALECT_SQLITE:
+	default:
+		c.ExpressionDecompiler = &ansi.ExpressionDecompiler{}
 	}
-	return nil, nil
+
+	return c
 }
