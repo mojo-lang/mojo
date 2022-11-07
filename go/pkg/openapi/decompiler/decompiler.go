@@ -1,3 +1,3 @@
 package decompiler
 
-// compile the openapi to mojo lang struct
+// compile the mojo lang AST struct to openapi struct

@@ -11,7 +11,7 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 type SchemaCompiler struct {
@@ -41,7 +41,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 		table := &document.Table{
 			Caption:   nil,
 			Alignment: 0,
-			Header:    document.NewTextTableHeader("field", "type", "format", "required", "default", "description"),
+			Header:    document.NewTextTableHeader("field", "type", "printer", "required", "default", "description"),
 		}
 
 		fieldNames := decl.GetStructDecl().GetAllFieldNames(lang.FieldNamOptionUseAlias)
@@ -84,7 +84,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 		table := &document.Table{
 			Caption:   nil,
 			Alignment: 0,
-			Header:    document.NewTextTableHeader("type", "format", "description"),
+			Header:    document.NewTextTableHeader("type", "printer", "description"),
 		}
 
 		for _, item := range schema.OneOf {
@@ -94,7 +94,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 			row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
 			typeFormat := item.GetFormat(s.Components.Schemas)
-			row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // format
+			row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // printer
 
 			// description
 			summary := item.GetSummary(s.Components.Schemas)
@@ -150,7 +150,7 @@ func (s *SchemaCompiler) compileFields(ctx context.Context, fieldNames []string,
 		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
 		typeFormat := property.GetFormat(s.Components.Schemas)
-		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // format
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // printer
 
 		required := "N"
 		if schema.IsPropertyRequired(fieldName) {

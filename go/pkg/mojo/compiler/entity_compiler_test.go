@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser/semantic"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser/semantic/circle"

@@ -4,10 +4,10 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 
-	compiler2 "github.com/mojo-lang/mojo/go/pkg/go/generator/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/mojo/go/pkg/go/generator/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator/data"
-	generator2 "github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
@@ -30,13 +30,13 @@ func NewCompiler(path string, files []*descriptor.File) *Compiler {
 func (c *Compiler) CompilePackage(pkg *lang.Package) (util.GeneratedFiles, error) {
 	var files util.GeneratedFiles
 
-	fs, err := generator2.ProtocGenGo(c.Path, pkg, c.Files)
+	fs, err := generator.ProtocGenGo(c.Path, pkg, c.Files)
 	if err != nil {
 		return nil, err
 	}
 	for _, f := range fs {
 		if len(f.Content) > 0 {
-			f.Content = generator2.FormatCode(f.Content)
+			f.Content = generator.FormatCode(f.Content)
 		}
 		files = append(files, f)
 	}
@@ -54,7 +54,7 @@ func (c *Compiler) CompilePackage(pkg *lang.Package) (util.GeneratedFiles, error
 		}
 	}
 
-	gm := &compiler2.GoMod{Data: c.Data}
+	gm := &compiler.GoMod{Data: c.Data}
 	if err = gm.CompilePackage(context.Empty(), pkg); err != nil {
 		return nil, err
 	}
@@ -75,16 +75,16 @@ func (c *Compiler) compilePackage(ctx context.Context, pkg *lang.Package) error 
 					var err error
 					switch decl.Declaration.(type) {
 					case *lang.Declaration_TypeAliasDecl:
-						s := compiler2.TypeAlias{Data: c.Data}
+						s := compiler.TypeAlias{Data: c.Data}
 						err = s.CompileTypeAlias(fileCtx, decl.GetTypeAliasDecl())
 					case *lang.Declaration_StructDecl:
-						s := compiler2.Struct{Data: c.Data}
+						s := compiler.Struct{Data: c.Data}
 						err = s.CompileStruct(fileCtx, decl.GetStructDecl())
 					case *lang.Declaration_EnumDecl:
-						e := compiler2.Enum{Data: c.Data}
+						e := compiler.Enum{Data: c.Data}
 						err = e.CompileEnum(fileCtx, decl.GetEnumDecl())
 					case *lang.Declaration_InterfaceDecl:
-						i := compiler2.Interface{Data: c.Data}
+						i := compiler.Interface{Data: c.Data}
 						err = i.CompileInterface(fileCtx, decl.GetInterfaceDecl())
 					}
 

@@ -8,7 +8,7 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 type ApiCompiler struct {

@@ -6,7 +6,7 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 type WellKnowTypeCompiler struct {
@@ -57,7 +57,7 @@ func (w *WellKnowTypeCompiler) CompileTypeAlias(ctx context.Context, decl *lang.
 					Title:       core.BytesTypeFullName,
 					Type:        openapi.Schema_TYPE_STRING,
 					Format:      core.BytesTypeName,
-					Description: &openapi.CachedDocument{Cache: "the format is: `b64.{base64 encoded bytes}`"},
+					Description: &openapi.CachedDocument{Cache: "the printer is: `b64.{base64 encoded bytes}`"},
 				}),
 				openapi.NewReferenceableSchema(int64Schema.Clone()),
 				openapi.NewReferenceableSchema(float64Schema.Clone()),

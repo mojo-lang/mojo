@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"strings"
 
-	compiler2 "github.com/mojo-lang/mojo/go/pkg/protobuf/generator/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/compiler"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
-
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type Compiler struct {
@@ -179,9 +178,9 @@ func (c *Compiler) compileImport(file *lang.SourceFile, descriptor *descriptor.F
 			continue
 		}
 
-		fileName := compiler2.GetProtoFile(dependency.SourceFileName)
+		fileName := compiler.GetProtoFile(dependency.SourceFileName)
 
-		if !compiler2.IsSystemFile(fileName) && fileName != descriptor.GetName() {
+		if !compiler.IsSystemFile(fileName) && fileName != descriptor.GetName() {
 			descriptor.AppendDependency(fileName)
 		}
 	}
@@ -195,7 +194,7 @@ func (c *Compiler) compileEnum(ctx context.Context, decl *lang.EnumDecl, descrip
 		return nil
 	}
 
-	return compiler2.Enum{}.Compile(ctx, decl, descriptor)
+	return compiler.Enum{}.Compile(ctx, decl, descriptor)
 }
 
 func (c *Compiler) compileTypeAlias(ctx context.Context, decl *lang.TypeAliasDecl, descriptor *descriptor.Message) error {
@@ -207,7 +206,7 @@ func (c *Compiler) compileTypeAlias(ctx context.Context, decl *lang.TypeAliasDec
 		return nil
 	}
 
-	return compiler2.TypeAlias{}.Compile(ctx, decl, descriptor)
+	return compiler.TypeAlias{}.Compile(ctx, decl, descriptor)
 }
 
 func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl, descriptor *descriptor.Message) error {
@@ -219,7 +218,7 @@ func (c *Compiler) compileStruct(ctx context.Context, decl *lang.StructDecl, des
 		return nil
 	}
 
-	return compiler2.Struct{}.Compile(ctx, decl, descriptor)
+	return compiler.Struct{}.Compile(ctx, decl, descriptor)
 }
 
 func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDecl, descriptor *descriptor.Service) error {
@@ -231,7 +230,7 @@ func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDec
 		return nil
 	}
 
-	return compiler2.Interface{}.Compile(ctx, decl, descriptor)
+	return compiler.Interface{}.Compile(ctx, decl, descriptor)
 }
 
 func getOrganizationPrefix(pkg *lang.Package) string {

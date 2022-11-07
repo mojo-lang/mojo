@@ -11,8 +11,8 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 var methods = []string{"http.get", "http.post", "http.put", "http.delete", "http.patch", "http.options", "http.head", "http.trace"}

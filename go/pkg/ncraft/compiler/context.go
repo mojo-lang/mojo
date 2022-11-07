@@ -3,7 +3,7 @@ package compiler
 import (
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 )
 

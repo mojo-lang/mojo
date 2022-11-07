@@ -8,8 +8,8 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"

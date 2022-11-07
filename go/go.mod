@@ -12,7 +12,7 @@ require (
 	github.com/goccy/go-graphviz v0.0.9
 	github.com/json-iterator/go v1.1.12
 	github.com/mojo-lang/core/go v0.0.0-20221103080547-672a84092d5d
-	github.com/mojo-lang/db/go v0.0.0-20221104074240-d635b6808e59
+	github.com/mojo-lang/db/go v0.0.0-20221107022720-7a4764ef5110
 	github.com/mojo-lang/document/go v0.0.0-20220504064505-9e47a78ac0ec
 	github.com/mojo-lang/geom/go v0.0.0-20220504072234-fd97fb89c547
 	github.com/mojo-lang/http/go v0.0.0-20220524115554-fc19f03dd3de

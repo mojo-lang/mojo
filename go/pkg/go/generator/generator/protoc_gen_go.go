@@ -20,8 +20,8 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	injection2 "github.com/mojo-lang/mojo/go/pkg/go/generator/injection"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 )

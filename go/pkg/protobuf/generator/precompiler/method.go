@@ -8,9 +8,9 @@ import (
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
 	"github.com/pkg/errors"
 
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 func CompileMethod(ctx context.Context, method *lang.FunctionDecl) (request *lang.StructDecl, response *lang.StructDecl, err error) {

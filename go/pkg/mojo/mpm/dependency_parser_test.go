@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/testdata"

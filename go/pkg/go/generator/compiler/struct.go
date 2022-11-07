@@ -6,9 +6,9 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/pkg/errors"
 
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
 )
 

@@ -1,6 +1,8 @@
 package plugin
 
-import "github.com/mojo-lang/mojo/go/pkg/mojo/context"
+import (
+	"github.com/mojo-lang/mojo/go/pkg/context"
+)
 
 const pluginsKey = "plugins"
 

@@ -3,7 +3,7 @@ package protobuf
 import (
 	path2 "path"
 
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator"
 
 	"github.com/mojo-lang/core/go/pkg/logs"

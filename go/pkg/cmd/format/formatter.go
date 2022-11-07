@@ -7,11 +7,11 @@ import (
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/format"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/printer"
 )
 
 type Formatter struct {
@@ -49,7 +49,7 @@ func (f *Formatter) formatPackage(pkg *lang.Package) error {
 	ctx := context.WithType(context.Empty(), pkg)
 	for _, file := range pkg.SourceFiles {
 		sb := strings.Builder{}
-		printer := format.NewPrinter(format.Config{}, &sb)
+		printer := printer.New(printer.Config{}, &sb)
 		printer.PrintSourceFile(ctx, file)
 
 		content := sb.String()

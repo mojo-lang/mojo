@@ -5,9 +5,6 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mojo-lang/mojo/go/pkg/openapi/generator/compiler"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
-
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
@@ -16,10 +13,12 @@ import (
 	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
 
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
+	"github.com/mojo-lang/mojo/go/pkg/openapi/generator/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
 )
 
 type Services struct {

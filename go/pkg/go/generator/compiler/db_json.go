@@ -8,20 +8,20 @@ import (
 	"github.com/mojo-lang/db/go/pkg/mojo/db"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
+	context2 "github.com/mojo-lang/mojo/go/pkg/context"
 	data2 "github.com/mojo-lang/mojo/go/pkg/go/generator/data"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
 )
 
 type DbJson struct {
 	*data2.Data
 }
 
-func (j *DbJson) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
+func (j *DbJson) CompileStruct(ctx context2.Context, decl *lang.StructDecl) error {
 	if decl.Type == nil || len(decl.Type.Fields) == 0 {
 		return nil
 	}
 
-	pkg := context.Package(ctx)
+	pkg := context2.Package(ctx)
 	for _, field := range decl.Type.Fields {
 		if !field.HasAttribute(db.JSONAttributeName) {
 			continue

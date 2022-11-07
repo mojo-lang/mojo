@@ -24,7 +24,7 @@ import (
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/mojo-lang/mojo/go/pkg/mojo/context"
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
@@ -369,7 +369,7 @@ func consumeBytes(bytes []byte, number protowire.Number) (left []byte, value []b
 		return
 	}
 	if num != number || typ != protowire.BytesType {
-		err = errors.New("invalid binary file format")
+		err = errors.New("invalid binary file printer")
 		return
 	}
 	if length == 0 {
