@@ -270,7 +270,7 @@ func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, respo
 				url.Query.Add("next-page-token", next)
 				path = url.Format()
 			}
-			w.Header().Set("Link", fmt.Sprintf("<%s>; rel=\"next\"", path, next))
+			w.Header().Set("Link", fmt.Sprintf("<%s>; rel=\"next\"", path))
 		}
 	}
 
