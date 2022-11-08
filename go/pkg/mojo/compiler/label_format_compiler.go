@@ -9,7 +9,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
 )
 
-const labelFormatName = "compiler.label-printer"
+const labelFormatName = "compiler.label-format"
 
 func init() {
 	plugin.RegisterPlugin(NewLabelFormatCompiler(nil))

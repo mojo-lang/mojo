@@ -369,7 +369,7 @@ func consumeBytes(bytes []byte, number protowire.Number) (left []byte, value []b
 		return
 	}
 	if num != number || typ != protowire.BytesType {
-		err = errors.New("invalid binary file printer")
+		err = errors.New("invalid binary file format")
 		return
 	}
 	if length == 0 {

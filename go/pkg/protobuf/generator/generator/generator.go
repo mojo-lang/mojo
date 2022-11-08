@@ -123,7 +123,7 @@ func (g *Generator) printAtom(v interface{}) {
 	case *float64:
 		fmt.Fprint(g, *v)
 	default:
-		g.Fail(fmt.Sprintf("unknown type in protobuf printer: %T", v))
+		g.Fail(fmt.Sprintf("unknown type in protobuf format: %T", v))
 	}
 }
 
