@@ -159,9 +159,11 @@ func (c *GenericRenamingCompiler) CompileStruct(ctx context.Context, decl *lang.
 		c.compileNominalType(fieldCtx, f.Type, LocationField)
 	}
 
-	for _, id := range decl.Scope.Identifiers {
-		if r, ok := c.References[id.FullName]; ok {
-			r.Ids[id.FullName] = id
+	if decl.Scope != nil {
+		for _, id := range decl.Scope.Identifiers {
+			if r, ok := c.References[id.FullName]; ok {
+				r.Ids[id.FullName] = id
+			}
 		}
 	}
 
@@ -198,9 +200,11 @@ func (c *GenericRenamingCompiler) CompileTypeAlias(ctx context.Context, decl *la
 		r.AliasFiles[decl.GetFullName()] = context.SourceFile(thisCtx)
 	}
 
-	for _, id := range decl.Scope.Identifiers {
-		if r, ok := c.References[id.FullName]; ok {
-			r.Ids[id.FullName] = id
+	if decl.Scope != nil {
+		for _, id := range decl.Scope.Identifiers {
+			if r, ok := c.References[id.FullName]; ok {
+				r.Ids[id.FullName] = id
+			}
 		}
 	}
 
@@ -296,7 +300,7 @@ func (c *GenericRenamingCompiler) Renaming(ctx context.Context) error {
 								enclosing = declaration.Enclosing
 							}
 
-							for _, id := range f.Scope.Identifiers {
+							for _, id := range f.Scope.GetIdentifiers() {
 								if id.Name == decl.Name {
 									id.Declaration = f.Statements[i].GetDeclaration()
 								}
