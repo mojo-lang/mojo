@@ -41,7 +41,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 		table := &document.Table{
 			Caption:   nil,
 			Alignment: 0,
-			Header:    document.NewTextTableHeader("field", "type", "printer", "required", "default", "description"),
+			Header:    document.NewTextTableHeader("field", "type", "format", "required", "default", "description"),
 		}
 
 		fieldNames := decl.GetStructDecl().GetAllFieldNames(lang.FieldNamOptionUseAlias)
@@ -84,7 +84,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 		table := &document.Table{
 			Caption:   nil,
 			Alignment: 0,
-			Header:    document.NewTextTableHeader("type", "printer", "description"),
+			Header:    document.NewTextTableHeader("type", "format", "description"),
 		}
 
 		for _, item := range schema.OneOf {
@@ -94,7 +94,7 @@ func (s *SchemaCompiler) Compile(decl *lang.Declaration, schema *openapi.Schema)
 			row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
 			typeFormat := item.GetFormat(s.Components.Schemas)
-			row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // printer
+			row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // format
 
 			// description
 			summary := item.GetSummary(s.Components.Schemas)
@@ -150,7 +150,7 @@ func (s *SchemaCompiler) compileFields(ctx context.Context, fieldNames []string,
 		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeName)))
 
 		typeFormat := property.GetFormat(s.Components.Schemas)
-		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // printer
+		row.Vals = append(row.Vals, document.NewTableCell(wrapCodeToBlock(typeFormat))) // format
 
 		required := "N"
 		if schema.IsPropertyRequired(fieldName) {
