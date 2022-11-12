@@ -3,6 +3,8 @@ package util
 import (
 	"bytes"
 	"io"
+	"reflect"
+	"strings"
 	"text/template"
 
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
@@ -19,10 +21,24 @@ func ApplyTemplate(tmplName string, tmpl string, data interface{}, funcMap templ
 
 	buffer := bytes.NewBuffer(nil)
 	if err = codeTemplate.Execute(buffer, data); err != nil {
-		return nil, errors.Wrap(err, "templates error")
+		return nil, errors.Wrapf(err, "attempting to execute templates %q", tmplName)
 	}
 
 	return buffer, nil
+}
+
+// FuncMap contains a series of utility functions to be passed into
+// templates and used within those templates.
+var FuncMap = template.FuncMap{
+	"Last":         func(x int, a interface{}) bool { return x == reflect.ValueOf(a).Len()-1 },
+	"ToLower":      strings.ToLower,
+	"ToUpper":      strings.ToUpper,
+	"GoName":       strcase.ToCamel,
+	"GoLocalName":  GoLocalName,
+	"ToSnake":      strcase.ToSnake,
+	"ToKebab":      strcase.ToKebab,
+	"ToCamel":      strcase.ToCamel,
+	"ToLowerCamel": strcase.ToLowerCamel,
 }
 
 func GoLocalName(name string, blacklist ...string) string {
