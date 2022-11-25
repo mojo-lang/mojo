@@ -4,7 +4,7 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
-	path2 "path"
+	"path"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
@@ -29,8 +29,8 @@ type GeneratedFile struct {
 
 	Reader io.Reader
 
-	SkipIfExist       bool
-	SkipNoneGenerated bool
+	SkipIfExist         bool
+	SkipIfUserCodeMixed bool
 }
 
 type GeneratedFiles []*GeneratedFile
@@ -44,8 +44,8 @@ func (c *GeneratedFile) WriteTo(output string, guard *PathGuard) error {
 		return nil
 	}
 
-	name := path2.Join(output, c.Name)
-	path := path2.Dir(name)
+	name := path.Join(output, c.Name)
+	path := path.Dir(name)
 
 	if err := guard.Check(path); err != nil {
 		return err
@@ -56,7 +56,7 @@ func (c *GeneratedFile) WriteTo(output string, guard *PathGuard) error {
 			return nil
 		}
 
-		if c.SkipNoneGenerated && !IsGeneratedFile(name) {
+		if c.SkipIfUserCodeMixed && !IsAllGeneratedFile(name) {
 			return nil
 		}
 	}

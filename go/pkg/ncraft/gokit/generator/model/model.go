@@ -39,10 +39,10 @@ func (m Model) Generate(path string, service *data.Service) ([]*util2.GeneratedF
 
 		formattedCode := _go.FormatCodeBytes(codeBytes)
 		files = append(files, &util2.GeneratedFile{
-			Name:              strings.Replace(path, "ENTITY", v.Name, 1),
-			Reader:            bytes.NewReader(formattedCode),
-			SkipIfExist:       false,
-			SkipNoneGenerated: false,
+			Name:                strings.Replace(path, "ENTITY", v.Name, 1),
+			Reader:              bytes.NewReader(formattedCode),
+			SkipIfExist:         false,
+			SkipIfUserCodeMixed: false,
 		})
 	}
 

@@ -10,6 +10,7 @@ import (
 	"go/token"
 	"io"
 
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 	"github.com/pkg/errors"
 
@@ -53,16 +54,16 @@ func GetHandlersTemplate() string {
 func New(svc *data.Interface, prev io.Reader) (render.Renderer, error) {
 	var h handler
 	// logs.WithField("Interface Methods", len(svc.Methods)).Debug("Handler being created")
-	h.mMap = newMethodMap(svc.Methods)
+	h.methodMap = newMethodMap(svc.Methods)
 	h.service = svc
 
 	if prev == nil {
 		return &h, nil
 	}
 
-	h.fset = token.NewFileSet()
+	h.fileSet = token.NewFileSet()
 	var err error
-	if h.ast, err = parser.ParseFile(h.fset, "", prev, parser.ParseComments); err != nil {
+	if h.ast, err = parser.ParseFile(h.fileSet, "", prev, parser.ParseComments); err != nil {
 		return nil, err
 	}
 
@@ -82,50 +83,43 @@ func newMethodMap(meths []*data.Method) methodMap {
 }
 
 type handler struct {
-	fset    *token.FileSet
-	service *data.Interface
-	mMap    methodMap
-	ast     *ast.File
-}
-
-type handlerData struct {
-	InterfaceName string
-	Methods       []*data.Method
+	fileSet   *token.FileSet
+	service   *data.Interface
+	methodMap methodMap
+	ast       *ast.File
 }
 
 // Render returns a go code server handler that has functions for all
 // InterfaceMethods in the service definition.
-func (h *handler) Render(alias string, data *data.Service) (io.Reader, error) {
+func (h *handler) Render(alias string, service *data.Service) (io.Reader, error) {
 	if alias != ServerHandlerPath {
 		return nil, errors.Errorf("cannot render unknown file: %q", alias)
 	}
 	if h.ast == nil {
-		return applyServerTmpl(data)
+		return applyServerTmpl(service)
 	}
 
 	// Remove exported methods not defined in service definition
 	// and remove methods defined in the previous file from methodMap
-	// log.WithField("Interface Methods", len(h.mMap)).Debug("Before prune")
-	// Lowercase the service name before pruning because the templates all
-	// lowercase the service name when generating code to ensure Identifiers
-	// incorporating the service name remain unexported.
-	h.ast.Decls = h.mMap.pruneDecls(h.ast.Decls, strcase.ToLowerCamel(data.Interface.Name))
-	// log.WithField("Interface Methods", len(h.mMap)).Debug("After prune")
+	logs.Debugw("Before prune", "Interface Methods", len(h.methodMap))
 
-	// create a new handlerData, and add all methods not defined in the previous file
-	ex := handlerData{
-		InterfaceName: data.Interface.Name,
+	var prunedDecls []ast.Decl
+	h.ast.Decls, prunedDecls = h.methodMap.pruneDecls(h.ast.Decls, strcase.ToLowerCamel(service.Interface.ServerName))
+	logs.Debugw("After prune", "Interface Methods", len(h.methodMap))
+
+	if len(prunedDecls) > 0 {
+		var comments []*ast.CommentGroup
+		for _, comment := range h.ast.Comments {
+			if !commentOfDecls(h.fileSet, comment, prunedDecls) {
+				comments = append(comments, comment)
+			}
+		}
+		h.ast.Comments = comments
 	}
 
 	// If there are no methods to templates then exit early
-	if len(h.mMap) == 0 {
+	if len(h.methodMap) == 0 {
 		return h.buffer()
-	}
-
-	for _, v := range h.mMap {
-		// log.WithField("Method", k).
-		//	Info("Generating handler from rpc definition")
-		ex.Methods = append(ex.Methods, v)
 	}
 
 	// get the code out of the ast
@@ -134,10 +128,22 @@ func (h *handler) Render(alias string, data *data.Service) (io.Reader, error) {
 		return nil, err
 	}
 
-	// render the server for all methods not already defined
-	// FIXME 使用ex构造一个data
-	newCode, err := applyServerMethsTmpl(data)
+	// create a new handlerData, and add all methods not defined in the previous file
+	ex := &data.Service{
+		Interface: &data.Interface{
+			Name:       service.Interface.Name,
+			ServerName: service.Interface.ServerName,
+			Methods:    nil,
+		},
+		FuncMap: service.FuncMap,
+	}
+	for k, v := range h.methodMap {
+		logs.Infow("Generating handler from rpc definition", "Method", k)
+		ex.Interface.Methods = append(ex.Interface.Methods, v)
+	}
 
+	// render the server for all methods not already defined
+	newCode, err := applyServerMethsTmpl(ex)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +157,7 @@ func (h *handler) Render(alias string, data *data.Service) (io.Reader, error) {
 
 func (h *handler) buffer() (*bytes.Buffer, error) {
 	code := bytes.NewBuffer(nil)
-	err := printer.Fprint(code, h.fset, h.ast)
+	err := printer.Fprint(code, h.fileSet, h.ast)
 
 	if err != nil {
 		return nil, err
@@ -168,43 +174,43 @@ func (h *handler) buffer() (*bytes.Buffer, error) {
 // deleted from methodMap, resulting in a methodMap only containing keys and
 // values for functions defined in the service but not in the handler ast.
 //
-// In addition pruneDecls will update unremoved "Handler func"s input
-// paramaters and output results to by the types described in methodMap's
+// In addition, pruneDecls will update un-removed "Handler func"s input
+// parameters and output results to by the types described in methodMap's
 // serviceMethod for that "Handler func".
-func (m methodMap) pruneDecls(decls []ast.Decl, svcName string) []ast.Decl {
+func (m methodMap) pruneDecls(decls []ast.Decl, svcName string) ([]ast.Decl, []ast.Decl) {
 	var newDecls []ast.Decl
+	var prunedDecls []ast.Decl
 	for _, d := range decls {
 		switch x := d.(type) {
 		case *ast.FuncDecl:
 			name := x.Name.Name
 			// Special case NewInterface and ignore unexported
-			if name == ignoredFunc || !ast.IsExported(name) {
-				// log.WithField("Func", name).
-				//	Debug("Ignoring")
+			if name == ignoredFunc || !ast.IsExported(name) || x.Recv == nil {
+				logs.Debugw("Ignoring", "Func", name)
 				newDecls = append(newDecls, x)
 				continue
 			}
-			if ok := isValidFunc(x, m, svcName); ok == true {
+			if ok := isValidFunc(x, m, svcName); ok {
 				indexName := strcase.ToSnake(name)
 				updateParams(x, m[indexName])
 				updateResults(x, m[indexName])
 				newDecls = append(newDecls, x)
 				delete(m, indexName)
+			} else {
+				prunedDecls = append(prunedDecls, x)
 			}
 		default:
 			newDecls = append(newDecls, d)
 		}
-
 	}
-	return newDecls
+	return newDecls, prunedDecls
 }
 
 // updateParams updates the second param of f to be `X`.(m.Request.Name).
 // func ProtoMethod(ctx context.Context, *pb.Old) ...-> func ProtoMethod(ctx context.Context, *pb.(m.Request.Name))...
 func updateParams(f *ast.FuncDecl, m *data.Method) {
 	if f.Type.Params.NumFields() != 2 {
-		// log.WithField("Function", f.Name.Name).
-		//	Warn("Function params signature should be func NAME(ctx context.Context, in *pb.TYPE), cannot fix")
+		logs.Warnw("Function params signature should be func NAME(ctx context.Context, in *pb.TYPE), cannot fix", "Function", f.Name.Name)
 		return
 	}
 	updatePBFieldType(f.Type.Params.List[1].Type, m.Request.Name)
@@ -214,8 +220,7 @@ func updateParams(f *ast.FuncDecl, m *data.Method) {
 // func ProtoMethod(...) (*pb.Old, error) ->  func ProtoMethod(...) (*pb.(m.Response.Name), error)
 func updateResults(f *ast.FuncDecl, m *data.Method) {
 	if f.Type.Results.NumFields() != 2 {
-		// log.WithField("Function", f.Name.Name).
-		//	Warn("Function results signature should be (*pb.TYPE, error), cannot fix")
+		logs.Warnw("Function results signature should be (*pb.TYPE, error), cannot fix", "Function", f.Name.Name)
 		return
 	}
 	updatePBFieldType(f.Type.Results.List[0].Type, m.Response.Name)
@@ -234,43 +239,38 @@ func updatePBFieldType(t ast.Expr, newType string) {
 	}
 }
 
-// isVaidFunc returns false if f is exported and does no exist in m with
-// reciever svcName + "Interface".
+// isValidFunc returns false if f is exported and does not exist in m with
+// receiver svcName + "Interface".
 func isValidFunc(f *ast.FuncDecl, m methodMap, svcName string) bool {
 	name := f.Name.String()
 	if !ast.IsExported(name) {
-		// log.WithField("Func", name).
-		//	Debug("Unexported function; ignoring")
+		logs.Debugw("Unexported function; ignoring", "func", name)
 		return true
 	}
 
 	v := m[strcase.ToSnake(name)]
 	if v == nil {
-		// log.WithField("Method", name).
-		//	Info("Method does not exist in service definition as an rpc; removing")
+		logs.Infow("Method does not exist in service definition as a rpc; removing", "Method", name)
 		return false
 	}
 
-	rName := recvTypeToString(f.Recv)
+	rName := receiveTypeToString(f.Recv)
 	if rName != svcName {
-		// log.WithField("Func", name).WithField("Receiver", rName).
-		//	Info("Func is exported with improper receiver; removing")
+		logs.Infow("Func is exported with improper receiver; removing", "Func", name, "Receiver", rName)
 		return false
 	}
 
-	// log.WithField("Func", name).
-	//	Debug("Method already exists in service definition; ignoring")
-
+	logs.Debugw("Method already exists in service definition; ignoring", "Func", name)
 	return true
 }
 
-// recvTypeToString accepts an *ast.FuncDecl.Recv recv, and returns the
+// receiveTypeToString accepts an *ast.FuncDecl.Recv recv, and returns the
 // string of the recv type.
 //	func (s Foo) Test() {} -> "Foo"
-func recvTypeToString(recv *ast.FieldList) string {
+func receiveTypeToString(recv *ast.FieldList) string {
 	if recv == nil ||
 		recv.List[0].Type == nil {
-		// log.Debug("Function has no reciever")
+		logs.Debug("Function has no receiver")
 		return ""
 	}
 
@@ -308,8 +308,30 @@ func exprString(e ast.Expr) string {
 	return ""
 }
 
+func commentOfDecls(file *token.FileSet, comment *ast.CommentGroup, decls []ast.Decl) bool {
+	for _, decl := range decls {
+		if commentOfDecl(file, comment, decl) {
+			return true
+		}
+	}
+	return false
+}
+
+func commentOfDecl(file *token.FileSet, comment *ast.CommentGroup, decl ast.Decl) bool {
+	lb := file.Position(comment.Pos()).Line
+	le := file.Position(comment.End()).Line
+	ldb := file.Position(decl.Pos()).Line
+	lde := file.Position(decl.End()).Line
+
+	if lb >= (ldb-1) && le < lde {
+		return true
+	}
+
+	return false
+}
+
 func applyServerTmpl(service *data.Service) (io.Reader, error) {
-	// logs.Debug("Rendering handler for the first time")
+	logs.Debug("Rendering handler for the first time")
 	return util.ApplyTemplate("ServerTmpl", GetHandlersTemplate(), service, service.FuncMap)
 }
 

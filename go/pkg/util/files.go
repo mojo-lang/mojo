@@ -30,7 +30,7 @@ func clearGeneratedFiles(path string, recursive bool, suffixes ...string) error 
 			}
 		}
 		if len(suffixes) == 0 || matchedSuffix {
-			return IsGeneratedFile(file)
+			return IsAllGeneratedFile(file)
 		}
 		return false
 	})
@@ -57,7 +57,7 @@ func hasSuffix(file string, suffixes ...string) bool {
 	return false
 }
 
-func IsGeneratedFile(path string) bool {
+func IsAllGeneratedFile(path string) bool {
 	if core.IsExist(path) {
 		content, err := ioutil.ReadFile(path)
 		if err != nil {

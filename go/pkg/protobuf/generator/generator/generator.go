@@ -249,9 +249,9 @@ func (g *Generator) WriteAllFiles(dir string) error {
 	for _, file := range g.Response.File {
 		if file.Name != nil && file.Content != nil {
 			files = append(files, &util2.GeneratedFile{
-				Name:              *file.Name,
-				Content:           *file.Content,
-				SkipNoneGenerated: true,
+				Name:                *file.Name,
+				Content:             *file.Content,
+				SkipIfUserCodeMixed: true,
 			})
 		} else {
 			logs.Warn("meet an empty file!")

@@ -32,7 +32,6 @@ func generateFiles(files []*util.GeneratedFile, output string) error {
 		Suffixes:           []string{".go", ".mod", ".md", ".sh", ".yaml"},
 	}
 	for _, file := range files {
-		file.SkipNoneGenerated = true
 		if err := file.WriteTo(output, guard); err != nil {
 			return err
 		}

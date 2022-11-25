@@ -16,7 +16,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/httptransport"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/model"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/templates"
-	util2 "github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 type HandlerTemplate struct {
@@ -45,18 +45,18 @@ func (o Options) SyncTo(ds *data.Service) {
 	ds.Go.ApiRepositoryPath = o.ApiRepository
 }
 
-func (o *Options) GenerateClient(ds *data.Service) ([]*util2.GeneratedFile, error) {
+func (o *Options) GenerateClient(ds *data.Service) ([]*util.GeneratedFile, error) {
 	o.SyncTo(ds)
 	return o.generateTemplatedFiles(ds, templates.ClientNames(), templates.Client)
 }
 
-func (o *Options) GenerateService(ds *data.Service) ([]*util2.GeneratedFile, error) {
+func (o *Options) GenerateService(ds *data.Service) ([]*util.GeneratedFile, error) {
 	o.SyncTo(ds)
 	return o.generateTemplatedFiles(ds, templates.ServiceNames(), templates.Service)
 }
 
 // GenerateTemplatedFiles generate the service or client files
-func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, getter templates.FileGetter) ([]*util2.GeneratedFile, error) {
+func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, getter templates.FileGetter) ([]*util.GeneratedFile, error) {
 	if tmpl := o.HandlerTemplate; tmpl != nil {
 		if len(tmpl.Interface) > 0 {
 			handlers.ResetHandlerInterface(tmpl.Interface)
@@ -69,7 +69,7 @@ func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, g
 		}
 	}
 
-	var codeGenFiles util2.GeneratedFiles
+	var codeGenFiles util.GeneratedFiles
 
 	// Remove the suffix "-service" since it's added back in by templatePathToActual
 	svcName := strcase.ToKebab(ds.Interface.BaredName)
@@ -95,11 +95,11 @@ func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, g
 			return nil, logs.NewErrorw("cannot render templates", "error", err.Error())
 		}
 
-		codeGenFiles = append(codeGenFiles, &util2.GeneratedFile{
-			Name:              actualPath,
-			Reader:            file,
-			SkipIfExist:       false,
-			SkipNoneGenerated: false,
+		codeGenFiles = append(codeGenFiles, &util.GeneratedFile{
+			Name:                actualPath,
+			Reader:              file,
+			SkipIfExist:         false,
+			SkipIfUserCodeMixed: tmplPath != handlers.ServerHandlerPath,
 		})
 	}
 
@@ -181,5 +181,5 @@ func applyTemplateFromPath(tmplPath string, ds *data.Service, getter templates.F
 		return nil, errors.Wrapf(err, "unable to find templates file: %v", tmplPath)
 	}
 
-	return util2.ApplyTemplate(tmplPath, string(tmplBytes), ds, ds.FuncMap)
+	return util.ApplyTemplate(tmplPath, string(tmplBytes), ds, ds.FuncMap)
 }

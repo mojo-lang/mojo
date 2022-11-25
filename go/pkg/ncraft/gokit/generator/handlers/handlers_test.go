@@ -177,7 +177,7 @@ func TestRecvTypeToString(t *testing.T) {
 
 	for i := 0; i < len(values); i += 2 {
 		fnc := parseFuncFromString(values[i], t)
-		got := recvTypeToString(fnc.Recv)
+		got := receiveTypeToString(fnc.Recv)
 		want := values[i+1]
 		if got != want {
 			t.Errorf("Func Recv got: \"%s\", want: \"%s\": for func: %s", got, want, values[i])
@@ -357,7 +357,7 @@ func TestPruneDecls(t *testing.T) {
 	}
 
 	if lenMMapBefore-1 != lenMMapAfter {
-		t.Fatalf("Prune did update mMap as expected; got: %d, want: %d", lenMMapBefore-1, lenMMapAfter)
+		t.Fatalf("Prune did update methodMap as expected; got: %d, want: %d", lenMMapBefore-1, lenMMapAfter)
 	}
 }
 
@@ -543,8 +543,8 @@ func renderInterface(svc *svcdef.Interface, prev string, data *gengokit.Data) (s
 }
 
 func parseASTFromString(s string, t *testing.T) *ast.File {
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile2(fset, "", s, 0)
+	fileSet := token.NewFileSet()
+	f, err := parser.ParseFile2(fileSet, "", s, 0)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -32,7 +32,7 @@ func (g *Generator) Generate(output string) error {
 	}
 
 	for _, f := range g.Files {
-		f.SkipNoneGenerated = true
+		f.SkipIfUserCodeMixed = true
 		if err = f.WriteTo(output, guard); err != nil {
 			return err
 		}

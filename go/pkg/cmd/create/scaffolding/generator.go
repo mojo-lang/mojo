@@ -47,9 +47,9 @@ func (g *Generator) Generate(data *Data, output string) error {
 			return err
 		}
 		files = append(files, &util.GeneratedFile{
-			Name:              path2.Join(output, pkgDirName, filename),
-			Content:           str,
-			SkipNoneGenerated: true,
+			Name:                path2.Join(output, pkgDirName, filename),
+			Content:             str,
+			SkipIfUserCodeMixed: true,
 		})
 		return nil
 	}
