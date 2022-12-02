@@ -204,7 +204,7 @@ func Run(cfg nserver.Config) {
     {{if .Interface.HasSubscription}}
     client, err := messaging.NewClient()
     if err != nil {
-        logs.Warnw("Agent Server Run: failed to create the message client", "error", err.Error())
+        logs.Fatalw("Agent Server Run: failed to create the message client", "error", err.Error())
     }
 
     for _, sub := range client.GetConfig().GetSubscriptions() {
