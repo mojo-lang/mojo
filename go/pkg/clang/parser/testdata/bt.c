@@ -38,11 +38,3 @@ void main() {
    printout(root);
 }
 
-//struct Test {
-//  typedef struct {int a;} typeanon;
-//  struct {
-//    int bariton;
-//    };
-//  };
-//  int bar;
-//};

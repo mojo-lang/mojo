@@ -45,10 +45,12 @@ func (c *GeneratedFile) WriteTo(output string, guard *PathGuard) error {
 	}
 
 	name := path.Join(output, c.Name)
-	path := path.Dir(name)
+	dir := path.Dir(name)
 
-	if err := guard.Check(path); err != nil {
-		return err
+	if guard != nil {
+		if err := guard.Check(dir); err != nil {
+			return err
+		}
 	}
 
 	if core.IsExist(name) {

@@ -33,6 +33,8 @@ func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, 
 	}
 
 	// tu.FindIncludesInFile(tu.File(fileName))
+	structs := make(map[string]*lang.StructDecl)
+	enums := make(map[string]*lang.EnumDecl)
 
 	cursor := tu.TranslationUnitCursor()
 	cursor.Visit(func(cursor, parent clang.Cursor) clang.ChildVisitResult {
@@ -48,8 +50,67 @@ func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, 
 		logs.Debugw("visit a cursor", "cursor", cursor.Spelling(), "kind", cursor.Kind().Spelling(), "USR", cursor.USR())
 
 		switch cursor.Kind() {
-		case clang.Cursor_ClassDecl, clang.Cursor_EnumDecl, clang.Cursor_StructDecl, clang.Cursor_Namespace, clang.Cursor_UnionDecl:
+		case clang.Cursor_ClassDecl:
 			return clang.ChildVisit_Recurse
+		case clang.Cursor_EnumDecl:
+			typ := cursor.Type()
+			decl := &lang.EnumDecl{
+				Name: typ.Spelling(),
+				Type: &lang.EnumType{},
+			}
+			enums[decl.Name] = decl
+			sourceFile.Statements = append(sourceFile.Statements, lang.NewEnumDeclStatement(decl))
+			return clang.ChildVisit_Recurse
+		case clang.Cursor_EnumConstantDecl:
+			name := cursor.Spelling()
+			value := cursor.EnumConstantDeclValue()
+			en := parent.Type().Spelling()
+			if e, ok := enums[en]; ok {
+				decl := &lang.ValueDecl{
+					Name: name,
+				}
+				if value != 0 {
+					decl.Initializer = &lang.Initializer{Value: lang.NewIntegerLiteralExpressionFrom(value)}
+				}
+				e.Type.Enumerators = append(e.Type.Enumerators, decl)
+			}
+			return clang.ChildVisit_Recurse
+		case clang.Cursor_StructDecl:
+			typ := cursor.Type()
+			decl := &lang.StructDecl{
+				Name: typ.Spelling(),
+				Type: &lang.StructType{},
+			}
+			structs[decl.Name] = decl
+			sourceFile.Statements = append(sourceFile.Statements, lang.NewStructDeclStatement(decl))
+			return clang.ChildVisit_Recurse
+		case clang.Cursor_FieldDecl:
+			typ := cursor.Type()
+			tName := typ.Spelling()
+			fName := cursor.Spelling()
+			sn := parent.Type().Spelling()
+			if s, ok := structs[sn]; ok {
+				decl := &lang.ValueDecl{
+					Name:       fName,
+					Attributes: nil,
+					Type:       &lang.NominalType{Name: tName},
+				}
+				s.Type.Fields = append(s.Type.Fields, decl)
+			}
+			return clang.ChildVisit_Recurse
+		case clang.Cursor_Namespace:
+			return clang.ChildVisit_Recurse
+		case clang.Cursor_UnionDecl:
+			return clang.ChildVisit_Recurse
+		case clang.Cursor_TypedefDecl:
+			typ := cursor.Type()
+			decl := &lang.TypeAliasDecl{
+				Name: typ.Spelling(),
+				Type: &lang.NominalType{
+					Name: cursor.TypedefDeclUnderlyingType().Spelling(),
+				},
+			}
+			sourceFile.Statements = append(sourceFile.Statements, lang.NewTypeAliasDeclStatement(decl))
 		case clang.Cursor_InclusionDirective:
 			// FIXME currently the include directive can't hit
 		case clang.Cursor_FunctionDecl:
@@ -92,10 +153,3 @@ func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, 
 
 	return sourceFile, nil
 }
-
-// func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
-//    if bytes, err := fs.ReadFile(fileSys, fileName); err != nil {
-//        return nil, err
-//    } else {
-//    }
-// }
