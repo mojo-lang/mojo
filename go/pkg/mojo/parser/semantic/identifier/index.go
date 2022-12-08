@@ -6,7 +6,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-// global identifier index
+// Index global identifier index
 type Index struct {
 	Packages    map[string][]*lang.Package
 	Identifiers map[string][]*lang.Identifier

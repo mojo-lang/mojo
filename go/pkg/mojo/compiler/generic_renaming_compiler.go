@@ -10,7 +10,7 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 type LocationType int32

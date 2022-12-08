@@ -7,7 +7,6 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
-	"os"
 	"path"
 	"path/filepath"
 	"sort"
@@ -26,8 +25,7 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 // force including the rpc, geom package in go.mod for generating all the mojo packages
@@ -241,7 +239,7 @@ func compileMojoPackage(pkg *mojoPackage) (*lang.Package, *BinaryFile, error) {
 	}
 
 	plugins := plugin.NewPlugins("mpm", "syntax")
-	p, err := plugins.ParsePackagePath(parser.WithWorkingDir(context.Empty(), dir), ".", os.DirFS(dir))
+	p, err := plugins.ParsePath(plugin.WithWorkingDir(context.Empty(), dir), dir)
 	if err != nil {
 		return nil, nil, err
 	}

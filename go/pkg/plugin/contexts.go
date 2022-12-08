@@ -1,4 +1,4 @@
-package parser
+package plugin
 
 import (
 	"io/fs"
@@ -8,6 +8,32 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
+
+const pluginsKey = "@plugins"
+
+func WithPlugins(ctx context.Context, plugins *Plugins) context.Context {
+	return context.WithValues(ctx, pluginsKey, plugins)
+}
+
+func ContextPlugins(ctx context.Context) *Plugins {
+	if plugins, ok := ctx.Value(pluginsKey).(*Plugins); ok {
+		return plugins
+	}
+	return nil
+}
+
+const fsKey = "@fs"
+
+func WithFs(ctx context.Context, fs fs.FS) context.Context {
+	return context.WithValues(ctx, fsKey, fs)
+}
+
+func ContextFs(ctx context.Context) fs.FS {
+	if f, ok := ctx.Value(fsKey).(fs.FS); ok {
+		return f
+	}
+	return nil
+}
 
 const fsCacheKey = "@fsCache"
 
@@ -40,7 +66,7 @@ func ContextDeclaredPackage(ctx context.Context) *lang.Package {
 	return nil
 }
 
-const workingDirKey = "workingDir"
+const workingDirKey = "@workingDir"
 
 func WithWorkingDir(ctx context.Context, workingDir string) context.Context {
 	return context.WithValues(ctx, workingDirKey, workingDir)
@@ -58,7 +84,7 @@ func ContextWorkingDir(ctx context.Context) string {
 	}
 }
 
-const packageNameKey = "packageName"
+const packageNameKey = "@packageName"
 
 func WithPackageName(ctx context.Context, pkgName string) context.Context {
 	return context.WithValues(ctx, packageNameKey, pkgName)

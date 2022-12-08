@@ -10,13 +10,12 @@ import (
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/ncraft/testdata"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 func TestServices_CompileInterface(t *testing.T) {
 	plugins := plugin.NewPlugins("mpm", "syntax", "semantic", "compiler")
-	pkg, err := plugins.ParsePackagePath(context.Empty(), "mojo-ncraft", testdata.NCraftCaseFiles)
+	pkg, err := plugins.ParsePath(context.Empty(), "../testdata/mojo-ncraft")
 	assert.NoError(t, err)
 	assert.NotNil(t, pkg)
 	if pkg == nil {

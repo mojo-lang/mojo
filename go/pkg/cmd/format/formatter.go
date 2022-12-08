@@ -1,7 +1,7 @@
 package format
 
 import (
-	"os"
+	"path"
 	"strings"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
@@ -9,9 +9,8 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/printer"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 type Formatter struct {
@@ -26,7 +25,7 @@ func (f *Formatter) Format() error {
 	if strings.HasPrefix(f.Path, f.WorkingDir) {
 		f.Path = strings.TrimPrefix(f.Path, f.WorkingDir)
 	}
-	pkg, err := plugins.ParsePackagePath(parser.WithWorkingDir(context.Empty(), f.WorkingDir), f.Path, os.DirFS(f.WorkingDir))
+	pkg, err := plugins.ParsePath(context.Empty(), path.Join(f.WorkingDir, f.Path))
 	if err != nil {
 		return err
 	}

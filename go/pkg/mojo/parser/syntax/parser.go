@@ -3,6 +3,7 @@ package syntax
 import (
 	"errors"
 	"io/fs"
+	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -13,8 +14,7 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
@@ -88,18 +88,26 @@ func (p Parser) ParseStream(fileName string, input *antlr.InputStream) (*lang.So
 	return nil, logs.NewErrorw("failed to parse mojo file", "file", fileName)
 }
 
-func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
-	if bytes, err := fs.ReadFile(fileSys, fileName); err != nil {
+func (p Parser) ParseFile(ctx context.Context, fileName string) (sourceFile *lang.SourceFile, err error) {
+	var content []byte
+	f := plugin.ContextFs(ctx)
+	if f == nil {
+		content, err = ioutil.ReadFile(fileName)
+	} else {
+		content, err = fs.ReadFile(f, fileName)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	if sourceFile, err = p.ParseStream(fileName, antlr.NewInputStream(string(content))); err != nil {
 		return nil, err
 	} else {
-		if sourceFile, err := p.ParseStream(fileName, antlr.NewInputStream(string(bytes))); err != nil {
-			return nil, err
-		} else {
-			sourceFile.Name = path.Base(fileName)
-			sourceFile.FullName = fileName
+		sourceFile.Name = path.Base(fileName)
+		sourceFile.FullName = fileName
 
-			return sourceFile, nil
-		}
+		return sourceFile, nil
 	}
 }
 
@@ -113,25 +121,14 @@ func (p Parser) ParsePackage(ctx context.Context, pkg *lang.Package) (err error)
 		pkgPath = path.Join(pkgPath, "mojo")
 	}
 
-	var files fs.FS
-	if fsCache := parser.ContextFsCache(ctx); fsCache != nil {
-		files = fsCache[pkg.FullName]
-	}
-	if files == nil {
-		workingDir := pkg.GetExtraString("workingDir")
-		if len(workingDir) == 0 {
-			workingDir = "."
-		}
-		files = os.DirFS(workingDir)
-	}
-
-	_, err = p.ParsePackagePath(parser.WithDeclaredPackage(ctx, pkg), pkgPath, files)
+	workingDir := pkg.GetExtraString("workingDir")
+	_, err = p.ParsePath(plugin.WithDeclaredPackage(ctx, pkg), path.Join(workingDir, pkgPath))
 	util.SetPackageProcessed(pkg, pluginName)
 	return
 }
 
-func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs.FS) (*lang.Package, error) {
-	currentPkg := parser.ContextDeclaredPackage(ctx)
+func (p Parser) ParsePath(ctx context.Context, pkgPath string) (*lang.Package, error) {
+	currentPkg := plugin.ContextDeclaredPackage(ctx)
 	currentPkgName := ""
 	if currentPkg != nil {
 		if util.IsPackageProcessed(currentPkg, pluginName) {
@@ -139,11 +136,18 @@ func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs
 		}
 		currentPkgName = currentPkg.FullName
 	} else {
-		currentPkgName = parser.ContextPackageName(ctx)
+		currentPkgName = plugin.ContextPackageName(ctx)
 		currentPkg = &lang.Package{
 			Name:     lang.GetPackageName(currentPkgName),
 			FullName: currentPkgName,
 		}
+	}
+
+	fileSys := plugin.ContextFs(ctx)
+	if fileSys == nil {
+		fileSys = os.DirFS(pkgPath)
+		ctx = plugin.WithFs(ctx, fileSys)
+		pkgPath = ""
 	}
 
 	currentPath := path.Join(pkgPath, lang.PackageNameToPath(currentPkgName))
@@ -172,11 +176,11 @@ func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs
 				pkgName = currentPkgName + "." + f.Name()
 			}
 
-			newCtx := parser.WithDeclaredPackage(context.WithType(thisCtx, currentPkg), &lang.Package{
+			newCtx := plugin.WithDeclaredPackage(context.WithType(thisCtx, currentPkg), &lang.Package{
 				Name:     lang.GetPackageName(pkgName),
 				FullName: pkgName,
 			})
-			if _, err = p.ParsePackagePath(newCtx, pkgPath, fileSys); err != nil {
+			if _, err = p.ParsePath(newCtx, pkgPath); err != nil {
 				return nil, err
 			}
 		} else {
@@ -184,7 +188,7 @@ func (p Parser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs
 				continue
 			}
 
-			if sourceFile, err := p.ParseFile(thisCtx, path.Join(currentPath, f.Name()), fileSys); err != nil {
+			if sourceFile, err := p.ParseFile(thisCtx, path.Join(currentPath, f.Name())); err != nil {
 				return nil, err
 			} else {
 				sourceFile.PackageName = currentPkgName

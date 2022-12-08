@@ -8,13 +8,12 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/testdata"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
-func TestDependencyParser_ParsePackagePath(t *testing.T) {
+func TestDependencyParser_ParsePath(t *testing.T) {
 	plugins := plugin.NewPlugins("mpm", "syntax", "semantic", "compiler")
-	pkg, err := plugins.ParsePackagePath(context.Empty(), "mojo-alias", testdata.AliasCaseFiles)
+	pkg, err := plugins.ParsePath(context.Empty(), "../testdata/mojo-alias")
 	assert.NoError(t, err)
 	assert.NotNil(t, pkg)
 }

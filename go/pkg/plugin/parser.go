@@ -2,14 +2,11 @@ package plugin
 
 import (
 	"errors"
-	"io/fs"
 
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/hook"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
 )
 
 const (
@@ -21,15 +18,15 @@ const (
 	parseTypeAliasMethod  = "ParseTypeAlias"
 )
 
-func ParseFile(p interface{}, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
-	if fileParser, ok := p.(parser.FileParser); ok {
-		fileParser.ParseFile(context.Empty(), fileName, fileSys)
-	}
-	return nil, errors.New("not a valid plugin type")
+func ParseString(p interface{}, ctx context.Context, content string) (*lang.SourceFile, error) {
+	return ParseFile(p, WithFs(ctx, core.StringFS(content)), "")
 }
 
-func ParseString(p interface{}, content string) (*lang.SourceFile, error) {
-	return ParseFile(p, "", core.StringFS(content))
+func ParseFile(p interface{}, ctx context.Context, fileName string) (*lang.SourceFile, error) {
+	if fileParser, ok := p.(FileParser); ok {
+		fileParser.ParseFile(ctx, fileName)
+	}
+	return nil, errors.New("not a valid plugin type")
 }
 
 func ParsePackage(p interface{}, ctx context.Context, pkg *lang.Package) error {
@@ -42,7 +39,7 @@ func ParsePackage(p interface{}, ctx context.Context, pkg *lang.Package) error {
 		return core.NewSkipError()
 	}
 
-	if hk, ok := p.(hook.PackagePreHook); ok {
+	if hk, ok := p.(PackagePreHook); ok {
 		err := hk.PrePackage(ctx, pkg)
 		if core.IsSkipError(err) {
 			return nil
@@ -52,12 +49,12 @@ func ParsePackage(p interface{}, ctx context.Context, pkg *lang.Package) error {
 	}
 
 	defer func() {
-		if hook, ok := p.(hook.PackagePostHook); ok {
+		if hook, ok := p.(PackagePostHook); ok {
 			hook.PostPackage(ctx, pkg)
 		}
 	}()
 
-	if pkgParser, ok := p.(parser.PackageParser); ok {
+	if pkgParser, ok := p.(PackageParser); ok {
 		return pkgParser.ParsePackage(ctx, pkg)
 	}
 
@@ -86,7 +83,7 @@ func ParseSourceFile(p interface{}, ctx context.Context, file *lang.SourceFile) 
 		return core.NewSkipError()
 	}
 
-	if hk, ok := p.(hook.SourceFilePreHook); ok {
+	if hk, ok := p.(SourceFilePreHook); ok {
 		err := hk.PreSourceFile(ctx, file)
 		if core.IsSkipError(err) {
 			return nil
@@ -95,12 +92,12 @@ func ParseSourceFile(p interface{}, ctx context.Context, file *lang.SourceFile) 
 		}
 	}
 	defer func() {
-		if hk, ok := p.(hook.SourceFilePostHook); ok {
+		if hk, ok := p.(SourceFilePostHook); ok {
 			hk.PostSourceFile(ctx, file)
 		}
 	}()
 
-	if fileParser, ok := p.(parser.SourceFileParser); ok {
+	if fileParser, ok := p.(SourceFileParser); ok {
 		return fileParser.ParseSourceFile(ctx, file)
 	}
 

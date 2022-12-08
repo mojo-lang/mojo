@@ -8,8 +8,9 @@ import (
 
 type Plugin interface {
 	GetName() string
-	GetGroup() string
 	GetPriority() int
+
+	GetGroup() string
 	GetGroupPriority() int
 
 	Create(options core.Options) Plugin

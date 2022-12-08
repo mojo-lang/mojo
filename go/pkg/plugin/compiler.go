@@ -5,8 +5,6 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/compiler"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/hook"
 )
 
 const (
@@ -18,6 +16,15 @@ const (
 	compileTypeAliasMethod  = "CompileTypeAlias"
 )
 
+func IsCompiler(c interface{}) bool {
+	return IsPackageCompiler(c) ||
+		IsSourceFileCompiler(c) ||
+		IsStructCompiler(c) ||
+		IsTypeAliasCompiler(c) ||
+		IsEnumCompiler(c) ||
+		IsInterfaceCompiler(c)
+}
+
 func CompilePackage(p interface{}, ctx context.Context, pkg *lang.Package) error {
 	if p == nil {
 		return nil
@@ -28,7 +35,7 @@ func CompilePackage(p interface{}, ctx context.Context, pkg *lang.Package) error
 		return core.NewSkipError()
 	}
 
-	if hk, ok := p.(hook.PackagePreHook); ok {
+	if hk, ok := p.(PackagePreHook); ok {
 		err := hk.PrePackage(ctx, pkg)
 		if core.IsSkipError(err) {
 			return nil
@@ -38,12 +45,12 @@ func CompilePackage(p interface{}, ctx context.Context, pkg *lang.Package) error
 	}
 
 	defer func() {
-		if hook, ok := p.(hook.PackagePostHook); ok {
+		if hook, ok := p.(PackagePostHook); ok {
 			hook.PostPackage(ctx, pkg)
 		}
 	}()
 
-	if pkgCompiler, ok := p.(compiler.PackageCompiler); ok {
+	if pkgCompiler, ok := p.(PackageCompiler); ok {
 		return pkgCompiler.CompilePackage(ctx, pkg)
 	}
 
@@ -72,7 +79,7 @@ func CompileSourceFile(p interface{}, ctx context.Context, file *lang.SourceFile
 		return core.NewSkipError()
 	}
 
-	if hk, ok := p.(hook.SourceFilePreHook); ok {
+	if hk, ok := p.(SourceFilePreHook); ok {
 		err := hk.PreSourceFile(ctx, file)
 		if core.IsSkipError(err) {
 			return nil
@@ -81,12 +88,12 @@ func CompileSourceFile(p interface{}, ctx context.Context, file *lang.SourceFile
 		}
 	}
 	defer func() {
-		if hk, ok := p.(hook.SourceFilePostHook); ok {
+		if hk, ok := p.(SourceFilePostHook); ok {
 			hk.PostSourceFile(ctx, file)
 		}
 	}()
 
-	if fileCompiler, ok := p.(compiler.SourceFileCompiler); ok {
+	if fileCompiler, ok := p.(SourceFileCompiler); ok {
 		return fileCompiler.CompileSourceFile(ctx, file)
 	}
 
@@ -126,7 +133,7 @@ func CompileInterface(p interface{}, ctx context.Context, decl *lang.InterfaceDe
 		return core.NewSkipError()
 	}
 
-	if hk, ok := p.(hook.InterfacePreHook); ok {
+	if hk, ok := p.(InterfacePreHook); ok {
 		err := hk.PreInterface(ctx, decl)
 		if core.IsSkipError(err) {
 			return nil
@@ -135,12 +142,12 @@ func CompileInterface(p interface{}, ctx context.Context, decl *lang.InterfaceDe
 		}
 	}
 	defer func() {
-		if hk, ok := p.(hook.InterfacePostHook); ok {
+		if hk, ok := p.(InterfacePostHook); ok {
 			hk.PostInterface(ctx, decl)
 		}
 	}()
 
-	if compiler, ok := p.(compiler.InterfaceCompiler); ok {
+	if compiler, ok := p.(InterfaceCompiler); ok {
 		return compiler.CompileInterface(ctx, decl)
 	}
 
@@ -156,7 +163,7 @@ func CompileStruct(p interface{}, ctx context.Context, decl *lang.StructDecl) er
 		return core.NewSkipError()
 	}
 
-	if hk, ok := p.(hook.StructPreHook); ok {
+	if hk, ok := p.(StructPreHook); ok {
 		if err := hk.PreStruct(ctx, decl); err != nil {
 			if core.IsSkipError(err) {
 				return nil
@@ -166,12 +173,12 @@ func CompileStruct(p interface{}, ctx context.Context, decl *lang.StructDecl) er
 		}
 	}
 	defer func() {
-		if hk, ok := p.(hook.StructPostHook); ok {
+		if hk, ok := p.(StructPostHook); ok {
 			hk.PostStruct(ctx, decl)
 		}
 	}()
 
-	if compiler, ok := p.(compiler.StructCompiler); ok {
+	if compiler, ok := p.(StructCompiler); ok {
 		return compiler.CompileStruct(ctx, decl)
 	}
 
@@ -187,7 +194,7 @@ func CompileTypeAlias(p interface{}, ctx context.Context, decl *lang.TypeAliasDe
 		return core.NewSkipError()
 	}
 
-	if hk, ok := p.(hook.TypeAliasPreHook); ok {
+	if hk, ok := p.(TypeAliasPreHook); ok {
 		err := hk.PreTypeAlias(ctx, decl)
 		if core.IsSkipError(err) {
 			return nil
@@ -196,12 +203,12 @@ func CompileTypeAlias(p interface{}, ctx context.Context, decl *lang.TypeAliasDe
 		}
 	}
 	defer func() {
-		if hk, ok := p.(hook.TypeAliasPostHook); ok {
+		if hk, ok := p.(TypeAliasPostHook); ok {
 			hk.PostTypeAlias(ctx, decl)
 		}
 	}()
 
-	if compiler, ok := p.(compiler.TypeAliasCompiler); ok {
+	if compiler, ok := p.(TypeAliasCompiler); ok {
 		return compiler.CompileTypeAlias(ctx, decl)
 	}
 
@@ -217,7 +224,7 @@ func CompileEnum(p interface{}, ctx context.Context, decl *lang.EnumDecl) error 
 		return core.NewSkipError()
 	}
 
-	if hk, ok := p.(hook.EnumPreHook); ok {
+	if hk, ok := p.(EnumPreHook); ok {
 		err := hk.PreEnum(ctx, decl)
 		if core.IsSkipError(err) {
 			return nil
@@ -226,12 +233,12 @@ func CompileEnum(p interface{}, ctx context.Context, decl *lang.EnumDecl) error 
 		}
 	}
 	defer func() {
-		if hk, ok := p.(hook.EnumPostHook); ok {
+		if hk, ok := p.(EnumPostHook); ok {
 			hk.PostEnum(ctx, decl)
 		}
 	}()
 
-	if compiler, ok := p.(compiler.EnumCompiler); ok {
+	if compiler, ok := p.(EnumCompiler); ok {
 		return compiler.CompileEnum(ctx, decl)
 	}
 

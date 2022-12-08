@@ -1,12 +1,8 @@
 package plugin
 
-import (
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
-)
-
 type parserPlugin struct {
 	BasicPlugin
-	Parser parser.PackageParser
+	Parser PackageParser
 }
 
 type Register struct {
@@ -38,16 +34,18 @@ func RegisterPlugin(plugin Plugin) {
 
 	register.plugins[plugin.GetName()] = plugin
 
-	group := register.groupPlugins[plugin.GetGroup()]
-	contained := false
-	for _, p := range group {
-		if p.GetName() == plugin.GetName() {
-			contained = true
-			break
+	if gn := plugin.GetGroup(); len(gn) > 0 {
+		group := register.groupPlugins[gn]
+		contained := false
+		for _, p := range group {
+			if p.GetName() == plugin.GetName() {
+				contained = true
+				break
+			}
 		}
-	}
-	if !contained {
-		group = append(group, plugin)
-		register.groupPlugins[plugin.GetGroup()] = group
+		if !contained {
+			group = append(group, plugin)
+			register.groupPlugins[gn] = group
+		}
 	}
 }

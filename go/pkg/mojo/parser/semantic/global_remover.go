@@ -8,8 +8,7 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 func init() {
@@ -48,7 +47,7 @@ func (r *GlobalRemover) ParsePackage(ctx context.Context, pkg *lang.Package) err
 
 	logs.Infow("enter to the plugin", "plugin", r.Name)
 
-	pkgName := parser.ContextPackageName(ctx)
+	pkgName := plugin.ContextPackageName(ctx)
 	processPkg := r.removeGlobal(pkg, pkgName)
 	if processPkg == nil {
 		return errors.New("the GlobalRemover does not match the GlobalMaker")

@@ -2,7 +2,7 @@ package compiler
 
 import (
 	"errors"
-	path2 "path"
+	"path"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
@@ -10,7 +10,7 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/parser/semantic/circle"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 func init() {
@@ -118,7 +118,7 @@ func (c *CircleCompiler) compile(ctx context.Context, pkg *lang.Package) (pollut
 		if sourceFile == nil {
 			existFile = false
 			sourceFile = &lang.SourceFile{
-				Name:        path2.Base(fileName),
+				Name:        path.Base(fileName),
 				FullName:    fileName,
 				PackageName: pkg.FullName,
 				Scope: &lang.Scope{

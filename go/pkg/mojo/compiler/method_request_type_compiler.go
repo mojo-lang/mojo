@@ -8,7 +8,7 @@ import (
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 const methodRequestTypeName = "compiler.method-request-type"

@@ -1,4 +1,4 @@
-package hook
+package plugin
 
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -7,9 +7,9 @@ import (
 )
 
 type EnumPreHook interface {
-	PreEnum(ctx context.Context, pkg *lang.EnumDecl) error
+	PreEnum(ctx context.Context, decl *lang.EnumDecl) error
 }
 
 type EnumPostHook interface {
-	PostEnum(ctx context.Context, pkg *lang.EnumDecl)
+	PostEnum(ctx context.Context, decl *lang.EnumDecl)
 }

@@ -1,7 +1,6 @@
 package plugin
 
 import (
-	"io/fs"
 	"sort"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
@@ -9,7 +8,6 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
 )
 
 type Plugins struct {
@@ -65,12 +63,12 @@ func (p *Plugins) Copy() *Plugins {
 	}
 }
 
-// ParsePackagePath if there is no mpm plugin, need set the package name to the ctx, using `parser.WithPackageName(ctx, pkgName)`
-func (p *Plugins) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs.FS) (pkg *lang.Package, err error) {
-	thisCtx := WithPlugins(parser.WithFsCache(ctx, make(parser.FsCache)), p)
+// ParsePath if there is no mpm plugin, need set the package name to the ctx, using `WithPackageName(ctx, pkgName)`
+func (p *Plugins) ParsePath(ctx context.Context, pkgPath string) (pkg *lang.Package, err error) {
+	thisCtx := WithPlugins(WithFsCache(ctx, make(FsCache)), p)
 	for p.plugin() != nil {
-		if psr, ok := p.plugin().(parser.PackagePathParser); ok {
-			if pkg, err = psr.ParsePackagePath(thisCtx, pkgPath, fileSys); err != nil {
+		if psr, ok := p.plugin().(PathParser); ok {
+			if pkg, err = psr.ParsePath(thisCtx, pkgPath); err != nil {
 				return nil, err
 			}
 			break
@@ -91,11 +89,11 @@ func (p *Plugins) ParsePackagePath(ctx context.Context, pkgPath string, fileSys 
 	return pkg, nil
 }
 
-func (p *Plugins) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (file *lang.SourceFile, err error) {
-	thisCtx := WithPlugins(parser.WithFsCache(ctx, make(parser.FsCache)), p)
+func (p *Plugins) ParseFile(ctx context.Context, fileName string) (file *lang.SourceFile, err error) {
+	thisCtx := WithPlugins(WithFsCache(ctx, make(FsCache)), p)
 	for p.plugin() != nil {
-		if psr, ok := p.plugin().(parser.FileParser); ok {
-			if file, err = psr.ParseFile(thisCtx, fileName, fileSys); err != nil {
+		if psr, ok := p.plugin().(FileParser); ok {
+			if file, err = psr.ParseFile(thisCtx, fileName); err != nil {
 				return nil, err
 			}
 		}
@@ -109,8 +107,8 @@ func (p *Plugins) ParseFile(ctx context.Context, fileName string, fileSys fs.FS)
 	return file, nil
 }
 
-func (p *Plugins) ParseString(content string) (*lang.SourceFile, error) {
-	return p.ParseFile(context.Empty(), "", core.StringFS(content))
+func (p *Plugins) ParseString(ctx context.Context, content string) (*lang.SourceFile, error) {
+	return p.ParseFile(WithFs(ctx, core.StringFS(content)), "")
 }
 
 func (p *Plugins) ParsePackage(ctx context.Context, pkg *lang.Package) error {

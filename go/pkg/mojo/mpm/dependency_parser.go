@@ -3,8 +3,6 @@ package mpm
 import (
 	"errors"
 	"fmt"
-	"io/fs"
-	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -14,9 +12,8 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
-	util2 "github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
 const pluginName = "mpm.dependency-parser"
@@ -48,12 +45,12 @@ func NewDependencyParser(options core.Options) *DependencyParser {
 
 // ParseFile
 // TODO implement the imports
-func (p *DependencyParser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
+func (p *DependencyParser) ParseFile(ctx context.Context, fileName string) (*lang.SourceFile, error) {
 	return nil, nil
 }
 
 func (p *DependencyParser) ParsePackage(ctx context.Context, pkg *lang.Package) error {
-	if util2.IsPackageProcessed(pkg, pluginName) {
+	if util.IsPackageProcessed(pkg, pluginName) {
 		return nil
 	}
 	logs.Infow("enter the plugin", "plugin", p.Name, "method", "ParsePackage", "pkg", pkg.FullName)
@@ -74,13 +71,17 @@ func (p *DependencyParser) ParsePackage(ctx context.Context, pkg *lang.Package) 
 		}
 	}
 
-	util2.SetPackageProcessed(pkg, pluginName)
+	util.SetPackageProcessed(pkg, pluginName)
 	return nil
 }
 
-func (p *DependencyParser) ParsePackagePath(ctx context.Context, pkgPath string, fileSys fs.FS) (*lang.Package, error) {
-	workingDir := parser.ContextWorkingDir(ctx)
+func (p *DependencyParser) ParsePath(ctx context.Context, pkgPath string) (*lang.Package, error) {
+	workingDir := plugin.ContextWorkingDir(ctx)
 	logs.Infow("enter the plugin", "plugin", p.Name, "method", "ParsePackagePath", "workingDir", workingDir, "path", pkgPath)
+
+	if strings.HasPrefix(pkgPath, workingDir) {
+		pkgPath = strings.TrimPrefix(pkgPath, workingDir)
+	}
 
 	fullPath := filepath.Join(workingDir, pkgPath)
 	if pkg, ok := p.parsedPackages[fullPath]; ok {
@@ -89,13 +90,9 @@ func (p *DependencyParser) ParsePackagePath(ctx context.Context, pkgPath string,
 	}
 
 	// parse the mojo package
-	pkg, err := p.parsePackageFile(ctx, pkgPath, fileSys)
+	pkg, err := p.parsePackageFile(ctx, fullPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if cache := parser.ContextFsCache(ctx); cache != nil {
-		cache[pkg.FullName] = fileSys
 	}
 
 	pkg.SetExtraString("path", pkgPath)
@@ -122,10 +119,8 @@ func (p *DependencyParser) ParsePackagePath(ctx context.Context, pkgPath string,
 			}
 		}
 
-		depPath = util2.GetAbsolutePath(filepath.Join(workingDir, pkgPath), depPath)
-		depWd := filepath.Dir(depPath)
-
-		depPkg, err := p.ParsePackagePath(parser.WithWorkingDir(ctx, depWd), filepath.Base(depPath), os.DirFS(depWd))
+		depPath = util.GetAbsolutePath(filepath.Join(workingDir, pkgPath), depPath)
+		depPkg, err := p.ParsePath(ctx, depPath)
 		if err != nil {
 			return nil, err
 		}
@@ -156,10 +151,10 @@ func (p *DependencyParser) ParsePackagePath(ctx context.Context, pkgPath string,
 	return pkg, nil
 }
 
-func (p *DependencyParser) parsePackageFile(ctx context.Context, pkgPath string, fileSys fs.FS) (*lang.Package, error) {
+func (p *DependencyParser) parsePackageFile(ctx context.Context, pkgPath string) (*lang.Package, error) {
 	plugins := plugin.NewPlugins("syntax")
 	packageFile := path.Join(pkgPath, "package.mojo")
-	file, err := plugins.ParseFile(ctx, packageFile, fileSys)
+	file, err := plugins.ParseFile(ctx, packageFile)
 	if err != nil {
 		logs.Errorw("failed to parse package file", "file", packageFile, "error", err.Error())
 		return nil, err

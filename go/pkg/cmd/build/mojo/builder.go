@@ -1,7 +1,7 @@
 package mojo
 
 import (
-	"os"
+	"path"
 	"strings"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
@@ -12,8 +12,7 @@ import (
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
 	_ "github.com/mojo-lang/mojo/go/pkg/mojo/parser"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/plugin/parser"
+	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
 type Builder struct {
@@ -28,7 +27,7 @@ func (b Builder) Build() (*lang.Package, error) {
 	if strings.HasPrefix(b.Path, b.PWD) {
 		b.Path = strings.TrimPrefix(b.Path, b.PWD)
 	}
-	pkg, err := plugins.ParsePackagePath(parser.WithWorkingDir(context.Empty(), b.PWD), b.Path, os.DirFS(b.PWD))
+	pkg, err := plugins.ParsePath(context.Empty(), path.Join(b.PWD, b.Path))
 	if err != nil {
 		return nil, err
 	}

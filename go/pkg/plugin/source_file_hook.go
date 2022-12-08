@@ -1,4 +1,4 @@
-package hook
+package plugin
 
 import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
