@@ -138,6 +138,5 @@ func (b Builder) Build() error {
 		}
 	}
 
-	_go.GoModTidy(b.Output)
-	return nil
+	return _go.GoModTidy(b.Output)
 }

@@ -1,8 +1,9 @@
+package client
+
 // Package clientarggen collects information for templating the code in a
 // ncraft-generated client which marshals command line flags into message fields
 // for each service. Functions and fields in clientargen are called by
 // templates in protoc-gen-ncraft-gokitkit/templates/
-package client
 
 import (
 	"bytes"
@@ -17,17 +18,17 @@ import (
 	"github.com/pkg/errors"
 )
 
-// A collection of the necessary information for generating basic business
+// Argument A collection of the necessary information for generating basic business
 // logic in the client. This business logic will allow the generated client to:
 //     1. Have command line flags of the correct go types
 //     2. Place correctly named and typed arguments in each request method
 //     3. Create a request struct with the the function arguments as fields
 //
 // Since we can only automatically generate handlers for some basic types, if a
-// ClientArgument is for a field that's not a base type (such as if it's an embedded
+// Argument is for a field that's not a base type (such as if it's an embedded
 // message) then the developer is going to have to write a handler for that
 // themselves.
-type ClientArgument struct {
+type Argument struct {
 	// Name contains the name of the arg as it appeared in the original
 	// protobuf definition.
 	Name string
@@ -71,7 +72,7 @@ type ClientArgument struct {
 // MethodArguments is a struct containing a slice of all the ClientArgs for this
 // Method.
 type MethodArguments struct {
-	Args []*ClientArgument
+	Args []*Argument
 }
 
 // FunctionArgs returns a string for the arguments of the function signature
@@ -82,7 +83,7 @@ type MethodArguments struct {
 //     func Sum(ASum int64, BSum int64) (pb.SumRequest, error) {
 //              └────────────────────┘
 func (m *MethodArguments) FunctionArgs() string {
-	tmp := []string{}
+	var tmp []string
 	for _, a := range m.Args {
 		tmp = append(tmp, fmt.Sprintf("%s %s", a.GoArg, a.GoType))
 	}
@@ -95,7 +96,7 @@ func (m *MethodArguments) FunctionArgs() string {
 //     request, _ := clientHandler.Sum(ASum,  BSum)
 //                                     └──────────┘
 func (m *MethodArguments) CallArgs() string {
-	tmp := []string{}
+	var tmp []string
 	for _, a := range m.Args {
 		tmp = append(tmp, a.GoArg)
 	}
@@ -109,16 +110,16 @@ func (m *MethodArguments) CallArgs() string {
 //     ASum := int32(flagASum)
 //     └─────────────────────┘
 func (m *MethodArguments) MarshalFlags() string {
-	tmp := []string{}
+	var tmp []string
 	for _, a := range m.Args {
 		tmp = append(tmp, a.GoConvertInvoc)
 	}
 	return strings.Join(tmp, "\n")
 }
 
-// ClientArguments is a map from the name of a method to a slice of all the
+// Arguments is a map from the name of a method to a slice of all the
 // ClientArgs for that method.
-type ClientArguments struct {
+type Arguments struct {
 	MethArgs map[string]*MethodArguments
 }
 
@@ -127,8 +128,8 @@ type ClientArguments struct {
 // templates to declare all the flag arguments for a client at once, and without
 // doing all this iteration in a templates where it would be much less
 // understandable.
-func (c *ClientArguments) AllFlags() string {
-	tmp := []string{}
+func (c *Arguments) AllFlags() string {
+	var tmp []string
 	for _, m := range c.MethArgs {
 		for _, a := range m.Args {
 			tmp = append(tmp, a.FlagConvertFunc)
@@ -154,10 +155,10 @@ var ProtoToGoTypeMap = map[string]string{
 	"TYPE_SINT64":   "int64",
 }
 
-// New creates a ClientArguments struct containing all the arguments for all
+// NewClientArguments New creates a Arguments struct containing all the arguments for all
 // the methods of a given RPC.
-func NewClientArguments(svc *data.Interface) *ClientArguments {
-	svcArgs := ClientArguments{
+func NewClientArguments(svc *data.Interface) *Arguments {
+	svcArgs := Arguments{
 		MethArgs: make(map[string]*MethodArguments),
 	}
 	for _, meth := range svc.Methods {
@@ -176,9 +177,9 @@ func NewClientArguments(svc *data.Interface) *ClientArguments {
 	return &svcArgs
 }
 
-// newClientArgument returns a ClientArgument generated from the provided method name and MessageField
-func newClientArgument(methName string, field *data.Field) *ClientArgument {
-	newArg := ClientArgument{}
+// newClientArgument returns a Argument generated from the provided method name and MessageField
+func newClientArgument(methName string, field *data.Field) *Argument {
+	newArg := Argument{}
 	newArg.Name = lowCamelName(field.Name)
 
 	if field.Type.IsArray {
@@ -231,7 +232,7 @@ func newClientArgument(methName string, field *data.Field) *ClientArgument {
 
 // goConvInvoc returns the code for converting from the flagArg to the goArg,
 // either via a simple flagTypeConversion or via JSON unmarshalling
-func goConvInvoc(a ClientArgument) string {
+func goConvInvoc(a Argument) string {
 	jsonConvTmpl := `
 var {{.GoArg}} {{.GoType}}
 if {{.FlagArg}} != nil && len(*{{.FlagArg}}) > 0 {
@@ -254,7 +255,7 @@ if {{.FlagArg}} != nil && len(*{{.FlagArg}}) > 0 {
 // createFlagConvertFunc creates the go string for the flag invocation to parse
 // a command line argument into it's nearest available type that the flag
 // package provides.
-func createFlagConvertFunc(a ClientArgument, methName string) string {
+func createFlagConvertFunc(a Argument, methName string) string {
 	fType := ""
 	switch {
 	case strings.Contains(a.FlagType, "uint32"):
@@ -283,7 +284,7 @@ func createFlagConvertFunc(a ClientArgument, methName string) string {
 // field could be has a cooresponding flag command type. So this stage must
 // exist to convert the subset of types which the flag package provides into
 // other golang types, and the dereferencing is just a side effect of that.
-func flagTypeConversion(a ClientArgument) string {
+func flagTypeConversion(a Argument) string {
 	fType := ""
 	switch {
 	case strings.Contains(a.FlagType, "uint32"):
@@ -316,12 +317,12 @@ func applyTemplate(name string, tmpl string, executor interface{}, fncs template
 // lowercased. "example_name" becomes "exampleName".
 func lowCamelName(s string) string {
 	s = strcase.ToCamel(s)
-	new := []rune(s)
-	if len(new) < 1 {
+	runes := []rune(s)
+	if len(runes) < 1 {
 		return s
 	}
-	rv := []rune{}
-	rv = append(rv, unicode.ToLower(new[0]))
-	rv = append(rv, new[1:]...)
+	var rv []rune
+	rv = append(rv, unicode.ToLower(runes[0]))
+	rv = append(rv, runes[1:]...)
 	return string(rv)
 }

@@ -71,7 +71,7 @@ func (e *ExpressionVisitor) VisitBinaryExpression(ctx *BinaryExpressionContext) 
 					StartPosition: GetPosition(ctx.GetStart()),
 					EndPosition:   GetPosition(ctx.GetStop()),
 					Callee: &lang.BinaryExpr_Operator{
-						&lang.Operator{
+						Operator: &lang.Operator{
 							StartPosition: GetPosition(binaryOperator.GetStart()),
 							EndPosition:   GetPosition(binaryOperator.GetStop()),
 							Symbol:        binaryOperator.GetText(),

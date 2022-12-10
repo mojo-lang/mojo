@@ -22,6 +22,7 @@ func (v *ExprVisitor) VisitExpr(ctx *ExprContext) interface{} {
 	return nil
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *ExprVisitor) VisitLiteral_value(ctx *Literal_valueContext) interface{} {
 	if numeric := ctx.NUMERIC_LITERAL(); numeric != nil {
 	}

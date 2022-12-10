@@ -45,7 +45,9 @@ func (c *Creator) Execute() error {
 		}
 
 		if c.RunImmediately {
-			c.RunHelloWorld(path2.Join(helloWorldRoot, "service-go"))
+			if err := c.RunHelloWorld(path2.Join(helloWorldRoot, "service-go")); err != nil {
+				return err
+			}
 		}
 	}
 

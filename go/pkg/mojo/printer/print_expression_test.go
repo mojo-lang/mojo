@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -20,8 +19,7 @@ func getExpression(file *lang.SourceFile) *lang.Expression {
 }
 
 func parseExpression(t *testing.T, str string) *lang.Expression {
-	parser := &syntax.Parser{}
-	file, err := parser.ParseString(str)
+	file, err := syntax.New(nil).ParseString(context.Empty(), str)
 	assert.NoError(t, err)
 
 	expr := getExpression(file)
@@ -36,7 +34,6 @@ func TestPrinter_PrintExpression(t *testing.T) {
 	const expect = `"testdata"`
 
 	decl := parseExpression(t, expr)
-	buffer := bytes.NewBuffer(nil)
-	New(Config{}, buffer).PrintExpression(context.Empty(), decl)
-	assert.Equal(t, expect, buffer.String())
+	p := New(&Config{}).PrintExpression(context.Empty(), decl)
+	assert.Equal(t, expect, p.Buffer.String())
 }

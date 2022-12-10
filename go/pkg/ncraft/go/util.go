@@ -40,8 +40,6 @@ func DiffGoCode(inA, inB string) (outA, outB, diff string) {
 		} else {
 			return string(outBytes)
 		}
-
-		return out
 	}
 	outA = codeFormat(inA)
 	outB = codeFormat(inB)
@@ -52,8 +50,8 @@ func DiffGoCode(inA, inB string) (outA, outB, diff string) {
 	return
 }
 
-// testFormat takes a string representing golang code and attempts to return a
-// formated copy of that code.
+// TestFormat takes a string representing golang code and attempts to return a
+// formatted copy of that code.
 func TestFormat(code string) (string, error) {
 	formatted, err := format.Source([]byte(code))
 

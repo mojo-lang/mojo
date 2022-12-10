@@ -46,11 +46,11 @@ func TestNewClientInterfaceArgs(t *testing.T) {
 	}
 	csa := New(sd.Interface)
 
-	expected := &ClientArguments{
+	expected := &Arguments{
 		MethArgs: map[string]*MethodArguments{
 			"Sum": &MethodArguments{
-				Args: []*ClientArgument{
-					&ClientArgument{
+				Args: []*Argument{
+					&Argument{
 						Name:            "a",
 						FlagName:        "a",
 						FlagArg:         "flagASum",
@@ -62,7 +62,7 @@ func TestNewClientInterfaceArgs(t *testing.T) {
 						IsBaseType:      true,
 						Repeated:        true,
 					},
-					&ClientArgument{
+					&Argument{
 
 						Name:            "b",
 						FlagName:        "b",

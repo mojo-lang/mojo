@@ -25,7 +25,7 @@ func NewCompiler() *Compiler {
 }
 
 func (c *Compiler) NewContext() context.Context {
-	return context.WithComponents(context.Empty(), c.Components)
+	return context.WithOpenAPIComponents(context.Empty(), c.Components)
 }
 
 func (c *Compiler) CompilePackages(packages map[string]*lang.Package) error {
@@ -122,7 +122,7 @@ func (c *Compiler) compileInterface(ctx context.Context, decl *lang.InterfaceDec
 		return err
 	}
 
-	api.Components = context.Components(thisCtx)
+	api.Components = context.OpenAPIComponents(thisCtx)
 	// key := lang.TypeNameToFileName(decl.GetFullName())
 	c.APIs[decl.GetFullName()] = api
 	return nil

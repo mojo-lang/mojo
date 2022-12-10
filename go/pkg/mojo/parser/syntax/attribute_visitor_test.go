@@ -5,13 +5,15 @@ import (
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func TestAttributeVisitor_VisitAttribute_Number(t *testing.T) {
 	const typeAttribute = `@1 type Mailbox{}`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(typeAttribute)
+	file, err := parser.ParseString(context.Empty(), typeAttribute)
 
 	assert.NoError(t, err)
 	attribute := getAttribute(file)
@@ -24,7 +26,7 @@ func TestAttributeVisitor_VisitAttribute_Object(t *testing.T) {
 	const typeAttribute = `@t(foo: 11, bar: 22) type Mailbox{}`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(typeAttribute)
+	file, err := parser.ParseString(context.Empty(), typeAttribute)
 
 	assert.NoError(t, err)
 	attribute := getAttribute(file)
@@ -43,7 +45,7 @@ func TestAttributeVisitor_VisitAttribute_Array(t *testing.T) {
 	const typeAttribute = `@foo("test1", "test2", "test3") type Mailbox{}`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(typeAttribute)
+	file, err := parser.ParseString(context.Empty(), typeAttribute)
 
 	assert.NoError(t, err)
 	attribute := getAttribute(file)
@@ -59,7 +61,7 @@ func TestAttributeVisitor_VisitAttribute_FieldNumber(t *testing.T) {
 	const typeAttribute = `type Mailbox { user : String @1 }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(typeAttribute)
+	file, err := parser.ParseString(context.Empty(), typeAttribute)
 
 	assert.NoError(t, err)
 	attribute := getFieldAttribute(file, 0)

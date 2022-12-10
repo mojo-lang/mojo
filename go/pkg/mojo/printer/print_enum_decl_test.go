@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -23,7 +22,7 @@ func getEnumDecl(file *lang.SourceFile) *lang.EnumDecl {
 
 func parseEnumDecl(t *testing.T, str string) *lang.EnumDecl {
 	parser := &syntax.Parser{}
-	file, err := parser.ParseString(str)
+	file, err := parser.ParseString(context.Empty(), str)
 	assert.NoError(t, err)
 
 	decl := getEnumDecl(file)
@@ -56,7 +55,6 @@ enum Mailbox {
 }`
 
 	decl := parseEnumDecl(t, typeDecl)
-	buffer := bytes.NewBuffer(nil)
-	New(Config{}, buffer).PrintEnumDecl(context.Empty(), decl)
-	assert.Equal(t, expect, buffer.String())
+	p := New(&Config{}).PrintEnumDecl(context.Empty(), decl)
+	assert.Equal(t, expect, p.Buffer.String())
 }

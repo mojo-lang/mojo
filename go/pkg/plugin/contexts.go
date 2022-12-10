@@ -96,3 +96,16 @@ func ContextPackageName(ctx context.Context) string {
 	}
 	return ""
 }
+
+const filenameKey = "@filename"
+
+func WithFilename(ctx context.Context, filename string) context.Context {
+	return context.WithValues(ctx, filenameKey, filename)
+}
+
+func ContextFilename(ctx context.Context) string {
+	if name, ok := ctx.Value(filenameKey).(string); ok {
+		return name
+	}
+	return ""
+}

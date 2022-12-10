@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func TestStringOperatorLiteralVisitor_VisitStringOperatorLiteral(t *testing.T) {
@@ -35,13 +37,13 @@ func TestStringOperatorLiteralVisitor_VisitStringOperatorLiteral2(t *testing.T) 
 func TestStringOperatorLiteralVisitor_VisitStringOperatorLiteral3(t *testing.T) {
 	const StringOperatorExpression = `r "^ab$"i`
 	parser := &Parser{}
-	_, err := parser.ParseString(StringOperatorExpression)
+	_, err := parser.ParseString(context.Empty(), StringOperatorExpression)
 	assert.Error(t, err)
 }
 
 func TestStringOperatorLiteralVisitor_VisitStringOperatorLiteral4(t *testing.T) {
 	const StringOperatorExpression = `r"^ab$" i`
 	parser := &Parser{}
-	_, err := parser.ParseString(StringOperatorExpression)
+	_, err := parser.ParseString(context.Empty(), StringOperatorExpression)
 	assert.Error(t, err)
 }

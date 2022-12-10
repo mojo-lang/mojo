@@ -46,6 +46,7 @@ func NewDependencyParser(options core.Options) *DependencyParser {
 // ParseFile
 // TODO implement the imports
 func (p *DependencyParser) ParseFile(ctx context.Context, fileName string) (*lang.SourceFile, error) {
+	_ = ctx
 	return nil, nil
 }
 
@@ -136,8 +137,8 @@ func (p *DependencyParser) ParsePath(ctx context.Context, pkgPath string) (*lang
 
 		if includedMojoPkg {
 			if _, ok := pkg.ResolvedDependencies["mojo.core"]; !ok {
-				core := GetMojoPackage("mojo.core")
-				pkg.ResolvedDependencies[core.FullName] = core
+				corePkg := GetMojoPackage("mojo.core")
+				pkg.ResolvedDependencies[corePkg.FullName] = corePkg
 			}
 		} else {
 			mojoPkgs := GetMojoPackages()

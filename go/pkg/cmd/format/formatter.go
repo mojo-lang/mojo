@@ -47,11 +47,8 @@ func (f *Formatter) FormatPackage(pkg *lang.Package) error {
 func (f *Formatter) formatPackage(pkg *lang.Package) error {
 	ctx := context.WithType(context.Empty(), pkg)
 	for _, file := range pkg.SourceFiles {
-		sb := strings.Builder{}
-		printer := printer.New(printer.Config{}, &sb)
-		printer.PrintSourceFile(ctx, file)
-
-		content := sb.String()
+		p := printer.New(&printer.Config{}).PrintSourceFile(ctx, file)
+		content := p.Buffer.String()
 		logs.Info(file.FullName, "\n", content)
 	}
 	return nil

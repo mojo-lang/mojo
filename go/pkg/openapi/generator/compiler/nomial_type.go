@@ -44,14 +44,14 @@ type NominalTypeCompiler struct {
 
 func (n *NominalTypeCompiler) Compile(nominalType *lang.NominalType) (*openapi.Schema, error) {
 	if n.Context == nil {
-		n.Context = context.WithComponents(context.Empty(), openapi.NewComponents())
+		n.Context = context.WithOpenAPIComponents(context.Empty(), openapi.NewComponents())
 	}
 	schema, err := compileNominalType(n.Context, nominalType)
 	if err != nil {
 		return nil, err
 	}
 
-	components := context.Components(n.Context)
+	components := context.OpenAPIComponents(n.Context)
 	if components == nil || len(components.Schemas) == 0 {
 		return schema.GetSchema(), err
 	}
@@ -60,7 +60,7 @@ func (n *NominalTypeCompiler) Compile(nominalType *lang.NominalType) (*openapi.S
 
 func (n *NominalTypeCompiler) GetSchema(s *openapi.ReferenceableSchema) *openapi.Schema {
 	if s != nil {
-		components := context.Components(n.Context)
+		components := context.OpenAPIComponents(n.Context)
 		return s.GetSchemaOf(components.Schemas)
 	}
 	return nil

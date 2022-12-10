@@ -19,12 +19,12 @@ func NewGenerator(files util2.GeneratedFiles, data *data.Data) *Generator {
 }
 
 func (g *Generator) Generate(output string) error {
-	generator := &generator.Generator{}
-	err := generator.Generate(g.Data)
+	gen := &generator.Generator{}
+	err := gen.Generate(g.Data)
 	if err != nil {
 		return err
 	}
-	g.Files = append(g.Files, generator.Files...)
+	g.Files = append(g.Files, gen.Files...)
 
 	guard := &util2.PathGuard{
 		OnlyClearGenerated: true,

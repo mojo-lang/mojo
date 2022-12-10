@@ -104,7 +104,9 @@ func clearFiles(path string, recursive bool, filter func(file string) bool) erro
 	}
 
 	for _, file := range files {
-		os.Remove(file)
+		if err = os.Remove(file); err != nil {
+			return err
+		}
 	}
 
 	return nil

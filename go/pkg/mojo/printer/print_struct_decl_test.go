@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -23,7 +22,7 @@ func getStructDecl(file *lang.SourceFile) *lang.StructDecl {
 
 func parseStructDecl(t *testing.T, decl string) *lang.StructDecl {
 	parser := &syntax.Parser{}
-	file, err := parser.ParseString(decl)
+	file, err := parser.ParseString(context.Empty(), decl)
 	assert.NoError(t, err)
 
 	structDecl := getStructDecl(file)
@@ -68,7 +67,6 @@ type Mailbox {
 }`
 
 	decl := parseStructDecl(t, typeDecl)
-	buffer := bytes.NewBuffer(nil)
-	New(Config{}, buffer).PrintStructDecl(context.Empty(), decl)
-	assert.Equal(t, expect, buffer.String())
+	p := New(&Config{}).PrintStructDecl(context.Empty(), decl)
+	assert.Equal(t, expect, p.Buffer.String())
 }

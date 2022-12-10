@@ -9,7 +9,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/plugin"
 )
 
-const goPackageNameName = "compiler.go-package-name"
+const goPackageNameName = "convert.go-package-name"
 
 func init() {
 	plugin.RegisterPlugin(NewGoPackageNameCompiler(nil))

@@ -6,9 +6,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-func (p *Printer) PrintStatement(ctx context.Context, decl *lang.Statement) {
+func (p *Printer) PrintStatement(ctx context.Context, decl *lang.Statement) *Printer {
 	if decl == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	switch d := decl.Statement.(type) {
@@ -17,4 +17,5 @@ func (p *Printer) PrintStatement(ctx context.Context, decl *lang.Statement) {
 	case *lang.Statement_Expression:
 		p.PrintExpression(ctx, d.Expression)
 	}
+	return p
 }

@@ -5,11 +5,12 @@ import (
 
 	"github.com/alecthomas/assert"
 
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf3/parser/syntax/testdata"
 )
 
 func TestParser_ParseString_AddressBook(t *testing.T) {
-	file, err := New(nil).ParseString(testdata.AddressBookProto)
+	file, err := New(nil).ParseString(context.Empty(), testdata.AddressBookProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 
@@ -34,13 +35,13 @@ func TestParser_ParseString_AddressBook(t *testing.T) {
 }
 
 func TestParser_ParseString_Conformance(t *testing.T) {
-	file, err := New(nil).ParseString(testdata.ConformanceProto)
+	file, err := New(nil).ParseString(context.Empty(), testdata.ConformanceProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }
 
 func TestParser_ParseString_Example(t *testing.T) {
-	file, err := New(nil).ParseString(testdata.ExampleProto)
+	file, err := New(nil).ParseString(context.Empty(), testdata.ExampleProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 
@@ -60,13 +61,19 @@ func TestParser_ParseString_Example(t *testing.T) {
 }
 
 func TestParser_ParseString_HelloWorld(t *testing.T) {
-	file, err := New(nil).ParseString(testdata.HelloWorldProto)
+	file, err := New(nil).ParseString(context.Empty(), testdata.HelloWorldProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }
 
 func TestParser_ParseString_HelloWorldReserved(t *testing.T) {
-	file, err := New(nil).ParseString(testdata.HelloWorldReservedProto)
+	file, err := New(nil).ParseString(context.Empty(), testdata.HelloWorldReservedProto)
+	assert.NoError(t, err)
+	assert.NotNil(t, file)
+}
+
+func TestParser_ParseString_HelloWorldReserved2(t *testing.T) {
+	file, err := New(nil).ParseFile(context.Empty(), "./testdata/helloworldreserved.proto")
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }

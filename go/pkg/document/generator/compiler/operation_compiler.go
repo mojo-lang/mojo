@@ -101,6 +101,7 @@ func (o *OperationCompiler) Compile(operation *openapi.Operation) (*document.Doc
 }
 
 func (o *OperationCompiler) compilePathParameters(ctx context.Context, parameters []*openapi.Parameter, doc *document.Document) error {
+	_ = ctx
 	table := &document.Table{
 		Caption:   nil,
 		Alignment: 0,
@@ -128,6 +129,7 @@ func (o *OperationCompiler) compilePathParameters(ctx context.Context, parameter
 }
 
 func (o *OperationCompiler) compileQueryParameters(ctx context.Context, parameters []*openapi.Parameter, doc *document.Document) error {
+	_ = ctx
 	table := &document.Table{
 		Caption:   nil,
 		Alignment: 0,
@@ -163,12 +165,13 @@ func (o *OperationCompiler) compileQueryParameters(ctx context.Context, paramete
 }
 
 func (o *OperationCompiler) compileRequestBody(ctx context.Context, body *openapi.RequestBody, doc *document.Document) error {
+	_ = ctx
 	if body == nil || doc == nil {
 		return nil
 	}
 
 	if mediaType, ok := body.Content[core.ApplicationJson]; ok {
-		o.compileMediaType(mediaType, doc)
+		return o.compileMediaType(mediaType, doc)
 	}
 	return nil
 }
@@ -178,36 +181,38 @@ func (o *OperationCompiler) compileMediaType(mediaType *openapi.MediaType, doc *
 	schema := mediaType.Schema.GetSchemaOf(o.Components.Schemas)
 
 	decl := o.Package.GetIdentifier(schema.Title).GetDeclaration()
-	if document, err := compiler.Compile(decl, schema); err != nil {
+	if d, err := compiler.Compile(decl, schema); err != nil {
 		return err
-	} else if document != nil {
-		doc.Blocks = append(doc.Blocks, document.GetBlocks()...)
+	} else if d != nil {
+		doc.Blocks = append(doc.Blocks, d.GetBlocks()...)
 	}
 
 	deps := schema.Dependencies(o.Components.Schemas)
 	for _, dep := range deps {
 		decl = o.Package.GetIdentifier(dep.Title).GetDeclaration()
-		if document, err := compiler.Compile(decl, dep); err != nil {
+		if d, err := compiler.Compile(decl, dep); err != nil {
 			return err
-		} else if document != nil && len(document.Blocks) > 0 {
+		} else if d != nil && len(d.Blocks) > 0 {
 			doc.AppendHeaderFrom(4, wrapCode(dep.Title))
-			doc.Blocks = append(doc.Blocks, document.GetBlocks()...)
+			doc.Blocks = append(doc.Blocks, d.GetBlocks()...)
 		}
 	}
 	return nil
 }
 
 func (o *OperationCompiler) compileResponse(ctx context.Context, response *openapi.Response, doc *document.Document) error {
+	_ = ctx
 	if response == nil || doc == nil {
 		return nil
 	}
 
 	if mediaType, ok := response.Content[core.ApplicationJson]; ok {
-		o.compileMediaType(mediaType, doc)
+		return o.compileMediaType(mediaType, doc)
 	}
 
 	return nil
 }
 
 func (o *OperationCompiler) compileErrorResponse(ctx context.Context) {
+	_ = ctx
 }

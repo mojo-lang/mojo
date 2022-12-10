@@ -17,6 +17,7 @@ type Parser struct {
 }
 
 func New(options core.Options) *Parser {
+	_ = options
 	return &Parser{}
 }
 
@@ -49,6 +50,7 @@ func (p Parser) ParseStream(fileName string, input antlr.CharStream) (*sql.Sourc
 }
 
 func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*sql.SourceFile, error) {
+	_ = ctx
 	if bytes, err := fs.ReadFile(fileSys, fileName); err != nil {
 		return nil, err
 	} else {

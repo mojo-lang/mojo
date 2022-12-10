@@ -13,6 +13,7 @@ func NewLimitSmtVisitor() *LimitSmtVisitor {
 	return visitor
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *LimitSmtVisitor) VisitLimit_stmt(ctx *Limit_stmtContext) interface{} {
 	allExprs := ctx.AllExpr()
 	if len(allExprs) > 0 {

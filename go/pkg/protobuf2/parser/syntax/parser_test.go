@@ -5,17 +5,18 @@ import (
 
 	"github.com/alecthomas/assert"
 
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf2/parser/syntax/testdata"
 )
 
 func TestParser_ParseString_Demo(t *testing.T) {
-	file, err := New(nil).ParseString(testdata.DemoProto)
+	file, err := New(nil).ParseString(context.Empty(), testdata.DemoProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }
 
 func TestParser_ParseString_Extend(t *testing.T) {
-	file, err := New(nil).ParseString(testdata.ExtendProto)
+	file, err := New(nil).ParseString(context.Empty(), testdata.ExtendProto)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }

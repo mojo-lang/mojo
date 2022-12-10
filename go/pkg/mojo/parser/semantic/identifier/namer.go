@@ -163,7 +163,9 @@ func (p *Namer) ParseStruct(ctx context.Context, decl *lang.StructDecl) error {
 
 		identifier := thisScope.Declare(lang.NewStructDeclaration(declaration))
 		identifier.SourceFileName = file.FullName
-		p.ParseStruct(thisCtx, declaration)
+		if err := p.ParseStruct(thisCtx, declaration); err != nil {
+			return err
+		}
 	}
 
 	for _, declaration := range decl.EnumDecls {
@@ -172,7 +174,9 @@ func (p *Namer) ParseStruct(ctx context.Context, decl *lang.StructDecl) error {
 
 		identifier := thisScope.Declare(lang.NewEnumDeclaration(declaration))
 		identifier.SourceFileName = file.FullName
-		p.ParseEnum(thisCtx, declaration)
+		if err := p.ParseEnum(thisCtx, declaration); err != nil {
+			return err
+		}
 	}
 
 	for _, declaration := range decl.TypeAliasDecls {
@@ -181,7 +185,9 @@ func (p *Namer) ParseStruct(ctx context.Context, decl *lang.StructDecl) error {
 
 		identifier := thisScope.Declare(lang.NewTypeAliasDeclaration(declaration))
 		identifier.SourceFileName = file.FullName
-		p.ParseTypeAlias(thisCtx, declaration)
+		if err := p.ParseTypeAlias(thisCtx, declaration); err != nil {
+			return err
+		}
 	}
 
 	for _, parameter := range decl.GenericParameters {

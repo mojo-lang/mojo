@@ -7,7 +7,7 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	data2 "github.com/mojo-lang/mojo/go/pkg/go/generator/data"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf/decompiler"
 )
 
 type ArrayResponse struct {
@@ -32,7 +32,7 @@ func (p *ArrayResponse) CompileMethod(ctx context.Context, method *lang.Function
 		}
 	}
 
-	if decl, err := precompiler.CompileMethodResponse(ctx, method); err != nil {
+	if decl, err := decompiler.CompileMethodResponse(ctx, method); err != nil {
 		return err
 	} else {
 		pr := &data2.ArrayResponse{}

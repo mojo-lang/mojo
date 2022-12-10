@@ -6,9 +6,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-func (p *Printer) PrintTypeDeclaration(ctx context.Context, decl *lang.TypeDeclaration) {
+func (p *Printer) PrintTypeDeclaration(ctx context.Context, decl *lang.TypeDeclaration) *Printer {
 	if decl == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	switch d := decl.TypeDeclaration.(type) {
@@ -23,4 +23,6 @@ func (p *Printer) PrintTypeDeclaration(ctx context.Context, decl *lang.TypeDecla
 	case *lang.TypeDeclaration_GenericParameter:
 		p.PrintGenericParameter(ctx, d.GenericParameter)
 	}
+
+	return p
 }

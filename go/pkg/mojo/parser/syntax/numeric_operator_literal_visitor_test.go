@@ -1,9 +1,11 @@
 package syntax
 
 import (
-    "testing"
+	"testing"
 
-    "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func TestNumericOperatorLiteralVisitor_VisitNumericOperatorLiteral(t *testing.T) {
@@ -31,6 +33,6 @@ func TestNumericOperatorLiteralVisitor_VisitNumericOperatorLiteral2(t *testing.T
 func TestNumericOperatorLiteralVisitor_VisitNumericOperatorLiteral3(t *testing.T) {
 	const NumericOperatorExpression = `12 s`
 	parser := &Parser{}
-	_, err := parser.ParseString(NumericOperatorExpression)
+	_, err := parser.ParseString(context.Empty(), NumericOperatorExpression)
 	assert.Error(t, err)
 }

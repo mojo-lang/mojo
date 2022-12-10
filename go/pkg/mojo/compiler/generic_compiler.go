@@ -232,8 +232,6 @@ func (c *GenericCompiler) CompileTypeAlias(ctx context.Context, decl *lang.TypeA
 		decl.Type = newType
 		return []*lang.Identifier{newType.NewIdentifier()}, nil, nil
 	}
-
-	return nil, nil, err
 }
 
 func (c *GenericCompiler) compileNominalType(ctx context.Context, nominalType *lang.NominalType, index IdentifierIndex) (*lang.NominalType, error) {

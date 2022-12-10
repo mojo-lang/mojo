@@ -31,7 +31,9 @@ func (d *Dependency) resolve(pkg *lang.Package) error {
 			pkg.ResolvedDependencies[dependency.FullName] = p
 		}
 
-		d.resolve(dependency)
+		if err := d.resolve(dependency); err != nil {
+			return err
+		}
 	}
 
 	return nil

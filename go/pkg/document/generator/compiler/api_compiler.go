@@ -22,7 +22,9 @@ func (a *ApiCompiler) Compile(pkg *lang.Package, api *openapi.OpenAPI) (*documen
 
 	a.Api = api
 	a.Package = pkg
-	a.compileHeader(ctx, api, doc)
+	if err := a.compileHeader(ctx, api, doc); err != nil {
+		return nil, err
+	}
 
 	err := openapi.OrderedPathItemIterator(api.Paths.Vals, func(path string, item *openapi.PathItem) error {
 		d, err := a.compilePathItem(ctx, path, item)
@@ -82,7 +84,7 @@ const ErrorCodes = `
 |500|服务器内部错误|
 `
 
-func (a *ApiCompiler) compileHeader(ctx context.Context, api *openapi.OpenAPI, doc *document.Document) error {
+func (a *ApiCompiler) compileHeader(_ context.Context, api *openapi.OpenAPI, doc *document.Document) error {
 	doc.AppendHeaderFromText(1, api.GetInfo().GetTitle())
 
 	description := api.GetInfo().GetDescription().GetDocument()
@@ -161,7 +163,7 @@ func (a *ApiCompiler) compilePathItem(ctx context.Context, path string, item *op
 // ```http
 // {{.HttpMethod}} {{.HttpPath}}
 // ```
-func (a *ApiCompiler) compileMethod(ctx context.Context, path string, method string, operation *openapi.Operation) (*document.Document, error) {
+func (a *ApiCompiler) compileMethod(_ context.Context, path string, method string, operation *openapi.Operation) (*document.Document, error) {
 	if operation == nil {
 		return nil, nil
 	}

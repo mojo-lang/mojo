@@ -5,11 +5,13 @@ import (
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func ParseVariableDecl(t *testing.T, decl string) *lang.VariableDecl {
 	parser := &Parser{}
-	file, err := parser.ParseString(decl)
+	file, err := parser.ParseString(context.Empty(), decl)
 
 	assert.NoError(t, err)
 	if len(file.Statements) > 0 {
@@ -25,7 +27,7 @@ func ParseVariableDecl(t *testing.T, decl string) *lang.VariableDecl {
 
 func ParseConstantDecl(t *testing.T, decl string) *lang.ConstantDecl {
 	parser := &Parser{}
-	file, err := parser.ParseString(decl)
+	file, err := parser.ParseString(context.Empty(), decl)
 
 	assert.NoError(t, err)
 	if len(file.Statements) > 0 {

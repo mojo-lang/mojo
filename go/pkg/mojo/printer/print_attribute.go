@@ -6,9 +6,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-func (p *Printer) PrintAttribute(ctx context.Context, attribute *lang.Attribute) {
+func (p *Printer) PrintAttribute(ctx context.Context, attribute *lang.Attribute) *Printer {
 	if attribute == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	if comments := attribute.GetStartPosition().GetLeadingComments(); len(comments) > 0 {
@@ -42,6 +42,8 @@ func (p *Printer) PrintAttribute(ctx context.Context, attribute *lang.Attribute)
 		}
 		p.PrintRaw(")")
 	}
+
+	return p
 }
 
 func (p *Printer) PrintAttributes(ctx context.Context, attributes lang.Attributes) *Printer {

@@ -15,6 +15,7 @@ func NewOrderBySmtVisitor() *OrderBySmtVisitor {
 	return visitor
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *OrderBySmtVisitor) VisitOrder_by_stmt(ctx *Order_by_stmtContext) interface{} {
 	orderBy := &sql.OrderByClause{}
 
@@ -27,6 +28,7 @@ func (v *OrderBySmtVisitor) VisitOrder_by_stmt(ctx *Order_by_stmtContext) interf
 	return orderBy
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *OrderBySmtVisitor) VisitOrdering_term(ctx *Ordering_termContext) interface{} {
 	ordering := &sql.Ordering{}
 	if expr, ok := ctx.Expr().Accept(NewExprVisitor()).(*sql.Expression); ok {

@@ -106,7 +106,9 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 	}
 	defer func() {
 		for _, d := range tempPbDirs {
-			os.RemoveAll(d)
+			if err := os.RemoveAll(d); err != nil {
+				logs.Warnw("failed to remove all the files", "dir", d, "error", err)
+			}
 		}
 	}()
 
@@ -122,7 +124,9 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 		return nil, err
 	}
 	defer func() {
-		os.RemoveAll(outDir)
+		if err := os.RemoveAll(outDir); err != nil {
+			logs.Warnw("failed to remove all the files in the dir", "dir", outDir, "error", err)
+		}
 	}()
 
 	cmd.Args = append(cmd.Args, fmt.Sprintf("--go_out=%s", outDir))
@@ -131,7 +135,9 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 	cmd.Args = append(cmd.Args, "--go-grpc_opt=paths=source_relative")
 
 	for _, file := range files {
-		cmd.Args = append(cmd.Args, file.GetName())
+		if !file.IsEmpty() {
+			cmd.Args = append(cmd.Args, file.GetName())
+		}
 	}
 
 	var stderr bytes.Buffer
@@ -174,13 +180,13 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 			valDecl := injection2.GetStructField(pkg, structName, fieldName)
 
 			if alias, _ := valDecl.GetStringAttribute(core.AliasAttributeName); len(alias) > 0 {
-				tags.Set(&structtag.Tag{
+				_ = tags.Set(&structtag.Tag{
 					Key:     "json",
 					Name:    strcase.ToLowerCamel(alias),
 					Options: []string{"omitempty"},
 				})
 			} else {
-				tags.Set(&structtag.Tag{
+				_ = tags.Set(&structtag.Tag{
 					Key:     "json",
 					Name:    strcase.ToLowerCamel(fieldName),
 					Options: []string{"omitempty"},
@@ -188,18 +194,18 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 			}
 
 			if ignore, _ := valDecl.GetBoolAttribute(db.IgnoreAttributeFullName); ignore {
-				tags.Set(&structtag.Tag{
+				_ = tags.Set(&structtag.Tag{
 					Key:  "db",
 					Name: "-",
 				})
-				tags.Set(&structtag.Tag{
+				_ = tags.Set(&structtag.Tag{
 					Key:  "gorm",
 					Name: "-",
 				})
 			} else {
 				if dbJson, _ := valDecl.GetBoolAttribute(db.JSONAttributeFullName); dbJson {
 					if tag, _ := tags.Get("db"); tag == nil {
-						tags.Set(&structtag.Tag{
+						_ = tags.Set(&structtag.Tag{
 							Key:  "db",
 							Name: fieldName,
 						})
@@ -208,7 +214,7 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 				}
 				if dbExplode, err := valDecl.GetStringAttribute(db.ExplodeAttributeFullName); err == nil {
 					if tag, _ := tags.Get("db"); tag == nil {
-						tags.Set(&structtag.Tag{
+						_ = tags.Set(&structtag.Tag{
 							Key:  "db",
 							Name: fieldName,
 						})
@@ -222,13 +228,13 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 
 				addPrimaryKey := func(key string) {
 					if tag, _ := tags.Get("db"); tag == nil {
-						tags.Set(&structtag.Tag{
+						_ = tags.Set(&structtag.Tag{
 							Key:  "db",
 							Name: fieldName,
 						})
 					}
 					tags.AddOptions("db", key+"=true")
-					tags.Set(&structtag.Tag{Key: "gorm", Name: "primaryKey"})
+					_ = tags.Set(&structtag.Tag{Key: "gorm", Name: "primaryKey"})
 				}
 
 				if v, err := valDecl.GetBoolAttribute(db.PrimaryKeyAttributeFullName); err == nil && v {
@@ -241,36 +247,36 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 
 				if valDecl.HasAttribute(db.IndexAttributeFullName) {
 					if tag, _ := tags.Get("db"); tag == nil {
-						tags.Set(&structtag.Tag{
+						_ = tags.Set(&structtag.Tag{
 							Key:  "db",
 							Name: fieldName,
 						})
 					}
 					tags.AddOptions("db", "index=true")
-					tags.Set(&structtag.Tag{Key: "gorm", Name: "index"})
+					_ = tags.Set(&structtag.Tag{Key: "gorm", Name: "index"})
 				}
 
 				if foreignKey, _ := valDecl.GetStringAttribute(db.ForeignKeyAttributeFullName); len(foreignKey) > 0 {
 					if tag, _ := tags.Get("db"); tag == nil {
-						tags.Set(&structtag.Tag{
+						_ = tags.Set(&structtag.Tag{
 							Key:  "db",
 							Name: fieldName,
 						})
 					}
 					tags.AddOptions("db", "foreignKey="+foreignKey)
-					tags.Set(&structtag.Tag{Key: "gorm", Name: "foreignKey:" + strcase.ToCamel(foreignKey)})
+					_ = tags.Set(&structtag.Tag{Key: "gorm", Name: "foreignKey:" + strcase.ToCamel(foreignKey)})
 				}
 			}
 		})
 
-		bytes, err := injector.Inject(f.Name, []byte(f.Content))
+		bs, err := injector.Inject(f.Name, []byte(f.Content))
 		if err == nil {
-			f.Content = string(bytes)
+			f.Content = string(bs)
 		}
 
-		bytes, err = injection2.NewDbJSONInjector().Inject(f.Name, []byte(f.Content))
+		bs, err = injection2.NewDbJSONInjector().Inject(f.Name, []byte(f.Content))
 		if err == nil {
-			f.Content = string(bytes)
+			f.Content = string(bs)
 		}
 	}
 

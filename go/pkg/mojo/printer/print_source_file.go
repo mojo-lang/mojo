@@ -7,9 +7,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/printer"
 )
 
-func (p *Printer) PrintSourceFile(ctx context.Context, file *lang.SourceFile) {
+func (p *Printer) PrintSourceFile(ctx context.Context, file *lang.SourceFile) *Printer {
 	if file == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	var packageDecl *lang.PackageDecl
@@ -48,4 +48,6 @@ func (p *Printer) PrintSourceFile(ctx context.Context, file *lang.SourceFile) {
 			p.PrintStatement(ctx, statement)
 		}
 	}
+
+	return p
 }

@@ -5,6 +5,8 @@ import (
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func TestExpressionVisitor_VisitExpression_Null(t *testing.T) {
@@ -115,13 +117,13 @@ func TestExpressionVisitor_VisitExpression_BinaryExpressionError(t *testing.T) {
 	const expression = `a - - - b`
 
 	parser := &Parser{}
-	_, err := parser.ParseString(expression)
+	_, err := parser.ParseString(context.Empty(), expression)
 	assert.Error(t, err)
 }
 
 func parseExpression(t *testing.T, str string) (expr *lang.Expression) {
 	parser := &Parser{}
-	file, err := parser.ParseString(str)
+	file, err := parser.ParseString(context.Empty(), str)
 	assert.NoError(t, err)
 
 	if file != nil && len(file.Statements) > 0 {

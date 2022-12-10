@@ -23,6 +23,7 @@ func (v *SqlSmtVisitor) VisitParse(ctx *ParseContext) interface{} {
 	return source
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *SqlSmtVisitor) VisitSql_stmt_list(ctx *Sql_stmt_listContext) interface{} {
 	allStatements := ctx.AllSql_stmt()
 
@@ -35,6 +36,7 @@ func (v *SqlSmtVisitor) VisitSql_stmt_list(ctx *Sql_stmt_listContext) interface{
 	return stmts
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *SqlSmtVisitor) VisitSql_stmt(ctx *Sql_stmtContext) interface{} {
 	if selectStmt := ctx.Select_stmt(); selectStmt != nil {
 		return selectStmt.Accept(NewSelectSmtVisitor())

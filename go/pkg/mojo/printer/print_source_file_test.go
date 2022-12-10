@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -58,10 +57,9 @@ type ApplyExpr: Expr {
 }`
 
 	parser := &syntax.Parser{}
-	sourceFile, err := parser.ParseString(file)
+	sourceFile, err := parser.ParseString(context.Empty(), file)
 	assert.NoError(t, err)
 
-	buffer := bytes.NewBuffer(nil)
-	New(Config{}, buffer).PrintSourceFile(context.Empty(), sourceFile)
-	assert.Equal(t, expect, buffer.String())
+	p := New(&Config{}).PrintSourceFile(context.Empty(), sourceFile)
+	assert.Equal(t, expect, p.Buffer.String())
 }

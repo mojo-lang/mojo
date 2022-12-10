@@ -6,9 +6,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-func (p *Printer) PrintInterfaceDecl(ctx context.Context, decl *lang.InterfaceDecl) {
+func (p *Printer) PrintInterfaceDecl(ctx context.Context, decl *lang.InterfaceDecl) *Printer {
 	if decl == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	breaker := &OnceLineBreaker{}
@@ -58,4 +58,6 @@ func (p *Printer) PrintInterfaceDecl(ctx context.Context, decl *lang.InterfaceDe
 			}
 		}
 	}
+
+	return p
 }

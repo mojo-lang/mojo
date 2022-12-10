@@ -74,8 +74,12 @@ func (g *Generator) Generate(data *Data, output string) error {
 		if len(f.Name) > 0 && len(f.Content) > 0 {
 			name := f.Name
 			path := path2.Dir(name)
-			core.CreateDir(path)
-			ioutil.WriteFile(name, []byte(f.Content), 0666)
+			if err := core.CreateDir(path); err != nil {
+				return err
+			}
+			if err := ioutil.WriteFile(name, []byte(f.Content), 0666); err != nil {
+				return err
+			}
 		}
 	}
 

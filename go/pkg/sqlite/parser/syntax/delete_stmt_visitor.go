@@ -9,10 +9,12 @@ func NewDeleteSmtVisitor() *DeleteSmtVisitor {
 	return visitor
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *DeleteSmtVisitor) VisitDelete_stmt(ctx *Delete_stmtContext) interface{} {
 	return nil
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *DeleteSmtVisitor) VisitDelete_stmt_limited(ctx *Delete_stmt_limitedContext) interface{} {
 	return nil
 }

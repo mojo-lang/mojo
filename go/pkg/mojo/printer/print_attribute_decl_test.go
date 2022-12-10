@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -23,7 +22,7 @@ func getAttributeDecl(file *lang.SourceFile) *lang.AttributeDecl {
 
 func parseAttributeDecl(t *testing.T, str string) *lang.AttributeDecl {
 	parser := &syntax.Parser{}
-	file, err := parser.ParseString(str)
+	file, err := parser.ParseString(context.Empty(), str)
 	assert.NoError(t, err)
 
 	decl := getAttributeDecl(file)
@@ -49,7 +48,6 @@ attribute mailbox: Box //< following document - 1
 `
 
 	decl := parseAttributeDecl(t, typeDecl)
-	buffer := bytes.NewBuffer(nil)
-	New(Config{}, buffer).PrintAttributeDecl(context.Empty(), decl)
-	assert.Equal(t, expect, buffer.String())
+	p := New(&Config{}).PrintAttributeDecl(context.Empty(), decl)
+	assert.Equal(t, expect, p.Buffer.String())
 }

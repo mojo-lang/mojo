@@ -6,7 +6,7 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator/data"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf/decompiler"
 )
 
 type Interface struct {
@@ -26,7 +26,7 @@ func (i *Interface) CompileInterface(ctx context.Context, decl *lang.InterfaceDe
 				return err
 			}
 		} else {
-			req, resp, err := precompiler.CompileMethod(thisCtx, method)
+			req, resp, err := decompiler.CompileMethod(thisCtx, method)
 			if err != nil {
 				return err
 			}

@@ -6,6 +6,8 @@ import (
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func getStructDecl(file *lang.SourceFile) *lang.StructDecl {
@@ -20,7 +22,7 @@ func getStructDecl(file *lang.SourceFile) *lang.StructDecl {
 
 func parseStructDecl(t *testing.T, decl string) *lang.StructDecl {
 	parser := &Parser{}
-	file, err := parser.ParseString(decl)
+	file, err := parser.ParseString(context.Empty(), decl)
 	assert.NoError(t, err)
 
 	structDecl := getStructDecl(file)

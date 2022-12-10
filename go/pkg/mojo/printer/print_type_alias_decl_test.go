@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -23,7 +22,7 @@ func getTypeAliasDecl(file *lang.SourceFile) *lang.TypeAliasDecl {
 
 func parseTypeAliasDecl(t *testing.T, decl string) *lang.TypeAliasDecl {
 	parser := &syntax.Parser{}
-	file, err := parser.ParseString(decl)
+	file, err := parser.ParseString(context.Empty(), decl)
 	assert.NoError(t, err)
 
 	alias := getTypeAliasDecl(file)
@@ -49,7 +48,6 @@ type Mailbox = Box //< following document - 1
 `
 
 	decl := parseTypeAliasDecl(t, typeDecl)
-	buffer := bytes.NewBuffer(nil)
-	New(Config{}, buffer).PrintTypeAliasDecl(context.Empty(), decl)
-	assert.Equal(t, expect, buffer.String())
+	p := New(&Config{}).PrintTypeAliasDecl(context.Empty(), decl)
+	assert.Equal(t, expect, p.Buffer.String())
 }

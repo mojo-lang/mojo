@@ -1,6 +1,8 @@
 package plugin
 
 import (
+	"errors"
+	"fmt"
 	"sort"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
@@ -74,6 +76,10 @@ func (p *Plugins) ParsePath(ctx context.Context, pkgPath string) (pkg *lang.Pack
 			break
 		}
 		p.Next()
+	}
+
+	if pkg == nil {
+		return nil, errors.New(fmt.Sprintf("failed to parse the pckage %s", pkgPath))
 	}
 
 	if err = p.ParsePackage(thisCtx, pkg); err != nil {

@@ -6,9 +6,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-func (p *Printer) PrintDeclaration(ctx context.Context, decl *lang.Declaration) {
+func (p *Printer) PrintDeclaration(ctx context.Context, decl *lang.Declaration) *Printer {
 	if decl == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	switch d := decl.Declaration.(type) {
@@ -29,4 +29,6 @@ func (p *Printer) PrintDeclaration(ctx context.Context, decl *lang.Declaration) 
 	case *lang.Declaration_PackageDecl:
 		p.PrintPackageDecl(ctx, d.PackageDecl)
 	}
+
+	return p
 }

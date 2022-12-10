@@ -19,7 +19,7 @@ func (c CommentMerger) Merge(file *lang.SourceFile) {
 				statement.GetStartPosition().AppendLeadingComment(c[index])
 				index++
 			} else if relative == lang.RelativeInternal {
-				statement.MergeComment(c[index])
+				_, _ = statement.MergeComment(c[index])
 				index++
 			} else {
 				if c[index].IsFollowing() && c[index].GetStartPosition().GetLine() == statement.GetEndPosition().GetLine() {

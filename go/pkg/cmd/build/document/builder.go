@@ -35,8 +35,8 @@ func (b Builder) Build() error {
 	if len(b.Output) > 0 {
 		output = b.Output
 	}
-	generator := generator.NewGenerator(documents)
-	err = generator.Generate(output)
+	gen := generator.NewGenerator(documents)
+	err = gen.Generate(output)
 	if err != nil {
 		logs.Errorw("generate document failed", "pwd", b.PWD, "path", b.Path, "package", b.Package.FullName, "error", err.Error())
 		return err

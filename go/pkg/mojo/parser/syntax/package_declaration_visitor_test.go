@@ -5,6 +5,8 @@ import (
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func TestPackageDeclarationVisitor_VisitPackageDeclaration(t *testing.T) {
@@ -17,7 +19,7 @@ func TestPackageDeclarationVisitor_VisitPackageDeclaration(t *testing.T) {
     	}
 	}`
 	parser := &Parser{}
-	file, err := parser.ParseString(packageDecl)
+	file, err := parser.ParseString(context.Empty(), packageDecl)
 	assert.NoError(t, err)
 
 	pkg := getPackage(file)
@@ -40,7 +42,7 @@ func TestPackageDeclarationVisitor_VisitPackageDeclaration2(t *testing.T) {
     	}
 	}`
 	parser := &Parser{}
-	file, err := parser.ParseString(packageDecl)
+	file, err := parser.ParseString(context.Empty(), packageDecl)
 	assert.NoError(t, err)
 
 	pkg := getPackage(file)

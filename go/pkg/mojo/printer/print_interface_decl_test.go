@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -23,7 +22,7 @@ func getInterfaceDecl(file *lang.SourceFile) *lang.InterfaceDecl {
 
 func parseInterfaceDecl(t *testing.T, str string) *lang.InterfaceDecl {
 	parser := &syntax.Parser{}
-	file, err := parser.ParseString(str)
+	file, err := parser.ParseString(context.Empty(), str)
 	assert.NoError(t, err)
 
 	decl := getInterfaceDecl(file)
@@ -61,7 +60,6 @@ interface Mailbox {
 }`
 
 	decl := parseInterfaceDecl(t, typeDecl)
-	buffer := bytes.NewBuffer(nil)
-	New(Config{}, buffer).PrintInterfaceDecl(context.Empty(), decl)
-	assert.Equal(t, expect, buffer.String())
+	p := New(&Config{}).PrintInterfaceDecl(context.Empty(), decl)
+	assert.Equal(t, expect, p.Buffer.String())
 }

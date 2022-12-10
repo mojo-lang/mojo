@@ -66,7 +66,7 @@ func CompileStructDecl(ctx context.Context, decl *lang.StructDecl) error {
 	//    err := compileEnumDecl(thisCtx, e)
 	// }
 
-	components := context.Components(thisCtx)
+	components := context.OpenAPIComponents(thisCtx)
 
 	// add an dummy schema first for recursion reference
 	components.Schemas[decl.GetFullName()] = &openapi.Schema{

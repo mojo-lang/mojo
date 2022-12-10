@@ -129,13 +129,14 @@ func (c *EntityCompiler) compileEntityNode(ctx context.Context, decl *lang.Struc
 		return nil
 	}
 
-	decl.EachField(func(decl *lang.ValueDecl) error {
+	_ = decl.EachField(func(decl *lang.ValueDecl) error {
 		if decl.HasAttribute(core.KeyAttributeName) || decl.HasAttribute(db.PrimaryKeyAttributeName) {
 			makeEntity(decl)
 			return core.NewBreakError()
 		}
 		return nil
 	})
+
 	return nil
 }
 
@@ -296,6 +297,7 @@ func (c *EntityCompiler) refineEntityEdge(pkg *lang.Package) error {
 }
 
 func (c *EntityCompiler) CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
+	_ = ctx
 	for key, methods := range decl.GetMethodGroups() {
 		for _, method := range methods {
 			// TODO: check the entity type with input or output type

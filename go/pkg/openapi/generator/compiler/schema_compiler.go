@@ -48,11 +48,11 @@ func FilterSchema(nominalType *lang.NominalType, schema *openapi.Schema) *openap
 }
 
 func (r *ReferenceCompiler) Compile(ctx context.Context, nominalType *lang.NominalType) (*openapi.ReferenceableSchema, error) {
-	components := context.Components(ctx)
+	components := context.OpenAPIComponents(ctx)
 	thisCtx := ctx
 	if components == nil {
 		components = openapi.NewComponents()
-		thisCtx = context.WithComponents(ctx, components)
+		thisCtx = context.WithOpenAPIComponents(ctx, components)
 	}
 
 	fullName := nominalType.GetFullName()

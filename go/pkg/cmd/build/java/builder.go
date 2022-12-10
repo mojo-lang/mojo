@@ -58,6 +58,10 @@ func (b Builder) protocJava() error {
 	// cmd.Args = append(cmd.Args, "--go_out=.")
 	cmd.Args = append(cmd.Args, "--java_out=.")
 	for _, file := range b.Files {
+		if file.IsEmpty() {
+			continue
+		}
+
 		fileCmd := &exec.Cmd{
 			Path: cmd.Path,
 			Args: cmd.Args,
@@ -72,28 +76,34 @@ func (b Builder) protocJava() error {
 	}
 	defer func() {
 		for _, d := range tempPbDirs {
-			os.RemoveAll(d)
+			if err := os.RemoveAll(d); err != nil {
+				logs.Warnw("failed to remove all the template protobuf files", "error", err)
+			}
 		}
 	}()
 
 	// move the generated files to destinations
 	destDir := path.Join(b.GetAbsolutePath(), "java/src/main/java")
 	if !core.IsExist(destDir) {
-		core.CreateDir(destDir)
+		if err := core.CreateDir(destDir); err != nil {
+			return err
+		}
 	}
 
-	util.DeepClearFiles(destDir, ".pb.java")
+	if err := util.DeepClearFiles(destDir, ".pb.java"); err != nil {
+		return err
+	}
 
 	for _, domain := range []string{"ai", "biz", "cn", "com", "edu", "gov", "net", "org", "info", "io", "tech"} {
 		srcDir := path.Join(b.GetAbsolutePath(), "protobuf", domain)
 		_, err := ioutil.ReadDir(srcDir)
 		if err == nil {
-			err = copy.Copy(srcDir, path.Join(destDir, domain))
-			if err != nil {
+			if err = copy.Copy(srcDir, path.Join(destDir, domain)); err != nil {
 				return err
 			}
-
-			os.RemoveAll(srcDir)
+			if err = os.RemoveAll(srcDir); err != nil {
+				return err
+			}
 			break
 		}
 	}

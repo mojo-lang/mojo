@@ -12,7 +12,7 @@ func TestObjectLiteralVisitor_VisitMapLiteral(t *testing.T) {
 	expr := parseExpression(t, typeAttribute)
 
 	dictionary := make(map[string]string)
-	expr.EvalStringMapLiteral(func(key string, value *lang.Expression) error {
+	err := expr.EvalStringMapLiteral(func(key string, value *lang.Expression) error {
 		v, err := value.EvalStringLiteral()
 		if err != nil {
 			return err
@@ -21,6 +21,7 @@ func TestObjectLiteralVisitor_VisitMapLiteral(t *testing.T) {
 		return nil
 	})
 
+	assert.NoError(t, err)
 	assert.NotEmpty(t, dictionary)
 	assert.Equal(t, "value", dictionary["key"])
 }

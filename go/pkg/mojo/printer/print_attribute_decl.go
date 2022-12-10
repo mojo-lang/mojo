@@ -6,9 +6,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-func (p *Printer) PrintAttributeDecl(ctx context.Context, decl *lang.AttributeDecl) {
+func (p *Printer) PrintAttributeDecl(ctx context.Context, decl *lang.AttributeDecl) *Printer {
 	if decl == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	breaker := &OnceLineBreaker{}
@@ -34,4 +34,6 @@ func (p *Printer) PrintAttributeDecl(ctx context.Context, decl *lang.AttributeDe
 		p.Outdent()
 		p.PrintTerm(ctx, lang.NewSymbolTerm(structType.EndPosition, lang.TermTypeEnd, "}"))
 	}
+
+	return p
 }

@@ -5,6 +5,8 @@ import (
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func TestAttributeDeclarationVisitor_VisitAttributeDeclaration(t *testing.T) {
@@ -30,7 +32,7 @@ func getAttributeDecl(file *lang.SourceFile) *lang.AttributeDecl {
 
 func parseAttributeDecl(t *testing.T, str string) *lang.AttributeDecl {
 	parser := &Parser{}
-	file, err := parser.ParseString(str)
+	file, err := parser.ParseString(context.Empty(), str)
 	assert.NoError(t, err)
 
 	decl := getAttributeDecl(file)

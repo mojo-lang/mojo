@@ -15,7 +15,7 @@ func CompileTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDecl) (*opena
 	}
 
 	thisCtx := context.WithType(ctx, decl)
-	components := context.Components(thisCtx)
+	components := context.OpenAPIComponents(thisCtx)
 
 	disableGenerated := false
 	if disableGenerate, _ := lang.GetDisableGenerateAttribute(decl.Attributes); len(disableGenerate) > 0 {

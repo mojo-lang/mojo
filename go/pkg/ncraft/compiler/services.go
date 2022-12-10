@@ -18,7 +18,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 	"github.com/mojo-lang/mojo/go/pkg/openapi/generator/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/plugin"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf/decompiler"
 )
 
 type Services struct {
@@ -164,7 +164,7 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
 		}
 	}
 
-	req, resp, err := precompiler.CompileMethod(ctx, decl)
+	req, resp, err := decompiler.CompileMethod(ctx, decl)
 	if err != nil {
 		return err
 	}
@@ -296,6 +296,7 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
 }
 
 func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*data.Message, error) {
+	_ = ctx
 	msg := &data.Message{
 		Decl:        decl,
 		PackageName: decl.PackageName,
@@ -304,7 +305,7 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 		Extensions:  make(map[string]interface{}),
 	}
 
-	decl.EachField(func(f *lang.ValueDecl) error {
+	err := decl.EachField(func(f *lang.ValueDecl) error {
 		t := f.GetType()
 		fieldType := &data.FieldType{
 			Go:         &data.GoFieldType{},
@@ -340,6 +341,9 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 
 		return nil
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return msg, nil
 }
@@ -365,9 +369,12 @@ func (s *Services) compileBindings(ctx context.Context, methodName string, path 
 		decl := method.Signature.ParameterDecl(0)
 		if b, _ := decl.GetBoolAttribute(protobuf.MethodRequestTypeAttributeName); b {
 			if structDecl := decl.Type.GetTypeDeclaration().GetStructDecl(); structDecl != nil {
-				structDecl.EachField(func(decl *lang.ValueDecl) error {
+				err := structDecl.EachField(func(decl *lang.ValueDecl) error {
 					return s.compileBindingParameter(ctx, decl, pathParams, nil, binding)
 				})
+				if err != nil {
+					return nil, err
+				}
 				return binding, nil
 			} else {
 				return nil, logs.NewErrorw("invalid request type", "method", method.FullName, "http-bind", methodName+":"+path)
@@ -396,9 +403,9 @@ func (s *Services) compileBindings(ctx context.Context, methodName string, path 
 }
 
 func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.ValueDecl, pathParams map[string]bool, enclosing *data.HTTPParameter, binding *data.HTTPBinding) error {
-	compiler := &compiler.NominalTypeCompiler{}
+	c := &compiler.NominalTypeCompiler{}
 
-	schema, err := compiler.Compile(decl.Type)
+	schema, err := c.Compile(decl.Type)
 	if err != nil {
 		return err
 	}
@@ -406,7 +413,7 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
 	param := &data.HTTPParameter{
 		Name: decl.Name,
 
-		Field: s.compileBindingField(ctx, schema, context.Components(compiler.Context).GetSchemas()),
+		Field: s.compileBindingField(ctx, schema, context.OpenAPIComponents(c.Context).GetSchemas()),
 
 		Go:         &data.GoHTTPParameter{},
 		Extensions: make(map[string]interface{}),

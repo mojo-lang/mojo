@@ -5,13 +5,15 @@ import (
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func TestNominalTypeVisitor_VisitArrayType(t *testing.T) {
 	const arrayType = `type Val{ val: [Int] }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(arrayType)
+	file, err := parser.ParseString(context.Empty(), arrayType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -25,7 +27,7 @@ func TestNominalTypeVisitor_VisitArrayType2(t *testing.T) {
 	const arrayType = `type Val{ val: [mojo.lang.StructType] }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(arrayType)
+	file, err := parser.ParseString(context.Empty(), arrayType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -40,7 +42,7 @@ func TestNominalTypeVisitor_VisitPrimeType_PackageName(t *testing.T) {
 	const primeType = `type Val{ val: mojo.core.Int }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(primeType)
+	file, err := parser.ParseString(context.Empty(), primeType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -53,7 +55,7 @@ func TestNominalTypeVisitor_VisitType_EnclosingName(t *testing.T) {
 	const primeType = `type Val{ val: mojo.core.Url.Path }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(primeType)
+	file, err := parser.ParseString(context.Empty(), primeType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -67,7 +69,7 @@ func TestNominalTypeVisitor_VisitType_EnclosingName2(t *testing.T) {
 	const primeType = `type Val{ val: [mojo.core.Url.Path] }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(primeType)
+	file, err := parser.ParseString(context.Empty(), primeType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -82,7 +84,7 @@ func TestNominalTypeVisitor_VisitMapType(t *testing.T) {
 	const dictType = `type Val{ val: {String: Int} }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(dictType)
+	file, err := parser.ParseString(context.Empty(), dictType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -97,7 +99,7 @@ func TestNominalTypeVisitor_VisitMapType2(t *testing.T) {
 	const dictType = `type Val{ val: {String @label("k"): Int @label("v")} }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(dictType)
+	file, err := parser.ParseString(context.Empty(), dictType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -121,7 +123,7 @@ func TestNominalTypeVisitor_VisitMapType3(t *testing.T) {
 	const dictType = `type Val{ val: {String: Int @label("v")} }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(dictType)
+	file, err := parser.ParseString(context.Empty(), dictType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -138,7 +140,7 @@ func TestNominalTypeVisitor_VisitUnion(t *testing.T) {
 	const unionType = `type Val{ val: String | Int | [String] }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(unionType)
+	file, err := parser.ParseString(context.Empty(), unionType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -157,7 +159,7 @@ func TestNominalTypeVisitor_VisitUnion2(t *testing.T) {
 }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(unionType)
+	file, err := parser.ParseString(context.Empty(), unionType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -175,7 +177,7 @@ func TestNominalTypeVisitor_VisitTupleType(t *testing.T) {
 	const tupleType = `type Val{ val: (String, Int) }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(tupleType)
+	file, err := parser.ParseString(context.Empty(), tupleType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -190,7 +192,7 @@ func TestNominalTypeVisitor_VisitTupleTypeWithLabel(t *testing.T) {
 	const tupleType = `type Val{ val: (str: String, integer: Int) }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(tupleType)
+	file, err := parser.ParseString(context.Empty(), tupleType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -211,7 +213,7 @@ func TestNominalTypeVisitor_VisitQuestionType(t *testing.T) {
 	const questionType = `type Val{ val: Int? }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(questionType)
+	file, err := parser.ParseString(context.Empty(), questionType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)
@@ -225,7 +227,7 @@ func TestNominalTypeVisitor_VisitBangType(t *testing.T) {
 	const bangType = `type Val{ val: Int! }`
 
 	parser := &Parser{}
-	file, err := parser.ParseString(bangType)
+	file, err := parser.ParseString(context.Empty(), bangType)
 
 	assert.NoError(t, err)
 	nominalType := getNominalType(file)

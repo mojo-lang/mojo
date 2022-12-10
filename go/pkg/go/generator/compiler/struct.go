@@ -9,7 +9,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/compiler/transformer"
-	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator/precompiler"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf/decompiler"
 )
 
 type Struct struct {
@@ -255,10 +255,12 @@ func (s *Struct) compileNominalType(ctx context.Context, t *lang.NominalType) (s
 		}
 		return decl.Name, nil
 	} else if t.Name == core.UnionTypeName {
-		decl, _ := precompiler.CompileUnionToStruct(ctx, t)
+		decl, _ := decompiler.CompileUnion(ctx, t)
 		if decl != nil { // skip if directly union declaration
 			for _, field := range decl.Type.Fields {
-				s.compileNominalType(ctx, field.Type)
+				if _, err := s.compileNominalType(ctx, field.Type); err != nil {
+					return "", nil
+				}
 			}
 			decl.PackageName = pkg.GetFullName()
 

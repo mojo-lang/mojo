@@ -1,3 +1,3 @@
 package decompiler
 
-// compile the proto descriptor to mojo lang struct
+// compile from the Mojo AST to Mojo AST for protobuf

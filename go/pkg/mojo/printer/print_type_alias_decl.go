@@ -6,9 +6,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-func (p *Printer) PrintTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDecl) {
+func (p *Printer) PrintTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDecl) *Printer {
 	if decl == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	breaker := &OnceLineBreaker{}
@@ -18,4 +18,6 @@ func (p *Printer) PrintTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDe
 		printDeclGenericParameters(ctx, decl.GenericParameters).
 		PrintRaw(" = ").
 		PrintNominalType(ctx, decl.Type)
+
+	return p
 }

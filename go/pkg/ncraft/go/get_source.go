@@ -70,7 +70,7 @@ func AllFuncSourceCode(val interface{}) (string, error) {
 	}
 
 	// Search ast for all function declarations
-	fncSlc := []*ast.FuncDecl{}
+	var fncSlc []*ast.FuncDecl
 	for _, decs := range fileAst.Decls {
 		switch decs.(type) {
 		case *ast.FuncDecl:

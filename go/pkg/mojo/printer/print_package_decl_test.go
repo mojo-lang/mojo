@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -23,7 +22,7 @@ func getPackageDecl(file *lang.SourceFile) *lang.PackageDecl {
 
 func parsePackageDecl(t *testing.T, str string) *lang.PackageDecl {
 	parser := &syntax.Parser{}
-	file, err := parser.ParseString(str)
+	file, err := parser.ParseString(context.Empty(), str)
 	assert.NoError(t, err)
 
 	decl := getPackageDecl(file)
@@ -73,7 +72,6 @@ package mojo.lang {
 }`
 
 	decl := parsePackageDecl(t, typeDecl)
-	buffer := bytes.NewBuffer(nil)
-	New(Config{}, buffer).PrintPackageDecl(context.Empty(), decl)
-	assert.Equal(t, expect, buffer.String())
+	p := New(&Config{}).PrintPackageDecl(context.Empty(), decl)
+	assert.Equal(t, expect, p.Buffer.String())
 }

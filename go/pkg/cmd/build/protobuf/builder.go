@@ -1,9 +1,10 @@
 package protobuf
 
 import (
-	path2 "path"
+	"path"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/mojo/go/pkg/protobuf/converter"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
@@ -20,7 +21,7 @@ type Builder struct {
 func (b Builder) Build() ([]*descriptor.File, error) {
 	logs.Infow("begin to build protobuf.", "package", b.Package.FullName, "path", b.Path)
 
-	compiler := generator.NewCompiler()
+	compiler := converter.New()
 	err := compiler.CompilePackage(context.Empty(), b.Package)
 	if err != nil {
 		logs.Errorw("failed to compile protobuf", "package", b.Package.FullName, "error", err.Error())
@@ -33,11 +34,10 @@ func (b Builder) Build() ([]*descriptor.File, error) {
 		return files, nil
 	}
 
-	output := path2.Join(b.GetAbsolutePath(), "protobuf")
+	output := path.Join(b.GetAbsolutePath(), "protobuf")
 	if len(b.Output) > 0 {
 		output = b.Output
 	}
 
-	generator := generator.NewGenerator(files)
-	return generator.Generate(output)
+	return files, generator.New().GenerateDescriptorsTo(files, output)
 }

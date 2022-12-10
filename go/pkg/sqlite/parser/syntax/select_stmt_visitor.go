@@ -13,14 +13,34 @@ func NewSelectSmtVisitor() *SelectSmtVisitor {
 	return visitor
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *SelectSmtVisitor) VisitSelect_stmt(ctx *Select_stmtContext) interface{} {
-	return nil
+	var selectStmts []*sql.SelectStmt
+	cores := ctx.AllSelect_core()
+	for _, core := range cores {
+		if stmt, ok := core.Accept(v).(*sql.SelectStmt); ok {
+			selectStmts = append(selectStmts, stmt)
+		} else {
+			// error
+		}
+	}
+
+	var selectStmt *sql.SelectStmt
+	if len(selectStmts) == 1 {
+		selectStmt = selectStmts[0]
+	} else if len(selectStmts) > 1 { // TODO
+	}
+
+	return &sql.Statement{Statement: &sql.Statement_SelectStmtVal{SelectStmtVal: selectStmt}}
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *SelectSmtVisitor) VisitCommon_table_stmt(ctx *Common_table_stmtContext) interface{} {
+	_ = ctx
 	return nil
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *SelectSmtVisitor) VisitSelect_core(ctx *Select_coreContext) interface{} {
 	selectStmt := &sql.SelectStmt{}
 
@@ -70,10 +90,14 @@ func (v *SelectSmtVisitor) VisitSelect_core(ctx *Select_coreContext) interface{}
 	return selectStmt
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *SelectSmtVisitor) VisitResult_column(ctx *Result_columnContext) interface{} {
+	_ = ctx
 	return nil
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *SelectSmtVisitor) VisitCommon_table_expression(ctx *Common_table_expressionContext) interface{} {
+	_ = ctx
 	return nil
 }

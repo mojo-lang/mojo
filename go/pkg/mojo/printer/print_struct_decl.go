@@ -6,9 +6,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
-func (p *Printer) PrintStructDecl(ctx context.Context, decl *lang.StructDecl) {
+func (p *Printer) PrintStructDecl(ctx context.Context, decl *lang.StructDecl) *Printer {
 	if decl == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	breaker := &OnceLineBreaker{}
@@ -95,6 +95,8 @@ func (p *Printer) PrintStructDecl(ctx context.Context, decl *lang.StructDecl) {
 			}
 		}
 	}
+
+	return p
 }
 
 func (p *Printer) PrintStructField(ctx context.Context, decl *lang.ValueDecl) *Printer {

@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/alecthomas/assert"
+
+	"github.com/mojo-lang/mojo/go/pkg/context"
 )
 
 func TestServiceDefVisitor_VisitRpc_Stream(t *testing.T) {
@@ -11,7 +13,7 @@ func TestServiceDefVisitor_VisitRpc_Stream(t *testing.T) {
 service T {
 rpc test ( in ) returns (out);
 }`
-	file, err := New(nil).ParseString(stream)
+	file, err := New(nil).ParseString(context.Empty(), stream)
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }

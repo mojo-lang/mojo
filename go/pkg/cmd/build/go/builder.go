@@ -38,15 +38,14 @@ func (b Builder) Build() error {
 	if len(b.Output) > 0 {
 		output = util.GetAbsolutePath(b.PWD, b.Output)
 	}
-	generator := generator.NewGenerator(files, compiler.Data)
-	err = generator.Generate(output)
+	gen := generator.NewGenerator(files, compiler.Data)
+	err = gen.Generate(output)
 	if err != nil {
 		logs.Errorw("generate go failed", "pwd", b.PWD, "path", b.Path, "package", b.Package.FullName, "error", err.Error())
 		return err
 	}
 
-	GoModTidy(output)
-	return nil
+	return GoModTidy(output)
 }
 
 func GoModTidy(pwd string) error {

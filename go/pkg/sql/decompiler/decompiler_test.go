@@ -2,13 +2,13 @@ package decompiler
 
 import (
 	"bytes"
-	"context"
 	"testing"
 
 	"github.com/mojo-lang/db/go/pkg/mojo/db/sql"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/parser/syntax"
 	"github.com/mojo-lang/mojo/go/pkg/sql/printer"
 )
@@ -36,11 +36,11 @@ var sqlExprs = []string{
 func TestDecompiler_CompileExpression(t *testing.T) {
 	for i, expr := range mojoExprs {
 		if mojo := parseExpression(t, expr); mojo != nil {
-			s, err := New(sql.Dialect_DIALECT_UNSPECIFIED).CompileExpression(context.Background(), mojo)
+			s, err := New(sql.Dialect_DIALECT_UNSPECIFIED).CompileExpression(context.Empty(), mojo)
 			assert.NoError(t, err)
 
 			sb := bytes.NewBuffer(nil)
-			printer.New(printer.Config{}, sb).PrintExpression(context.Background(), s)
+			printer.New(&printer.Config{}, sb).PrintExpression(context.Empty(), s)
 
 			_ = i
 			// assert.Equal(t, sqlExprs[i], sb.String())
@@ -50,7 +50,7 @@ func TestDecompiler_CompileExpression(t *testing.T) {
 
 func parseExpression(t *testing.T, str string) (expr *lang.Expression) {
 	parser := &syntax.Parser{}
-	file, err := parser.ParseString(str)
+	file, err := parser.ParseString(context.Empty(), str)
 	assert.NoError(t, err)
 
 	if file != nil && len(file.Statements) > 0 {

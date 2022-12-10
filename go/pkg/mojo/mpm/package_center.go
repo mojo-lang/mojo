@@ -83,7 +83,9 @@ func (p *PackageCenter) Install(name string, requirement *lang.Package_Requireme
 	cmd := exec.Command("git", "clone", url.Format())
 	cmd.Dir = path.Dir(repoPath)
 
-	core.CreateDir(cmd.Dir)
+	if err := core.CreateDir(cmd.Dir); err != nil {
+		return "", err
+	}
 
 	logs.Debugw("begin to install mojo package", "package", name, "cmd", cmd.String())
 	out, err := cmd.CombinedOutput()

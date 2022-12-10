@@ -1,17 +1,15 @@
 package printer
 
 import (
-	"strings"
-
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/printer"
 )
 
-func (p *Printer) PrintEnumDecl(ctx context.Context, decl *lang.EnumDecl) {
+func (p *Printer) PrintEnumDecl(ctx context.Context, decl *lang.EnumDecl) *Printer {
 	if decl == nil || p.GetError() != nil {
-		return
+		return p
 	}
 
 	breaker := &OnceLineBreaker{}
@@ -47,9 +45,12 @@ func (p *Printer) PrintEnumDecl(ctx context.Context, decl *lang.EnumDecl) {
 
 		p.PrintTerm(ctx, lang.NewSymbolTerm(decl.Type.EndPosition, lang.TermTypeEnd, "}"))
 	}
+
+	return p
 }
 
 func (p *Printer) calcEnumVerticalLines(ctx context.Context, enum *lang.EnumType) printer.Columns {
+	_ = ctx
 	nameMax := 0
 	attributesMax := 0
 	for _, enumerator := range enum.Enumerators {
@@ -57,10 +58,8 @@ func (p *Printer) calcEnumVerticalLines(ctx context.Context, enum *lang.EnumType
 			nameMax = len(enumerator.Name)
 		}
 
-		sb := &strings.Builder{}
-		printer := New(Config{}, sb)
-		printer.PrintAttributes(context.Empty(), enumerator.Attributes)
-		s := sb.String()
+		prt := New(&Config{}).PrintAttributes(context.Empty(), enumerator.Attributes)
+		s := prt.Buffer.String()
 		if len(s) > attributesMax {
 			attributesMax = len(s)
 		}
@@ -74,9 +73,9 @@ func (p *Printer) calcEnumVerticalLines(ctx context.Context, enum *lang.EnumType
 	return lines
 }
 
-func (p *Printer) PrintEnumEnumerator(ctx context.Context, decl *lang.ValueDecl) {
+func (p *Printer) PrintEnumEnumerator(ctx context.Context, decl *lang.ValueDecl) *Printer {
 	if decl == nil || p.GetError() != nil {
-		return
+		return p
 	}
 	vLines := printer.ContextColumns(ctx)
 	breaker := OnceLineBreaker{}
@@ -103,4 +102,6 @@ func (p *Printer) PrintEnumEnumerator(ctx context.Context, decl *lang.ValueDecl)
 	if comments := decl.GetEndPosition().GetTailingComments(); len(comments) > 0 {
 		p.PrintComments(ctx, comments...)
 	}
+
+	return p
 }

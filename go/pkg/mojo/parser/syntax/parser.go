@@ -3,7 +3,6 @@ package syntax
 import (
 	"errors"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -42,8 +41,8 @@ func New(options core.Options) *Parser {
 	}
 }
 
-func (p Parser) ParseExpression(expr string) (*lang.Expression, error) {
-	if file, err := p.ParseString(expr); err != nil {
+func (p *Parser) ParseExpression(expr string) (*lang.Expression, error) {
+	if file, err := p.ParseString(context.Empty(), expr); err != nil {
 		return nil, err
 	} else {
 		if len(file.Statements) > 0 {
@@ -55,12 +54,12 @@ func (p Parser) ParseExpression(expr string) (*lang.Expression, error) {
 	return nil, errors.New("not a valid expression")
 }
 
-func (p Parser) ParseString(mojo string) (*lang.SourceFile, error) {
+func (p *Parser) ParseString(ctx context.Context, mojo string) (*lang.SourceFile, error) {
 	input := antlr.NewInputStream(mojo)
-	return p.ParseStream("", input)
+	return p.ParseStream(plugin.ContextFilename(ctx), input)
 }
 
-func (p Parser) ParseStream(fileName string, input *antlr.InputStream) (*lang.SourceFile, error) {
+func (p *Parser) ParseStream(fileName string, input *antlr.InputStream) (*lang.SourceFile, error) {
 	lexer := NewMojoLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 
@@ -88,30 +87,11 @@ func (p Parser) ParseStream(fileName string, input *antlr.InputStream) (*lang.So
 	return nil, logs.NewErrorw("failed to parse mojo file", "file", fileName)
 }
 
-func (p Parser) ParseFile(ctx context.Context, fileName string) (sourceFile *lang.SourceFile, err error) {
-	var content []byte
-	f := plugin.ContextFs(ctx)
-	if f == nil {
-		content, err = ioutil.ReadFile(fileName)
-	} else {
-		content, err = fs.ReadFile(f, fileName)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	if sourceFile, err = p.ParseStream(fileName, antlr.NewInputStream(string(content))); err != nil {
-		return nil, err
-	} else {
-		sourceFile.Name = path.Base(fileName)
-		sourceFile.FullName = fileName
-
-		return sourceFile, nil
-	}
+func (p *Parser) ParseFile(ctx context.Context, fileName string) (sourceFile *lang.SourceFile, err error) {
+	return plugin.ParseFile(p, ctx, fileName)
 }
 
-func (p Parser) ParsePackage(ctx context.Context, pkg *lang.Package) (err error) {
+func (p *Parser) ParsePackage(ctx context.Context, pkg *lang.Package) (err error) {
 	if util.IsPackageProcessed(pkg, pluginName) {
 		return nil
 	}
@@ -127,7 +107,7 @@ func (p Parser) ParsePackage(ctx context.Context, pkg *lang.Package) (err error)
 	return
 }
 
-func (p Parser) ParsePath(ctx context.Context, pkgPath string) (*lang.Package, error) {
+func (p *Parser) ParsePath(ctx context.Context, pkgPath string) (*lang.Package, error) {
 	currentPkg := plugin.ContextDeclaredPackage(ctx)
 	currentPkgName := ""
 	if currentPkg != nil {

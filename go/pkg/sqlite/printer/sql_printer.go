@@ -10,5 +10,5 @@ type SqlitePrinter struct {
 }
 
 func New(printer *printer.Printer) *SqlitePrinter {
-	return &SqlitePrinter{ansi.SQLPrinter{P: printer}}
+	return &SqlitePrinter{ansi.SQLPrinter{Printer: printer}}
 }

@@ -1,7 +1,7 @@
 package printer
 
 import (
-	"io"
+	"bytes"
 
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
@@ -16,12 +16,15 @@ type Config = printer.Config
 type Cursor = printer.Cursor
 
 type Printer struct {
-	P *printer.Printer
+	P      *printer.Printer
+	Buffer *bytes.Buffer
 }
 
-func New(config Config, writer io.Writer) *Printer {
+func New(config *Config) *Printer {
+	buffer := bytes.NewBuffer(nil)
 	p := &Printer{
-		P: printer.New(config, writer),
+		P:      printer.New(config, buffer),
+		Buffer: buffer,
 	}
 	return p
 }

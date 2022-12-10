@@ -175,6 +175,7 @@ func parseGoMod(projectPath string) map[string]*mojoPackage {
 
 	parse := func(v *module.Version) *mojoPackage {
 		if !strings.HasPrefix(v.Path, "github.com/mojo-lang") {
+			logs.Warnw("not mojo std package", "path", v.Path)
 			return nil
 		}
 
@@ -187,7 +188,10 @@ func parseGoMod(projectPath string) map[string]*mojoPackage {
 		version := v.Version
 		segments := strings.Split(version, "-")
 		if len(segments) > 0 {
-			pkg.Version.Parse(segments[0][1:])
+			if err = pkg.Version.Parse(segments[0][1:]); err != nil {
+				logs.Warnw("failed to parse version", "path", v.Path, "version", version, "error", err)
+				return nil
+			}
 		}
 		if len(segments) > 2 {
 			pkg.Timestamp = segments[1]

@@ -33,6 +33,7 @@ import (
 	"unicode"
 
 	"github.com/fatih/structtag"
+	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 )
 
@@ -55,10 +56,14 @@ func NewTagInjector(xxxSkip []string, injections TagInjections) *TagInjector {
 			fieldName := field.Names[0].Name
 			if len(fieldName) > 0 && (strings.HasPrefix(fieldName, "XXX") || unicode.IsLower(rune(fieldName[0]))) {
 				for _, skip := range xxxSkip {
-					tags.Set(&structtag.Tag{
+					err := tags.Set(&structtag.Tag{
 						Key:  skip,
 						Name: "-",
 					})
+					if err != nil {
+						logs.Warnw("failed to set the tag", "tag", skip, "error", err)
+						return
+					}
 				}
 			}
 		})
@@ -71,7 +76,11 @@ func NewTagInjector(xxxSkip []string, injections TagInjections) *TagInjector {
 			key := structName + "." + fieldName
 			if injection, ok := injections[key]; ok {
 				for _, tag := range injection.Tags() {
-					tags.Set(tag)
+					err := tags.Set(tag)
+					if err != nil {
+						logs.Warnw("failed to set the tag", "tagName", tag.Name, "tagKey", tag.Key, "error", err)
+						return
+					}
 				}
 			}
 		})

@@ -13,7 +13,7 @@ import (
 )
 
 type Config struct {
-	printer.Config
+	*printer.Config
 
 	Dialect sql.Dialect
 }
@@ -24,7 +24,7 @@ type Printer struct {
 	SQL SQLPrinter
 }
 
-func New(config Config, writer io.Writer) *Printer {
+func New(config *Config, writer io.Writer) *Printer {
 	p := &Printer{
 		P: printer.New(config.Config, writer),
 	}
@@ -32,7 +32,7 @@ func New(config Config, writer io.Writer) *Printer {
 	case sql.Dialect_DIALECT_SQLITE:
 		p.SQL = sqlite.New(p.P)
 	default:
-		p.SQL = &ansi.SQLPrinter{P: p.P}
+		p.SQL = ansi.New(p.P)
 	}
 
 	return p

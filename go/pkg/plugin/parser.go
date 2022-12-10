@@ -2,6 +2,10 @@ package plugin
 
 import (
 	"errors"
+	"fmt"
+	"io/fs"
+	"io/ioutil"
+	"path"
 
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -19,12 +23,39 @@ const (
 )
 
 func ParseString(p interface{}, ctx context.Context, content string) (*lang.SourceFile, error) {
-	return ParseFile(p, WithFs(ctx, core.StringFS(content)), "")
+	if stringParser, ok := p.(StringParser); ok {
+		return stringParser.ParseString(ctx, content)
+	}
+	return nil, errors.New(fmt.Sprintf("%v is not a StringParser", p))
 }
 
 func ParseFile(p interface{}, ctx context.Context, fileName string) (*lang.SourceFile, error) {
+	if _, ok := p.(StringParser); ok {
+		ctx = WithFilename(ctx, fileName)
+
+		var err error
+		var content []byte
+		f := ContextFs(ctx)
+		if f == nil {
+			content, err = ioutil.ReadFile(fileName)
+		} else {
+			content, err = fs.ReadFile(f, fileName)
+		}
+		if err != nil {
+			return nil, fmt.Errorf("failed to read the file %s, %w", fileName, err)
+		}
+
+		sf, err := ParseString(p, ctx, string(content))
+		if err != nil {
+			return nil, err
+		}
+		sf.Name = path.Base(fileName)
+		sf.FullName = fileName
+		return sf, nil
+	}
+
 	if fileParser, ok := p.(FileParser); ok {
-		fileParser.ParseFile(ctx, fileName)
+		return fileParser.ParseFile(ctx, fileName)
 	}
 	return nil, errors.New("not a valid plugin type")
 }

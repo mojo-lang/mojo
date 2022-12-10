@@ -9,6 +9,7 @@ func NewInsertSmtVisitor() *InsertSmtVisitor {
 	return visitor
 }
 
+//goland:noinspection GoSnakeCaseUsage
 func (v *InsertSmtVisitor) VisitInsert_stmt(ctx *Insert_stmtContext) interface{} {
 	return nil
 }

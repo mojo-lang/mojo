@@ -34,32 +34,57 @@ func (g *Generator) generateDecl(decl data2.Decl, fileType string, template stri
 
 func (g *Generator) Generate(data *data2.Data) error {
 	for _, decl := range data.BoxedArrays {
-		g.generateDecl(decl, "json", goArrayJsonFile)
+		err := g.generateDecl(decl, "json", goArrayJsonFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	for _, decl := range data.BoxedMaps {
-		g.generateDecl(decl, "json", goMapJsonFile)
+		err := g.generateDecl(decl, "json", goMapJsonFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	for _, decl := range data.Enums {
-		g.generateDecl(decl, "fmt", goEnumFmtFile)
-		g.generateDecl(decl, "json", goEnumJsonFile)
+		err := g.generateDecl(decl, "fmt", goEnumFmtFile)
+		if err != nil {
+			return err
+		}
+
+		err = g.generateDecl(decl, "json", goEnumJsonFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	for _, decl := range data.BoxedUnions {
-		g.generateDecl(decl, "json", goUnionJsonFile)
+		err := g.generateDecl(decl, "json", goUnionJsonFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	for _, decl := range data.DbJSONs {
-		g.generateDecl(decl, "sql", goDbJSONSqlFile)
+		err := g.generateDecl(decl, "sql", goDbJSONSqlFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	for _, decl := range data.FormatJSONs {
-		g.generateDecl(decl, "json", goFormatJSONFile)
+		err := g.generateDecl(decl, "json", goFormatJSONFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	for _, decl := range data.ArrayResponses {
-		g.generateDecl(decl, "json", goArrayResponseJsonFile)
+		err := g.generateDecl(decl, "json", goArrayResponseJsonFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	if data.GoMod != nil {

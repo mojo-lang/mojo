@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,7 +16,6 @@ func TestPrinter_PrintNominalType(t *testing.T) {
 	assert.NotNil(t, decl.Type)
 	assert.NotEmptyf(t, decl.Type.Inherits, "the type inherits is empty")
 
-	buffer := bytes.NewBuffer(nil)
-	New(Config{}, buffer).PrintNominalType(context.Empty(), decl.Type.Inherits[0])
-	assert.Equal(t, expect, buffer.String())
+	p := New(&Config{}).PrintNominalType(context.Empty(), decl.Type.Inherits[0])
+	assert.Equal(t, expect, p.Buffer.String())
 }

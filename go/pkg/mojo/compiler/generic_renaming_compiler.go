@@ -151,12 +151,16 @@ func (c *GenericRenamingCompiler) CompileStruct(ctx context.Context, decl *lang.
 	}
 
 	for _, i := range decl.Type.Inherits {
-		c.compileNominalType(thisCtx, i, LocationInherit)
+		if err := c.compileNominalType(thisCtx, i, LocationInherit); err != nil {
+			return err
+		}
 	}
 
 	for _, f := range decl.Type.Fields {
 		fieldCtx := context.WithType(thisCtx, f)
-		c.compileNominalType(fieldCtx, f.Type, LocationField)
+		if err := c.compileNominalType(fieldCtx, f.Type, LocationField); err != nil {
+			return err
+		}
 	}
 
 	if decl.Scope != nil {
