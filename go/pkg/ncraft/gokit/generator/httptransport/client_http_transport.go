@@ -29,7 +29,7 @@ func NewClientHttpTransport(ds data.Service) (*ClientHttpTransport, error) {
 }
 
 func (h *ClientHttpTransport) Render(tmpl string, ds *data.Service) (io.Reader, error) {
-	code, err := util.ApplyTemplate("ClientTemplate", templates.ClientTemplate, ds, ds.FuncMap)
+	code, err := util.ApplyTemplate(tmpl, templates.ClientTemplate, ds, ds.FuncMap)
 	if err != nil {
 		return nil, err
 	}

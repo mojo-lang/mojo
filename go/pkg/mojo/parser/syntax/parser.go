@@ -25,6 +25,8 @@ const pluginName = "syntax.parser"
 
 type Parser struct {
 	plugin.BasicPlugin
+
+	Options core.Options
 }
 
 func New(options core.Options) *Parser {
@@ -38,6 +40,7 @@ func New(options core.Options) *Parser {
 				return New(options)
 			},
 		},
+		Options: options,
 	}
 }
 

@@ -7,6 +7,7 @@ import (
 )
 
 func (p *Printer) PrintDocument(ctx context.Context, document *lang.Document) {
+	_ = ctx
 	if document == nil || p == nil || p.Error != nil {
 		return
 	}

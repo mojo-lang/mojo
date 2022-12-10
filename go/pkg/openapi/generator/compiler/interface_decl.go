@@ -156,6 +156,7 @@ func compileMethod(ctx context.Context, method *lang.FunctionDecl, api *openapi.
 }
 
 func compileDescription(ctx context.Context, method *lang.FunctionDecl) (string, *openapi.CachedDocument) {
+	_ = ctx
 	sd := method.Document.Parse().GetStructured()
 	md := markdown.New()
 	summary := ""

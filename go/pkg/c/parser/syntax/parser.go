@@ -14,10 +14,11 @@ import (
 )
 
 type Parser struct {
+	Options core.Options
 }
 
 func New(options core.Options) *Parser {
-	return &Parser{}
+	return &Parser{Options: options}
 }
 
 func (p Parser) ParseString(mojo string) (*lang.SourceFile, error) {
@@ -50,6 +51,7 @@ func (p Parser) ParseStream(fileName string, input antlr.CharStream) (*lang.Sour
 }
 
 func (p Parser) ParseFile(ctx context.Context, fileName string, fileSys fs.FS) (*lang.SourceFile, error) {
+	_ = ctx
 	if bytes, err := fs.ReadFile(fileSys, fileName); err != nil {
 		return nil, err
 	} else {

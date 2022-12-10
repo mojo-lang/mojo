@@ -18,6 +18,8 @@ func init() {
 // LabelFormatCompiler used for union, tuple
 type LabelFormatCompiler struct {
 	plugin.BasicPlugin
+
+	Options core.Options
 }
 
 func NewLabelFormatCompiler(options core.Options) *LabelFormatCompiler {
@@ -32,6 +34,7 @@ func NewLabelFormatCompiler(options core.Options) *LabelFormatCompiler {
 			},
 			MarkedPackages: make(map[string]bool),
 		},
+		Options: options,
 	}
 }
 

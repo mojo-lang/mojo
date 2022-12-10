@@ -2,7 +2,8 @@ package data
 
 import (
 	"strconv"
-	"strings"
+
+	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
 )
 
 var DigitEnglish = map[rune]string{
@@ -29,7 +30,7 @@ func EnglishNumber(i int) string {
 	rv := ""
 	for _, c := range n {
 		if e, ok := DigitEnglish[c]; ok {
-			rv += strings.Title(e)
+			rv += strcase.ToCamel(e)
 		}
 	}
 	return rv

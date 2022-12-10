@@ -19,6 +19,8 @@ func init() {
 
 type MethodRequestTypeCompiler struct {
 	plugin.BasicPlugin
+
+	Options core.Options
 }
 
 func NewMethodRequestTypeCompiler(options core.Options) *MethodRequestTypeCompiler {
@@ -32,6 +34,7 @@ func NewMethodRequestTypeCompiler(options core.Options) *MethodRequestTypeCompil
 				return NewMethodRequestTypeCompiler(options)
 			},
 		},
+		Options: options,
 	}
 }
 
@@ -48,6 +51,7 @@ func (c *MethodRequestTypeCompiler) CompileInterface(ctx context.Context, decl *
 }
 
 func (c *MethodRequestTypeCompiler) CompileMethod(ctx context.Context, method *lang.FunctionDecl) error {
+	_ = ctx
 	wrapRequestName := strcase.ToCamel(method.Name) + "Request"
 
 	// special case for the request, do NOT generate new request type

@@ -21,6 +21,8 @@ func init() {
 
 type Namer struct {
 	plugin.BasicPlugin
+
+	Options core.Options
 }
 
 func NewNamer(options core.Options) *Namer {
@@ -34,6 +36,7 @@ func NewNamer(options core.Options) *Namer {
 				return NewNamer(options)
 			},
 		},
+		Options: options,
 	}
 }
 

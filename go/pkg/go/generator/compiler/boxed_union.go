@@ -15,7 +15,7 @@ type BoxedUnion struct {
 }
 
 func (b *BoxedUnion) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
-
+	_ = ctx
 	bu := &data2.BoxedUnion{}
 	bu.PackageName = decl.GetPackageName()
 	bu.GoPackageName = lang.GetGoPackageName(decl.GetPackageName())

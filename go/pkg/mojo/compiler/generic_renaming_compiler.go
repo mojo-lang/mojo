@@ -38,6 +38,7 @@ func init() {
 
 type GenericRenamingCompiler struct {
 	plugin.BasicPlugin
+	Options core.Options
 
 	References map[string]*Reference
 }
@@ -54,6 +55,7 @@ func NewGenericRenamingCompiler(options core.Options) *GenericRenamingCompiler {
 				return NewGenericRenamingCompiler(options)
 			},
 		},
+		Options: options,
 	}
 }
 
@@ -181,6 +183,7 @@ func (c *GenericRenamingCompiler) CompileStruct(ctx context.Context, decl *lang.
 }
 
 func (c *GenericRenamingCompiler) compileNominalType(ctx context.Context, t *lang.NominalType, location LocationType) error {
+	_ = ctx
 	if r, ok := c.References[t.GetFullName()]; ok {
 		r.Types[location] = append(r.Types[location], t)
 	} else {

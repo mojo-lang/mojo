@@ -17,6 +17,8 @@ func init() {
 
 type IrregularCaseRuleCompiler struct {
 	plugin.BasicPlugin
+
+	Options core.Options
 }
 
 func NewIrregularCaseRuleCompiler(options core.Options) *IrregularCaseRuleCompiler {
@@ -31,6 +33,7 @@ func NewIrregularCaseRuleCompiler(options core.Options) *IrregularCaseRuleCompil
 			},
 			MarkedPackages: make(map[string]bool),
 		},
+		Options: options,
 	}
 }
 
@@ -55,6 +58,7 @@ func (c *IrregularCaseRuleCompiler) CompileSourceFile(ctx context.Context, sourc
 }
 
 func (c *IrregularCaseRuleCompiler) ApplyAttribute(ctx context.Context, attribute *lang.Attribute) (err error) {
+	_ = ctx
 	if attribute != nil && len(attribute.Arguments) > 0 {
 		if len(attribute.Arguments) == 2 {
 			rule, replacement := "", ""

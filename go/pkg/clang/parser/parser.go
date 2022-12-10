@@ -8,10 +8,11 @@ import (
 )
 
 type Parser struct {
+	Options core.Options
 }
 
 func New(options core.Options) *Parser {
-	return &Parser{}
+	return &Parser{Options: options}
 }
 
 func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, error) {

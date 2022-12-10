@@ -13,10 +13,11 @@ import (
 )
 
 type Parser struct {
+	Options core.Options
 }
 
 func New(options core.Options) *Parser {
-	return &Parser{}
+	return &Parser{Options: options}
 }
 
 func (p *Parser) ParseString(ctx context.Context, content string) (*lang.SourceFile, error) {

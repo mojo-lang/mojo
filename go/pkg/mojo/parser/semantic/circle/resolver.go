@@ -25,6 +25,7 @@ func init() {
 }
 
 func NewResolver(options core.Options) *Resolver {
+	_ = options
 	return &Resolver{
 		BasicPlugin: plugin.BasicPlugin{
 			Name:          pluginName,

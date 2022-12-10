@@ -18,8 +18,8 @@ func init() {
 
 type GlobalMaker struct {
 	plugin.BasicPlugin
-
-	Global *lang.Package
+	Options core.Options
+	Global  *lang.Package
 }
 
 func NewGlobalMaker(options core.Options) *GlobalMaker {
@@ -33,6 +33,7 @@ func NewGlobalMaker(options core.Options) *GlobalMaker {
 				return NewGlobalMaker(options)
 			},
 		},
+		Options: options,
 	}
 }
 

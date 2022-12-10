@@ -17,6 +17,7 @@ func init() {
 
 type GlobalRemover struct {
 	plugin.BasicPlugin
+	Options core.Options
 
 	processedPackages map[string]bool
 }
@@ -32,6 +33,7 @@ func NewGlobalRemover(options core.Options) *GlobalRemover {
 				return NewGlobalRemover(options)
 			},
 		},
+		Options:           options,
 		processedPackages: make(map[string]bool),
 	}
 }

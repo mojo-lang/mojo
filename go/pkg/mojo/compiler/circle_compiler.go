@@ -24,6 +24,7 @@ type CircleCompiler struct {
 }
 
 func NewCircleCompiler(options core.Options) *CircleCompiler {
+	_ = options
 	return &CircleCompiler{
 		BasicPlugin: plugin.BasicPlugin{
 			Name:          circleName,

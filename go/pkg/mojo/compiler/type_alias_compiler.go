@@ -23,6 +23,7 @@ type TypeAliasCompiler struct {
 }
 
 func NewTypeAliasCompiler(options core.Options, name string, priority int) *TypeAliasCompiler {
+	_ = options
 	return &TypeAliasCompiler{
 		BasicPlugin: plugin.BasicPlugin{
 			Name:          name,

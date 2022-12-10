@@ -19,6 +19,8 @@ const paginationName = "compiler.pagination"
 
 type PaginationCompiler struct {
 	plugin.BasicPlugin
+
+	Options core.Options
 }
 
 func NewPaginationCompiler(options core.Options) *PaginationCompiler {
@@ -32,6 +34,7 @@ func NewPaginationCompiler(options core.Options) *PaginationCompiler {
 				return NewPaginationCompiler(options)
 			},
 		},
+		Options: options,
 	}
 }
 

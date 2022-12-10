@@ -17,6 +17,7 @@ type Parser struct {
 }
 
 func New(options core.Options) *Parser {
+	_ = options
 	return &Parser{}
 }
 

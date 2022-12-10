@@ -17,6 +17,8 @@ func init() {
 
 type GoPackageNameCompiler struct {
 	plugin.BasicPlugin
+
+	Options core.Options
 }
 
 func NewGoPackageNameCompiler(options core.Options) *GoPackageNameCompiler {
@@ -31,6 +33,7 @@ func NewGoPackageNameCompiler(options core.Options) *GoPackageNameCompiler {
 			},
 			MarkedPackages: make(map[string]bool),
 		},
+		Options: options,
 	}
 }
 

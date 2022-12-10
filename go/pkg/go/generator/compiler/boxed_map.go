@@ -15,6 +15,7 @@ type BoxedMap struct {
 }
 
 func (b *BoxedMap) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
+	_ = ctx
 	bm := &data2.BoxedMap{}
 	bm.PackageName = decl.GetPackageName()
 	bm.GoPackageName = GetGoPackage(decl.GetPackageName())

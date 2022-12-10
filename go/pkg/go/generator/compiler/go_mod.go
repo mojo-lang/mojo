@@ -14,7 +14,7 @@ type GoMod struct {
 }
 
 func (g *GoMod) CompilePackage(ctx context.Context, pkg *lang.Package) error {
-
+	_ = ctx
 	gm := &data2.GoMod{}
 	gm.Name = pkg.GoModName()
 	gm.Version = "1.16"

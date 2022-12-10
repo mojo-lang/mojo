@@ -8,6 +8,7 @@ import (
 
 // PrintDescriptorEnum the enum definitions for this Enum.
 func (p *Printer) PrintDescriptorEnum(ctx context.Context, enum *descriptor.Enum) *Printer {
+	_ = ctx
 	if enum.IsDeprecated() {
 		p.PrintLine("// ", deprecationComment)
 	}

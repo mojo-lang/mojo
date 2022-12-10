@@ -15,7 +15,7 @@ type BoxedArray struct {
 }
 
 func (b *BoxedArray) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
-
+	_ = ctx
 	ba := &data2.BoxedArray{}
 
 	ba.PackageName = decl.GetPackageName()
