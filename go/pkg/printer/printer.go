@@ -24,17 +24,20 @@ func New(config *Config, writer io.Writer) *Printer {
 		}
 	}
 
+	if config.IndentWidth == 0 {
+		config.IndentWidth = 4
+	}
+	if config.MaxCharactersPerLine == 0 {
+		config.MaxCharactersPerLine = 125
+	}
+
 	printer := &Printer{
 		Config: config,
 		Writer: writer,
 		indent: lineIndent{
 			Width: config.IndentWidth,
+			Count: config.Indent,
 		},
-	}
-
-	if printer.Config.IndentWidth == 0 {
-		printer.Config.IndentWidth = 4
-		printer.indent.Width = 4
 	}
 
 	return printer
@@ -69,16 +72,22 @@ func (p *Printer) Outdent() *Printer {
 }
 
 func (p *Printer) BreakLine() *Printer {
-	if p.Error == nil {
-		p.PrintRaw("\n")
-
-		p.Cursor.Line++
-		p.Cursor.Column = 0
+	if p == nil || p.Error != nil {
+		return p
 	}
+
+	p.PrintRaw("\n")
+	p.Cursor.Line++
+	p.Cursor.Column = 0
+
 	return p
 }
 
 func (p *Printer) PrintBlankLine() *Printer {
+	if p == nil || p.Error != nil {
+		return p
+	}
+
 	if p.Cursor.Column > 0 {
 		p.BreakLine()
 	}
@@ -94,6 +103,10 @@ func (p *Printer) IsNewLine() bool {
 }
 
 func (p *Printer) PrintRaw(values ...interface{}) *Printer {
+	if p == nil || p.Error != nil {
+		return p
+	}
+
 	if n, err := p.Writer.Write([]byte(fmt.Sprint(p.normalize(values...)...))); err != nil {
 		p.Error = err
 	} else {
@@ -117,6 +130,10 @@ func (p *Printer) PrintIndent() *Printer {
 }
 
 func (p *Printer) PrintLine(values ...interface{}) *Printer {
+	if p == nil || p.Error != nil {
+		return p
+	}
+
 	if p.Cursor.Column > 0 {
 		p.BreakLine()
 	}
@@ -133,7 +150,7 @@ func (p *Printer) PrintLine(values ...interface{}) *Printer {
 }
 
 func (p *Printer) PrintTo(cursor Cursor) *Printer {
-	if p.Error != nil {
+	if p == nil || p.Error != nil {
 		return p
 	}
 

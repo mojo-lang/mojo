@@ -3,10 +3,16 @@ package printer
 type Columns []int
 
 func (c Columns) Column(index int) int {
-	if index >= len(c) || index < 0 {
-		return -1
+	if len(c) > 0 {
+		if index < 0 {
+			return c[0]
+		}
+		if index >= len(c) {
+			return c[len(c)-1]
+		}
+		return c[index]
 	}
-	return c[index]
+	return 0
 }
 
 func (c Columns) PrintTo(index int, printer *Printer) *Printer {

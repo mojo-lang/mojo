@@ -16,16 +16,23 @@ type lineIndent struct {
 	Count int
 }
 
-func (l *lineIndent) Indent() {
-	l.Count++
+func (l *lineIndent) Indent() *lineIndent {
+	if l != nil {
+		l.Count++
+	}
+	return l
 }
 
-func (l *lineIndent) Outdent() {
-	if l.Count > 0 {
+func (l *lineIndent) Outdent() *lineIndent {
+	if l != nil && l.Count > 0 {
 		l.Count--
 	}
+	return l
 }
 
 func (l *lineIndent) IndentSpace() []byte {
-	return spaceIndents[0 : l.Count*l.Width]
+	if l != nil {
+		return spaceIndents[0 : l.Count*l.Width]
+	}
+	return nil
 }

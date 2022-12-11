@@ -60,7 +60,7 @@ type Mailbox {
     /* block comment
     */
 
-    //comment4
+    // comment4
     // comment5
     following: Bool //< following document - 1
                     //< following document - 2

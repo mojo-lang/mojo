@@ -68,11 +68,12 @@ func (p *Printer) PrintComments(ctx context.Context, comments ...*lang.Comment) 
 					p.BreakLine()
 				}
 			} else {
-				for i, line := range multiLine.Lines {
-					if i > 0 {
-						p.BreakLine()
+				for _, line := range multiLine.Lines {
+					if len(line.Text) == 0 || strings.HasPrefix(line.Text, " ") {
+						p.PrintLine("//", line.Text)
+					} else {
+						p.PrintLine("// ", line.Text)
 					}
-					p.PrintLine(line.Text)
 				}
 				p.BreakLine()
 			}

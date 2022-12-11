@@ -11,7 +11,7 @@ func NewFirstLineNoneBreaker(printer *Printer) *FirstLineNoneBreaker {
 }
 
 func (f *FirstLineNoneBreaker) Break() *Printer {
-	if f.Line > f.Cursor.Line {
+	if f.Printer.Cursor.Line > f.Cursor.Line {
 		f.Printer.BreakLine()
 	}
 	return f.Printer

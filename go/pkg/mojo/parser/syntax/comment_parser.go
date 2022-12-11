@@ -1,6 +1,8 @@
 package syntax
 
 import (
+	"strings"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
@@ -21,6 +23,7 @@ func (c CommentParser) Parse(stream *antlr.CommonTokenStream) []*lang.Comment {
 				Line:   endPosition.Line,
 				Column: endPosition.Column,
 			}
+			removeMultiLineCommentPrefix(multiLineComment)
 			comments = append(comments, lang.NewMultiLineCommentComment(multiLineComment))
 			multiLineComment = nil
 		}
@@ -133,4 +136,12 @@ func isComment(tokenType int) bool {
 
 func isLineComment(tokenType int) bool {
 	return tokenType == MojoParserLINE_COMMENT || tokenType == MojoParserLINE_COMMENT_DISTINCT_DOCUMENT
+}
+
+func removeMultiLineCommentPrefix(comment *lang.MultiLineComment) {
+	if comment != nil && len(comment.Lines) > 0 {
+		for _, line := range comment.Lines {
+			line.Text = strings.TrimPrefix(line.Text, "//")
+		}
+	}
 }
