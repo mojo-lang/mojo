@@ -3,7 +3,13 @@ struct tree_el {
    struct tree_el * right, * left;
 };
 
+enum colour {
+    RED = 1,
+    BLUE = 2,
+};
+
 typedef struct tree_el node;
+typedef enum colour colour;
 
 void insert(node ** tree, node * item) {
    if(!(*tree)) {

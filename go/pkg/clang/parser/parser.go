@@ -1,11 +1,17 @@
 package parser
 
 import (
+	"os"
+	"runtime"
+	"strings"
+
 	"github.com/go-clang/clang-v13/clang"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 )
+
+const macOSDefaultIncludeDir = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
 
 type Parser struct {
 	Options core.Options
@@ -15,10 +21,70 @@ func New(options core.Options) *Parser {
 	return &Parser{Options: options}
 }
 
+func (p Parser) initCmdArgs(cmdArgs []string) []string {
+	parsePathEnv := func(p string, index map[string]bool) {
+		paths := strings.Split(p, ":")
+		for _, pth := range paths {
+			index[pth] = true
+		}
+	}
+
+	switch runtime.GOOS {
+	case "linux":
+		includes := make(map[string]bool)
+		if path, ok := os.LookupEnv("C_INCLUDE_PATH"); ok {
+			parsePathEnv(path, includes)
+		}
+		if path, ok := os.LookupEnv("CPLUS_INCLUDE_PATH"); ok {
+			parsePathEnv(path, includes)
+		}
+		if len(includes) == 0 {
+			includes["/usr/include"] = true
+			includes["/usr/local/include"] = true
+		}
+
+		var args []string
+		for _, arg := range cmdArgs {
+			if strings.HasPrefix(arg, "-I") {
+				paths := make(map[string]bool)
+				parsePathEnv(strings.TrimSuffix(arg, "-I"), paths)
+				for path := range paths {
+					if _, ok := includes[path]; !ok {
+						includes[path] = true
+					}
+				}
+			} else {
+				args = append(args, arg)
+			}
+		}
+
+		var paths []string
+		for path := range includes {
+			paths = append(paths, path)
+		}
+		args = append(args, "-I"+strings.Join(paths, ":"))
+		return args
+	case "darwin":
+		included := false
+		for _, arg := range cmdArgs {
+			if arg == "-I"+macOSDefaultIncludeDir {
+				included = true
+			}
+		}
+		if !included {
+			cmdArgs = append(cmdArgs, "-I"+macOSDefaultIncludeDir)
+		}
+		return cmdArgs
+	case "windows":
+	}
+	return cmdArgs
+}
+
 func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, error) {
 	idx := clang.NewIndex(1, 0)
 	defer idx.Dispose()
 
+	p.initCmdArgs(cmdArgs)
 	tu := idx.ParseTranslationUnit(fileName, cmdArgs, nil, 0)
 	defer tu.Dispose()
 
