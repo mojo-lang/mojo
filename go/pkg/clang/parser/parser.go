@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/go-clang/clang-v13/clang"
+	"github.com/go-clang/clang-v10/clang"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"

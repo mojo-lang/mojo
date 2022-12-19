@@ -112,8 +112,8 @@ github.com/gertd/go-pluralize v0.1.7 h1:RgvJTJ5W7olOoAks97BOwOlekBFsLEyh00W48Z6Z
 github.com/gertd/go-pluralize v0.1.7/go.mod h1:O4eNeeIf91MHh1GJ2I47DNtaesm66NYvjYgAahcqSDQ=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
-github.com/go-clang/clang-v13 v1.0.1 h1:NeMbVNvXOEJhbtkCkIWUWPAwlaWi7rqTON/J7/erid4=
-github.com/go-clang/clang-v13 v1.0.1/go.mod h1:CsecorN1/MB9bqY4CqjRaW1bHF35t+RuKlKDEvRsn2o=
+github.com/go-clang/clang-v10 v0.0.0-20211120055647-b59749ef6dbb h1:sSKan11W4E+w5GjWAfxsBKh5iVok5TQstLSn2hBg1hY=
+github.com/go-clang/clang-v10 v0.0.0-20211120055647-b59749ef6dbb/go.mod h1:PHBb8F8cYKe/MUC8JdJ9y/2j7eJa1SJ/VKBHLuJtpGA=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20191125211704-12ad95a8df72/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
@@ -307,7 +307,6 @@ github.com/mojo-lang/core/go v0.0.0-20220504064051-1b3f33899289/go.mod h1:MdE3mb
 github.com/mojo-lang/core/go v0.0.0-20220514121011-d34ba80903c5/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
 github.com/mojo-lang/core/go v0.0.0-20220520092744-d044478f0e2a/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
 github.com/mojo-lang/core/go v0.0.0-20220929135212-3562b42bfff9/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
-github.com/mojo-lang/core/go v0.0.0-20221103080547-672a84092d5d h1:zf5fFJAKQFBizJPz3LYDDNRwiIZrYI0QnmVbBSi2gKU=
 github.com/mojo-lang/core/go v0.0.0-20221103080547-672a84092d5d/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
 github.com/mojo-lang/core/go v0.0.0-20221219004943-fa9d45a5355d h1:64lxf2UknBNbwfKwzHMJ1IarQzlTmOF0wBxlwZFfxmI=
 github.com/mojo-lang/core/go v0.0.0-20221219004943-fa9d45a5355d/go.mod h1:MdE3mbieft+zVx8iDWNSYzS6bkuUWKmnUVwCHGOofpU=
