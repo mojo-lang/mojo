@@ -139,7 +139,7 @@ var ({{range $msg := .ImportedMessages}}
 func RegisterHttpHandler(router *mux.Router, endpoints Endpoints, tracer stdopentracing.Tracer, logger log.Logger)  {
 	{{- if .Interface.Methods}}
 		serverOptions := []httptransport.ServerOption{
-			httptransport.ServerBefore(headersToContext),
+			httptransport.ServerBefore(headersToContext, queryToContext),
 			httptransport.ServerErrorEncoder(errorEncoder),
 			httptransport.ServerErrorLogger(logger),
 			httptransport.ServerAfter(httptransport.SetContentType(contentType)),
@@ -175,21 +175,11 @@ func RegisterHttpHandler(router *mux.Router, endpoints Endpoints, tracer stdopen
 // implements json.Marshaler, and the marshaling succeeds, the JSON encoded
 // form of the error will be used. If the error implements StatusCoder, the
 // provided StatusCode will be used instead of 500.
-func errorEncoder(_ context.Context, err error, w http.ResponseWriter) {
-	body, _ := json.Marshal(errorWrapper{Error: err.Error()})
-	if marshaler, ok := err.(json.Marshaler); ok {
-		if jsonBody, marshalErr := marshaler.MarshalJSON(); marshalErr == nil {
-			body = jsonBody
-		}
+func errorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
+	e, ok := err.(*core.Error)
+	if !ok {
+		e = core.NewErrorFrom(500, err.Error())
 	}
-    e, ok := err.(*core.Error)
-    if !ok {
-        e = core.NewErrorFrom(500, err.Error())
-	}
-
-    if jsonBody, marshalErr := jsoniter.ConfigFastest.Marshal(e); marshalErr == nil {
-        body = jsonBody
-    }
 
 	w.Header().Set("Content-Type", contentType)
 	if headerer, ok := err.(httptransport.Headerer); ok {
@@ -197,16 +187,34 @@ func errorEncoder(_ context.Context, err error, w http.ResponseWriter) {
 			w.Header().Set(k, headerer.Headers().Get(k))
 		}
 	}
+
+	var body []byte
 	code := http.StatusInternalServerError
-	if sc, ok := err.(httptransport.StatusCoder); ok {
-		code = sc.StatusCode()
+	if enveloped, ok := ctx.Value("envelope").(bool); ok && enveloped {
+		envelope := &nhttp.EnvelopedResult{}
+		envelope.Error = e
+
+		code = http.StatusOK
+		if jsonBody, marshalErr := jsoniter.ConfigFastest.Marshal(envelope); marshalErr == nil {
+			body = jsonBody
+		}
+	} else {
+		if sc, ok := err.(httptransport.StatusCoder); ok {
+			code = sc.StatusCode()
+		}
+		if marshaler, ok := err.(json.Marshaler); ok {
+			if jsonBody, marshalErr := marshaler.MarshalJSON(); marshalErr == nil {
+				body = jsonBody
+			}
+		}
+
+		if jsonBody, marshalErr := jsoniter.ConfigFastest.Marshal(e); marshalErr == nil {
+			body = jsonBody
+		}
 	}
+
 	w.WriteHeader(code)
 	w.Write(body)
-}
-
-type errorWrapper struct {
-	Error string ` + "`" + `json:"error"` + "`" + `
 }
 
 // Server Decode
@@ -244,17 +252,32 @@ func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.Respon
 // EncodeHTTPGenericResponse is a transport/http.EncodeResponseFunc that encodes
 // the response as JSON to the response writer. Primarily useful in a server.
 func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	if reflect.ValueOf(response).IsNil() {
-		return nil
-	}
-    if _, ok := response.(*core.Null); ok {
-		return nil 
-	}
-    if writer, ok := response.(nhttp.ResponseWriter); ok {
+	if writer, ok := response.(nhttp.ResponseWriter); ok {
 		return writer.WriteHttpResponse(ctx, w)
 	}
 
-    if p, ok := response.(pagination.Paginater); ok {
+	if reflect.ValueOf(response).IsNil() {
+		response = nil
+	}
+	if _, ok := response.(*core.Null); ok {
+		response = nil
+	}
+
+	if enveloped, ok := ctx.Value("envelope").(bool); ok && enveloped {
+		response = &nhttp.EnvelopedResult{
+			Error: &core.Error{
+				Code:    core.NewErrorCode(200),
+				Message: "OK",
+			},
+			Data:  response,
+		}
+	}
+
+	if response == nil {
+		return nil
+	}
+
+	if p, ok := response.(pagination.Paginater); ok {
 		total := p.GetTotalCount()
 		if total > 0 {
 			w.Header().Set("X-Total-Count", strconv.Itoa(int(total)))
@@ -274,7 +297,7 @@ func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, respo
 		}
 	}
 
-    return nhttp.NewResponseJsonWriter(response).WriteHttpResponse(ctx, w)
+	return nhttp.NewResponseJsonWriter(response).WriteHttpResponse(ctx, w)
 }
 
 // Helper functions
@@ -300,6 +323,26 @@ func headersToContext(ctx context.Context, r *http.Request) context.Context {
 	ctx = context.WithValue(ctx, "http-request-path", r.URL.Path)
 	ctx = context.WithValue(ctx, "transport", "HTTPJSON")
 
+	return ctx
+}
+
+func queryToContext(ctx context.Context, r *http.Request) context.Context {
+	check := func(values []string) bool{
+		for _, value := range values {
+			if value == "true" {
+				return true
+			}
+		}
+		return false
+	}
+	for key, values := range r.URL.Query() {
+		switch key {
+		case "envelope":
+			if check(values) {
+				ctx = context.WithValue(ctx, "envelope", true)
+			}
+		}
+	}
 	return ctx
 }
 `
