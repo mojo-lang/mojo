@@ -93,11 +93,12 @@ import (
 
 	"context"
 
-	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
-	"github.com/json-iterator/go"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/tracing/opentracing"
+	"github.com/gorilla/mux"
+	"github.com/json-iterator/go"
+	"github.com/ncraft-io/ncraft/go/pkg/ncraft/logs"
+	"github.com/pkg/errors"
 
 	httptransport "github.com/go-kit/kit/transport/http"
 	pagination "github.com/ncraft-io/ncraft-gokit/pkg/pagination"
@@ -134,6 +135,11 @@ var ({{range $msg := .ImportedMessages}}
 {{- end}}{{range $enum := .ImportedEnums}}
 	_ = {{$enum.Go.PackageName}}.{{$enum.Name}}(0)
 {{- end}}){{end}}
+
+var cfg *nhttp.Config
+func init()  {
+	cfg = nhttp.NewConfig()
+}
 
 // RegisterHttpHandler register a set of endpoints available on predefined paths to the router.
 func RegisterHttpHandler(router *mux.Router, endpoints Endpoints, tracer stdopentracing.Tracer, logger log.Logger)  {
@@ -190,12 +196,30 @@ func errorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
 
 	var body []byte
 	code := http.StatusInternalServerError
-	if enveloped, ok := ctx.Value("envelope").(bool); ok && enveloped {
-		envelope := &nhttp.EnvelopedResult{}
+
+	if enveloped := nhttp.IsEnvelopeStyle(ctx, cfg.GetStyle()); enveloped {
+		envelope := &nhttp.EnvelopedResponse{}
 		envelope.Error = e
 
-		code = http.StatusOK
-		if jsonBody, marshalErr := jsoniter.ConfigFastest.Marshal(envelope); marshalErr == nil {
+		if cfg.GetEnvelop().MappingCode {
+			if sc, ok := err.(httptransport.StatusCoder); ok {
+				code = sc.StatusCode()
+			}
+		} else {
+			code = http.StatusOK
+		}
+
+		var response interface{}
+		if cfg.GetEnvelop().ErrorWrapped {
+			response = envelope.ToErrorWrapped()
+		} else {
+			response = envelope
+		}
+
+		jsonBody, marshalErr := jsoniter.ConfigFastest.Marshal(response)
+		if marshalErr != nil {
+			logs.Warnw("failed to marshal the error response to json", "error", marshalErr)
+		} else {
 			body = jsonBody
 		}
 	} else {
@@ -263,13 +287,36 @@ func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, respo
 		response = nil
 	}
 
-	if enveloped, ok := ctx.Value("envelope").(bool); ok && enveloped {
-		response = &nhttp.EnvelopedResult{
+	enveloped := nhttp.IsEnvelopeStyle(ctx, cfg.GetStyle())
+	if enveloped {
+		code := core.NewErrorCode(200)
+		message := "OK"
+		if sc := cfg.GetEnvelop().SuccessCode; len(sc) > 0 {
+			if c, err := core.ParseErrorCode(sc); err != nil {
+				logs.Warnw("failed to parse the user setting success code, will use \"200\" indeed.", "code", sc, "error", err)
+			} else {
+				code = c
+			}
+		}
+		if msg := cfg.GetEnvelop().SuccessMessage; len(msg) > 0 {
+			message = msg
+		}
+
+		totalCount := int32(0)
+		nextPageToken := ""
+		if p, ok := response.(pagination.Paginater); ok {
+			totalCount = p.GetTotalCount()
+			nextPageToken = p.GetNextPageToken()
+		}
+
+		response = &nhttp.EnvelopedResponse {
 			Error: &core.Error{
-				Code:    core.NewErrorCode(200),
-				Message: "OK",
+				Code:    code,
+				Message: message,
 			},
-			Data:  response,
+			TotalCount: totalCount,
+			NextPageToken: nextPageToken,
+			Data: response,
 		}
 	}
 
@@ -277,7 +324,7 @@ func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, respo
 		return nil
 	}
 
-	if p, ok := response.(pagination.Paginater); ok {
+	if p, ok := response.(pagination.Paginater); ok && !enveloped {
 		total := p.GetTotalCount()
 		if total > 0 {
 			w.Header().Set("X-Total-Count", strconv.Itoa(int(total)))
