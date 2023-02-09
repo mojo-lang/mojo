@@ -186,6 +186,14 @@ func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, 
 				Signature: &lang.FunctionSignature{},
 			}
 
+			storage := cursor.StorageClass()
+			switch storage {
+			case clang.SC_Static:
+				decl.Attributes = append(decl.Attributes, lang.NewBoolAttribute("", "c_static"))
+			case clang.SC_Extern:
+				decl.Attributes = append(decl.Attributes, lang.NewBoolAttribute("", "c_extern"))
+			}
+
 			typ := cursor.Type()
 			num := cursor.NumArguments()
 			var args []*lang.ValueDecl

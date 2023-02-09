@@ -14,6 +14,8 @@ void a3(void);
 void a4(int, ...);
 void a4(int param1, ...);
 
+static void a5();
+
 
 int f(int arg1, char arg2)
 {
