@@ -84,14 +84,14 @@ func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, 
 	idx := clang.NewIndex(1, 0)
 	defer idx.Dispose()
 
-	p.initCmdArgs(cmdArgs)
+	cmdArgs = p.initCmdArgs(cmdArgs)
 	tu := idx.ParseTranslationUnit(fileName, cmdArgs, nil, 0)
 	defer tu.Dispose()
 
 	diagnostics := tu.Diagnostics()
 	for i, d := range diagnostics {
 		if i < 8 {
-			logs.Warnw("found diagnostics", "problem", d.Spelling())
+			logs.Warnw("found diagnostics", "problem", d.Spelling(), "file", fileName)
 		}
 	}
 
