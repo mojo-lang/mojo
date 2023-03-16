@@ -35,24 +35,6 @@ func ContextFs(ctx context.Context) fs.FS {
 	return nil
 }
 
-const fsCacheKey = "@fsCache"
-
-type FsCache map[string]fs.FS
-
-func WithFsCache(ctx context.Context, cache FsCache) context.Context {
-	if ContextFsCache(ctx) == nil {
-		return context.WithValues(ctx, fsCacheKey, cache)
-	}
-	return ctx
-}
-
-func ContextFsCache(ctx context.Context) FsCache {
-	if cache, ok := ctx.Value(fsCacheKey).(FsCache); ok {
-		return cache
-	}
-	return nil
-}
-
 const declaredPackageKey = "@declaredPackage"
 
 func WithDeclaredPackage(ctx context.Context, pkg *lang.Package) context.Context {

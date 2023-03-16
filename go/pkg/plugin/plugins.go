@@ -67,7 +67,7 @@ func (p *Plugins) Copy() *Plugins {
 
 // ParsePath if there is no mpm plugin, need set the package name to the ctx, using `WithPackageName(ctx, pkgName)`
 func (p *Plugins) ParsePath(ctx context.Context, pkgPath string) (pkg *lang.Package, err error) {
-	thisCtx := WithPlugins(WithFsCache(ctx, make(FsCache)), p)
+	thisCtx := WithPlugins(ctx, p)
 	for p.plugin() != nil {
 		if psr, ok := p.plugin().(PathParser); ok {
 			if pkg, err = psr.ParsePath(thisCtx, pkgPath); err != nil {
@@ -96,7 +96,7 @@ func (p *Plugins) ParsePath(ctx context.Context, pkgPath string) (pkg *lang.Pack
 }
 
 func (p *Plugins) ParseFile(ctx context.Context, fileName string) (file *lang.SourceFile, err error) {
-	thisCtx := WithPlugins(WithFsCache(ctx, make(FsCache)), p)
+	thisCtx := WithPlugins(ctx, p)
 	for p.plugin() != nil {
 		if psr, ok := p.plugin().(FileParser); ok {
 			if file, err = psr.ParseFile(thisCtx, fileName); err != nil {
