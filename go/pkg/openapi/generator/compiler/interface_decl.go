@@ -20,7 +20,7 @@ var methods = []string{"http.get", "http.post", "http.put", "http.delete", "http
 func CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) (*openapi.OpenAPI, error) {
 	thisCtx := context.WithType(ctx, decl)
 
-	api := openapi.NewOpenApi()
+	api := openapi.New()
 	api.Openapi = &core.Version{
 		Major: 3,
 		Minor: 0,
@@ -65,7 +65,7 @@ func CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) (*openapi.O
 	api.Info = &openapi.Info{
 		Title:          title,
 		Description:    &openapi.CachedDocument{Cache: description},
-		TermsOfService: nil,
+		TermsOfService: "",
 		Contact:        nil,
 		License:        nil,
 		Version:        version,

@@ -53,8 +53,8 @@ func (c CommentParser) Parse(stream *antlr.CommonTokenStream) []*lang.Comment {
 				} else {
 					closeMultiLineComment(token)
 					block := toBlockComment(token)
-					block.HeadEmbeded = !leadingWhiteSpaceInLine(token, i, allTokens)
-					block.TailEmbeded = !tailingWhiteSpaceInLine(token, i, allTokens)
+					block.HeadEmbedded = !leadingWhiteSpaceInLine(token, i, allTokens)
+					block.TailEmbedded = !tailingWhiteSpaceInLine(token, i, allTokens)
 					if i < len(allTokens)-1 {
 						block.EndPosition = GetPosition(allTokens[i+1])
 					}
@@ -119,14 +119,14 @@ func tailingWhiteSpaceInLine(token antlr.Token, i int, allTokens []antlr.Token) 
 func toBlockComment(token antlr.Token) *lang.BlockComment {
 	return &lang.BlockComment{
 		StartPosition: GetPosition(token),
-		Text:          token.GetText(),
+		Content:       token.GetText(),
 	}
 }
 
 func toLineComment(token antlr.Token) *lang.LineComment {
 	return &lang.LineComment{
 		StartPosition: GetPosition(token),
-		Text:          token.GetText(),
+		Content:       token.GetText(),
 	}
 }
 
@@ -141,7 +141,7 @@ func isLineComment(tokenType int) bool {
 func removeMultiLineCommentPrefix(comment *lang.MultiLineComment) {
 	if comment != nil && len(comment.Lines) > 0 {
 		for _, line := range comment.Lines {
-			line.Text = strings.TrimPrefix(line.Text, "//")
+			line.Content = strings.TrimPrefix(line.Content, "//")
 		}
 	}
 }

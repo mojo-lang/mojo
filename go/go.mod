@@ -11,15 +11,15 @@ require (
 	github.com/go-clang/clang-v10 v0.0.0-20211120055647-b59749ef6dbb
 	github.com/goccy/go-graphviz v0.0.9
 	github.com/json-iterator/go v1.1.12
-	github.com/mojo-lang/core/go v0.0.0-20221219004943-fa9d45a5355d
-	github.com/mojo-lang/db/go v0.0.0-20221107022720-7a4764ef5110
-	github.com/mojo-lang/document/go v0.0.0-20220504064505-9e47a78ac0ec
-	github.com/mojo-lang/geom/go v0.0.0-20220504072234-fd97fb89c547
-	github.com/mojo-lang/http/go v0.0.0-20220524115554-fc19f03dd3de
-	github.com/mojo-lang/lang/go v0.0.0-20221104073626-339ac5bda868
-	github.com/mojo-lang/openapi/go v0.0.0-20220504071403-44d2e722f238
+	github.com/mojo-lang/core/go v0.0.0-20230316063425-d2ec3be7c3d2
+	github.com/mojo-lang/db/go v0.0.0-20230317015121-444a0bd3401b
+	github.com/mojo-lang/document/go v0.0.0-20230316134732-e16ad56d3bbb
+	github.com/mojo-lang/geom/go v0.0.0-20230317014408-8591723d5c67
+	github.com/mojo-lang/http/go v0.0.0-20230317014654-439cda874c97
+	github.com/mojo-lang/lang/go v0.0.0-20230316230240-3c27d67b5a81
+	github.com/mojo-lang/openapi/go v0.0.0-20230317012743-5c7ff0966191
 	github.com/mojo-lang/protobuf/go v0.0.0-20221210054719-938e11feee38
-	github.com/mojo-lang/rpc/go v0.0.0-20220507115528-45cbbb5313df
+	github.com/mojo-lang/rpc/go v0.0.0-20230317020413-b3c3cf543bc5
 	github.com/mojo-lang/yaml/go v0.0.0-20220504064824-fa1822f5517c
 	github.com/otiai10/copy v1.6.0
 	github.com/pkg/errors v0.9.1

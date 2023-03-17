@@ -20,14 +20,14 @@ func (p *Printer) PrintComments(ctx context.Context, comments ...*lang.Comment) 
 
 		switch c := comment.Comment.(type) {
 		case *lang.Comment_BlockComment:
-			text := c.BlockComment.Text
+			text := c.BlockComment.Content
 			if c.BlockComment.IsInLine() {
-				if c.BlockComment.HeadEmbeded {
-					p.PrintRaw(c.BlockComment.Text)
+				if c.BlockComment.HeadEmbedded {
+					p.PrintRaw(c.BlockComment.Content)
 				} else {
-					p.PrintLine(c.BlockComment.Text)
+					p.PrintLine(c.BlockComment.Content)
 				}
-				if !c.BlockComment.TailEmbeded {
+				if !c.BlockComment.TailEmbedded {
 					p.BreakLine()
 				}
 			} else {
@@ -37,7 +37,7 @@ func (p *Printer) PrintComments(ctx context.Context, comments ...*lang.Comment) 
 						p.BreakLine()
 					}
 					if i == 0 {
-						if c.BlockComment.HeadEmbeded {
+						if c.BlockComment.HeadEmbedded {
 							p.PrintRaw(line)
 						} else {
 							p.PrintLine(line)
@@ -47,7 +47,7 @@ func (p *Printer) PrintComments(ctx context.Context, comments ...*lang.Comment) 
 					}
 				}
 
-				if !c.BlockComment.TailEmbeded {
+				if !c.BlockComment.TailEmbedded {
 					p.BreakLine()
 				}
 			}
@@ -64,15 +64,15 @@ func (p *Printer) PrintComments(ctx context.Context, comments ...*lang.Comment) 
 					}
 
 					cursor = p.Cursor
-					p.PrintRaw(" // ", line.Text)
+					p.PrintRaw(" // ", line.Content)
 					p.BreakLine()
 				}
 			} else {
 				for _, line := range multiLine.Lines {
-					if len(line.Text) == 0 || strings.HasPrefix(line.Text, " ") {
-						p.PrintLine("//", line.Text)
+					if len(line.Content) == 0 || strings.HasPrefix(line.Content, " ") {
+						p.PrintLine("//", line.Content)
 					} else {
-						p.PrintLine("// ", line.Text)
+						p.PrintLine("// ", line.Content)
 					}
 				}
 				p.BreakLine()

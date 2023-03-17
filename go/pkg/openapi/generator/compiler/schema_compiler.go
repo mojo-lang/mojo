@@ -64,7 +64,7 @@ func (r *ReferenceCompiler) Compile(ctx context.Context, nominalType *lang.Nomin
 
 		return openapi.NewReferencedSchema(&openapi.Reference{
 			Ref: &core.Url{
-				Fragment: openapi.ReferenceRoot + fullName,
+				Fragment: openapi.SchemaReferenceRoot + fullName,
 			},
 		}), nil
 	} else if structDecl := nominalType.TypeDeclaration.GetStructDecl(); structDecl != nil && !IsPrimeType(structDecl.GetFullName()) {

@@ -80,9 +80,9 @@ func (d *DocumentVisitor) VisitDocument(ctx *DocumentContext) interface{} {
 		}
 
 		if strings.HasPrefix(line.GetText(), "/// ") {
-			lineDocument.Text = strings.TrimPrefix(line.GetText(), "/// ")
+			lineDocument.Content = strings.TrimPrefix(line.GetText(), "/// ")
 		} else {
-			lineDocument.Text = strings.TrimPrefix(line.GetText(), "///")
+			lineDocument.Content = strings.TrimPrefix(line.GetText(), "///")
 		}
 
 		document.Lines = append(document.Lines, lineDocument)
@@ -117,9 +117,9 @@ func (d *DocumentVisitor) VisitFollowingDocument(ctx *FollowingDocumentContext) 
 		}
 
 		if strings.HasPrefix(text, "//< ") {
-			line.Text = strings.TrimPrefix(text, "//< ")
+			line.Content = strings.TrimPrefix(text, "//< ")
 		} else {
-			line.Text = strings.TrimPrefix(text, "//<")
+			line.Content = strings.TrimPrefix(text, "//<")
 		}
 
 		document.Lines = append(document.Lines, line)

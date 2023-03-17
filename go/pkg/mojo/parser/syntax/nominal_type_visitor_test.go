@@ -167,10 +167,10 @@ func TestNominalTypeVisitor_VisitUnion2(t *testing.T) {
 	assert.Equal(t, "Union", nominalType.Name)
 	assert.Equal(t, 3, len(nominalType.GenericArguments))
 	assert.Equal(t, "String", nominalType.GenericArguments[0].Name)
-	assert.Equal(t, "string doc", nominalType.GenericArguments[0].Document.Lines[0].Text)
+	assert.Equal(t, "string doc", nominalType.GenericArguments[0].Document.Lines[0].Content)
 	assert.Equal(t, "Int", nominalType.GenericArguments[1].Name)
 	assert.Equal(t, "Array", nominalType.GenericArguments[2].Name)
-	assert.Equal(t, "strings doc", nominalType.GenericArguments[2].Document.Lines[0].Text)
+	assert.Equal(t, "strings doc", nominalType.GenericArguments[2].Document.Lines[0].Content)
 }
 
 func TestNominalTypeVisitor_VisitTupleType(t *testing.T) {

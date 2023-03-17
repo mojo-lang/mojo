@@ -18,7 +18,7 @@ func TestPrinter_PrintComments(t *testing.T) {
 		Comment: &lang.Comment_MultiLineComment{
 			MultiLineComment: &lang.MultiLineComment{
 				Lines: []*lang.LineComment{
-					{Text: "foo"},
+					{Content: "foo"},
 				},
 			},
 		},

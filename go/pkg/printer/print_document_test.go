@@ -14,6 +14,6 @@ func TestPrinter_PrintDocument(t *testing.T) {
 	buffer := bytes.NewBuffer(nil)
 	p := New(&Config{}, buffer)
 
-	p.PrintDocument(context.Empty(), &lang.Document{Lines: []*lang.Document_Line{{Text: "foo"}}})
+	p.PrintDocument(context.Empty(), &lang.Document{Lines: []*lang.Document_Line{{Content: "foo"}}})
 	assert.Equal(t, "/// foo\n", buffer.String())
 }

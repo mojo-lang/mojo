@@ -41,7 +41,7 @@ func CompileTypeAliasDecl(ctx context.Context, decl *lang.TypeAliasDecl) (*opena
 	} else {
 		return openapi.NewReferencedSchema(&openapi.Reference{
 			Ref: &core.Url{
-				Fragment: openapi.ReferenceRoot + decl.GetFullName(),
+				Fragment: openapi.SchemaReferenceRoot + decl.GetFullName(),
 			},
 		}), nil
 	}

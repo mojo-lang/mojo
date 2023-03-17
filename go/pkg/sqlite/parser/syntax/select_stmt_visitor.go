@@ -31,7 +31,7 @@ func (v *SelectSmtVisitor) VisitSelect_stmt(ctx *Select_stmtContext) interface{}
 	} else if len(selectStmts) > 1 { // TODO
 	}
 
-	return &sql.Statement{Statement: &sql.Statement_SelectStmtVal{SelectStmtVal: selectStmt}}
+	return &sql.Statement{Statement: &sql.Statement_SelectStmt{SelectStmt: selectStmt}}
 }
 
 //goland:noinspection GoSnakeCaseUsage

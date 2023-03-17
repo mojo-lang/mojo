@@ -23,12 +23,12 @@ func (p *Printer) PrintDocument(ctx context.Context, document *lang.Document) {
 			}
 
 			cursor = p.Cursor
-			p.PrintRaw(" //< ", line.Text)
+			p.PrintRaw(" //< ", line.Content)
 			p.BreakLine()
 		}
 	} else {
 		for _, line := range document.Lines {
-			p.PrintLine("/// ", line.Text)
+			p.PrintLine("/// ", line.Content)
 			p.BreakLine()
 		}
 	}
