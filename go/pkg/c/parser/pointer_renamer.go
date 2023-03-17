@@ -12,6 +12,7 @@ import (
 
 const cPointerAttributionName = "c_pointer"
 const cDoublePointerAttributionName = "c_double_pointer"
+const cppReferenceAttributeName = "cpp_reference"
 
 var doublePointerRegex = regexp.MustCompile(`\* *\*$`)
 
@@ -82,6 +83,10 @@ func (r *PointerRenamer) ParseNominalType(ctx context.Context, typ *lang.Nominal
 			typ.Name = strings.TrimSuffix(typ.Name, "*")
 			typ.Name = strings.TrimSpace(typ.Name)
 			typ.Attributes = append(typ.Attributes, lang.NewBoolAttribute("", cPointerAttributionName))
+		} else if strings.HasSuffix(typ.Name, "&") {
+			typ.Name = strings.TrimSuffix(typ.Name, "&")
+			typ.Name = strings.TrimSpace(typ.Name)
+			typ.Attributes = append(typ.Attributes, lang.NewBoolAttribute("", cppReferenceAttributeName))
 		}
 	}
 	return nil

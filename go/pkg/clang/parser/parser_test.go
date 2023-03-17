@@ -18,6 +18,12 @@ func TestParser_ParseFile2(t *testing.T) {
 	assert.NotNil(t, file)
 }
 
+func TestParser_ParseFile_CPP(t *testing.T) {
+	file, err := New(nil).ParseFile("./testdata/zipper.hpp", nil)
+	assert.NoError(t, err)
+	assert.NotNil(t, file)
+}
+
 func TestParser_ParseFile_Static(t *testing.T) {
 	file, err := New(nil).ParseFile("./testdata/func_static_extern.h", nil)
 	assert.NoError(t, err)
