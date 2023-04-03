@@ -15,15 +15,24 @@ import (
 const macOSDefaultIncludeDir = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
 const macOSDefaultCxxIncludeDir = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
 
+type Diagnostic struct {
+	Problem  string
+	FileName string
+	Line     uint32
+	Column   uint32
+	Offset   uint32
+}
+
 type Parser struct {
-	Options core.Options
+	Options     core.Options
+	Diagnostics []*Diagnostic
 }
 
 func New(options core.Options) *Parser {
 	return &Parser{Options: options}
 }
 
-func (p Parser) initCmdArgs(cmdArgs []string) []string {
+func (p *Parser) initCmdArgs(cmdArgs []string) []string {
 	parsePathEnv := func(p string, index map[string]bool) {
 		paths := strings.Split(p, ":")
 		for _, pth := range paths {
@@ -91,7 +100,7 @@ func (p Parser) initCmdArgs(cmdArgs []string) []string {
 
 // ParseFile
 // should to add []string{"-x", "c++"} args if need to parse cpp in *.h file
-func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, error) {
+func (p *Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, error) {
 	idx := clang.NewIndex(1, 0)
 	defer idx.Dispose()
 
@@ -101,6 +110,12 @@ func (p Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile, 
 
 	diagnostics := tu.Diagnostics()
 	for i, d := range diagnostics {
+		dia := &Diagnostic{}
+		dia.Problem = d.Spelling()
+		dia.FileName = fileName
+		_, dia.Line, dia.Column, dia.Offset = d.Location().FileLocation()
+		p.Diagnostics = append(p.Diagnostics, dia)
+
 		if i < 8 {
 			logs.Warnw("found diagnostics", "problem", d.Spelling(), "file", fileName)
 		}
