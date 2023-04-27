@@ -11,15 +11,15 @@ require (
 	github.com/go-clang/clang-v10 v0.0.0-20211120055647-b59749ef6dbb
 	github.com/goccy/go-graphviz v0.1.1
 	github.com/json-iterator/go v1.1.12
-	github.com/mojo-lang/core/go v0.0.0-20230427070306-34ab6ed73f1c
-	github.com/mojo-lang/db/go v0.0.0-20230427073637-d14a5dec8a17
-	github.com/mojo-lang/document/go v0.0.0-20230427070517-a007d4b8d5e5
-	github.com/mojo-lang/geom/go v0.0.0-20230427074121-4117b4dc2b82
-	github.com/mojo-lang/http/go v0.0.0-20230427071139-99e50de8480a
-	github.com/mojo-lang/lang/go v0.0.0-20230427071021-4d8911209d5a
-	github.com/mojo-lang/openapi/go v0.0.0-20230427071316-7cf753c14976
-	github.com/mojo-lang/protobuf/go v0.0.0-20230427073849-2ad5e5f6da4d
-	github.com/mojo-lang/rpc/go v0.0.0-20230427070821-634a39456e7d
+	github.com/mojo-lang/core/go v0.0.0-20230427095043-961105c650c8
+	github.com/mojo-lang/db/go v0.0.0-20230427100802-d945e09a3155
+	github.com/mojo-lang/document/go v0.0.0-20230427095224-881190052073
+	github.com/mojo-lang/geom/go v0.0.0-20230427100520-a11933f5eda2
+	github.com/mojo-lang/http/go v0.0.0-20230427095618-4ac8e30ae2b4
+	github.com/mojo-lang/lang/go v0.0.0-20230427095418-142f6e7329e6
+	github.com/mojo-lang/openapi/go v0.0.0-20230427100424-e4d8e3ceff64
+	github.com/mojo-lang/protobuf/go v0.0.0-20230427095904-99b484646c55
+	github.com/mojo-lang/rpc/go v0.0.0-20230427100006-63752a043553
 	github.com/mojo-lang/yaml/go v0.0.0-20230427074706-ae9ec985690a
 	github.com/otiai10/copy v1.6.0
 	github.com/pkg/errors v0.9.1
@@ -76,6 +76,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.3.3 // indirect
 	gorm.io/driver/postgres v1.5.0 // indirect
-	gorm.io/driver/sqlite v1.5.0 // indirect
+	gorm.io/driver/sqlite v1.4.4 // indirect
 	gorm.io/gorm v1.25.0 // indirect
 )
