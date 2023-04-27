@@ -80,11 +80,13 @@ func (i Injector) parseFile(fileName string, content []byte) (areas []Area, err 
 			i.PreStruct(structCtx, structType, structName)
 		}
 
-		for _, field := range structType.Fields.List {
-			if len(field.Names) == 0 {
-				continue
+		if i.OnStructField != nil {
+			for _, field := range structType.Fields.List {
+				if len(field.Names) == 0 {
+					continue
+				}
+				i.OnStructField(structCtx, field, areasAppender)
 			}
-			i.OnStructField(structCtx, field, areasAppender)
 		}
 
 		if i.PostStruct != nil {

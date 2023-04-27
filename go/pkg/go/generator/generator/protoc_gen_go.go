@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"go/ast"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -21,7 +20,7 @@ import (
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	injection2 "github.com/mojo-lang/mojo/go/pkg/go/generator/injection"
+	"github.com/mojo-lang/mojo/go/pkg/go/generator/injection"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/mpm"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 )
@@ -44,7 +43,7 @@ func GenerateMojoPackageProtobuf(pkg *lang.Package) (string, error) {
 			return "", err
 		}
 
-		if err = ioutil.WriteFile(fileName, file, fs.ModePerm); err != nil {
+		if err = os.WriteFile(fileName, file, fs.ModePerm); err != nil {
 			return "", err
 		}
 	}
@@ -155,7 +154,7 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 			if rel, err := filepath.Rel(outDir, path); err != nil {
 				return err
 			} else {
-				if content, err := ioutil.ReadFile(path); err != nil {
+				if content, err := os.ReadFile(path); err != nil {
 					return err
 				} else {
 					genFiles = append(genFiles, &util.GeneratedFile{
@@ -173,11 +172,11 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 
 	for _, f := range genFiles {
 		xxxSkip := []string{"gorm", "xml", "bson"}
-		injector := injection2.NewTagInjector(xxxSkip, nil)
+		injector := injection.NewTagInjector(xxxSkip, nil)
 		injector.RegisterTagChanger(func(ctx context.Context, field *ast.Field, tags *structtag.Tags) {
-			structName := injection2.ToMojoStructName(injection2.GetStructName(ctx))
-			fieldName := injection2.ToMojoFieldName(field.Names[0].Name)
-			valDecl := injection2.GetStructField(pkg, structName, fieldName)
+			structName := injection.ToMojoStructName(injection.GetStructName(ctx))
+			fieldName := injection.ToMojoFieldName(field.Names[0].Name)
+			valDecl := injection.GetStructField(pkg, structName, fieldName)
 
 			if alias, _ := valDecl.GetStringAttribute(core.AliasAttributeName); len(alias) > 0 {
 				_ = tags.Set(&structtag.Tag{
@@ -274,11 +273,39 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 			f.Content = string(bs)
 		}
 
-		bs, err = injection2.NewDbJSONInjector().Inject(f.Name, []byte(f.Content))
+		bs, err = injection.NewDbJSONInjector().Inject(f.Name, []byte(f.Content))
+		if err == nil {
+			f.Content = string(bs)
+		}
+
+		bs, err = newStringMethodRenamer().Inject(f.Name, []byte(f.Content))
 		if err == nil {
 			f.Content = string(bs)
 		}
 	}
 
 	return genFiles, nil
+}
+
+type stringMethodRenamer struct {
+	injection.Injector
+}
+
+func newStringMethodRenamer() *stringMethodRenamer {
+	in := &stringMethodRenamer{}
+	in.OnFunction = in.onFunction
+	return in
+}
+
+func (r *stringMethodRenamer) onFunction(ctx context.Context, function *ast.FuncDecl, areaAppender func(area injection.Area)) {
+	if function.Recv != nil && len(function.Recv.List) > 0 {
+		name := function.Name
+		if name.Name == "String" {
+			areaAppender(&injection.TextArea{
+				Start:   name.Pos(),
+				End:     name.End(),
+				Content: "ToText",
+			})
+		}
+	}
 }
