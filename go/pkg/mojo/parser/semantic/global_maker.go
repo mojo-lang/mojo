@@ -75,8 +75,13 @@ func treePackages(packages lang.Packages, global *lang.Package) *lang.Package {
 		packages = append(packages, global)
 	} else {
 		existPackages = global.GetAllPackages()
+		inputLen := len(packages)
 		for _, pkg := range existPackages {
 			packages = append(packages, pkg)
+		}
+
+		for i := 0; i < inputLen; i++ {
+			existPackages[packages[i].GetFullName()] = packages[i]
 		}
 	}
 
