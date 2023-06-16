@@ -1,6 +1,8 @@
 package syntax
 
 import (
+	"regexp"
+
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 
@@ -22,15 +24,14 @@ func New(options core.Options) *Parser {
 	}
 }
 
-func (p *Parser) ParseString(ctx context.Context, content string) (*lang.SourceFile, error) {
-	file, err := p.Proto3.ParseString(ctx, content)
-	if err != nil {
-		if _, ok := err.(*proto3.ProtoError); ok {
-			return p.Proto2.ParseString(ctx, content)
-		}
-	}
+var proto3Regex = regexp.MustCompile(`syntax[ \t\r\n]*=[ \t\r\n]*['"]proto3['"]`)
 
-	return file, err
+func (p *Parser) ParseString(ctx context.Context, content string) (*lang.SourceFile, error) {
+	if proto3Regex.MatchString(content) {
+		return p.Proto3.ParseString(ctx, content)
+	} else {
+		return p.Proto2.ParseString(ctx, content)
+	}
 }
 
 func (p *Parser) ParseFile(ctx context.Context, filename string) (*lang.SourceFile, error) {

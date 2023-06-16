@@ -1,13 +1,12 @@
-// Code generated from java-escape by ANTLR 4.11.1. DO NOT EDIT.
+// Code generated from CPP14Lexer.g4 by ANTLR 4.13.0. DO NOT EDIT.
 
 package syntax
 
 import (
 	"fmt"
+	"github.com/antlr4-go/antlr/v4"
 	"sync"
 	"unicode"
-
-	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 )
 
 // Suppress unused import error
@@ -22,28 +21,28 @@ type CPP14Lexer struct {
 	// TODO: EOF string
 }
 
-var cpp14lexerLexerStaticData struct {
+var CPP14LexerLexerStaticData struct {
 	once                   sync.Once
 	serializedATN          []int32
-	channelNames           []string
-	modeNames              []string
-	literalNames           []string
-	symbolicNames          []string
-	ruleNames              []string
-	predictionContextCache *antlr.PredictionContextCache
+	ChannelNames           []string
+	ModeNames              []string
+	LiteralNames           []string
+	SymbolicNames          []string
+	RuleNames              []string
+	PredictionContextCache *antlr.PredictionContextCache
 	atn                    *antlr.ATN
 	decisionToDFA          []*antlr.DFA
 }
 
 func cpp14lexerLexerInit() {
-	staticData := &cpp14lexerLexerStaticData
-	staticData.channelNames = []string{
+	staticData := &CPP14LexerLexerStaticData
+	staticData.ChannelNames = []string{
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN",
 	}
-	staticData.modeNames = []string{
+	staticData.ModeNames = []string{
 		"DEFAULT_MODE",
 	}
-	staticData.literalNames = []string{
+	staticData.LiteralNames = []string{
 		"", "", "", "", "", "", "", "", "", "", "'alignas'", "'alignof'", "'asm'",
 		"'auto'", "'bool'", "'break'", "'case'", "'catch'", "'char'", "'char16_t'",
 		"'char32_t'", "'class'", "'const'", "'constexpr'", "'const_cast'", "'continue'",
@@ -63,7 +62,7 @@ func cpp14lexerLexerInit() {
 		"'=='", "'!='", "'<='", "'>='", "", "", "'++'", "'--'", "','", "'->*'",
 		"'->'", "'?'", "':'", "'::'", "';'", "'.'", "'.*'", "'...'",
 	}
-	staticData.symbolicNames = []string{
+	staticData.SymbolicNames = []string{
 		"", "IntegerLiteral", "CharacterLiteral", "FloatingLiteral", "StringLiteral",
 		"BooleanLiteral", "PointerLiteral", "UserDefinedLiteral", "MultiLineMacro",
 		"Directive", "Alignas", "Alignof", "Asm", "Auto", "Bool", "Break", "Case",
@@ -89,7 +88,7 @@ func cpp14lexerLexerInit() {
 		"UserDefinedStringLiteral", "UserDefinedCharacterLiteral", "Whitespace",
 		"Newline", "BlockComment", "LineComment",
 	}
-	staticData.ruleNames = []string{
+	staticData.RuleNames = []string{
 		"IntegerLiteral", "CharacterLiteral", "FloatingLiteral", "StringLiteral",
 		"BooleanLiteral", "PointerLiteral", "UserDefinedLiteral", "MultiLineMacro",
 		"Directive", "Alignas", "Alignof", "Asm", "Auto", "Bool", "Break", "Case",
@@ -120,7 +119,7 @@ func cpp14lexerLexerInit() {
 		"UserDefinedFloatingLiteral", "UserDefinedStringLiteral", "UserDefinedCharacterLiteral",
 		"Udsuffix", "Whitespace", "Newline", "BlockComment", "LineComment",
 	}
-	staticData.predictionContextCache = antlr.NewPredictionContextCache()
+	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
 		4, 0, 145, 1460, 6, -1, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3,
 		2, 4, 7, 4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9,
@@ -818,7 +817,7 @@ func cpp14lexerLexerInit() {
 // NewCPP14Lexer(). You can call this function if you wish to initialize the static state ahead
 // of time.
 func CPP14LexerInit() {
-	staticData := &cpp14lexerLexerStaticData
+	staticData := &CPP14LexerLexerStaticData
 	staticData.once.Do(cpp14lexerLexerInit)
 }
 
@@ -827,13 +826,13 @@ func NewCPP14Lexer(input antlr.CharStream) *CPP14Lexer {
 	CPP14LexerInit()
 	l := new(CPP14Lexer)
 	l.BaseLexer = antlr.NewBaseLexer(input)
-	staticData := &cpp14lexerLexerStaticData
-	l.Interpreter = antlr.NewLexerATNSimulator(l, staticData.atn, staticData.decisionToDFA, staticData.predictionContextCache)
-	l.channelNames = staticData.channelNames
-	l.modeNames = staticData.modeNames
-	l.RuleNames = staticData.ruleNames
-	l.LiteralNames = staticData.literalNames
-	l.SymbolicNames = staticData.symbolicNames
+	staticData := &CPP14LexerLexerStaticData
+	l.Interpreter = antlr.NewLexerATNSimulator(l, staticData.atn, staticData.decisionToDFA, staticData.PredictionContextCache)
+	l.channelNames = staticData.ChannelNames
+	l.modeNames = staticData.ModeNames
+	l.RuleNames = staticData.RuleNames
+	l.LiteralNames = staticData.LiteralNames
+	l.SymbolicNames = staticData.SymbolicNames
 	l.GrammarFileName = "CPP14Lexer.g4"
 	// TODO: l.EOF = antlr.TokenEOF
 

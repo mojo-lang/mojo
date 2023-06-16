@@ -1,13 +1,12 @@
-// Code generated from java-escape by ANTLR 4.11.1. DO NOT EDIT.
+// Code generated from MojoLexer.g4 by ANTLR 4.13.0. DO NOT EDIT.
 
 package syntax
 
 import (
 	"fmt"
+	"github.com/antlr4-go/antlr/v4"
 	"sync"
 	"unicode"
-
-	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 )
 
 // Suppress unused import error
@@ -22,28 +21,28 @@ type MojoLexer struct {
 	// TODO: EOF string
 }
 
-var mojolexerLexerStaticData struct {
+var MojoLexerLexerStaticData struct {
 	once                   sync.Once
 	serializedATN          []int32
-	channelNames           []string
-	modeNames              []string
-	literalNames           []string
-	symbolicNames          []string
-	ruleNames              []string
-	predictionContextCache *antlr.PredictionContextCache
+	ChannelNames           []string
+	ModeNames              []string
+	LiteralNames           []string
+	SymbolicNames          []string
+	RuleNames              []string
+	PredictionContextCache *antlr.PredictionContextCache
 	atn                    *antlr.ATN
 	decisionToDFA          []*antlr.DFA
 }
 
 func mojolexerLexerInit() {
-	staticData := &mojolexerLexerStaticData
-	staticData.channelNames = []string{
+	staticData := &MojoLexerLexerStaticData
+	staticData.ChannelNames = []string{
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN",
 	}
-	staticData.modeNames = []string{
+	staticData.ModeNames = []string{
 		"DEFAULT_MODE",
 	}
-	staticData.literalNames = []string{
+	staticData.LiteralNames = []string{
 		"", "'and'", "'as'", "'attribute'", "'break'", "'const'", "'continue'",
 		"'else'", "'enum'", "'false'", "'for'", "'func'", "'if'", "'import'",
 		"'in'", "'interface'", "'is'", "'match'", "'not'", "'null'", "'or'",
@@ -52,7 +51,7 @@ func mojolexerLexerInit() {
 		"';'", "'<'", "'>'", "'!'", "'?'", "'@'", "'&'", "'-'", "'='", "'|'",
 		"'/'", "'+'", "'*'", "'%'", "'^'", "'~'", "'$'", "'`'", "'_'",
 	}
-	staticData.symbolicNames = []string{
+	staticData.SymbolicNames = []string{
 		"", "KEYWORD_AND", "KEYWORD_AS", "KEYWORD_ATTRIBUTE", "KEYWORD_BREAK",
 		"KEYWORD_CONST", "KEYWORD_CONTINUE", "KEYWORD_ELSE", "KEYWORD_ENUM",
 		"KEYWORD_FALSE", "KEYWORD_FOR", "KEYWORD_FUNC", "KEYWORD_IF", "KEYWORD_IMPORT",
@@ -73,7 +72,7 @@ func mojolexerLexerInit() {
 		"EOL", "LINE_DOCUMENT", "FOLLOWING_LINE_DOCUMENT", "INNER_LINE_DOCUMENT",
 		"OPERATOR_FOLLOWING_CHARACTER",
 	}
-	staticData.ruleNames = []string{
+	staticData.RuleNames = []string{
 		"KEYWORD_AND", "KEYWORD_AS", "KEYWORD_ATTRIBUTE", "KEYWORD_BREAK", "KEYWORD_CONST",
 		"KEYWORD_CONTINUE", "KEYWORD_ELSE", "KEYWORD_ENUM", "KEYWORD_FALSE",
 		"KEYWORD_FOR", "KEYWORD_FUNC", "KEYWORD_IF", "KEYWORD_IMPORT", "KEYWORD_IN",
@@ -102,7 +101,7 @@ func mojolexerLexerInit() {
 		"BLOCK_COMMENT", "LINE_COMMENT", "LINE_COMMENT_DISTINCT_DOCUMENT", "EOL",
 		"LINE_DOCUMENT", "FOLLOWING_LINE_DOCUMENT", "INNER_LINE_DOCUMENT", "OPERATOR_FOLLOWING_CHARACTER",
 	}
-	staticData.predictionContextCache = antlr.NewPredictionContextCache()
+	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
 		4, 0, 92, 865, 6, -1, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2,
 		4, 7, 4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2,
@@ -521,7 +520,7 @@ func mojolexerLexerInit() {
 // NewMojoLexer(). You can call this function if you wish to initialize the static state ahead
 // of time.
 func MojoLexerInit() {
-	staticData := &mojolexerLexerStaticData
+	staticData := &MojoLexerLexerStaticData
 	staticData.once.Do(mojolexerLexerInit)
 }
 
@@ -530,13 +529,13 @@ func NewMojoLexer(input antlr.CharStream) *MojoLexer {
 	MojoLexerInit()
 	l := new(MojoLexer)
 	l.BaseLexer = antlr.NewBaseLexer(input)
-	staticData := &mojolexerLexerStaticData
-	l.Interpreter = antlr.NewLexerATNSimulator(l, staticData.atn, staticData.decisionToDFA, staticData.predictionContextCache)
-	l.channelNames = staticData.channelNames
-	l.modeNames = staticData.modeNames
-	l.RuleNames = staticData.ruleNames
-	l.LiteralNames = staticData.literalNames
-	l.SymbolicNames = staticData.symbolicNames
+	staticData := &MojoLexerLexerStaticData
+	l.Interpreter = antlr.NewLexerATNSimulator(l, staticData.atn, staticData.decisionToDFA, staticData.PredictionContextCache)
+	l.channelNames = staticData.ChannelNames
+	l.modeNames = staticData.ModeNames
+	l.RuleNames = staticData.RuleNames
+	l.LiteralNames = staticData.LiteralNames
+	l.SymbolicNames = staticData.SymbolicNames
 	l.GrammarFileName = "MojoLexer.g4"
 	// TODO: l.EOF = antlr.TokenEOF
 

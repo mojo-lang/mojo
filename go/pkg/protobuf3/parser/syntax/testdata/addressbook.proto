@@ -7,7 +7,9 @@
 // https://developers.google.com/protocol-buffers/docs/tutorials
 
 // [START declaration]
-syntax = "proto3";
+syntax
+    =
+    "proto3";
 package tutorial;
 // [END declaration]
 

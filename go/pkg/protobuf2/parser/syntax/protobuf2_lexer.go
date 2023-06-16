@@ -1,13 +1,12 @@
-// Code generated from java-escape by ANTLR 4.11.1. DO NOT EDIT.
+// Code generated from Protobuf2.g4 by ANTLR 4.13.0. DO NOT EDIT.
 
 package syntax
 
 import (
 	"fmt"
+	"github.com/antlr4-go/antlr/v4"
 	"sync"
 	"unicode"
-
-	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 )
 
 // Suppress unused import error
@@ -22,28 +21,28 @@ type Protobuf2Lexer struct {
 	// TODO: EOF string
 }
 
-var protobuf2lexerLexerStaticData struct {
+var Protobuf2LexerLexerStaticData struct {
 	once                   sync.Once
 	serializedATN          []int32
-	channelNames           []string
-	modeNames              []string
-	literalNames           []string
-	symbolicNames          []string
-	ruleNames              []string
-	predictionContextCache *antlr.PredictionContextCache
+	ChannelNames           []string
+	ModeNames              []string
+	LiteralNames           []string
+	SymbolicNames          []string
+	RuleNames              []string
+	PredictionContextCache *antlr.PredictionContextCache
 	atn                    *antlr.ATN
 	decisionToDFA          []*antlr.DFA
 }
 
 func protobuf2lexerLexerInit() {
-	staticData := &protobuf2lexerLexerStaticData
-	staticData.channelNames = []string{
+	staticData := &Protobuf2LexerLexerStaticData
+	staticData.ChannelNames = []string{
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN",
 	}
-	staticData.modeNames = []string{
+	staticData.ModeNames = []string{
 		"DEFAULT_MODE",
 	}
-	staticData.literalNames = []string{
+	staticData.LiteralNames = []string{
 		"", "'syntax'", "'import'", "'weak'", "'public'", "'package'", "'option'",
 		"'repeated'", "'optional'", "'required'", "'group'", "'oneof'", "'map'",
 		"'int32'", "'int64'", "'uint32'", "'uint64'", "'sint32'", "'sint64'",
@@ -54,7 +53,7 @@ func protobuf2lexerLexerInit() {
 		"'['", "']'", "'{'", "'}'", "'<'", "'>'", "'.'", "','", "':'", "'+'",
 		"'-'",
 	}
-	staticData.symbolicNames = []string{
+	staticData.SymbolicNames = []string{
 		"", "SYNTAX", "IMPORT", "WEAK", "PUBLIC", "PACKAGE", "OPTION", "REPEATED",
 		"OPTIONAL", "REQUIRED", "GROUP", "ONEOF", "MAP", "INT32", "INT64", "UINT32",
 		"UINT64", "SINT32", "SINT64", "FIXED32", "FIXED64", "SFIXED32", "SFIXED64",
@@ -65,7 +64,7 @@ func protobuf2lexerLexerInit() {
 		"MINUS", "STR_LIT", "BOOL_LIT", "FLOAT_LIT", "INT_LIT", "IDENTIFIER",
 		"WS", "LINE_COMMENT", "COMMENT",
 	}
-	staticData.ruleNames = []string{
+	staticData.RuleNames = []string{
 		"SYNTAX", "IMPORT", "WEAK", "PUBLIC", "PACKAGE", "OPTION", "REPEATED",
 		"OPTIONAL", "REQUIRED", "GROUP", "ONEOF", "MAP", "INT32", "INT64", "UINT32",
 		"UINT64", "SINT32", "SINT64", "FIXED32", "FIXED64", "SFIXED32", "SFIXED64",
@@ -78,7 +77,7 @@ func protobuf2lexerLexerInit() {
 		"OCTAL_LIT", "HEX_LIT", "IDENTIFIER", "LETTER", "DECIMAL_DIGIT", "OCTAL_DIGIT",
 		"HEX_DIGIT", "WS", "LINE_COMMENT", "COMMENT",
 	}
-	staticData.predictionContextCache = antlr.NewPredictionContextCache()
+	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
 		4, 0, 63, 622, 6, -1, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2,
 		4, 7, 4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2,
@@ -369,7 +368,7 @@ func protobuf2lexerLexerInit() {
 // NewProtobuf2Lexer(). You can call this function if you wish to initialize the static state ahead
 // of time.
 func Protobuf2LexerInit() {
-	staticData := &protobuf2lexerLexerStaticData
+	staticData := &Protobuf2LexerLexerStaticData
 	staticData.once.Do(protobuf2lexerLexerInit)
 }
 
@@ -378,13 +377,13 @@ func NewProtobuf2Lexer(input antlr.CharStream) *Protobuf2Lexer {
 	Protobuf2LexerInit()
 	l := new(Protobuf2Lexer)
 	l.BaseLexer = antlr.NewBaseLexer(input)
-	staticData := &protobuf2lexerLexerStaticData
-	l.Interpreter = antlr.NewLexerATNSimulator(l, staticData.atn, staticData.decisionToDFA, staticData.predictionContextCache)
-	l.channelNames = staticData.channelNames
-	l.modeNames = staticData.modeNames
-	l.RuleNames = staticData.ruleNames
-	l.LiteralNames = staticData.literalNames
-	l.SymbolicNames = staticData.symbolicNames
+	staticData := &Protobuf2LexerLexerStaticData
+	l.Interpreter = antlr.NewLexerATNSimulator(l, staticData.atn, staticData.decisionToDFA, staticData.PredictionContextCache)
+	l.channelNames = staticData.ChannelNames
+	l.modeNames = staticData.ModeNames
+	l.RuleNames = staticData.RuleNames
+	l.LiteralNames = staticData.LiteralNames
+	l.SymbolicNames = staticData.SymbolicNames
 	l.GrammarFileName = "Protobuf2.g4"
 	// TODO: l.EOF = antlr.TokenEOF
 

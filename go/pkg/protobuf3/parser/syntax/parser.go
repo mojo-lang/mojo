@@ -4,7 +4,7 @@ import (
 	"context"
 	"regexp"
 
-	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
+	"github.com/antlr4-go/antlr/v4"
 	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
@@ -45,11 +45,12 @@ func (p *Parser) ParseStream(fileName string, input antlr.CharStream) (*lang.Sou
 	}
 
 	if len(errorListener.Errors) > 0 {
-		msg := errorListener.Errors[0].Error()
-		if protoMismatched.MatchString(msg) {
-			return nil, &ProtoError{}
+		for _, e := range errorListener.Errors {
+			msg := e.Error()
+			if protoMismatched.MatchString(msg) {
+				return nil, &ProtoError{}
+			}
 		}
-
 		return nil, logs.NewErrorw("failed to parse proto3 file", "file", fileName, "error", errorListener.Errors.Error())
 	}
 

@@ -1,4 +1,4 @@
-// Code generated from java-escape by ANTLR 4.11.1. DO NOT EDIT.
+// Code generated from MojoParser.g4 by ANTLR 4.13.0. DO NOT EDIT.
 
 package syntax // MojoParser
 import (
@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
+	"github.com/antlr4-go/antlr/v4"
 )
 
 // Suppress unused import errors
@@ -18,20 +18,20 @@ type MojoParser struct {
 	*antlr.BaseParser
 }
 
-var mojoparserParserStaticData struct {
+var MojoParserParserStaticData struct {
 	once                   sync.Once
 	serializedATN          []int32
-	literalNames           []string
-	symbolicNames          []string
-	ruleNames              []string
-	predictionContextCache *antlr.PredictionContextCache
+	LiteralNames           []string
+	SymbolicNames          []string
+	RuleNames              []string
+	PredictionContextCache *antlr.PredictionContextCache
 	atn                    *antlr.ATN
 	decisionToDFA          []*antlr.DFA
 }
 
 func mojoparserParserInit() {
-	staticData := &mojoparserParserStaticData
-	staticData.literalNames = []string{
+	staticData := &MojoParserParserStaticData
+	staticData.LiteralNames = []string{
 		"", "'and'", "'as'", "'attribute'", "'break'", "'const'", "'continue'",
 		"'else'", "'enum'", "'false'", "'for'", "'func'", "'if'", "'import'",
 		"'in'", "'interface'", "'is'", "'match'", "'not'", "'null'", "'or'",
@@ -40,7 +40,7 @@ func mojoparserParserInit() {
 		"';'", "'<'", "'>'", "'!'", "'?'", "'@'", "'&'", "'-'", "'='", "'|'",
 		"'/'", "'+'", "'*'", "'%'", "'^'", "'~'", "'$'", "'`'", "'_'",
 	}
-	staticData.symbolicNames = []string{
+	staticData.SymbolicNames = []string{
 		"", "KEYWORD_AND", "KEYWORD_AS", "KEYWORD_ATTRIBUTE", "KEYWORD_BREAK",
 		"KEYWORD_CONST", "KEYWORD_CONTINUE", "KEYWORD_ELSE", "KEYWORD_ENUM",
 		"KEYWORD_FALSE", "KEYWORD_FOR", "KEYWORD_FUNC", "KEYWORD_IF", "KEYWORD_IMPORT",
@@ -61,7 +61,7 @@ func mojoparserParserInit() {
 		"EOL", "LINE_DOCUMENT", "FOLLOWING_LINE_DOCUMENT", "INNER_LINE_DOCUMENT",
 		"OPERATOR_FOLLOWING_CHARACTER",
 	}
-	staticData.ruleNames = []string{
+	staticData.RuleNames = []string{
 		"mojoFile", "statement", "freeFloatingDocument", "statements", "loopStatement",
 		"forInStatement", "whileStatement", "conditions", "condition", "optionalBindingCondition",
 		"branchStatement", "ifStatement", "elseClause", "matchStatement", "matchCases",
@@ -110,7 +110,7 @@ func mojoparserParserInit() {
 		"literal", "boolLiteral", "nullLiteral", "numericLiteral", "integerLiteral",
 		"stringLiteral", "eos", "eov", "eosWithDocument", "eovWithDocument",
 	}
-	staticData.predictionContextCache = antlr.NewPredictionContextCache()
+	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
 		4, 1, 92, 2320, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
@@ -1266,7 +1266,7 @@ func mojoparserParserInit() {
 // NewMojoParser(). You can call this function if you wish to initialize the static state ahead
 // of time.
 func MojoParserInit() {
-	staticData := &mojoparserParserStaticData
+	staticData := &MojoParserParserStaticData
 	staticData.once.Do(mojoparserParserInit)
 }
 
@@ -1275,12 +1275,12 @@ func NewMojoParser(input antlr.TokenStream) *MojoParser {
 	MojoParserInit()
 	this := new(MojoParser)
 	this.BaseParser = antlr.NewBaseParser(input)
-	staticData := &mojoparserParserStaticData
-	this.Interpreter = antlr.NewParserATNSimulator(this, staticData.atn, staticData.decisionToDFA, staticData.predictionContextCache)
-	this.RuleNames = staticData.ruleNames
-	this.LiteralNames = staticData.literalNames
-	this.SymbolicNames = staticData.symbolicNames
-	this.GrammarFileName = "java-escape"
+	staticData := &MojoParserParserStaticData
+	this.Interpreter = antlr.NewParserATNSimulator(this, staticData.atn, staticData.decisionToDFA, staticData.PredictionContextCache)
+	this.RuleNames = staticData.RuleNames
+	this.LiteralNames = staticData.LiteralNames
+	this.SymbolicNames = staticData.SymbolicNames
+	this.GrammarFileName = "MojoParser.g4"
 
 	return this
 }
@@ -1583,20 +1583,31 @@ type IMojoFileContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	EOF() antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	Statements() IStatementsContext
+
 	// IsMojoFileContext differentiates from other interfaces.
 	IsMojoFileContext()
 }
 
 type MojoFileContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyMojoFileContext() *MojoFileContext {
 	var p = new(MojoFileContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_mojoFile
 	return p
+}
+
+func InitEmptyMojoFileContext(p *MojoFileContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_mojoFile
 }
 
 func (*MojoFileContext) IsMojoFileContext() {}
@@ -1604,7 +1615,7 @@ func (*MojoFileContext) IsMojoFileContext() {}
 func NewMojoFileContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MojoFileContext {
 	var p = new(MojoFileContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_mojoFile
@@ -1661,53 +1672,52 @@ func (s *MojoFileContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) MojoFile() (localctx IMojoFileContext) {
-	this := p
-	_ = this
-
 	localctx = NewMojoFileContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 0, MojoParserRULE_mojoFile)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(383)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 0, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 0, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
 				p.SetState(380)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 		p.SetState(385)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 0, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 0, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(387)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
-	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&90071451381530622) != 0 || (int64((_la-72)) & ^0x3f) == 0 && ((int64(1)<<(_la-72))&135159) != 0 {
+	if ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&90071451381530622) != 0) || ((int64((_la-72)) & ^0x3f) == 0 && ((int64(1)<<(_la-72))&135159) != 0) {
 		{
 			p.SetState(386)
 			p.Statements()
@@ -1716,24 +1726,48 @@ func (p *MojoParser) MojoFile() (localctx IMojoFileContext) {
 	}
 	p.SetState(392)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(389)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(394)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(395)
 		p.Match(MojoParserEOF)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStatementContext is an interface to support dynamic dispatch.
@@ -1743,20 +1777,33 @@ type IStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Declaration() IDeclarationContext
+	Expression() IExpressionContext
+	LoopStatement() ILoopStatementContext
+	BranchStatement() IBranchStatementContext
+	ControlTransferStatement() IControlTransferStatementContext
+	FreeFloatingDocument() IFreeFloatingDocumentContext
+
 	// IsStatementContext differentiates from other interfaces.
 	IsStatementContext()
 }
 
 type StatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStatementContext() *StatementContext {
 	var p = new(StatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_statement
 	return p
+}
+
+func InitEmptyStatementContext(p *StatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_statement
 }
 
 func (*StatementContext) IsStatementContext() {}
@@ -1764,7 +1811,7 @@ func (*StatementContext) IsStatementContext() {}
 func NewStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StatementContext {
 	var p = new(StatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_statement
@@ -1889,31 +1936,15 @@ func (s *StatementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Statement() (localctx IStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 2, MojoParserRULE_statement)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(403)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 3, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -1956,9 +1987,21 @@ func (p *MojoParser) Statement() (localctx IStatementContext) {
 			p.FreeFloatingDocument()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFreeFloatingDocumentContext is an interface to support dynamic dispatch.
@@ -1968,20 +2011,28 @@ type IFreeFloatingDocumentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Document() IDocumentContext
+
 	// IsFreeFloatingDocumentContext differentiates from other interfaces.
 	IsFreeFloatingDocumentContext()
 }
 
 type FreeFloatingDocumentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFreeFloatingDocumentContext() *FreeFloatingDocumentContext {
 	var p = new(FreeFloatingDocumentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_freeFloatingDocument
 	return p
+}
+
+func InitEmptyFreeFloatingDocumentContext(p *FreeFloatingDocumentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_freeFloatingDocument
 }
 
 func (*FreeFloatingDocumentContext) IsFreeFloatingDocumentContext() {}
@@ -1989,7 +2040,7 @@ func (*FreeFloatingDocumentContext) IsFreeFloatingDocumentContext() {}
 func NewFreeFloatingDocumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FreeFloatingDocumentContext {
 	var p = new(FreeFloatingDocumentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_freeFloatingDocument
@@ -2034,35 +2085,25 @@ func (s *FreeFloatingDocumentContext) Accept(visitor antlr.ParseTreeVisitor) int
 }
 
 func (p *MojoParser) FreeFloatingDocument() (localctx IFreeFloatingDocumentContext) {
-	this := p
-	_ = this
-
 	localctx = NewFreeFloatingDocumentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 4, MojoParserRULE_freeFloatingDocument)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(405)
 		p.Document()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStatementsContext is an interface to support dynamic dispatch.
@@ -2072,20 +2113,34 @@ type IStatementsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllStatement() []IStatementContext
+	Statement(i int) IStatementContext
+	AllEos() []IEosContext
+	Eos(i int) IEosContext
+	SEMI() antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsStatementsContext differentiates from other interfaces.
 	IsStatementsContext()
 }
 
 type StatementsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStatementsContext() *StatementsContext {
 	var p = new(StatementsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_statements
 	return p
+}
+
+func InitEmptyStatementsContext(p *StatementsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_statements
 }
 
 func (*StatementsContext) IsStatementsContext() {}
@@ -2093,7 +2148,7 @@ func (*StatementsContext) IsStatementsContext() {}
 func NewStatementsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StatementsContext {
 	var p = new(StatementsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_statements
@@ -2216,28 +2271,9 @@ func (s *StatementsContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Statements() (localctx IStatementsContext) {
-	this := p
-	_ = this
-
 	localctx = NewStatementsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 6, MojoParserRULE_statements)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -2248,8 +2284,13 @@ func (p *MojoParser) Statements() (localctx IStatementsContext) {
 	}
 	p.SetState(419)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -2258,16 +2299,26 @@ func (p *MojoParser) Statements() (localctx IStatementsContext) {
 			}
 			p.SetState(412)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(409)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(414)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -2278,21 +2329,44 @@ func (p *MojoParser) Statements() (localctx IStatementsContext) {
 		}
 		p.SetState(421)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(423)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserSEMI {
 		{
 			p.SetState(422)
 			p.Match(MojoParserSEMI)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ILoopStatementContext is an interface to support dynamic dispatch.
@@ -2302,20 +2376,29 @@ type ILoopStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	ForInStatement() IForInStatementContext
+	WhileStatement() IWhileStatementContext
+
 	// IsLoopStatementContext differentiates from other interfaces.
 	IsLoopStatementContext()
 }
 
 type LoopStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyLoopStatementContext() *LoopStatementContext {
 	var p = new(LoopStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_loopStatement
 	return p
+}
+
+func InitEmptyLoopStatementContext(p *LoopStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_loopStatement
 }
 
 func (*LoopStatementContext) IsLoopStatementContext() {}
@@ -2323,7 +2406,7 @@ func (*LoopStatementContext) IsLoopStatementContext() {}
 func NewLoopStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LoopStatementContext {
 	var p = new(LoopStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_loopStatement
@@ -2384,30 +2467,13 @@ func (s *LoopStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) LoopStatement() (localctx ILoopStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewLoopStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 8, MojoParserRULE_loopStatement)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(427)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserKEYWORD_FOR:
@@ -2425,10 +2491,21 @@ func (p *MojoParser) LoopStatement() (localctx ILoopStatementContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IForInStatementContext is an interface to support dynamic dispatch.
@@ -2438,20 +2515,34 @@ type IForInStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_FOR() antlr.TerminalNode
+	Pattern() IPatternContext
+	KEYWORD_IN() antlr.TerminalNode
+	Expression() IExpressionContext
+	CodeBlock() ICodeBlockContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsForInStatementContext differentiates from other interfaces.
 	IsForInStatementContext()
 }
 
 type ForInStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyForInStatementContext() *ForInStatementContext {
 	var p = new(ForInStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_forInStatement
 	return p
+}
+
+func InitEmptyForInStatementContext(p *ForInStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_forInStatement
 }
 
 func (*ForInStatementContext) IsForInStatementContext() {}
@@ -2459,7 +2550,7 @@ func (*ForInStatementContext) IsForInStatementContext() {}
 func NewForInStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ForInStatementContext {
 	var p = new(ForInStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_forInStatement
@@ -2552,33 +2643,18 @@ func (s *ForInStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) ForInStatement() (localctx IForInStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewForInStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 10, MojoParserRULE_forInStatement)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(429)
 		p.Match(MojoParserKEYWORD_FOR)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(430)
@@ -2586,21 +2662,35 @@ func (p *MojoParser) ForInStatement() (localctx IForInStatementContext) {
 	}
 	p.SetState(434)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(431)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(436)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(437)
 		p.Match(MojoParserKEYWORD_IN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(438)
@@ -2608,16 +2698,26 @@ func (p *MojoParser) ForInStatement() (localctx IForInStatementContext) {
 	}
 	p.SetState(442)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(439)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(444)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -2625,7 +2725,17 @@ func (p *MojoParser) ForInStatement() (localctx IForInStatementContext) {
 		p.CodeBlock()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IWhileStatementContext is an interface to support dynamic dispatch.
@@ -2635,20 +2745,32 @@ type IWhileStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_WHILE() antlr.TerminalNode
+	Conditions() IConditionsContext
+	CodeBlock() ICodeBlockContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsWhileStatementContext differentiates from other interfaces.
 	IsWhileStatementContext()
 }
 
 type WhileStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyWhileStatementContext() *WhileStatementContext {
 	var p = new(WhileStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_whileStatement
 	return p
+}
+
+func InitEmptyWhileStatementContext(p *WhileStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_whileStatement
 }
 
 func (*WhileStatementContext) IsWhileStatementContext() {}
@@ -2656,7 +2778,7 @@ func (*WhileStatementContext) IsWhileStatementContext() {}
 func NewWhileStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *WhileStatementContext {
 	var p = new(WhileStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_whileStatement
@@ -2729,33 +2851,18 @@ func (s *WhileStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) WhileStatement() (localctx IWhileStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewWhileStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 12, MojoParserRULE_whileStatement)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(447)
 		p.Match(MojoParserKEYWORD_WHILE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(448)
@@ -2763,16 +2870,26 @@ func (p *MojoParser) WhileStatement() (localctx IWhileStatementContext) {
 	}
 	p.SetState(452)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(449)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(454)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -2780,7 +2897,17 @@ func (p *MojoParser) WhileStatement() (localctx IWhileStatementContext) {
 		p.CodeBlock()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IConditionsContext is an interface to support dynamic dispatch.
@@ -2790,20 +2917,33 @@ type IConditionsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllCondition() []IConditionContext
+	Condition(i int) IConditionContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsConditionsContext differentiates from other interfaces.
 	IsConditionsContext()
 }
 
 type ConditionsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyConditionsContext() *ConditionsContext {
 	var p = new(ConditionsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_conditions
 	return p
+}
+
+func InitEmptyConditionsContext(p *ConditionsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_conditions
 }
 
 func (*ConditionsContext) IsConditionsContext() {}
@@ -2811,7 +2951,7 @@ func (*ConditionsContext) IsConditionsContext() {}
 func NewConditionsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ConditionsContext {
 	var p = new(ConditionsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_conditions
@@ -2930,28 +3070,9 @@ func (s *ConditionsContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Conditions() (localctx IConditionsContext) {
-	this := p
-	_ = this
-
 	localctx = NewConditionsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 14, MojoParserRULE_conditions)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -2962,8 +3083,13 @@ func (p *MojoParser) Conditions() (localctx IConditionsContext) {
 	}
 	p.SetState(469)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 12, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 12, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -2972,16 +3098,26 @@ func (p *MojoParser) Conditions() (localctx IConditionsContext) {
 			}
 			p.SetState(462)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(459)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(464)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -2992,10 +3128,26 @@ func (p *MojoParser) Conditions() (localctx IConditionsContext) {
 		}
 		p.SetState(471)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 12, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 12, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IConditionContext is an interface to support dynamic dispatch.
@@ -3005,20 +3157,29 @@ type IConditionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Expression() IExpressionContext
+	OptionalBindingCondition() IOptionalBindingConditionContext
+
 	// IsConditionContext differentiates from other interfaces.
 	IsConditionContext()
 }
 
 type ConditionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyConditionContext() *ConditionContext {
 	var p = new(ConditionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_condition
 	return p
+}
+
+func InitEmptyConditionContext(p *ConditionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_condition
 }
 
 func (*ConditionContext) IsConditionContext() {}
@@ -3026,7 +3187,7 @@ func (*ConditionContext) IsConditionContext() {}
 func NewConditionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ConditionContext {
 	var p = new(ConditionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_condition
@@ -3087,30 +3248,13 @@ func (s *ConditionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Condition() (localctx IConditionContext) {
-	this := p
-	_ = this
-
 	localctx = NewConditionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 16, MojoParserRULE_condition)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(474)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_CONTINUE, MojoParserKEYWORD_ELSE, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FALSE, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_OR, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TRUE, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR, MojoParserDOT, MojoParserLCURLY, MojoParserLPAREN, MojoParserLBRACK, MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserUNDERSCORE, MojoParserTYPE_IDENTIFIER, MojoParserVALUE_IDENTIFIER, MojoParserOPERATOR_HEAD_OTHER, MojoParserBINARY_LITERAL, MojoParserOCTAL_LITERAL, MojoParserDECIMAL_LITERAL, MojoParserPURE_DECIMAL_DIGITS, MojoParserHEXADECIMAL_LITERAL, MojoParserFLOAT_LITERAL, MojoParserSTATIC_STRING_LITERAL, MojoParserINTERPOLATED_STRING_LITERAL:
@@ -3128,10 +3272,21 @@ func (p *MojoParser) Condition() (localctx IConditionContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IOptionalBindingConditionContext is an interface to support dynamic dispatch.
@@ -3141,20 +3296,32 @@ type IOptionalBindingConditionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_VAR() antlr.TerminalNode
+	Pattern() IPatternContext
+	Initializer() IInitializerContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsOptionalBindingConditionContext differentiates from other interfaces.
 	IsOptionalBindingConditionContext()
 }
 
 type OptionalBindingConditionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyOptionalBindingConditionContext() *OptionalBindingConditionContext {
 	var p = new(OptionalBindingConditionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_optionalBindingCondition
 	return p
+}
+
+func InitEmptyOptionalBindingConditionContext(p *OptionalBindingConditionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_optionalBindingCondition
 }
 
 func (*OptionalBindingConditionContext) IsOptionalBindingConditionContext() {}
@@ -3162,7 +3329,7 @@ func (*OptionalBindingConditionContext) IsOptionalBindingConditionContext() {}
 func NewOptionalBindingConditionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *OptionalBindingConditionContext {
 	var p = new(OptionalBindingConditionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_optionalBindingCondition
@@ -3235,33 +3402,18 @@ func (s *OptionalBindingConditionContext) Accept(visitor antlr.ParseTreeVisitor)
 }
 
 func (p *MojoParser) OptionalBindingCondition() (localctx IOptionalBindingConditionContext) {
-	this := p
-	_ = this
-
 	localctx = NewOptionalBindingConditionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 18, MojoParserRULE_optionalBindingCondition)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(476)
 		p.Match(MojoParserKEYWORD_VAR)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(477)
@@ -3269,16 +3421,26 @@ func (p *MojoParser) OptionalBindingCondition() (localctx IOptionalBindingCondit
 	}
 	p.SetState(481)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(478)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(483)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -3286,7 +3448,17 @@ func (p *MojoParser) OptionalBindingCondition() (localctx IOptionalBindingCondit
 		p.Initializer()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IBranchStatementContext is an interface to support dynamic dispatch.
@@ -3296,20 +3468,29 @@ type IBranchStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	IfStatement() IIfStatementContext
+	MatchStatement() IMatchStatementContext
+
 	// IsBranchStatementContext differentiates from other interfaces.
 	IsBranchStatementContext()
 }
 
 type BranchStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyBranchStatementContext() *BranchStatementContext {
 	var p = new(BranchStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_branchStatement
 	return p
+}
+
+func InitEmptyBranchStatementContext(p *BranchStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_branchStatement
 }
 
 func (*BranchStatementContext) IsBranchStatementContext() {}
@@ -3317,7 +3498,7 @@ func (*BranchStatementContext) IsBranchStatementContext() {}
 func NewBranchStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BranchStatementContext {
 	var p = new(BranchStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_branchStatement
@@ -3378,30 +3559,13 @@ func (s *BranchStatementContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) BranchStatement() (localctx IBranchStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewBranchStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 20, MojoParserRULE_branchStatement)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(488)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserKEYWORD_IF:
@@ -3419,10 +3583,21 @@ func (p *MojoParser) BranchStatement() (localctx IBranchStatementContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IIfStatementContext is an interface to support dynamic dispatch.
@@ -3432,20 +3607,33 @@ type IIfStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_IF() antlr.TerminalNode
+	Conditions() IConditionsContext
+	CodeBlock() ICodeBlockContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	ElseClause() IElseClauseContext
+
 	// IsIfStatementContext differentiates from other interfaces.
 	IsIfStatementContext()
 }
 
 type IfStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyIfStatementContext() *IfStatementContext {
 	var p = new(IfStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_ifStatement
 	return p
+}
+
+func InitEmptyIfStatementContext(p *IfStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_ifStatement
 }
 
 func (*IfStatementContext) IsIfStatementContext() {}
@@ -3453,7 +3641,7 @@ func (*IfStatementContext) IsIfStatementContext() {}
 func NewIfStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *IfStatementContext {
 	var p = new(IfStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_ifStatement
@@ -3542,28 +3730,9 @@ func (s *IfStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) IfStatement() (localctx IIfStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewIfStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 22, MojoParserRULE_ifStatement)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -3571,6 +3740,10 @@ func (p *MojoParser) IfStatement() (localctx IIfStatementContext) {
 	{
 		p.SetState(490)
 		p.Match(MojoParserKEYWORD_IF)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(491)
@@ -3578,16 +3751,26 @@ func (p *MojoParser) IfStatement() (localctx IIfStatementContext) {
 	}
 	p.SetState(495)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(492)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(497)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -3596,22 +3779,40 @@ func (p *MojoParser) IfStatement() (localctx IIfStatementContext) {
 	}
 	p.SetState(502)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 17, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 17, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
 				p.SetState(499)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 		p.SetState(504)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 17, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 17, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(506)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserKEYWORD_ELSE {
@@ -3622,7 +3823,17 @@ func (p *MojoParser) IfStatement() (localctx IIfStatementContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IElseClauseContext is an interface to support dynamic dispatch.
@@ -3632,20 +3843,32 @@ type IElseClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_ELSE() antlr.TerminalNode
+	CodeBlock() ICodeBlockContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	IfStatement() IIfStatementContext
+
 	// IsElseClauseContext differentiates from other interfaces.
 	IsElseClauseContext()
 }
 
 type ElseClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyElseClauseContext() *ElseClauseContext {
 	var p = new(ElseClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_elseClause
 	return p
+}
+
+func InitEmptyElseClauseContext(p *ElseClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_elseClause
 }
 
 func (*ElseClauseContext) IsElseClauseContext() {}
@@ -3653,7 +3876,7 @@ func (*ElseClauseContext) IsElseClauseContext() {}
 func NewElseClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ElseClauseContext {
 	var p = new(ElseClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_elseClause
@@ -3726,50 +3949,49 @@ func (s *ElseClauseContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) ElseClause() (localctx IElseClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewElseClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 24, MojoParserRULE_elseClause)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(524)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 21, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 21, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(508)
 			p.Match(MojoParserKEYWORD_ELSE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		p.SetState(512)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(509)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(514)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -3782,19 +4004,33 @@ func (p *MojoParser) ElseClause() (localctx IElseClauseContext) {
 		{
 			p.SetState(516)
 			p.Match(MojoParserKEYWORD_ELSE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		p.SetState(520)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(517)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(522)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -3802,9 +4038,21 @@ func (p *MojoParser) ElseClause() (localctx IElseClauseContext) {
 			p.IfStatement()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IMatchStatementContext is an interface to support dynamic dispatch.
@@ -3814,20 +4062,34 @@ type IMatchStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_MATCH() antlr.TerminalNode
+	Expression() IExpressionContext
+	LCURLY() antlr.TerminalNode
+	RCURLY() antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	MatchCases() IMatchCasesContext
+
 	// IsMatchStatementContext differentiates from other interfaces.
 	IsMatchStatementContext()
 }
 
 type MatchStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyMatchStatementContext() *MatchStatementContext {
 	var p = new(MatchStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_matchStatement
 	return p
+}
+
+func InitEmptyMatchStatementContext(p *MatchStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_matchStatement
 }
 
 func (*MatchStatementContext) IsMatchStatementContext() {}
@@ -3835,7 +4097,7 @@ func (*MatchStatementContext) IsMatchStatementContext() {}
 func NewMatchStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MatchStatementContext {
 	var p = new(MatchStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_matchStatement
@@ -3916,33 +4178,18 @@ func (s *MatchStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) MatchStatement() (localctx IMatchStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewMatchStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 26, MojoParserRULE_matchStatement)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(526)
 		p.Match(MojoParserKEYWORD_MATCH)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(527)
@@ -3950,38 +4197,62 @@ func (p *MojoParser) MatchStatement() (localctx IMatchStatementContext) {
 	}
 	p.SetState(531)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(528)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(533)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(534)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(542)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 24, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 24, p.GetParserRuleContext()) == 1 {
 		p.SetState(538)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(535)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(540)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -3989,27 +4260,53 @@ func (p *MojoParser) MatchStatement() (localctx IMatchStatementContext) {
 			p.MatchCases()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(547)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(544)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(549)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(550)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IMatchCasesContext is an interface to support dynamic dispatch.
@@ -4019,20 +4316,33 @@ type IMatchCasesContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllMatchCase() []IMatchCaseContext
+	MatchCase(i int) IMatchCaseContext
+	AllEos() []IEosContext
+	Eos(i int) IEosContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsMatchCasesContext differentiates from other interfaces.
 	IsMatchCasesContext()
 }
 
 type MatchCasesContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyMatchCasesContext() *MatchCasesContext {
 	var p = new(MatchCasesContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_matchCases
 	return p
+}
+
+func InitEmptyMatchCasesContext(p *MatchCasesContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_matchCases
 }
 
 func (*MatchCasesContext) IsMatchCasesContext() {}
@@ -4040,7 +4350,7 @@ func (*MatchCasesContext) IsMatchCasesContext() {}
 func NewMatchCasesContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MatchCasesContext {
 	var p = new(MatchCasesContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_matchCases
@@ -4159,28 +4469,9 @@ func (s *MatchCasesContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) MatchCases() (localctx IMatchCasesContext) {
-	this := p
-	_ = this
-
 	localctx = NewMatchCasesContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 28, MojoParserRULE_matchCases)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -4191,8 +4482,13 @@ func (p *MojoParser) MatchCases() (localctx IMatchCasesContext) {
 	}
 	p.SetState(564)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 27, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 27, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -4201,16 +4497,26 @@ func (p *MojoParser) MatchCases() (localctx IMatchCasesContext) {
 			}
 			p.SetState(557)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(554)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(559)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -4221,14 +4527,30 @@ func (p *MojoParser) MatchCases() (localctx IMatchCasesContext) {
 		}
 		p.SetState(566)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 27, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 27, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(567)
 		p.Eos()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IMatchCaseContext is an interface to support dynamic dispatch.
@@ -4238,20 +4560,33 @@ type IMatchCaseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Pattern() IPatternContext
+	RIGHT_RIGHT_ARROWS() antlr.TerminalNode
+	CodeBlock() ICodeBlockContext
+	Expression() IExpressionContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsMatchCaseContext differentiates from other interfaces.
 	IsMatchCaseContext()
 }
 
 type MatchCaseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyMatchCaseContext() *MatchCaseContext {
 	var p = new(MatchCaseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_matchCase
 	return p
+}
+
+func InitEmptyMatchCaseContext(p *MatchCaseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_matchCase
 }
 
 func (*MatchCaseContext) IsMatchCaseContext() {}
@@ -4259,7 +4594,7 @@ func (*MatchCaseContext) IsMatchCaseContext() {}
 func NewMatchCaseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MatchCaseContext {
 	var p = new(MatchCaseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_matchCase
@@ -4348,28 +4683,9 @@ func (s *MatchCaseContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) MatchCase() (localctx IMatchCaseContext) {
-	this := p
-	_ = this
-
 	localctx = NewMatchCaseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 30, MojoParserRULE_matchCase)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -4378,39 +4694,67 @@ func (p *MojoParser) MatchCase() (localctx IMatchCaseContext) {
 	}
 	p.SetState(573)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(570)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(575)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(576)
 		p.Match(MojoParserRIGHT_RIGHT_ARROWS)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(580)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(577)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(582)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	p.SetState(585)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 30, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 30, p.GetParserRuleContext()) {
 	case 1:
 		{
 			p.SetState(583)
@@ -4423,9 +4767,21 @@ func (p *MojoParser) MatchCase() (localctx IMatchCaseContext) {
 			p.Expression()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IControlTransferStatementContext is an interface to support dynamic dispatch.
@@ -4435,20 +4791,30 @@ type IControlTransferStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	BreakStatement() IBreakStatementContext
+	ContinueStatement() IContinueStatementContext
+	ReturnStatement() IReturnStatementContext
+
 	// IsControlTransferStatementContext differentiates from other interfaces.
 	IsControlTransferStatementContext()
 }
 
 type ControlTransferStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyControlTransferStatementContext() *ControlTransferStatementContext {
 	var p = new(ControlTransferStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_controlTransferStatement
 	return p
+}
+
+func InitEmptyControlTransferStatementContext(p *ControlTransferStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_controlTransferStatement
 }
 
 func (*ControlTransferStatementContext) IsControlTransferStatementContext() {}
@@ -4456,7 +4822,7 @@ func (*ControlTransferStatementContext) IsControlTransferStatementContext() {}
 func NewControlTransferStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ControlTransferStatementContext {
 	var p = new(ControlTransferStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_controlTransferStatement
@@ -4533,30 +4899,13 @@ func (s *ControlTransferStatementContext) Accept(visitor antlr.ParseTreeVisitor)
 }
 
 func (p *MojoParser) ControlTransferStatement() (localctx IControlTransferStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewControlTransferStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 32, MojoParserRULE_controlTransferStatement)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(590)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserKEYWORD_BREAK:
@@ -4581,10 +4930,21 @@ func (p *MojoParser) ControlTransferStatement() (localctx IControlTransferStatem
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IBreakStatementContext is an interface to support dynamic dispatch.
@@ -4594,20 +4954,28 @@ type IBreakStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_BREAK() antlr.TerminalNode
+
 	// IsBreakStatementContext differentiates from other interfaces.
 	IsBreakStatementContext()
 }
 
 type BreakStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyBreakStatementContext() *BreakStatementContext {
 	var p = new(BreakStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_breakStatement
 	return p
+}
+
+func InitEmptyBreakStatementContext(p *BreakStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_breakStatement
 }
 
 func (*BreakStatementContext) IsBreakStatementContext() {}
@@ -4615,7 +4983,7 @@ func (*BreakStatementContext) IsBreakStatementContext() {}
 func NewBreakStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BreakStatementContext {
 	var p = new(BreakStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_breakStatement
@@ -4648,35 +5016,29 @@ func (s *BreakStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) BreakStatement() (localctx IBreakStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewBreakStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 34, MojoParserRULE_breakStatement)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(592)
 		p.Match(MojoParserKEYWORD_BREAK)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IContinueStatementContext is an interface to support dynamic dispatch.
@@ -4686,20 +5048,28 @@ type IContinueStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_CONTINUE() antlr.TerminalNode
+
 	// IsContinueStatementContext differentiates from other interfaces.
 	IsContinueStatementContext()
 }
 
 type ContinueStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyContinueStatementContext() *ContinueStatementContext {
 	var p = new(ContinueStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_continueStatement
 	return p
+}
+
+func InitEmptyContinueStatementContext(p *ContinueStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_continueStatement
 }
 
 func (*ContinueStatementContext) IsContinueStatementContext() {}
@@ -4707,7 +5077,7 @@ func (*ContinueStatementContext) IsContinueStatementContext() {}
 func NewContinueStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ContinueStatementContext {
 	var p = new(ContinueStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_continueStatement
@@ -4740,35 +5110,29 @@ func (s *ContinueStatementContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) ContinueStatement() (localctx IContinueStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewContinueStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 36, MojoParserRULE_continueStatement)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(594)
 		p.Match(MojoParserKEYWORD_CONTINUE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IReturnStatementContext is an interface to support dynamic dispatch.
@@ -4778,20 +5142,29 @@ type IReturnStatementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_RETURN() antlr.TerminalNode
+	Expression() IExpressionContext
+
 	// IsReturnStatementContext differentiates from other interfaces.
 	IsReturnStatementContext()
 }
 
 type ReturnStatementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyReturnStatementContext() *ReturnStatementContext {
 	var p = new(ReturnStatementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_returnStatement
 	return p
+}
+
+func InitEmptyReturnStatementContext(p *ReturnStatementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_returnStatement
 }
 
 func (*ReturnStatementContext) IsReturnStatementContext() {}
@@ -4799,7 +5172,7 @@ func (*ReturnStatementContext) IsReturnStatementContext() {}
 func NewReturnStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ReturnStatementContext {
 	var p = new(ReturnStatementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_returnStatement
@@ -4848,39 +5221,27 @@ func (s *ReturnStatementContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) ReturnStatement() (localctx IReturnStatementContext) {
-	this := p
-	_ = this
-
 	localctx = NewReturnStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 38, MojoParserRULE_returnStatement)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(596)
 		p.Match(MojoParserKEYWORD_RETURN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(598)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
-	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&90062655082986494) != 0 || (int64((_la-72)) & ^0x3f) == 0 && ((int64(1)<<(_la-72))&4087) != 0 {
+	if ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&90062655082986494) != 0) || ((int64((_la-72)) & ^0x3f) == 0 && ((int64(1)<<(_la-72))&4087) != 0) {
 		{
 			p.SetState(597)
 			p.Expression()
@@ -4888,7 +5249,17 @@ func (p *MojoParser) ReturnStatement() (localctx IReturnStatementContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IGenericParameterClauseContext is an interface to support dynamic dispatch.
@@ -4898,20 +5269,32 @@ type IGenericParameterClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LT() antlr.TerminalNode
+	GenericParameters() IGenericParametersContext
+	GT() antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsGenericParameterClauseContext differentiates from other interfaces.
 	IsGenericParameterClauseContext()
 }
 
 type GenericParameterClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyGenericParameterClauseContext() *GenericParameterClauseContext {
 	var p = new(GenericParameterClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_genericParameterClause
 	return p
+}
+
+func InitEmptyGenericParameterClauseContext(p *GenericParameterClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_genericParameterClause
 }
 
 func (*GenericParameterClauseContext) IsGenericParameterClauseContext() {}
@@ -4919,7 +5302,7 @@ func (*GenericParameterClauseContext) IsGenericParameterClauseContext() {}
 func NewGenericParameterClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *GenericParameterClauseContext {
 	var p = new(GenericParameterClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_genericParameterClause
@@ -4980,46 +5363,41 @@ func (s *GenericParameterClauseContext) Accept(visitor antlr.ParseTreeVisitor) i
 }
 
 func (p *MojoParser) GenericParameterClause() (localctx IGenericParameterClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewGenericParameterClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 40, MojoParserRULE_genericParameterClause)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(600)
 		p.Match(MojoParserLT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(604)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(601)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(606)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -5028,24 +5406,48 @@ func (p *MojoParser) GenericParameterClause() (localctx IGenericParameterClauseC
 	}
 	p.SetState(611)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(608)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(613)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(614)
 		p.Match(MojoParserGT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IGenericParametersContext is an interface to support dynamic dispatch.
@@ -5055,20 +5457,33 @@ type IGenericParametersContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllGenericParameter() []IGenericParameterContext
+	GenericParameter(i int) IGenericParameterContext
+	AllEovWithDocument() []IEovWithDocumentContext
+	EovWithDocument(i int) IEovWithDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsGenericParametersContext differentiates from other interfaces.
 	IsGenericParametersContext()
 }
 
 type GenericParametersContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyGenericParametersContext() *GenericParametersContext {
 	var p = new(GenericParametersContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_genericParameters
 	return p
+}
+
+func InitEmptyGenericParametersContext(p *GenericParametersContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_genericParameters
 }
 
 func (*GenericParametersContext) IsGenericParametersContext() {}
@@ -5076,7 +5491,7 @@ func (*GenericParametersContext) IsGenericParametersContext() {}
 func NewGenericParametersContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *GenericParametersContext {
 	var p = new(GenericParametersContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_genericParameters
@@ -5195,28 +5610,9 @@ func (s *GenericParametersContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) GenericParameters() (localctx IGenericParametersContext) {
-	this := p
-	_ = this
-
 	localctx = NewGenericParametersContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 42, MojoParserRULE_genericParameters)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -5227,8 +5623,13 @@ func (p *MojoParser) GenericParameters() (localctx IGenericParametersContext) {
 	}
 	p.SetState(628)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 36, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 36, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -5237,16 +5638,26 @@ func (p *MojoParser) GenericParameters() (localctx IGenericParametersContext) {
 			}
 			p.SetState(621)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(618)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(623)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -5257,20 +5668,38 @@ func (p *MojoParser) GenericParameters() (localctx IGenericParametersContext) {
 		}
 		p.SetState(630)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 36, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 36, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(632)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 37, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 37, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(631)
 			p.EovWithDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IGenericParameterContext is an interface to support dynamic dispatch.
@@ -5280,20 +5709,30 @@ type IGenericParameterContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeName() ITypeNameContext
+	ELLIPSIS() antlr.TerminalNode
+	TypeAnnotation() ITypeAnnotationContext
+
 	// IsGenericParameterContext differentiates from other interfaces.
 	IsGenericParameterContext()
 }
 
 type GenericParameterContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyGenericParameterContext() *GenericParameterContext {
 	var p = new(GenericParameterContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_genericParameter
 	return p
+}
+
+func InitEmptyGenericParameterContext(p *GenericParameterContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_genericParameter
 }
 
 func (*GenericParameterContext) IsGenericParameterContext() {}
@@ -5301,7 +5740,7 @@ func (*GenericParameterContext) IsGenericParameterContext() {}
 func NewGenericParameterContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *GenericParameterContext {
 	var p = new(GenericParameterContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_genericParameter
@@ -5366,31 +5805,15 @@ func (s *GenericParameterContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) GenericParameter() (localctx IGenericParameterContext) {
-	this := p
-	_ = this
-
 	localctx = NewGenericParameterContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 44, MojoParserRULE_genericParameter)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(641)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 38, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 38, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -5407,6 +5830,10 @@ func (p *MojoParser) GenericParameter() (localctx IGenericParameterContext) {
 		{
 			p.SetState(636)
 			p.Match(MojoParserELLIPSIS)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 3:
@@ -5420,9 +5847,21 @@ func (p *MojoParser) GenericParameter() (localctx IGenericParameterContext) {
 			p.TypeAnnotation()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IGenericArgumentClauseContext is an interface to support dynamic dispatch.
@@ -5432,20 +5871,32 @@ type IGenericArgumentClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LT() antlr.TerminalNode
+	GenericArguments() IGenericArgumentsContext
+	GT() antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsGenericArgumentClauseContext differentiates from other interfaces.
 	IsGenericArgumentClauseContext()
 }
 
 type GenericArgumentClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyGenericArgumentClauseContext() *GenericArgumentClauseContext {
 	var p = new(GenericArgumentClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_genericArgumentClause
 	return p
+}
+
+func InitEmptyGenericArgumentClauseContext(p *GenericArgumentClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_genericArgumentClause
 }
 
 func (*GenericArgumentClauseContext) IsGenericArgumentClauseContext() {}
@@ -5453,7 +5904,7 @@ func (*GenericArgumentClauseContext) IsGenericArgumentClauseContext() {}
 func NewGenericArgumentClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *GenericArgumentClauseContext {
 	var p = new(GenericArgumentClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_genericArgumentClause
@@ -5514,46 +5965,41 @@ func (s *GenericArgumentClauseContext) Accept(visitor antlr.ParseTreeVisitor) in
 }
 
 func (p *MojoParser) GenericArgumentClause() (localctx IGenericArgumentClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewGenericArgumentClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 46, MojoParserRULE_genericArgumentClause)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(643)
 		p.Match(MojoParserLT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(647)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(644)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(649)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -5562,24 +6008,48 @@ func (p *MojoParser) GenericArgumentClause() (localctx IGenericArgumentClauseCon
 	}
 	p.SetState(654)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(651)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(656)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(657)
 		p.Match(MojoParserGT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IGenericArgumentsContext is an interface to support dynamic dispatch.
@@ -5589,20 +6059,33 @@ type IGenericArgumentsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllGenericArgument() []IGenericArgumentContext
+	GenericArgument(i int) IGenericArgumentContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsGenericArgumentsContext differentiates from other interfaces.
 	IsGenericArgumentsContext()
 }
 
 type GenericArgumentsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyGenericArgumentsContext() *GenericArgumentsContext {
 	var p = new(GenericArgumentsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_genericArguments
 	return p
+}
+
+func InitEmptyGenericArgumentsContext(p *GenericArgumentsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_genericArguments
 }
 
 func (*GenericArgumentsContext) IsGenericArgumentsContext() {}
@@ -5610,7 +6093,7 @@ func (*GenericArgumentsContext) IsGenericArgumentsContext() {}
 func NewGenericArgumentsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *GenericArgumentsContext {
 	var p = new(GenericArgumentsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_genericArguments
@@ -5729,28 +6212,9 @@ func (s *GenericArgumentsContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) GenericArguments() (localctx IGenericArgumentsContext) {
-	this := p
-	_ = this
-
 	localctx = NewGenericArgumentsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 48, MojoParserRULE_genericArguments)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -5761,8 +6225,13 @@ func (p *MojoParser) GenericArguments() (localctx IGenericArgumentsContext) {
 	}
 	p.SetState(671)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 42, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 42, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -5771,16 +6240,26 @@ func (p *MojoParser) GenericArguments() (localctx IGenericArgumentsContext) {
 			}
 			p.SetState(664)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(661)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(666)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -5791,10 +6270,26 @@ func (p *MojoParser) GenericArguments() (localctx IGenericArgumentsContext) {
 		}
 		p.SetState(673)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 42, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 42, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IGenericArgumentContext is an interface to support dynamic dispatch.
@@ -5804,20 +6299,29 @@ type IGenericArgumentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Type_() IType_Context
+	Attributes() IAttributesContext
+
 	// IsGenericArgumentContext differentiates from other interfaces.
 	IsGenericArgumentContext()
 }
 
 type GenericArgumentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyGenericArgumentContext() *GenericArgumentContext {
 	var p = new(GenericArgumentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_genericArgument
 	return p
+}
+
+func InitEmptyGenericArgumentContext(p *GenericArgumentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_genericArgument
 }
 
 func (*GenericArgumentContext) IsGenericArgumentContext() {}
@@ -5825,7 +6329,7 @@ func (*GenericArgumentContext) IsGenericArgumentContext() {}
 func NewGenericArgumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *GenericArgumentContext {
 	var p = new(GenericArgumentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_genericArgument
@@ -5886,28 +6390,9 @@ func (s *GenericArgumentContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) GenericArgument() (localctx IGenericArgumentContext) {
-	this := p
-	_ = this
-
 	localctx = NewGenericArgumentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 50, MojoParserRULE_genericArgument)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -5916,6 +6401,9 @@ func (p *MojoParser) GenericArgument() (localctx IGenericArgumentContext) {
 	}
 	p.SetState(676)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -5926,7 +6414,17 @@ func (p *MojoParser) GenericArgument() (localctx IGenericArgumentContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IDeclarationContext is an interface to support dynamic dispatch.
@@ -5936,20 +6434,42 @@ type IDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	PackageDeclaration() IPackageDeclarationContext
+	ImportDeclaration() IImportDeclarationContext
+	ConstantDeclaration() IConstantDeclarationContext
+	VariableDeclaration() IVariableDeclarationContext
+	TypeAliasDeclaration() ITypeAliasDeclarationContext
+	FunctionDeclaration() IFunctionDeclarationContext
+	EnumDeclaration() IEnumDeclarationContext
+	StructDeclaration() IStructDeclarationContext
+	InterfaceDeclaration() IInterfaceDeclarationContext
+	AttributeDeclaration() IAttributeDeclarationContext
+	AttributeAliasDeclaration() IAttributeAliasDeclarationContext
+	Document() IDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	Attributes() IAttributesContext
+
 	// IsDeclarationContext differentiates from other interfaces.
 	IsDeclarationContext()
 }
 
 type DeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyDeclarationContext() *DeclarationContext {
 	var p = new(DeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_declaration
 	return p
+}
+
+func InitEmptyDeclarationContext(p *DeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_declaration
 }
 
 func (*DeclarationContext) IsDeclarationContext() {}
@@ -5957,7 +6477,7 @@ func (*DeclarationContext) IsDeclarationContext() {}
 func NewDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DeclarationContext {
 	var p = new(DeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_declaration
@@ -6202,32 +6722,16 @@ func (s *DeclarationContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) Declaration() (localctx IDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 52, MojoParserRULE_declaration)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(681)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLINE_DOCUMENT {
@@ -6238,11 +6742,18 @@ func (p *MojoParser) Declaration() (localctx IDeclarationContext) {
 		{
 			p.SetState(679)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	}
 	p.SetState(690)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -6252,23 +6763,37 @@ func (p *MojoParser) Declaration() (localctx IDeclarationContext) {
 		}
 		p.SetState(687)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(684)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(689)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 
 	}
 	p.SetState(703)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 47, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 47, p.GetParserRuleContext()) {
 	case 1:
 		{
 			p.SetState(692)
@@ -6335,9 +6860,21 @@ func (p *MojoParser) Declaration() (localctx IDeclarationContext) {
 			p.AttributeAliasDeclaration()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ICodeBlockContext is an interface to support dynamic dispatch.
@@ -6347,20 +6884,32 @@ type ICodeBlockContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LCURLY() antlr.TerminalNode
+	RCURLY() antlr.TerminalNode
+	Statements() IStatementsContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsCodeBlockContext differentiates from other interfaces.
 	IsCodeBlockContext()
 }
 
 type CodeBlockContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyCodeBlockContext() *CodeBlockContext {
 	var p = new(CodeBlockContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_codeBlock
 	return p
+}
+
+func InitEmptyCodeBlockContext(p *CodeBlockContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_codeBlock
 }
 
 func (*CodeBlockContext) IsCodeBlockContext() {}
@@ -6368,7 +6917,7 @@ func (*CodeBlockContext) IsCodeBlockContext() {}
 func NewCodeBlockContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *CodeBlockContext {
 	var p = new(CodeBlockContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_codeBlock
@@ -6429,50 +6978,45 @@ func (s *CodeBlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) CodeBlock() (localctx ICodeBlockContext) {
-	this := p
-	_ = this
-
 	localctx = NewCodeBlockContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 54, MojoParserRULE_codeBlock)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(705)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(713)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 49, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 49, p.GetParserRuleContext()) == 1 {
 		p.SetState(709)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(706)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(711)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -6480,27 +7024,53 @@ func (p *MojoParser) CodeBlock() (localctx ICodeBlockContext) {
 			p.Statements()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(718)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(715)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(720)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(721)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPackageDeclarationContext is an interface to support dynamic dispatch.
@@ -6510,20 +7080,32 @@ type IPackageDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_PACKAGE() antlr.TerminalNode
+	PackageIdentifier() IPackageIdentifierContext
+	ObjectLiteral() IObjectLiteralContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsPackageDeclarationContext differentiates from other interfaces.
 	IsPackageDeclarationContext()
 }
 
 type PackageDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPackageDeclarationContext() *PackageDeclarationContext {
 	var p = new(PackageDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_packageDeclaration
 	return p
+}
+
+func InitEmptyPackageDeclarationContext(p *PackageDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_packageDeclaration
 }
 
 func (*PackageDeclarationContext) IsPackageDeclarationContext() {}
@@ -6531,7 +7113,7 @@ func (*PackageDeclarationContext) IsPackageDeclarationContext() {}
 func NewPackageDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PackageDeclarationContext {
 	var p = new(PackageDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_packageDeclaration
@@ -6604,33 +7186,18 @@ func (s *PackageDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) PackageDeclaration() (localctx IPackageDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewPackageDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 56, MojoParserRULE_packageDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(723)
 		p.Match(MojoParserKEYWORD_PACKAGE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(724)
@@ -6639,19 +7206,29 @@ func (p *MojoParser) PackageDeclaration() (localctx IPackageDeclarationContext) 
 	p.SetState(732)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 52, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 52, p.GetParserRuleContext()) == 1 {
 		p.SetState(728)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(725)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(730)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -6659,9 +7236,21 @@ func (p *MojoParser) PackageDeclaration() (localctx IPackageDeclarationContext) 
 			p.ObjectLiteral()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPackageIdentifierContext is an interface to support dynamic dispatch.
@@ -6671,20 +7260,31 @@ type IPackageIdentifierContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllPackageName() []IPackageNameContext
+	PackageName(i int) IPackageNameContext
+	AllDOT() []antlr.TerminalNode
+	DOT(i int) antlr.TerminalNode
+
 	// IsPackageIdentifierContext differentiates from other interfaces.
 	IsPackageIdentifierContext()
 }
 
 type PackageIdentifierContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPackageIdentifierContext() *PackageIdentifierContext {
 	var p = new(PackageIdentifierContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_packageIdentifier
 	return p
+}
+
+func InitEmptyPackageIdentifierContext(p *PackageIdentifierContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_packageIdentifier
 }
 
 func (*PackageIdentifierContext) IsPackageIdentifierContext() {}
@@ -6692,7 +7292,7 @@ func (*PackageIdentifierContext) IsPackageIdentifierContext() {}
 func NewPackageIdentifierContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PackageIdentifierContext {
 	var p = new(PackageIdentifierContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_packageIdentifier
@@ -6770,28 +7370,8 @@ func (s *PackageIdentifierContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) PackageIdentifier() (localctx IPackageIdentifierContext) {
-	this := p
-	_ = this
-
 	localctx = NewPackageIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 58, MojoParserRULE_packageIdentifier)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
@@ -6801,13 +7381,22 @@ func (p *MojoParser) PackageIdentifier() (localctx IPackageIdentifierContext) {
 	}
 	p.SetState(739)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 53, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 53, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
 				p.SetState(735)
 				p.Match(MojoParserDOT)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 			{
 				p.SetState(736)
@@ -6817,10 +7406,26 @@ func (p *MojoParser) PackageIdentifier() (localctx IPackageIdentifierContext) {
 		}
 		p.SetState(741)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 53, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 53, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPackageNameContext is an interface to support dynamic dispatch.
@@ -6830,20 +7435,28 @@ type IPackageNameContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	VALUE_IDENTIFIER() antlr.TerminalNode
+
 	// IsPackageNameContext differentiates from other interfaces.
 	IsPackageNameContext()
 }
 
 type PackageNameContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPackageNameContext() *PackageNameContext {
 	var p = new(PackageNameContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_packageName
 	return p
+}
+
+func InitEmptyPackageNameContext(p *PackageNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_packageName
 }
 
 func (*PackageNameContext) IsPackageNameContext() {}
@@ -6851,7 +7464,7 @@ func (*PackageNameContext) IsPackageNameContext() {}
 func NewPackageNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PackageNameContext {
 	var p = new(PackageNameContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_packageName
@@ -6884,35 +7497,29 @@ func (s *PackageNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) PackageName() (localctx IPackageNameContext) {
-	this := p
-	_ = this
-
 	localctx = NewPackageNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 60, MojoParserRULE_packageName)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(742)
 		p.Match(MojoParserVALUE_IDENTIFIER)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportDeclarationContext is an interface to support dynamic dispatch.
@@ -6922,20 +7529,33 @@ type IImportDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_IMPORT() antlr.TerminalNode
+	ImportPath() IImportPathContext
+	ImportAllClause() IImportAllClauseContext
+	ImportValueAsClause() IImportValueAsClauseContext
+	ImportTypeClause() IImportTypeClauseContext
+	ImportGroupClause() IImportGroupClauseContext
+
 	// IsImportDeclarationContext differentiates from other interfaces.
 	IsImportDeclarationContext()
 }
 
 type ImportDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportDeclarationContext() *ImportDeclarationContext {
 	var p = new(ImportDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importDeclaration
 	return p
+}
+
+func InitEmptyImportDeclarationContext(p *ImportDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importDeclaration
 }
 
 func (*ImportDeclarationContext) IsImportDeclarationContext() {}
@@ -6943,7 +7563,7 @@ func (*ImportDeclarationContext) IsImportDeclarationContext() {}
 func NewImportDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportDeclarationContext {
 	var p = new(ImportDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importDeclaration
@@ -7056,32 +7676,16 @@ func (s *ImportDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) ImportDeclaration() (localctx IImportDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 62, MojoParserRULE_importDeclaration)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(744)
 		p.Match(MojoParserKEYWORD_IMPORT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(745)
@@ -7090,33 +7694,51 @@ func (p *MojoParser) ImportDeclaration() (localctx IImportDeclarationContext) {
 	p.SetState(750)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 54, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 54, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(746)
 			p.ImportAllClause()
 		}
 
-	} else if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 54, p.GetParserRuleContext()) == 2 {
+	} else if p.HasError() { // JIM
+		goto errorExit
+	} else if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 54, p.GetParserRuleContext()) == 2 {
 		{
 			p.SetState(747)
 			p.ImportValueAsClause()
 		}
 
-	} else if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 54, p.GetParserRuleContext()) == 3 {
+	} else if p.HasError() { // JIM
+		goto errorExit
+	} else if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 54, p.GetParserRuleContext()) == 3 {
 		{
 			p.SetState(748)
 			p.ImportTypeClause()
 		}
 
-	} else if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 54, p.GetParserRuleContext()) == 4 {
+	} else if p.HasError() { // JIM
+		goto errorExit
+	} else if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 54, p.GetParserRuleContext()) == 4 {
 		{
 			p.SetState(749)
 			p.ImportGroupClause()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportPathContext is an interface to support dynamic dispatch.
@@ -7126,20 +7748,31 @@ type IImportPathContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllImportPathIdentifier() []IImportPathIdentifierContext
+	ImportPathIdentifier(i int) IImportPathIdentifierContext
+	AllDOT() []antlr.TerminalNode
+	DOT(i int) antlr.TerminalNode
+
 	// IsImportPathContext differentiates from other interfaces.
 	IsImportPathContext()
 }
 
 type ImportPathContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportPathContext() *ImportPathContext {
 	var p = new(ImportPathContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importPath
 	return p
+}
+
+func InitEmptyImportPathContext(p *ImportPathContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importPath
 }
 
 func (*ImportPathContext) IsImportPathContext() {}
@@ -7147,7 +7780,7 @@ func (*ImportPathContext) IsImportPathContext() {}
 func NewImportPathContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportPathContext {
 	var p = new(ImportPathContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importPath
@@ -7225,28 +7858,8 @@ func (s *ImportPathContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) ImportPath() (localctx IImportPathContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportPathContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 64, MojoParserRULE_importPath)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
@@ -7256,13 +7869,22 @@ func (p *MojoParser) ImportPath() (localctx IImportPathContext) {
 	}
 	p.SetState(757)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 55, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 55, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
 				p.SetState(753)
 				p.Match(MojoParserDOT)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 			{
 				p.SetState(754)
@@ -7272,10 +7894,26 @@ func (p *MojoParser) ImportPath() (localctx IImportPathContext) {
 		}
 		p.SetState(759)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 55, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 55, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportPathIdentifierContext is an interface to support dynamic dispatch.
@@ -7285,20 +7923,28 @@ type IImportPathIdentifierContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DeclarationIdentifier() IDeclarationIdentifierContext
+
 	// IsImportPathIdentifierContext differentiates from other interfaces.
 	IsImportPathIdentifierContext()
 }
 
 type ImportPathIdentifierContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportPathIdentifierContext() *ImportPathIdentifierContext {
 	var p = new(ImportPathIdentifierContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importPathIdentifier
 	return p
+}
+
+func InitEmptyImportPathIdentifierContext(p *ImportPathIdentifierContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importPathIdentifier
 }
 
 func (*ImportPathIdentifierContext) IsImportPathIdentifierContext() {}
@@ -7306,7 +7952,7 @@ func (*ImportPathIdentifierContext) IsImportPathIdentifierContext() {}
 func NewImportPathIdentifierContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportPathIdentifierContext {
 	var p = new(ImportPathIdentifierContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importPathIdentifier
@@ -7351,35 +7997,25 @@ func (s *ImportPathIdentifierContext) Accept(visitor antlr.ParseTreeVisitor) int
 }
 
 func (p *MojoParser) ImportPathIdentifier() (localctx IImportPathIdentifierContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportPathIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 66, MojoParserRULE_importPathIdentifier)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(760)
 		p.DeclarationIdentifier()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportAllClauseContext is an interface to support dynamic dispatch.
@@ -7389,20 +8025,29 @@ type IImportAllClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DOT() antlr.TerminalNode
+	STAR() antlr.TerminalNode
+
 	// IsImportAllClauseContext differentiates from other interfaces.
 	IsImportAllClauseContext()
 }
 
 type ImportAllClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportAllClauseContext() *ImportAllClauseContext {
 	var p = new(ImportAllClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importAllClause
 	return p
+}
+
+func InitEmptyImportAllClauseContext(p *ImportAllClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importAllClause
 }
 
 func (*ImportAllClauseContext) IsImportAllClauseContext() {}
@@ -7410,7 +8055,7 @@ func (*ImportAllClauseContext) IsImportAllClauseContext() {}
 func NewImportAllClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportAllClauseContext {
 	var p = new(ImportAllClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importAllClause
@@ -7447,39 +8092,37 @@ func (s *ImportAllClauseContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) ImportAllClause() (localctx IImportAllClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportAllClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 68, MojoParserRULE_importAllClause)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(762)
 		p.Match(MojoParserDOT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(763)
 		p.Match(MojoParserSTAR)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportValueAsClauseContext is an interface to support dynamic dispatch.
@@ -7489,20 +8132,29 @@ type IImportValueAsClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_AS() antlr.TerminalNode
+	DeclarationIdentifier() IDeclarationIdentifierContext
+
 	// IsImportValueAsClauseContext differentiates from other interfaces.
 	IsImportValueAsClauseContext()
 }
 
 type ImportValueAsClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportValueAsClauseContext() *ImportValueAsClauseContext {
 	var p = new(ImportValueAsClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importValueAsClause
 	return p
+}
+
+func InitEmptyImportValueAsClauseContext(p *ImportValueAsClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importValueAsClause
 }
 
 func (*ImportValueAsClauseContext) IsImportValueAsClauseContext() {}
@@ -7510,7 +8162,7 @@ func (*ImportValueAsClauseContext) IsImportValueAsClauseContext() {}
 func NewImportValueAsClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportValueAsClauseContext {
 	var p = new(ImportValueAsClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importValueAsClause
@@ -7559,39 +8211,33 @@ func (s *ImportValueAsClauseContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) ImportValueAsClause() (localctx IImportValueAsClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportValueAsClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 70, MojoParserRULE_importValueAsClause)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(765)
 		p.Match(MojoParserKEYWORD_AS)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(766)
 		p.DeclarationIdentifier()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportTypeClauseContext is an interface to support dynamic dispatch.
@@ -7601,20 +8247,30 @@ type IImportTypeClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DOT() antlr.TerminalNode
+	TypeName() ITypeNameContext
+	ImportTypeAsClause() IImportTypeAsClauseContext
+
 	// IsImportTypeClauseContext differentiates from other interfaces.
 	IsImportTypeClauseContext()
 }
 
 type ImportTypeClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportTypeClauseContext() *ImportTypeClauseContext {
 	var p = new(ImportTypeClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importTypeClause
 	return p
+}
+
+func InitEmptyImportTypeClauseContext(p *ImportTypeClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importTypeClause
 }
 
 func (*ImportTypeClauseContext) IsImportTypeClauseContext() {}
@@ -7622,7 +8278,7 @@ func (*ImportTypeClauseContext) IsImportTypeClauseContext() {}
 func NewImportTypeClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportTypeClauseContext {
 	var p = new(ImportTypeClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importTypeClause
@@ -7687,33 +8343,18 @@ func (s *ImportTypeClauseContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) ImportTypeClause() (localctx IImportTypeClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportTypeClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 72, MojoParserRULE_importTypeClause)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(768)
 		p.Match(MojoParserDOT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(769)
@@ -7721,6 +8362,9 @@ func (p *MojoParser) ImportTypeClause() (localctx IImportTypeClauseContext) {
 	}
 	p.SetState(771)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserKEYWORD_AS {
@@ -7731,7 +8375,17 @@ func (p *MojoParser) ImportTypeClause() (localctx IImportTypeClauseContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportTypeAsClauseContext is an interface to support dynamic dispatch.
@@ -7741,20 +8395,29 @@ type IImportTypeAsClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_AS() antlr.TerminalNode
+	TypeName() ITypeNameContext
+
 	// IsImportTypeAsClauseContext differentiates from other interfaces.
 	IsImportTypeAsClauseContext()
 }
 
 type ImportTypeAsClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportTypeAsClauseContext() *ImportTypeAsClauseContext {
 	var p = new(ImportTypeAsClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importTypeAsClause
 	return p
+}
+
+func InitEmptyImportTypeAsClauseContext(p *ImportTypeAsClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importTypeAsClause
 }
 
 func (*ImportTypeAsClauseContext) IsImportTypeAsClauseContext() {}
@@ -7762,7 +8425,7 @@ func (*ImportTypeAsClauseContext) IsImportTypeAsClauseContext() {}
 func NewImportTypeAsClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportTypeAsClauseContext {
 	var p = new(ImportTypeAsClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importTypeAsClause
@@ -7811,39 +8474,33 @@ func (s *ImportTypeAsClauseContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) ImportTypeAsClause() (localctx IImportTypeAsClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportTypeAsClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 74, MojoParserRULE_importTypeAsClause)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(773)
 		p.Match(MojoParserKEYWORD_AS)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(774)
 		p.TypeName()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportGroupClauseContext is an interface to support dynamic dispatch.
@@ -7853,20 +8510,33 @@ type IImportGroupClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DOT() antlr.TerminalNode
+	LCURLY() antlr.TerminalNode
+	ImportGroup() IImportGroupContext
+	RCURLY() antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsImportGroupClauseContext differentiates from other interfaces.
 	IsImportGroupClauseContext()
 }
 
 type ImportGroupClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportGroupClauseContext() *ImportGroupClauseContext {
 	var p = new(ImportGroupClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importGroupClause
 	return p
+}
+
+func InitEmptyImportGroupClauseContext(p *ImportGroupClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importGroupClause
 }
 
 func (*ImportGroupClauseContext) IsImportGroupClauseContext() {}
@@ -7874,7 +8544,7 @@ func (*ImportGroupClauseContext) IsImportGroupClauseContext() {}
 func NewImportGroupClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportGroupClauseContext {
 	var p = new(ImportGroupClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importGroupClause
@@ -7939,50 +8609,49 @@ func (s *ImportGroupClauseContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) ImportGroupClause() (localctx IImportGroupClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportGroupClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 76, MojoParserRULE_importGroupClause)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(776)
 		p.Match(MojoParserDOT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(777)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(781)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(778)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(783)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -7991,24 +8660,48 @@ func (p *MojoParser) ImportGroupClause() (localctx IImportGroupClauseContext) {
 	}
 	p.SetState(788)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(785)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(790)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(791)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportGroupContext is an interface to support dynamic dispatch.
@@ -8018,20 +8711,35 @@ type IImportGroupContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllImportValue() []IImportValueContext
+	ImportValue(i int) IImportValueContext
+	AllImportType() []IImportTypeContext
+	ImportType(i int) IImportTypeContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsImportGroupContext differentiates from other interfaces.
 	IsImportGroupContext()
 }
 
 type ImportGroupContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportGroupContext() *ImportGroupContext {
 	var p = new(ImportGroupContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importGroup
 	return p
+}
+
+func InitEmptyImportGroupContext(p *ImportGroupContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importGroup
 }
 
 func (*ImportGroupContext) IsImportGroupContext() {}
@@ -8039,7 +8747,7 @@ func (*ImportGroupContext) IsImportGroupContext() {}
 func NewImportGroupContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportGroupContext {
 	var p = new(ImportGroupContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importGroup
@@ -8199,34 +8907,18 @@ func (s *ImportGroupContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) ImportGroup() (localctx IImportGroupContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportGroupContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 78, MojoParserRULE_importGroup)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(795)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_CONTINUE, MojoParserKEYWORD_ELSE, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FALSE, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_OR, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TRUE, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
@@ -8242,12 +8934,18 @@ func (p *MojoParser) ImportGroup() (localctx IImportGroupContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 	p.SetState(810)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 62, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 62, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -8256,20 +8954,33 @@ func (p *MojoParser) ImportGroup() (localctx IImportGroupContext) {
 			}
 			p.SetState(801)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(798)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(803)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			p.SetState(806)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 
 			switch p.GetTokenStream().LA(1) {
 			case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_CONTINUE, MojoParserKEYWORD_ELSE, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FALSE, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_OR, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TRUE, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
@@ -8285,26 +8996,45 @@ func (p *MojoParser) ImportGroup() (localctx IImportGroupContext) {
 				}
 
 			default:
-				panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+				p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+				goto errorExit
 			}
 
 		}
 		p.SetState(812)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 62, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 62, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(814)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 63, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 63, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(813)
 			p.Eov()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportValueContext is an interface to support dynamic dispatch.
@@ -8314,20 +9044,29 @@ type IImportValueContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DeclarationIdentifier() IDeclarationIdentifierContext
+	ImportValueAsClause() IImportValueAsClauseContext
+
 	// IsImportValueContext differentiates from other interfaces.
 	IsImportValueContext()
 }
 
 type ImportValueContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportValueContext() *ImportValueContext {
 	var p = new(ImportValueContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importValue
 	return p
+}
+
+func InitEmptyImportValueContext(p *ImportValueContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importValue
 }
 
 func (*ImportValueContext) IsImportValueContext() {}
@@ -8335,7 +9074,7 @@ func (*ImportValueContext) IsImportValueContext() {}
 func NewImportValueContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportValueContext {
 	var p = new(ImportValueContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importValue
@@ -8396,28 +9135,9 @@ func (s *ImportValueContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) ImportValue() (localctx IImportValueContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportValueContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 80, MojoParserRULE_importValue)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -8426,6 +9146,9 @@ func (p *MojoParser) ImportValue() (localctx IImportValueContext) {
 	}
 	p.SetState(818)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserKEYWORD_AS {
@@ -8436,7 +9159,17 @@ func (p *MojoParser) ImportValue() (localctx IImportValueContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImportTypeContext is an interface to support dynamic dispatch.
@@ -8446,20 +9179,29 @@ type IImportTypeContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeName() ITypeNameContext
+	ImportTypeAsClause() IImportTypeAsClauseContext
+
 	// IsImportTypeContext differentiates from other interfaces.
 	IsImportTypeContext()
 }
 
 type ImportTypeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImportTypeContext() *ImportTypeContext {
 	var p = new(ImportTypeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_importType
 	return p
+}
+
+func InitEmptyImportTypeContext(p *ImportTypeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_importType
 }
 
 func (*ImportTypeContext) IsImportTypeContext() {}
@@ -8467,7 +9209,7 @@ func (*ImportTypeContext) IsImportTypeContext() {}
 func NewImportTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImportTypeContext {
 	var p = new(ImportTypeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_importType
@@ -8528,28 +9270,9 @@ func (s *ImportTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) ImportType() (localctx IImportTypeContext) {
-	this := p
-	_ = this
-
 	localctx = NewImportTypeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 82, MojoParserRULE_importType)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -8558,6 +9281,9 @@ func (p *MojoParser) ImportType() (localctx IImportTypeContext) {
 	}
 	p.SetState(822)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserKEYWORD_AS {
@@ -8568,7 +9294,17 @@ func (p *MojoParser) ImportType() (localctx IImportTypeContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IConstantDeclarationContext is an interface to support dynamic dispatch.
@@ -8578,20 +9314,29 @@ type IConstantDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_CONST() antlr.TerminalNode
+	PatternInitializers() IPatternInitializersContext
+
 	// IsConstantDeclarationContext differentiates from other interfaces.
 	IsConstantDeclarationContext()
 }
 
 type ConstantDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyConstantDeclarationContext() *ConstantDeclarationContext {
 	var p = new(ConstantDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_constantDeclaration
 	return p
+}
+
+func InitEmptyConstantDeclarationContext(p *ConstantDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_constantDeclaration
 }
 
 func (*ConstantDeclarationContext) IsConstantDeclarationContext() {}
@@ -8599,7 +9344,7 @@ func (*ConstantDeclarationContext) IsConstantDeclarationContext() {}
 func NewConstantDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ConstantDeclarationContext {
 	var p = new(ConstantDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_constantDeclaration
@@ -8648,39 +9393,33 @@ func (s *ConstantDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) ConstantDeclaration() (localctx IConstantDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewConstantDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 84, MojoParserRULE_constantDeclaration)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(824)
 		p.Match(MojoParserKEYWORD_CONST)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(825)
 		p.PatternInitializers()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPatternInitializersContext is an interface to support dynamic dispatch.
@@ -8690,20 +9429,37 @@ type IPatternInitializersContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllPatternInitializer() []IPatternInitializerContext
+	PatternInitializer(i int) IPatternInitializerContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	LCURLY() antlr.TerminalNode
+	AllDocumentedPatternInitializer() []IDocumentedPatternInitializerContext
+	DocumentedPatternInitializer(i int) IDocumentedPatternInitializerContext
+	RCURLY() antlr.TerminalNode
+
 	// IsPatternInitializersContext differentiates from other interfaces.
 	IsPatternInitializersContext()
 }
 
 type PatternInitializersContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPatternInitializersContext() *PatternInitializersContext {
 	var p = new(PatternInitializersContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_patternInitializers
 	return p
+}
+
+func InitEmptyPatternInitializersContext(p *PatternInitializersContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_patternInitializers
 }
 
 func (*PatternInitializersContext) IsPatternInitializersContext() {}
@@ -8711,7 +9467,7 @@ func (*PatternInitializersContext) IsPatternInitializersContext() {}
 func NewPatternInitializersContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PatternInitializersContext {
 	var p = new(PatternInitializersContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_patternInitializers
@@ -8879,34 +9635,19 @@ func (s *PatternInitializersContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) PatternInitializers() (localctx IPatternInitializersContext) {
-	this := p
-	_ = this
-
 	localctx = NewPatternInitializersContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 86, MojoParserRULE_patternInitializers)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
 	p.SetState(875)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 73, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 73, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -8915,8 +9656,13 @@ func (p *MojoParser) PatternInitializers() (localctx IPatternInitializersContext
 		}
 		p.SetState(839)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 67, p.GetParserRuleContext())
-
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 67, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 		for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 			if _alt == 1 {
 				{
@@ -8925,16 +9671,26 @@ func (p *MojoParser) PatternInitializers() (localctx IPatternInitializersContext
 				}
 				p.SetState(832)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				for _la == MojoParserEOL {
 					{
 						p.SetState(829)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
 					p.SetState(834)
 					p.GetErrorHandler().Sync(p)
+					if p.HasError() {
+						goto errorExit
+					}
 					_la = p.GetTokenStream().LA(1)
 				}
 				{
@@ -8945,7 +9701,13 @@ func (p *MojoParser) PatternInitializers() (localctx IPatternInitializersContext
 			}
 			p.SetState(841)
 			p.GetErrorHandler().Sync(p)
-			_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 67, p.GetParserRuleContext())
+			if p.HasError() {
+				goto errorExit
+			}
+			_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 67, p.GetParserRuleContext())
+			if p.HasError() {
+				goto errorExit
+			}
 		}
 
 	case 2:
@@ -8953,19 +9715,33 @@ func (p *MojoParser) PatternInitializers() (localctx IPatternInitializersContext
 		{
 			p.SetState(842)
 			p.Match(MojoParserLCURLY)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		p.SetState(846)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(843)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(848)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -8974,8 +9750,13 @@ func (p *MojoParser) PatternInitializers() (localctx IPatternInitializersContext
 		}
 		p.SetState(861)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 70, p.GetParserRuleContext())
-
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 70, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 		for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 			if _alt == 1 {
 				{
@@ -8984,16 +9765,26 @@ func (p *MojoParser) PatternInitializers() (localctx IPatternInitializersContext
 				}
 				p.SetState(854)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				for _la == MojoParserEOL {
 					{
 						p.SetState(851)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
 					p.SetState(856)
 					p.GetErrorHandler().Sync(p)
+					if p.HasError() {
+						goto errorExit
+					}
 					_la = p.GetTokenStream().LA(1)
 				}
 				{
@@ -9004,40 +9795,74 @@ func (p *MojoParser) PatternInitializers() (localctx IPatternInitializersContext
 			}
 			p.SetState(863)
 			p.GetErrorHandler().Sync(p)
-			_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 70, p.GetParserRuleContext())
+			if p.HasError() {
+				goto errorExit
+			}
+			_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 70, p.GetParserRuleContext())
+			if p.HasError() {
+				goto errorExit
+			}
 		}
 		p.SetState(865)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 71, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 71, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(864)
 				p.Eov()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 		p.SetState(870)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(867)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(872)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
 			p.SetState(873)
 			p.Match(MojoParserRCURLY)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IDocumentedPatternInitializerContext is an interface to support dynamic dispatch.
@@ -9047,20 +9872,32 @@ type IDocumentedPatternInitializerContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	PatternInitializer() IPatternInitializerContext
+	Document() IDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	Attributes() IAttributesContext
+
 	// IsDocumentedPatternInitializerContext differentiates from other interfaces.
 	IsDocumentedPatternInitializerContext()
 }
 
 type DocumentedPatternInitializerContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyDocumentedPatternInitializerContext() *DocumentedPatternInitializerContext {
 	var p = new(DocumentedPatternInitializerContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_documentedPatternInitializer
 	return p
+}
+
+func InitEmptyDocumentedPatternInitializerContext(p *DocumentedPatternInitializerContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_documentedPatternInitializer
 }
 
 func (*DocumentedPatternInitializerContext) IsDocumentedPatternInitializerContext() {}
@@ -9068,7 +9905,7 @@ func (*DocumentedPatternInitializerContext) IsDocumentedPatternInitializerContex
 func NewDocumentedPatternInitializerContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DocumentedPatternInitializerContext {
 	var p = new(DocumentedPatternInitializerContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_documentedPatternInitializer
@@ -9153,32 +9990,16 @@ func (s *DocumentedPatternInitializerContext) Accept(visitor antlr.ParseTreeVisi
 }
 
 func (p *MojoParser) DocumentedPatternInitializer() (localctx IDocumentedPatternInitializerContext) {
-	this := p
-	_ = this
-
 	localctx = NewDocumentedPatternInitializerContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 88, MojoParserRULE_documentedPatternInitializer)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(880)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLINE_DOCUMENT {
@@ -9189,11 +10010,18 @@ func (p *MojoParser) DocumentedPatternInitializer() (localctx IDocumentedPattern
 		{
 			p.SetState(878)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	}
 	p.SetState(885)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -9204,6 +10032,10 @@ func (p *MojoParser) DocumentedPatternInitializer() (localctx IDocumentedPattern
 		{
 			p.SetState(883)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	}
@@ -9212,7 +10044,17 @@ func (p *MojoParser) DocumentedPatternInitializer() (localctx IDocumentedPattern
 		p.PatternInitializer()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPatternInitializerContext is an interface to support dynamic dispatch.
@@ -9222,20 +10064,29 @@ type IPatternInitializerContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Pattern() IPatternContext
+	Initializer() IInitializerContext
+
 	// IsPatternInitializerContext differentiates from other interfaces.
 	IsPatternInitializerContext()
 }
 
 type PatternInitializerContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPatternInitializerContext() *PatternInitializerContext {
 	var p = new(PatternInitializerContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_patternInitializer
 	return p
+}
+
+func InitEmptyPatternInitializerContext(p *PatternInitializerContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_patternInitializer
 }
 
 func (*PatternInitializerContext) IsPatternInitializerContext() {}
@@ -9243,7 +10094,7 @@ func (*PatternInitializerContext) IsPatternInitializerContext() {}
 func NewPatternInitializerContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PatternInitializerContext {
 	var p = new(PatternInitializerContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_patternInitializer
@@ -9304,28 +10155,9 @@ func (s *PatternInitializerContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) PatternInitializer() (localctx IPatternInitializerContext) {
-	this := p
-	_ = this
-
 	localctx = NewPatternInitializerContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 90, MojoParserRULE_patternInitializer)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -9334,6 +10166,9 @@ func (p *MojoParser) PatternInitializer() (localctx IPatternInitializerContext) 
 	}
 	p.SetState(891)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserEQUAL {
@@ -9344,7 +10179,17 @@ func (p *MojoParser) PatternInitializer() (localctx IPatternInitializerContext) 
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IInitializerContext is an interface to support dynamic dispatch.
@@ -9354,20 +10199,31 @@ type IInitializerContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AssignmentOperator() IAssignmentOperatorContext
+	Expression() IExpressionContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsInitializerContext differentiates from other interfaces.
 	IsInitializerContext()
 }
 
 type InitializerContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyInitializerContext() *InitializerContext {
 	var p = new(InitializerContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_initializer
 	return p
+}
+
+func InitEmptyInitializerContext(p *InitializerContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_initializer
 }
 
 func (*InitializerContext) IsInitializerContext() {}
@@ -9375,7 +10231,7 @@ func (*InitializerContext) IsInitializerContext() {}
 func NewInitializerContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *InitializerContext {
 	var p = new(InitializerContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_initializer
@@ -9444,28 +10300,9 @@ func (s *InitializerContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) Initializer() (localctx IInitializerContext) {
-	this := p
-	_ = this
-
 	localctx = NewInitializerContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 92, MojoParserRULE_initializer)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -9474,16 +10311,26 @@ func (p *MojoParser) Initializer() (localctx IInitializerContext) {
 	}
 	p.SetState(897)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(894)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(899)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -9491,7 +10338,17 @@ func (p *MojoParser) Initializer() (localctx IInitializerContext) {
 		p.Expression()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IVariableDeclarationContext is an interface to support dynamic dispatch.
@@ -9501,20 +10358,32 @@ type IVariableDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_VAR() antlr.TerminalNode
+	PatternInitializers() IPatternInitializersContext
+	IdentifierPattern() IIdentifierPatternContext
+	COLON_EQUAL() antlr.TerminalNode
+	Expression() IExpressionContext
+
 	// IsVariableDeclarationContext differentiates from other interfaces.
 	IsVariableDeclarationContext()
 }
 
 type VariableDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyVariableDeclarationContext() *VariableDeclarationContext {
 	var p = new(VariableDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_variableDeclaration
 	return p
+}
+
+func InitEmptyVariableDeclarationContext(p *VariableDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_variableDeclaration
 }
 
 func (*VariableDeclarationContext) IsVariableDeclarationContext() {}
@@ -9522,7 +10391,7 @@ func (*VariableDeclarationContext) IsVariableDeclarationContext() {}
 func NewVariableDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *VariableDeclarationContext {
 	var p = new(VariableDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_variableDeclaration
@@ -9607,30 +10476,13 @@ func (s *VariableDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) VariableDeclaration() (localctx IVariableDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewVariableDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 94, MojoParserRULE_variableDeclaration)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(908)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserKEYWORD_VAR:
@@ -9638,6 +10490,10 @@ func (p *MojoParser) VariableDeclaration() (localctx IVariableDeclarationContext
 		{
 			p.SetState(902)
 			p.Match(MojoParserKEYWORD_VAR)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(903)
@@ -9653,6 +10509,10 @@ func (p *MojoParser) VariableDeclaration() (localctx IVariableDeclarationContext
 		{
 			p.SetState(905)
 			p.Match(MojoParserCOLON_EQUAL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(906)
@@ -9660,10 +10520,21 @@ func (p *MojoParser) VariableDeclaration() (localctx IVariableDeclarationContext
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeAliasDeclarationContext is an interface to support dynamic dispatch.
@@ -9673,20 +10544,33 @@ type ITypeAliasDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_TYPE() antlr.TerminalNode
+	TypeAliasName() ITypeAliasNameContext
+	TypeAliasAssignment() ITypeAliasAssignmentContext
+	GenericParameterClause() IGenericParameterClauseContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsTypeAliasDeclarationContext differentiates from other interfaces.
 	IsTypeAliasDeclarationContext()
 }
 
 type TypeAliasDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeAliasDeclarationContext() *TypeAliasDeclarationContext {
 	var p = new(TypeAliasDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeAliasDeclaration
 	return p
+}
+
+func InitEmptyTypeAliasDeclarationContext(p *TypeAliasDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeAliasDeclaration
 }
 
 func (*TypeAliasDeclarationContext) IsTypeAliasDeclarationContext() {}
@@ -9694,7 +10578,7 @@ func (*TypeAliasDeclarationContext) IsTypeAliasDeclarationContext() {}
 func NewTypeAliasDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeAliasDeclarationContext {
 	var p = new(TypeAliasDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeAliasDeclaration
@@ -9783,33 +10667,18 @@ func (s *TypeAliasDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) int
 }
 
 func (p *MojoParser) TypeAliasDeclaration() (localctx ITypeAliasDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeAliasDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 96, MojoParserRULE_typeAliasDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(910)
 		p.Match(MojoParserKEYWORD_TYPE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(911)
@@ -9817,6 +10686,9 @@ func (p *MojoParser) TypeAliasDeclaration() (localctx ITypeAliasDeclarationConte
 	}
 	p.SetState(913)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLT {
@@ -9828,16 +10700,26 @@ func (p *MojoParser) TypeAliasDeclaration() (localctx ITypeAliasDeclarationConte
 	}
 	p.SetState(918)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(915)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(920)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -9845,7 +10727,17 @@ func (p *MojoParser) TypeAliasDeclaration() (localctx ITypeAliasDeclarationConte
 		p.TypeAliasAssignment()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeAliasNameContext is an interface to support dynamic dispatch.
@@ -9855,20 +10747,28 @@ type ITypeAliasNameContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeName() ITypeNameContext
+
 	// IsTypeAliasNameContext differentiates from other interfaces.
 	IsTypeAliasNameContext()
 }
 
 type TypeAliasNameContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeAliasNameContext() *TypeAliasNameContext {
 	var p = new(TypeAliasNameContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeAliasName
 	return p
+}
+
+func InitEmptyTypeAliasNameContext(p *TypeAliasNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeAliasName
 }
 
 func (*TypeAliasNameContext) IsTypeAliasNameContext() {}
@@ -9876,7 +10776,7 @@ func (*TypeAliasNameContext) IsTypeAliasNameContext() {}
 func NewTypeAliasNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeAliasNameContext {
 	var p = new(TypeAliasNameContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeAliasName
@@ -9921,35 +10821,25 @@ func (s *TypeAliasNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) TypeAliasName() (localctx ITypeAliasNameContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeAliasNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 98, MojoParserRULE_typeAliasName)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(923)
 		p.TypeName()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeAliasAssignmentContext is an interface to support dynamic dispatch.
@@ -9959,20 +10849,33 @@ type ITypeAliasAssignmentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AssignmentOperator() IAssignmentOperatorContext
+	Type_() IType_Context
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	Attributes() IAttributesContext
+	FollowingDocument() IFollowingDocumentContext
+
 	// IsTypeAliasAssignmentContext differentiates from other interfaces.
 	IsTypeAliasAssignmentContext()
 }
 
 type TypeAliasAssignmentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeAliasAssignmentContext() *TypeAliasAssignmentContext {
 	var p = new(TypeAliasAssignmentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeAliasAssignment
 	return p
+}
+
+func InitEmptyTypeAliasAssignmentContext(p *TypeAliasAssignmentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeAliasAssignment
 }
 
 func (*TypeAliasAssignmentContext) IsTypeAliasAssignmentContext() {}
@@ -9980,7 +10883,7 @@ func (*TypeAliasAssignmentContext) IsTypeAliasAssignmentContext() {}
 func NewTypeAliasAssignmentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeAliasAssignmentContext {
 	var p = new(TypeAliasAssignmentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeAliasAssignment
@@ -10081,28 +10984,9 @@ func (s *TypeAliasAssignmentContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) TypeAliasAssignment() (localctx ITypeAliasAssignmentContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeAliasAssignmentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 100, MojoParserRULE_typeAliasAssignment)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -10111,16 +10995,26 @@ func (p *MojoParser) TypeAliasAssignment() (localctx ITypeAliasAssignmentContext
 	}
 	p.SetState(929)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(926)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(931)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -10129,6 +11023,9 @@ func (p *MojoParser) TypeAliasAssignment() (localctx ITypeAliasAssignmentContext
 	}
 	p.SetState(934)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -10141,15 +11038,27 @@ func (p *MojoParser) TypeAliasAssignment() (localctx ITypeAliasAssignmentContext
 	p.SetState(937)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 83, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 83, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(936)
 			p.FollowingDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionDeclarationContext is an interface to support dynamic dispatch.
@@ -10159,20 +11068,34 @@ type IFunctionDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_FUNC() antlr.TerminalNode
+	FunctionName() IFunctionNameContext
+	FunctionSignature() IFunctionSignatureContext
+	GenericParameterClause() IGenericParameterClauseContext
+	FunctionBody() IFunctionBodyContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsFunctionDeclarationContext differentiates from other interfaces.
 	IsFunctionDeclarationContext()
 }
 
 type FunctionDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionDeclarationContext() *FunctionDeclarationContext {
 	var p = new(FunctionDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionDeclaration
 	return p
+}
+
+func InitEmptyFunctionDeclarationContext(p *FunctionDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionDeclaration
 }
 
 func (*FunctionDeclarationContext) IsFunctionDeclarationContext() {}
@@ -10180,7 +11103,7 @@ func (*FunctionDeclarationContext) IsFunctionDeclarationContext() {}
 func NewFunctionDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionDeclarationContext {
 	var p = new(FunctionDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionDeclaration
@@ -10285,33 +11208,18 @@ func (s *FunctionDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) FunctionDeclaration() (localctx IFunctionDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 102, MojoParserRULE_functionDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(939)
 		p.Match(MojoParserKEYWORD_FUNC)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(940)
@@ -10319,6 +11227,9 @@ func (p *MojoParser) FunctionDeclaration() (localctx IFunctionDeclarationContext
 	}
 	p.SetState(942)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLT {
@@ -10335,19 +11246,29 @@ func (p *MojoParser) FunctionDeclaration() (localctx IFunctionDeclarationContext
 	p.SetState(952)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 86, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 86, p.GetParserRuleContext()) == 1 {
 		p.SetState(948)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(945)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(950)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -10355,9 +11276,21 @@ func (p *MojoParser) FunctionDeclaration() (localctx IFunctionDeclarationContext
 			p.FunctionBody()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionNameContext is an interface to support dynamic dispatch.
@@ -10367,20 +11300,29 @@ type IFunctionNameContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DeclarationIdentifier() IDeclarationIdentifierContext
+	Operator() IOperatorContext
+
 	// IsFunctionNameContext differentiates from other interfaces.
 	IsFunctionNameContext()
 }
 
 type FunctionNameContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionNameContext() *FunctionNameContext {
 	var p = new(FunctionNameContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionName
 	return p
+}
+
+func InitEmptyFunctionNameContext(p *FunctionNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionName
 }
 
 func (*FunctionNameContext) IsFunctionNameContext() {}
@@ -10388,7 +11330,7 @@ func (*FunctionNameContext) IsFunctionNameContext() {}
 func NewFunctionNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionNameContext {
 	var p = new(FunctionNameContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionName
@@ -10449,30 +11391,13 @@ func (s *FunctionNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 }
 
 func (p *MojoParser) FunctionName() (localctx IFunctionNameContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 104, MojoParserRULE_functionName)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(956)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_CONTINUE, MojoParserKEYWORD_ELSE, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FALSE, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_OR, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TRUE, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR, MojoParserVALUE_IDENTIFIER:
@@ -10490,10 +11415,21 @@ func (p *MojoParser) FunctionName() (localctx IFunctionNameContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionSignatureContext is an interface to support dynamic dispatch.
@@ -10503,20 +11439,32 @@ type IFunctionSignatureContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	FunctionParameterClause() IFunctionParameterClauseContext
+	FollowingDocument() IFollowingDocumentContext
+	FunctionResult() IFunctionResultContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsFunctionSignatureContext differentiates from other interfaces.
 	IsFunctionSignatureContext()
 }
 
 type FunctionSignatureContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionSignatureContext() *FunctionSignatureContext {
 	var p = new(FunctionSignatureContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionSignature
 	return p
+}
+
+func InitEmptyFunctionSignatureContext(p *FunctionSignatureContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionSignature
 }
 
 func (*FunctionSignatureContext) IsFunctionSignatureContext() {}
@@ -10524,7 +11472,7 @@ func (*FunctionSignatureContext) IsFunctionSignatureContext() {}
 func NewFunctionSignatureContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionSignatureContext {
 	var p = new(FunctionSignatureContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionSignature
@@ -10609,28 +11557,9 @@ func (s *FunctionSignatureContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) FunctionSignature() (localctx IFunctionSignatureContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionSignatureContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 106, MojoParserRULE_functionSignature)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -10640,29 +11569,41 @@ func (p *MojoParser) FunctionSignature() (localctx IFunctionSignatureContext) {
 	p.SetState(960)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 88, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 88, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(959)
 			p.FollowingDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(969)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 90, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 90, p.GetParserRuleContext()) == 1 {
 		p.SetState(965)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(962)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(967)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -10670,9 +11611,21 @@ func (p *MojoParser) FunctionSignature() (localctx IFunctionSignatureContext) {
 			p.FunctionResult()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionResultContext is an interface to support dynamic dispatch.
@@ -10682,20 +11635,35 @@ type IFunctionResultContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	ArrowOperator() IArrowOperatorContext
+	Type_() IType_Context
+	LabelIdentifier() ILabelIdentifierContext
+	Attributes() IAttributesContext
+	FollowingDocument() IFollowingDocumentContext
+	COLON() antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsFunctionResultContext differentiates from other interfaces.
 	IsFunctionResultContext()
 }
 
 type FunctionResultContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionResultContext() *FunctionResultContext {
 	var p = new(FunctionResultContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionResult
 	return p
+}
+
+func InitEmptyFunctionResultContext(p *FunctionResultContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionResult
 }
 
 func (*FunctionResultContext) IsFunctionResultContext() {}
@@ -10703,7 +11671,7 @@ func (*FunctionResultContext) IsFunctionResultContext() {}
 func NewFunctionResultContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionResultContext {
 	var p = new(FunctionResultContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionResult
@@ -10824,28 +11792,9 @@ func (s *FunctionResultContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) FunctionResult() (localctx IFunctionResultContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionResultContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 108, MojoParserRULE_functionResult)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -10855,23 +11804,32 @@ func (p *MojoParser) FunctionResult() (localctx IFunctionResultContext) {
 	p.SetState(976)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 92, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 92, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(972)
 			p.LabelIdentifier()
 		}
 		p.SetState(974)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserCOLON {
 			{
 				p.SetState(973)
 				p.Match(MojoParserCOLON)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	{
 		p.SetState(978)
@@ -10879,6 +11837,9 @@ func (p *MojoParser) FunctionResult() (localctx IFunctionResultContext) {
 	}
 	p.SetState(980)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -10891,19 +11852,29 @@ func (p *MojoParser) FunctionResult() (localctx IFunctionResultContext) {
 	p.SetState(989)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 95, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 95, p.GetParserRuleContext()) == 1 {
 		p.SetState(985)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(982)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(987)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -10911,9 +11882,21 @@ func (p *MojoParser) FunctionResult() (localctx IFunctionResultContext) {
 			p.FollowingDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionBodyContext is an interface to support dynamic dispatch.
@@ -10923,20 +11906,33 @@ type IFunctionBodyContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LCURLY() antlr.TerminalNode
+	RCURLY() antlr.TerminalNode
+	FollowingDocument() IFollowingDocumentContext
+	Statements() IStatementsContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsFunctionBodyContext differentiates from other interfaces.
 	IsFunctionBodyContext()
 }
 
 type FunctionBodyContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionBodyContext() *FunctionBodyContext {
 	var p = new(FunctionBodyContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionBody
 	return p
+}
+
+func InitEmptyFunctionBodyContext(p *FunctionBodyContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionBody
 }
 
 func (*FunctionBodyContext) IsFunctionBodyContext() {}
@@ -10944,7 +11940,7 @@ func (*FunctionBodyContext) IsFunctionBodyContext() {}
 func NewFunctionBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionBodyContext {
 	var p = new(FunctionBodyContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionBody
@@ -11021,36 +12017,24 @@ func (s *FunctionBodyContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 }
 
 func (p *MojoParser) FunctionBody() (localctx IFunctionBodyContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionBodyContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 110, MojoParserRULE_functionBody)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(991)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(993)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -11063,19 +12047,29 @@ func (p *MojoParser) FunctionBody() (localctx IFunctionBodyContext) {
 	p.SetState(1002)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 98, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 98, p.GetParserRuleContext()) == 1 {
 		p.SetState(998)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(995)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1000)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -11083,27 +12077,53 @@ func (p *MojoParser) FunctionBody() (localctx IFunctionBodyContext) {
 			p.Statements()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1007)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1004)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1009)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(1010)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionParameterClauseContext is an interface to support dynamic dispatch.
@@ -11113,20 +12133,32 @@ type IFunctionParameterClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LPAREN() antlr.TerminalNode
+	RPAREN() antlr.TerminalNode
+	FunctionParameters() IFunctionParametersContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsFunctionParameterClauseContext differentiates from other interfaces.
 	IsFunctionParameterClauseContext()
 }
 
 type FunctionParameterClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionParameterClauseContext() *FunctionParameterClauseContext {
 	var p = new(FunctionParameterClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionParameterClause
 	return p
+}
+
+func InitEmptyFunctionParameterClauseContext(p *FunctionParameterClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionParameterClause
 }
 
 func (*FunctionParameterClauseContext) IsFunctionParameterClauseContext() {}
@@ -11134,7 +12166,7 @@ func (*FunctionParameterClauseContext) IsFunctionParameterClauseContext() {}
 func NewFunctionParameterClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionParameterClauseContext {
 	var p = new(FunctionParameterClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionParameterClause
@@ -11195,41 +12227,34 @@ func (s *FunctionParameterClauseContext) Accept(visitor antlr.ParseTreeVisitor) 
 }
 
 func (p *MojoParser) FunctionParameterClause() (localctx IFunctionParameterClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionParameterClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 112, MojoParserRULE_functionParameterClause)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1030)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 102, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 102, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(1012)
 			p.Match(MojoParserLPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1013)
 			p.Match(MojoParserRPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 2:
@@ -11237,19 +12262,33 @@ func (p *MojoParser) FunctionParameterClause() (localctx IFunctionParameterClaus
 		{
 			p.SetState(1014)
 			p.Match(MojoParserLPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		p.SetState(1018)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1015)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1020)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -11258,26 +12297,52 @@ func (p *MojoParser) FunctionParameterClause() (localctx IFunctionParameterClaus
 		}
 		p.SetState(1025)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1022)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1027)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
 			p.SetState(1028)
 			p.Match(MojoParserRPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionParametersContext is an interface to support dynamic dispatch.
@@ -11287,20 +12352,33 @@ type IFunctionParametersContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllFunctionParameter() []IFunctionParameterContext
+	FunctionParameter(i int) IFunctionParameterContext
+	AllEovWithDocument() []IEovWithDocumentContext
+	EovWithDocument(i int) IEovWithDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsFunctionParametersContext differentiates from other interfaces.
 	IsFunctionParametersContext()
 }
 
 type FunctionParametersContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionParametersContext() *FunctionParametersContext {
 	var p = new(FunctionParametersContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionParameters
 	return p
+}
+
+func InitEmptyFunctionParametersContext(p *FunctionParametersContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionParameters
 }
 
 func (*FunctionParametersContext) IsFunctionParametersContext() {}
@@ -11308,7 +12386,7 @@ func (*FunctionParametersContext) IsFunctionParametersContext() {}
 func NewFunctionParametersContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionParametersContext {
 	var p = new(FunctionParametersContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionParameters
@@ -11427,28 +12505,9 @@ func (s *FunctionParametersContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) FunctionParameters() (localctx IFunctionParametersContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionParametersContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 114, MojoParserRULE_functionParameters)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -11459,8 +12518,13 @@ func (p *MojoParser) FunctionParameters() (localctx IFunctionParametersContext) 
 	}
 	p.SetState(1044)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 104, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 104, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -11469,16 +12533,26 @@ func (p *MojoParser) FunctionParameters() (localctx IFunctionParametersContext) 
 			}
 			p.SetState(1037)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1034)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1039)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -11489,20 +12563,38 @@ func (p *MojoParser) FunctionParameters() (localctx IFunctionParametersContext) 
 		}
 		p.SetState(1046)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 104, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 104, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1048)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 105, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 105, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1047)
 			p.EovWithDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionParameterContext is an interface to support dynamic dispatch.
@@ -11512,20 +12604,36 @@ type IFunctionParameterContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LabelIdentifier() ILabelIdentifierContext
+	TypeAnnotation() ITypeAnnotationContext
+	Initializer() IInitializerContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	Type_() IType_Context
+	ELLIPSIS() antlr.TerminalNode
+	COLON() antlr.TerminalNode
+	Attributes() IAttributesContext
+
 	// IsFunctionParameterContext differentiates from other interfaces.
 	IsFunctionParameterContext()
 }
 
 type FunctionParameterContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionParameterContext() *FunctionParameterContext {
 	var p = new(FunctionParameterContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionParameter
 	return p
+}
+
+func InitEmptyFunctionParameterContext(p *FunctionParameterContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionParameter
 }
 
 func (*FunctionParameterContext) IsFunctionParameterContext() {}
@@ -11533,7 +12641,7 @@ func (*FunctionParameterContext) IsFunctionParameterContext() {}
 func NewFunctionParameterContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionParameterContext {
 	var p = new(FunctionParameterContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionParameter
@@ -11658,32 +12766,17 @@ func (s *FunctionParameterContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) FunctionParameter() (localctx IFunctionParameterContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionParameterContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 116, MojoParserRULE_functionParameter)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1070)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 110, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 110, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -11697,19 +12790,29 @@ func (p *MojoParser) FunctionParameter() (localctx IFunctionParameterContext) {
 		p.SetState(1059)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 107, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 107, p.GetParserRuleContext()) == 1 {
 			p.SetState(1055)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1052)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1057)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -11717,6 +12820,8 @@ func (p *MojoParser) FunctionParameter() (localctx IFunctionParameterContext) {
 				p.Initializer()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case 2:
@@ -11727,12 +12832,19 @@ func (p *MojoParser) FunctionParameter() (localctx IFunctionParameterContext) {
 		}
 		p.SetState(1063)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserCOLON {
 			{
 				p.SetState(1062)
 				p.Match(MojoParserCOLON)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
@@ -11743,9 +12855,16 @@ func (p *MojoParser) FunctionParameter() (localctx IFunctionParameterContext) {
 		{
 			p.SetState(1066)
 			p.Match(MojoParserELLIPSIS)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		p.SetState(1068)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserAT {
@@ -11756,9 +12875,21 @@ func (p *MojoParser) FunctionParameter() (localctx IFunctionParameterContext) {
 
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IEnumDeclarationContext is an interface to support dynamic dispatch.
@@ -11768,20 +12899,34 @@ type IEnumDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_ENUM() antlr.TerminalNode
+	EnumName() IEnumNameContext
+	EnumBody() IEnumBodyContext
+	GenericParameterClause() IGenericParameterClauseContext
+	TypeInheritanceClause() ITypeInheritanceClauseContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsEnumDeclarationContext differentiates from other interfaces.
 	IsEnumDeclarationContext()
 }
 
 type EnumDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyEnumDeclarationContext() *EnumDeclarationContext {
 	var p = new(EnumDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_enumDeclaration
 	return p
+}
+
+func InitEmptyEnumDeclarationContext(p *EnumDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_enumDeclaration
 }
 
 func (*EnumDeclarationContext) IsEnumDeclarationContext() {}
@@ -11789,7 +12934,7 @@ func (*EnumDeclarationContext) IsEnumDeclarationContext() {}
 func NewEnumDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *EnumDeclarationContext {
 	var p = new(EnumDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_enumDeclaration
@@ -11894,33 +13039,18 @@ func (s *EnumDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) EnumDeclaration() (localctx IEnumDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewEnumDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 118, MojoParserRULE_enumDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1072)
 		p.Match(MojoParserKEYWORD_ENUM)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1073)
@@ -11928,6 +13058,9 @@ func (p *MojoParser) EnumDeclaration() (localctx IEnumDeclarationContext) {
 	}
 	p.SetState(1075)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLT {
@@ -11940,19 +13073,29 @@ func (p *MojoParser) EnumDeclaration() (localctx IEnumDeclarationContext) {
 	p.SetState(1084)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 113, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 113, p.GetParserRuleContext()) == 1 {
 		p.SetState(1080)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1077)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1082)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -11960,19 +13103,31 @@ func (p *MojoParser) EnumDeclaration() (localctx IEnumDeclarationContext) {
 			p.TypeInheritanceClause()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1089)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1086)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1091)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -11980,7 +13135,17 @@ func (p *MojoParser) EnumDeclaration() (localctx IEnumDeclarationContext) {
 		p.EnumBody()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IEnumBodyContext is an interface to support dynamic dispatch.
@@ -11990,20 +13155,33 @@ type IEnumBodyContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LCURLY() antlr.TerminalNode
+	RCURLY() antlr.TerminalNode
+	FollowingDocument() IFollowingDocumentContext
+	EnumMembers() IEnumMembersContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsEnumBodyContext differentiates from other interfaces.
 	IsEnumBodyContext()
 }
 
 type EnumBodyContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyEnumBodyContext() *EnumBodyContext {
 	var p = new(EnumBodyContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_enumBody
 	return p
+}
+
+func InitEmptyEnumBodyContext(p *EnumBodyContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_enumBody
 }
 
 func (*EnumBodyContext) IsEnumBodyContext() {}
@@ -12011,7 +13189,7 @@ func (*EnumBodyContext) IsEnumBodyContext() {}
 func NewEnumBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *EnumBodyContext {
 	var p = new(EnumBodyContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_enumBody
@@ -12088,36 +13266,24 @@ func (s *EnumBodyContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) EnumBody() (localctx IEnumBodyContext) {
-	this := p
-	_ = this
-
 	localctx = NewEnumBodyContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 120, MojoParserRULE_enumBody)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1094)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1096)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -12130,19 +13296,29 @@ func (p *MojoParser) EnumBody() (localctx IEnumBodyContext) {
 	p.SetState(1105)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 117, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 117, p.GetParserRuleContext()) == 1 {
 		p.SetState(1101)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1098)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1103)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -12150,27 +13326,53 @@ func (p *MojoParser) EnumBody() (localctx IEnumBodyContext) {
 			p.EnumMembers()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1110)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1107)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1112)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(1113)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IEnumNameContext is an interface to support dynamic dispatch.
@@ -12180,20 +13382,28 @@ type IEnumNameContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeName() ITypeNameContext
+
 	// IsEnumNameContext differentiates from other interfaces.
 	IsEnumNameContext()
 }
 
 type EnumNameContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyEnumNameContext() *EnumNameContext {
 	var p = new(EnumNameContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_enumName
 	return p
+}
+
+func InitEmptyEnumNameContext(p *EnumNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_enumName
 }
 
 func (*EnumNameContext) IsEnumNameContext() {}
@@ -12201,7 +13411,7 @@ func (*EnumNameContext) IsEnumNameContext() {}
 func NewEnumNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *EnumNameContext {
 	var p = new(EnumNameContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_enumName
@@ -12246,35 +13456,25 @@ func (s *EnumNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) EnumName() (localctx IEnumNameContext) {
-	this := p
-	_ = this
-
 	localctx = NewEnumNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 122, MojoParserRULE_enumName)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1115)
 		p.TypeName()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IEnumMembersContext is an interface to support dynamic dispatch.
@@ -12284,20 +13484,33 @@ type IEnumMembersContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllEnumMember() []IEnumMemberContext
+	EnumMember(i int) IEnumMemberContext
+	AllEovWithDocument() []IEovWithDocumentContext
+	EovWithDocument(i int) IEovWithDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsEnumMembersContext differentiates from other interfaces.
 	IsEnumMembersContext()
 }
 
 type EnumMembersContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyEnumMembersContext() *EnumMembersContext {
 	var p = new(EnumMembersContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_enumMembers
 	return p
+}
+
+func InitEmptyEnumMembersContext(p *EnumMembersContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_enumMembers
 }
 
 func (*EnumMembersContext) IsEnumMembersContext() {}
@@ -12305,7 +13518,7 @@ func (*EnumMembersContext) IsEnumMembersContext() {}
 func NewEnumMembersContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *EnumMembersContext {
 	var p = new(EnumMembersContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_enumMembers
@@ -12424,28 +13637,9 @@ func (s *EnumMembersContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) EnumMembers() (localctx IEnumMembersContext) {
-	this := p
-	_ = this
-
 	localctx = NewEnumMembersContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 124, MojoParserRULE_enumMembers)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -12456,8 +13650,13 @@ func (p *MojoParser) EnumMembers() (localctx IEnumMembersContext) {
 	}
 	p.SetState(1129)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 120, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 120, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -12466,16 +13665,26 @@ func (p *MojoParser) EnumMembers() (localctx IEnumMembersContext) {
 			}
 			p.SetState(1122)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1119)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1124)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -12486,20 +13695,38 @@ func (p *MojoParser) EnumMembers() (localctx IEnumMembersContext) {
 		}
 		p.SetState(1131)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 120, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 120, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1133)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 121, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 121, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1132)
 			p.EovWithDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IEnumMemberContext is an interface to support dynamic dispatch.
@@ -12509,20 +13736,35 @@ type IEnumMemberContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DeclarationIdentifier() IDeclarationIdentifierContext
+	Document() IDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	AllAttributes() []IAttributesContext
+	Attributes(i int) IAttributesContext
+	Initializer() IInitializerContext
+	FreeFloatingDocument() IFreeFloatingDocumentContext
+
 	// IsEnumMemberContext differentiates from other interfaces.
 	IsEnumMemberContext()
 }
 
 type EnumMemberContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyEnumMemberContext() *EnumMemberContext {
 	var p = new(EnumMemberContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_enumMember
 	return p
+}
+
+func InitEmptyEnumMemberContext(p *EnumMemberContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_enumMember
 }
 
 func (*EnumMemberContext) IsEnumMemberContext() {}
@@ -12530,7 +13772,7 @@ func (*EnumMemberContext) IsEnumMemberContext() {}
 func NewEnumMemberContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *EnumMemberContext {
 	var p = new(EnumMemberContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_enumMember
@@ -12672,36 +13914,24 @@ func (s *EnumMemberContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) EnumMember() (localctx IEnumMemberContext) {
-	this := p
-	_ = this
-
 	localctx = NewEnumMemberContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 126, MojoParserRULE_enumMember)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1159)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 127, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 127, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		p.SetState(1138)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserLINE_DOCUMENT {
@@ -12712,11 +13942,18 @@ func (p *MojoParser) EnumMember() (localctx IEnumMemberContext) {
 			{
 				p.SetState(1136)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 		p.SetState(1143)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserAT {
@@ -12727,6 +13964,10 @@ func (p *MojoParser) EnumMember() (localctx IEnumMemberContext) {
 			{
 				p.SetState(1141)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
@@ -12736,6 +13977,9 @@ func (p *MojoParser) EnumMember() (localctx IEnumMemberContext) {
 		}
 		p.SetState(1147)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserAT {
@@ -12748,19 +13992,29 @@ func (p *MojoParser) EnumMember() (localctx IEnumMemberContext) {
 		p.SetState(1156)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 126, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 126, p.GetParserRuleContext()) == 1 {
 			p.SetState(1152)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1149)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1154)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -12768,6 +14022,8 @@ func (p *MojoParser) EnumMember() (localctx IEnumMemberContext) {
 				p.Initializer()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case 2:
@@ -12777,9 +14033,21 @@ func (p *MojoParser) EnumMember() (localctx IEnumMemberContext) {
 			p.FreeFloatingDocument()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStructDeclarationContext is an interface to support dynamic dispatch.
@@ -12789,20 +14057,31 @@ type IStructDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_TYPE() antlr.TerminalNode
+	StructName() IStructNameContext
+	StructType() IStructTypeContext
+	GenericParameterClause() IGenericParameterClauseContext
+
 	// IsStructDeclarationContext differentiates from other interfaces.
 	IsStructDeclarationContext()
 }
 
 type StructDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStructDeclarationContext() *StructDeclarationContext {
 	var p = new(StructDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_structDeclaration
 	return p
+}
+
+func InitEmptyStructDeclarationContext(p *StructDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_structDeclaration
 }
 
 func (*StructDeclarationContext) IsStructDeclarationContext() {}
@@ -12810,7 +14089,7 @@ func (*StructDeclarationContext) IsStructDeclarationContext() {}
 func NewStructDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StructDeclarationContext {
 	var p = new(StructDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_structDeclaration
@@ -12891,33 +14170,18 @@ func (s *StructDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) StructDeclaration() (localctx IStructDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewStructDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 128, MojoParserRULE_structDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1161)
 		p.Match(MojoParserKEYWORD_TYPE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1162)
@@ -12925,6 +14189,9 @@ func (p *MojoParser) StructDeclaration() (localctx IStructDeclarationContext) {
 	}
 	p.SetState(1164)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLT {
@@ -12939,7 +14206,17 @@ func (p *MojoParser) StructDeclaration() (localctx IStructDeclarationContext) {
 		p.StructType()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStructNameContext is an interface to support dynamic dispatch.
@@ -12949,20 +14226,28 @@ type IStructNameContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeName() ITypeNameContext
+
 	// IsStructNameContext differentiates from other interfaces.
 	IsStructNameContext()
 }
 
 type StructNameContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStructNameContext() *StructNameContext {
 	var p = new(StructNameContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_structName
 	return p
+}
+
+func InitEmptyStructNameContext(p *StructNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_structName
 }
 
 func (*StructNameContext) IsStructNameContext() {}
@@ -12970,7 +14255,7 @@ func (*StructNameContext) IsStructNameContext() {}
 func NewStructNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StructNameContext {
 	var p = new(StructNameContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_structName
@@ -13015,35 +14300,25 @@ func (s *StructNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) StructName() (localctx IStructNameContext) {
-	this := p
-	_ = this
-
 	localctx = NewStructNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 130, MojoParserRULE_structName)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1168)
 		p.TypeName()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStructTypeContext is an interface to support dynamic dispatch.
@@ -13053,20 +14328,31 @@ type IStructTypeContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeInheritanceClause() ITypeInheritanceClauseContext
+	StructBody() IStructBodyContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsStructTypeContext differentiates from other interfaces.
 	IsStructTypeContext()
 }
 
 type StructTypeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStructTypeContext() *StructTypeContext {
 	var p = new(StructTypeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_structType
 	return p
+}
+
+func InitEmptyStructTypeContext(p *StructTypeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_structType
 }
 
 func (*StructTypeContext) IsStructTypeContext() {}
@@ -13074,7 +14360,7 @@ func (*StructTypeContext) IsStructTypeContext() {}
 func NewStructTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StructTypeContext {
 	var p = new(StructTypeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_structType
@@ -13143,46 +14429,37 @@ func (s *StructTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) StructType() (localctx IStructTypeContext) {
-	this := p
-	_ = this
-
 	localctx = NewStructTypeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 132, MojoParserRULE_structType)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1177)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 130, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 130, p.GetParserRuleContext()) == 1 {
 		p.SetState(1173)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1170)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1175)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -13190,23 +14467,35 @@ func (p *MojoParser) StructType() (localctx IStructTypeContext) {
 			p.TypeInheritanceClause()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1186)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 132, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 132, p.GetParserRuleContext()) == 1 {
 		p.SetState(1182)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1179)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1184)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -13214,9 +14503,21 @@ func (p *MojoParser) StructType() (localctx IStructTypeContext) {
 			p.StructBody()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStructBodyContext is an interface to support dynamic dispatch.
@@ -13226,20 +14527,33 @@ type IStructBodyContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LCURLY() antlr.TerminalNode
+	RCURLY() antlr.TerminalNode
+	FollowingDocument() IFollowingDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	StructMembers() IStructMembersContext
+
 	// IsStructBodyContext differentiates from other interfaces.
 	IsStructBodyContext()
 }
 
 type StructBodyContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStructBodyContext() *StructBodyContext {
 	var p = new(StructBodyContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_structBody
 	return p
+}
+
+func InitEmptyStructBodyContext(p *StructBodyContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_structBody
 }
 
 func (*StructBodyContext) IsStructBodyContext() {}
@@ -13247,7 +14561,7 @@ func (*StructBodyContext) IsStructBodyContext() {}
 func NewStructBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StructBodyContext {
 	var p = new(StructBodyContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_structBody
@@ -13324,36 +14638,24 @@ func (s *StructBodyContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) StructBody() (localctx IStructBodyContext) {
-	this := p
-	_ = this
-
 	localctx = NewStructBodyContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 134, MojoParserRULE_structBody)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1188)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1192)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -13364,25 +14666,39 @@ func (p *MojoParser) StructBody() (localctx IStructBodyContext) {
 		{
 			p.SetState(1190)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	}
 	p.SetState(1201)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 135, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 135, p.GetParserRuleContext()) == 1 {
 		p.SetState(1197)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1194)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1199)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -13390,27 +14706,53 @@ func (p *MojoParser) StructBody() (localctx IStructBodyContext) {
 			p.StructMembers()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1206)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1203)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1208)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(1209)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStructMembersContext is an interface to support dynamic dispatch.
@@ -13420,20 +14762,33 @@ type IStructMembersContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllStructMember() []IStructMemberContext
+	StructMember(i int) IStructMemberContext
+	AllEosWithDocument() []IEosWithDocumentContext
+	EosWithDocument(i int) IEosWithDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsStructMembersContext differentiates from other interfaces.
 	IsStructMembersContext()
 }
 
 type StructMembersContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStructMembersContext() *StructMembersContext {
 	var p = new(StructMembersContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_structMembers
 	return p
+}
+
+func InitEmptyStructMembersContext(p *StructMembersContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_structMembers
 }
 
 func (*StructMembersContext) IsStructMembersContext() {}
@@ -13441,7 +14796,7 @@ func (*StructMembersContext) IsStructMembersContext() {}
 func NewStructMembersContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StructMembersContext {
 	var p = new(StructMembersContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_structMembers
@@ -13560,28 +14915,9 @@ func (s *StructMembersContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) StructMembers() (localctx IStructMembersContext) {
-	this := p
-	_ = this
-
 	localctx = NewStructMembersContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 136, MojoParserRULE_structMembers)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -13592,8 +14928,13 @@ func (p *MojoParser) StructMembers() (localctx IStructMembersContext) {
 	}
 	p.SetState(1223)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 138, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 138, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -13602,16 +14943,26 @@ func (p *MojoParser) StructMembers() (localctx IStructMembersContext) {
 			}
 			p.SetState(1216)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1213)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1218)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -13622,20 +14973,38 @@ func (p *MojoParser) StructMembers() (localctx IStructMembersContext) {
 		}
 		p.SetState(1225)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 138, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 138, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1227)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 139, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 139, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1226)
 			p.EosWithDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStructMemberContext is an interface to support dynamic dispatch.
@@ -13645,20 +15014,37 @@ type IStructMemberContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	StructDeclaration() IStructDeclarationContext
+	EnumDeclaration() IEnumDeclarationContext
+	ConstantDeclaration() IConstantDeclarationContext
+	TypeAliasDeclaration() ITypeAliasDeclarationContext
+	StructMemberDeclaration() IStructMemberDeclarationContext
+	Document() IDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	Attributes() IAttributesContext
+	FreeFloatingDocument() IFreeFloatingDocumentContext
+
 	// IsStructMemberContext differentiates from other interfaces.
 	IsStructMemberContext()
 }
 
 type StructMemberContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStructMemberContext() *StructMemberContext {
 	var p = new(StructMemberContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_structMember
 	return p
+}
+
+func InitEmptyStructMemberContext(p *StructMemberContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_structMember
 }
 
 func (*StructMemberContext) IsStructMemberContext() {}
@@ -13666,7 +15052,7 @@ func (*StructMemberContext) IsStructMemberContext() {}
 func NewStructMemberContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StructMemberContext {
 	var p = new(StructMemberContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_structMember
@@ -13831,36 +15217,24 @@ func (s *StructMemberContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 }
 
 func (p *MojoParser) StructMember() (localctx IStructMemberContext) {
-	this := p
-	_ = this
-
 	localctx = NewStructMemberContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 138, MojoParserRULE_structMember)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1247)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 143, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 143, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		p.SetState(1232)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserLINE_DOCUMENT {
@@ -13871,11 +15245,18 @@ func (p *MojoParser) StructMember() (localctx IStructMemberContext) {
 			{
 				p.SetState(1230)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 		p.SetState(1237)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserAT {
@@ -13886,12 +15267,20 @@ func (p *MojoParser) StructMember() (localctx IStructMemberContext) {
 			{
 				p.SetState(1235)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 		p.SetState(1244)
 		p.GetErrorHandler().Sync(p)
-		switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 142, p.GetParserRuleContext()) {
+		if p.HasError() {
+			goto errorExit
+		}
+
+		switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 142, p.GetParserRuleContext()) {
 		case 1:
 			{
 				p.SetState(1239)
@@ -13922,6 +15311,8 @@ func (p *MojoParser) StructMember() (localctx IStructMemberContext) {
 				p.StructMemberDeclaration()
 			}
 
+		case antlr.ATNInvalidAltNumber:
+			goto errorExit
 		}
 
 	case 2:
@@ -13931,9 +15322,21 @@ func (p *MojoParser) StructMember() (localctx IStructMemberContext) {
 			p.FreeFloatingDocument()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStructMemberDeclarationContext is an interface to support dynamic dispatch.
@@ -13943,20 +15346,32 @@ type IStructMemberDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DeclarationIdentifier() IDeclarationIdentifierContext
+	TypeAnnotation() ITypeAnnotationContext
+	Initializer() IInitializerContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsStructMemberDeclarationContext differentiates from other interfaces.
 	IsStructMemberDeclarationContext()
 }
 
 type StructMemberDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStructMemberDeclarationContext() *StructMemberDeclarationContext {
 	var p = new(StructMemberDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_structMemberDeclaration
 	return p
+}
+
+func InitEmptyStructMemberDeclarationContext(p *StructMemberDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_structMemberDeclaration
 }
 
 func (*StructMemberDeclarationContext) IsStructMemberDeclarationContext() {}
@@ -13964,7 +15379,7 @@ func (*StructMemberDeclarationContext) IsStructMemberDeclarationContext() {}
 func NewStructMemberDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StructMemberDeclarationContext {
 	var p = new(StructMemberDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_structMemberDeclaration
@@ -14049,28 +15464,9 @@ func (s *StructMemberDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) 
 }
 
 func (p *MojoParser) StructMemberDeclaration() (localctx IStructMemberDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewStructMemberDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 140, MojoParserRULE_structMemberDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -14084,19 +15480,29 @@ func (p *MojoParser) StructMemberDeclaration() (localctx IStructMemberDeclaratio
 	p.SetState(1258)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 145, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 145, p.GetParserRuleContext()) == 1 {
 		p.SetState(1254)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1251)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1256)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -14104,9 +15510,21 @@ func (p *MojoParser) StructMemberDeclaration() (localctx IStructMemberDeclaratio
 			p.Initializer()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IInterfaceDeclarationContext is an interface to support dynamic dispatch.
@@ -14116,20 +15534,31 @@ type IInterfaceDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_INTERFACE() antlr.TerminalNode
+	InterfaceName() IInterfaceNameContext
+	InterfaceType() IInterfaceTypeContext
+	GenericParameterClause() IGenericParameterClauseContext
+
 	// IsInterfaceDeclarationContext differentiates from other interfaces.
 	IsInterfaceDeclarationContext()
 }
 
 type InterfaceDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyInterfaceDeclarationContext() *InterfaceDeclarationContext {
 	var p = new(InterfaceDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_interfaceDeclaration
 	return p
+}
+
+func InitEmptyInterfaceDeclarationContext(p *InterfaceDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_interfaceDeclaration
 }
 
 func (*InterfaceDeclarationContext) IsInterfaceDeclarationContext() {}
@@ -14137,7 +15566,7 @@ func (*InterfaceDeclarationContext) IsInterfaceDeclarationContext() {}
 func NewInterfaceDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *InterfaceDeclarationContext {
 	var p = new(InterfaceDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_interfaceDeclaration
@@ -14218,33 +15647,18 @@ func (s *InterfaceDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) int
 }
 
 func (p *MojoParser) InterfaceDeclaration() (localctx IInterfaceDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewInterfaceDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 142, MojoParserRULE_interfaceDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1260)
 		p.Match(MojoParserKEYWORD_INTERFACE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1261)
@@ -14252,6 +15666,9 @@ func (p *MojoParser) InterfaceDeclaration() (localctx IInterfaceDeclarationConte
 	}
 	p.SetState(1263)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLT {
@@ -14266,7 +15683,17 @@ func (p *MojoParser) InterfaceDeclaration() (localctx IInterfaceDeclarationConte
 		p.InterfaceType()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IInterfaceNameContext is an interface to support dynamic dispatch.
@@ -14276,20 +15703,28 @@ type IInterfaceNameContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeName() ITypeNameContext
+
 	// IsInterfaceNameContext differentiates from other interfaces.
 	IsInterfaceNameContext()
 }
 
 type InterfaceNameContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyInterfaceNameContext() *InterfaceNameContext {
 	var p = new(InterfaceNameContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_interfaceName
 	return p
+}
+
+func InitEmptyInterfaceNameContext(p *InterfaceNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_interfaceName
 }
 
 func (*InterfaceNameContext) IsInterfaceNameContext() {}
@@ -14297,7 +15732,7 @@ func (*InterfaceNameContext) IsInterfaceNameContext() {}
 func NewInterfaceNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *InterfaceNameContext {
 	var p = new(InterfaceNameContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_interfaceName
@@ -14342,35 +15777,25 @@ func (s *InterfaceNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) InterfaceName() (localctx IInterfaceNameContext) {
-	this := p
-	_ = this
-
 	localctx = NewInterfaceNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 144, MojoParserRULE_interfaceName)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1267)
 		p.TypeName()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IInterfaceTypeContext is an interface to support dynamic dispatch.
@@ -14380,20 +15805,31 @@ type IInterfaceTypeContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	InterfaceBody() IInterfaceBodyContext
+	TypeInheritanceClause() ITypeInheritanceClauseContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsInterfaceTypeContext differentiates from other interfaces.
 	IsInterfaceTypeContext()
 }
 
 type InterfaceTypeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyInterfaceTypeContext() *InterfaceTypeContext {
 	var p = new(InterfaceTypeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_interfaceType
 	return p
+}
+
+func InitEmptyInterfaceTypeContext(p *InterfaceTypeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_interfaceType
 }
 
 func (*InterfaceTypeContext) IsInterfaceTypeContext() {}
@@ -14401,7 +15837,7 @@ func (*InterfaceTypeContext) IsInterfaceTypeContext() {}
 func NewInterfaceTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *InterfaceTypeContext {
 	var p = new(InterfaceTypeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_interfaceType
@@ -14470,46 +15906,37 @@ func (s *InterfaceTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) InterfaceType() (localctx IInterfaceTypeContext) {
-	this := p
-	_ = this
-
 	localctx = NewInterfaceTypeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 146, MojoParserRULE_interfaceType)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1276)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 148, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 148, p.GetParserRuleContext()) == 1 {
 		p.SetState(1272)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1269)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1274)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -14517,19 +15944,31 @@ func (p *MojoParser) InterfaceType() (localctx IInterfaceTypeContext) {
 			p.TypeInheritanceClause()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1281)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1278)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1283)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -14537,7 +15976,17 @@ func (p *MojoParser) InterfaceType() (localctx IInterfaceTypeContext) {
 		p.InterfaceBody()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IInterfaceBodyContext is an interface to support dynamic dispatch.
@@ -14547,20 +15996,33 @@ type IInterfaceBodyContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LCURLY() antlr.TerminalNode
+	RCURLY() antlr.TerminalNode
+	FollowingDocument() IFollowingDocumentContext
+	InterfaceMembers() IInterfaceMembersContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsInterfaceBodyContext differentiates from other interfaces.
 	IsInterfaceBodyContext()
 }
 
 type InterfaceBodyContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyInterfaceBodyContext() *InterfaceBodyContext {
 	var p = new(InterfaceBodyContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_interfaceBody
 	return p
+}
+
+func InitEmptyInterfaceBodyContext(p *InterfaceBodyContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_interfaceBody
 }
 
 func (*InterfaceBodyContext) IsInterfaceBodyContext() {}
@@ -14568,7 +16030,7 @@ func (*InterfaceBodyContext) IsInterfaceBodyContext() {}
 func NewInterfaceBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *InterfaceBodyContext {
 	var p = new(InterfaceBodyContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_interfaceBody
@@ -14645,36 +16107,24 @@ func (s *InterfaceBodyContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) InterfaceBody() (localctx IInterfaceBodyContext) {
-	this := p
-	_ = this
-
 	localctx = NewInterfaceBodyContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 148, MojoParserRULE_interfaceBody)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1286)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1288)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -14687,19 +16137,29 @@ func (p *MojoParser) InterfaceBody() (localctx IInterfaceBodyContext) {
 	p.SetState(1297)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 152, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 152, p.GetParserRuleContext()) == 1 {
 		p.SetState(1293)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1290)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1295)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -14707,27 +16167,53 @@ func (p *MojoParser) InterfaceBody() (localctx IInterfaceBodyContext) {
 			p.InterfaceMembers()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1302)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1299)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1304)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(1305)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IInterfaceMembersContext is an interface to support dynamic dispatch.
@@ -14737,20 +16223,33 @@ type IInterfaceMembersContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllInterfaceMember() []IInterfaceMemberContext
+	InterfaceMember(i int) IInterfaceMemberContext
+	AllEosWithDocument() []IEosWithDocumentContext
+	EosWithDocument(i int) IEosWithDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsInterfaceMembersContext differentiates from other interfaces.
 	IsInterfaceMembersContext()
 }
 
 type InterfaceMembersContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyInterfaceMembersContext() *InterfaceMembersContext {
 	var p = new(InterfaceMembersContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_interfaceMembers
 	return p
+}
+
+func InitEmptyInterfaceMembersContext(p *InterfaceMembersContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_interfaceMembers
 }
 
 func (*InterfaceMembersContext) IsInterfaceMembersContext() {}
@@ -14758,7 +16257,7 @@ func (*InterfaceMembersContext) IsInterfaceMembersContext() {}
 func NewInterfaceMembersContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *InterfaceMembersContext {
 	var p = new(InterfaceMembersContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_interfaceMembers
@@ -14877,28 +16376,9 @@ func (s *InterfaceMembersContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) InterfaceMembers() (localctx IInterfaceMembersContext) {
-	this := p
-	_ = this
-
 	localctx = NewInterfaceMembersContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 150, MojoParserRULE_interfaceMembers)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -14909,8 +16389,13 @@ func (p *MojoParser) InterfaceMembers() (localctx IInterfaceMembersContext) {
 	}
 	p.SetState(1319)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 155, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 155, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -14919,16 +16404,26 @@ func (p *MojoParser) InterfaceMembers() (localctx IInterfaceMembersContext) {
 			}
 			p.SetState(1312)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1309)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1314)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -14939,20 +16434,38 @@ func (p *MojoParser) InterfaceMembers() (localctx IInterfaceMembersContext) {
 		}
 		p.SetState(1321)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 155, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 155, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1323)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 156, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 156, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1322)
 			p.EosWithDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IInterfaceMemberContext is an interface to support dynamic dispatch.
@@ -14962,20 +16475,34 @@ type IInterfaceMemberContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeAliasDeclaration() ITypeAliasDeclarationContext
+	InterfaceMethodDeclaration() IInterfaceMethodDeclarationContext
+	Document() IDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	Attributes() IAttributesContext
+	FreeFloatingDocument() IFreeFloatingDocumentContext
+
 	// IsInterfaceMemberContext differentiates from other interfaces.
 	IsInterfaceMemberContext()
 }
 
 type InterfaceMemberContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyInterfaceMemberContext() *InterfaceMemberContext {
 	var p = new(InterfaceMemberContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_interfaceMember
 	return p
+}
+
+func InitEmptyInterfaceMemberContext(p *InterfaceMemberContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_interfaceMember
 }
 
 func (*InterfaceMemberContext) IsInterfaceMemberContext() {}
@@ -14983,7 +16510,7 @@ func (*InterfaceMemberContext) IsInterfaceMemberContext() {}
 func NewInterfaceMemberContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *InterfaceMemberContext {
 	var p = new(InterfaceMemberContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_interfaceMember
@@ -15100,36 +16627,24 @@ func (s *InterfaceMemberContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) InterfaceMember() (localctx IInterfaceMemberContext) {
-	this := p
-	_ = this
-
 	localctx = NewInterfaceMemberContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 152, MojoParserRULE_interfaceMember)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1340)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 160, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 160, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		p.SetState(1328)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserLINE_DOCUMENT {
@@ -15140,11 +16655,18 @@ func (p *MojoParser) InterfaceMember() (localctx IInterfaceMemberContext) {
 			{
 				p.SetState(1326)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 		p.SetState(1333)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserAT {
@@ -15155,12 +16677,20 @@ func (p *MojoParser) InterfaceMember() (localctx IInterfaceMemberContext) {
 			{
 				p.SetState(1331)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 		p.SetState(1337)
 		p.GetErrorHandler().Sync(p)
-		switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 159, p.GetParserRuleContext()) {
+		if p.HasError() {
+			goto errorExit
+		}
+
+		switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 159, p.GetParserRuleContext()) {
 		case 1:
 			{
 				p.SetState(1335)
@@ -15173,6 +16703,8 @@ func (p *MojoParser) InterfaceMember() (localctx IInterfaceMemberContext) {
 				p.InterfaceMethodDeclaration()
 			}
 
+		case antlr.ATNInvalidAltNumber:
+			goto errorExit
 		}
 
 	case 2:
@@ -15182,9 +16714,21 @@ func (p *MojoParser) InterfaceMember() (localctx IInterfaceMemberContext) {
 			p.FreeFloatingDocument()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IInterfaceMethodDeclarationContext is an interface to support dynamic dispatch.
@@ -15194,20 +16738,32 @@ type IInterfaceMethodDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	FunctionName() IFunctionNameContext
+	FunctionSignature() IFunctionSignatureContext
+	GenericParameterClause() IGenericParameterClauseContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsInterfaceMethodDeclarationContext differentiates from other interfaces.
 	IsInterfaceMethodDeclarationContext()
 }
 
 type InterfaceMethodDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyInterfaceMethodDeclarationContext() *InterfaceMethodDeclarationContext {
 	var p = new(InterfaceMethodDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_interfaceMethodDeclaration
 	return p
+}
+
+func InitEmptyInterfaceMethodDeclarationContext(p *InterfaceMethodDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_interfaceMethodDeclaration
 }
 
 func (*InterfaceMethodDeclarationContext) IsInterfaceMethodDeclarationContext() {}
@@ -15215,7 +16771,7 @@ func (*InterfaceMethodDeclarationContext) IsInterfaceMethodDeclarationContext() 
 func NewInterfaceMethodDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *InterfaceMethodDeclarationContext {
 	var p = new(InterfaceMethodDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_interfaceMethodDeclaration
@@ -15300,28 +16856,9 @@ func (s *InterfaceMethodDeclarationContext) Accept(visitor antlr.ParseTreeVisito
 }
 
 func (p *MojoParser) InterfaceMethodDeclaration() (localctx IInterfaceMethodDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewInterfaceMethodDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 154, MojoParserRULE_interfaceMethodDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -15330,6 +16867,9 @@ func (p *MojoParser) InterfaceMethodDeclaration() (localctx IInterfaceMethodDecl
 	}
 	p.SetState(1344)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLT {
@@ -15341,16 +16881,26 @@ func (p *MojoParser) InterfaceMethodDeclaration() (localctx IInterfaceMethodDecl
 	}
 	p.SetState(1349)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1346)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1351)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -15358,7 +16908,17 @@ func (p *MojoParser) InterfaceMethodDeclaration() (localctx IInterfaceMethodDecl
 		p.FunctionSignature()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributeDeclarationContext is an interface to support dynamic dispatch.
@@ -15368,20 +16928,36 @@ type IAttributeDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_ATTRIBUTE() antlr.TerminalNode
+	AttributeName() IAttributeNameContext
+	StructBody() IStructBodyContext
+	TypeAnnotation() ITypeAnnotationContext
+	GenericParameterClause() IGenericParameterClauseContext
+	Initializer() IInitializerContext
+	FollowingDocument() IFollowingDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsAttributeDeclarationContext differentiates from other interfaces.
 	IsAttributeDeclarationContext()
 }
 
 type AttributeDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributeDeclarationContext() *AttributeDeclarationContext {
 	var p = new(AttributeDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attributeDeclaration
 	return p
+}
+
+func InitEmptyAttributeDeclarationContext(p *AttributeDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attributeDeclaration
 }
 
 func (*AttributeDeclarationContext) IsAttributeDeclarationContext() {}
@@ -15389,7 +16965,7 @@ func (*AttributeDeclarationContext) IsAttributeDeclarationContext() {}
 func NewAttributeDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributeDeclarationContext {
 	var p = new(AttributeDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attributeDeclaration
@@ -15526,33 +17102,18 @@ func (s *AttributeDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) int
 }
 
 func (p *MojoParser) AttributeDeclaration() (localctx IAttributeDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributeDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 156, MojoParserRULE_attributeDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1354)
 		p.Match(MojoParserKEYWORD_ATTRIBUTE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1355)
@@ -15560,6 +17121,9 @@ func (p *MojoParser) AttributeDeclaration() (localctx IAttributeDeclarationConte
 	}
 	p.SetState(1357)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLT {
@@ -15571,7 +17135,11 @@ func (p *MojoParser) AttributeDeclaration() (localctx IAttributeDeclarationConte
 	}
 	p.SetState(1373)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 167, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 167, p.GetParserRuleContext()) {
 	case 1:
 		{
 			p.SetState(1359)
@@ -15586,19 +17154,29 @@ func (p *MojoParser) AttributeDeclaration() (localctx IAttributeDeclarationConte
 		p.SetState(1368)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 165, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 165, p.GetParserRuleContext()) == 1 {
 			p.SetState(1364)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1361)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1366)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -15606,9 +17184,14 @@ func (p *MojoParser) AttributeDeclaration() (localctx IAttributeDeclarationConte
 				p.Initializer()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 		p.SetState(1371)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -15619,9 +17202,21 @@ func (p *MojoParser) AttributeDeclaration() (localctx IAttributeDeclarationConte
 
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributeAliasDeclarationContext is an interface to support dynamic dispatch.
@@ -15631,20 +17226,33 @@ type IAttributeAliasDeclarationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_ATTRIBUTE() antlr.TerminalNode
+	AttributeName() IAttributeNameContext
+	AttributeAliasAssignment() IAttributeAliasAssignmentContext
+	GenericParameterClause() IGenericParameterClauseContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsAttributeAliasDeclarationContext differentiates from other interfaces.
 	IsAttributeAliasDeclarationContext()
 }
 
 type AttributeAliasDeclarationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributeAliasDeclarationContext() *AttributeAliasDeclarationContext {
 	var p = new(AttributeAliasDeclarationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attributeAliasDeclaration
 	return p
+}
+
+func InitEmptyAttributeAliasDeclarationContext(p *AttributeAliasDeclarationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attributeAliasDeclaration
 }
 
 func (*AttributeAliasDeclarationContext) IsAttributeAliasDeclarationContext() {}
@@ -15652,7 +17260,7 @@ func (*AttributeAliasDeclarationContext) IsAttributeAliasDeclarationContext() {}
 func NewAttributeAliasDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributeAliasDeclarationContext {
 	var p = new(AttributeAliasDeclarationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attributeAliasDeclaration
@@ -15741,33 +17349,18 @@ func (s *AttributeAliasDeclarationContext) Accept(visitor antlr.ParseTreeVisitor
 }
 
 func (p *MojoParser) AttributeAliasDeclaration() (localctx IAttributeAliasDeclarationContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributeAliasDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 158, MojoParserRULE_attributeAliasDeclaration)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1375)
 		p.Match(MojoParserKEYWORD_ATTRIBUTE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1376)
@@ -15775,6 +17368,9 @@ func (p *MojoParser) AttributeAliasDeclaration() (localctx IAttributeAliasDeclar
 	}
 	p.SetState(1378)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLT {
@@ -15786,16 +17382,26 @@ func (p *MojoParser) AttributeAliasDeclaration() (localctx IAttributeAliasDeclar
 	}
 	p.SetState(1383)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1380)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1385)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -15803,7 +17409,17 @@ func (p *MojoParser) AttributeAliasDeclaration() (localctx IAttributeAliasDeclar
 		p.AttributeAliasAssignment()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributeAliasAssignmentContext is an interface to support dynamic dispatch.
@@ -15813,20 +17429,35 @@ type IAttributeAliasAssignmentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AssignmentOperator() IAssignmentOperatorContext
+	AttributeName() IAttributeNameContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	PackageIdentifier() IPackageIdentifierContext
+	DOT() antlr.TerminalNode
+	GenericArgumentClause() IGenericArgumentClauseContext
+	FollowingDocument() IFollowingDocumentContext
+
 	// IsAttributeAliasAssignmentContext differentiates from other interfaces.
 	IsAttributeAliasAssignmentContext()
 }
 
 type AttributeAliasAssignmentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributeAliasAssignmentContext() *AttributeAliasAssignmentContext {
 	var p = new(AttributeAliasAssignmentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attributeAliasAssignment
 	return p
+}
+
+func InitEmptyAttributeAliasAssignmentContext(p *AttributeAliasAssignmentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attributeAliasAssignment
 }
 
 func (*AttributeAliasAssignmentContext) IsAttributeAliasAssignmentContext() {}
@@ -15834,7 +17465,7 @@ func (*AttributeAliasAssignmentContext) IsAttributeAliasAssignmentContext() {}
 func NewAttributeAliasAssignmentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributeAliasAssignmentContext {
 	var p = new(AttributeAliasAssignmentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attributeAliasAssignment
@@ -15955,28 +17586,9 @@ func (s *AttributeAliasAssignmentContext) Accept(visitor antlr.ParseTreeVisitor)
 }
 
 func (p *MojoParser) AttributeAliasAssignment() (localctx IAttributeAliasAssignmentContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributeAliasAssignmentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 160, MojoParserRULE_attributeAliasAssignment)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -15985,22 +17597,32 @@ func (p *MojoParser) AttributeAliasAssignment() (localctx IAttributeAliasAssignm
 	}
 	p.SetState(1392)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1389)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1394)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	p.SetState(1398)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 171, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 171, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1395)
 			p.PackageIdentifier()
@@ -16008,8 +17630,14 @@ func (p *MojoParser) AttributeAliasAssignment() (localctx IAttributeAliasAssignm
 		{
 			p.SetState(1396)
 			p.Match(MojoParserDOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	{
 		p.SetState(1400)
@@ -16017,6 +17645,9 @@ func (p *MojoParser) AttributeAliasAssignment() (localctx IAttributeAliasAssignm
 	}
 	p.SetState(1402)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserLT {
@@ -16028,6 +17659,9 @@ func (p *MojoParser) AttributeAliasAssignment() (localctx IAttributeAliasAssignm
 	}
 	p.SetState(1405)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -16038,7 +17672,17 @@ func (p *MojoParser) AttributeAliasAssignment() (localctx IAttributeAliasAssignm
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPatternContext is an interface to support dynamic dispatch.
@@ -16048,20 +17692,37 @@ type IPatternContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	WildcardPattern() IWildcardPatternContext
+	TypeAnnotation() ITypeAnnotationContext
+	IdentifierPattern() IIdentifierPatternContext
+	TuplePattern() ITuplePatternContext
+	OptionalPattern() IOptionalPatternContext
+	KEYWORD_IS() antlr.TerminalNode
+	Type_() IType_Context
+	ExpressionPattern() IExpressionPatternContext
+	Pattern() IPatternContext
+	KEYWORD_AS() antlr.TerminalNode
+
 	// IsPatternContext differentiates from other interfaces.
 	IsPatternContext()
 }
 
 type PatternContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPatternContext() *PatternContext {
 	var p = new(PatternContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_pattern
 	return p
+}
+
+func InitEmptyPatternContext(p *PatternContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_pattern
 }
 
 func (*PatternContext) IsPatternContext() {}
@@ -16069,7 +17730,7 @@ func (*PatternContext) IsPatternContext() {}
 func NewPatternContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PatternContext {
 	var p = new(PatternContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_pattern
@@ -16238,39 +17899,24 @@ func (p *MojoParser) Pattern() (localctx IPatternContext) {
 }
 
 func (p *MojoParser) pattern(_p int) (localctx IPatternContext) {
-	this := p
-	_ = this
-
 	var _parentctx antlr.ParserRuleContext = p.GetParserRuleContext()
+
 	_parentState := p.GetState()
 	localctx = NewPatternContext(p, p.GetParserRuleContext(), _parentState)
 	var _prevctx IPatternContext = localctx
 	var _ antlr.ParserRuleContext = _prevctx // TODO: To prevent unused variable warning.
 	_startState := 162
 	p.EnterRecursionRule(localctx, 162, MojoParserRULE_pattern, _p)
-
-	defer func() {
-		p.UnrollRecursionContexts(_parentctx)
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1424)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 177, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 177, p.GetParserRuleContext()) {
 	case 1:
 		{
 			p.SetState(1408)
@@ -16279,12 +17925,14 @@ func (p *MojoParser) pattern(_p int) (localctx IPatternContext) {
 		p.SetState(1410)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 174, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 174, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(1409)
 				p.TypeAnnotation()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case 2:
@@ -16295,12 +17943,14 @@ func (p *MojoParser) pattern(_p int) (localctx IPatternContext) {
 		p.SetState(1414)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 175, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 175, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(1413)
 				p.TypeAnnotation()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case 3:
@@ -16311,12 +17961,14 @@ func (p *MojoParser) pattern(_p int) (localctx IPatternContext) {
 		p.SetState(1418)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 176, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 176, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(1417)
 				p.TypeAnnotation()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case 4:
@@ -16329,6 +17981,10 @@ func (p *MojoParser) pattern(_p int) (localctx IPatternContext) {
 		{
 			p.SetState(1421)
 			p.Match(MojoParserKEYWORD_IS)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1422)
@@ -16341,12 +17997,19 @@ func (p *MojoParser) pattern(_p int) (localctx IPatternContext) {
 			p.ExpressionPattern()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
 	p.SetState(1431)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 178, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 178, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			if p.GetParseListeners() != nil {
@@ -16358,11 +18021,16 @@ func (p *MojoParser) pattern(_p int) (localctx IPatternContext) {
 			p.SetState(1426)
 
 			if !(p.Precpred(p.GetParserRuleContext(), 2)) {
-				panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
+				p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
+				goto errorExit
 			}
 			{
 				p.SetState(1427)
 				p.Match(MojoParserKEYWORD_AS)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 			{
 				p.SetState(1428)
@@ -16372,10 +18040,26 @@ func (p *MojoParser) pattern(_p int) (localctx IPatternContext) {
 		}
 		p.SetState(1433)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 178, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 178, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.UnrollRecursionContexts(_parentctx)
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IWildcardPatternContext is an interface to support dynamic dispatch.
@@ -16385,20 +18069,28 @@ type IWildcardPatternContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	UNDERSCORE() antlr.TerminalNode
+
 	// IsWildcardPatternContext differentiates from other interfaces.
 	IsWildcardPatternContext()
 }
 
 type WildcardPatternContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyWildcardPatternContext() *WildcardPatternContext {
 	var p = new(WildcardPatternContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_wildcardPattern
 	return p
+}
+
+func InitEmptyWildcardPatternContext(p *WildcardPatternContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_wildcardPattern
 }
 
 func (*WildcardPatternContext) IsWildcardPatternContext() {}
@@ -16406,7 +18098,7 @@ func (*WildcardPatternContext) IsWildcardPatternContext() {}
 func NewWildcardPatternContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *WildcardPatternContext {
 	var p = new(WildcardPatternContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_wildcardPattern
@@ -16439,35 +18131,29 @@ func (s *WildcardPatternContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) WildcardPattern() (localctx IWildcardPatternContext) {
-	this := p
-	_ = this
-
 	localctx = NewWildcardPatternContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 164, MojoParserRULE_wildcardPattern)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1434)
 		p.Match(MojoParserUNDERSCORE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IIdentifierPatternContext is an interface to support dynamic dispatch.
@@ -16477,20 +18163,28 @@ type IIdentifierPatternContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DeclarationIdentifier() IDeclarationIdentifierContext
+
 	// IsIdentifierPatternContext differentiates from other interfaces.
 	IsIdentifierPatternContext()
 }
 
 type IdentifierPatternContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyIdentifierPatternContext() *IdentifierPatternContext {
 	var p = new(IdentifierPatternContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_identifierPattern
 	return p
+}
+
+func InitEmptyIdentifierPatternContext(p *IdentifierPatternContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_identifierPattern
 }
 
 func (*IdentifierPatternContext) IsIdentifierPatternContext() {}
@@ -16498,7 +18192,7 @@ func (*IdentifierPatternContext) IsIdentifierPatternContext() {}
 func NewIdentifierPatternContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *IdentifierPatternContext {
 	var p = new(IdentifierPatternContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_identifierPattern
@@ -16543,35 +18237,25 @@ func (s *IdentifierPatternContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) IdentifierPattern() (localctx IIdentifierPatternContext) {
-	this := p
-	_ = this
-
 	localctx = NewIdentifierPatternContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 166, MojoParserRULE_identifierPattern)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1436)
 		p.DeclarationIdentifier()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITuplePatternContext is an interface to support dynamic dispatch.
@@ -16581,20 +18265,30 @@ type ITuplePatternContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LPAREN() antlr.TerminalNode
+	RPAREN() antlr.TerminalNode
+	TuplePatternElementList() ITuplePatternElementListContext
+
 	// IsTuplePatternContext differentiates from other interfaces.
 	IsTuplePatternContext()
 }
 
 type TuplePatternContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTuplePatternContext() *TuplePatternContext {
 	var p = new(TuplePatternContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_tuplePattern
 	return p
+}
+
+func InitEmptyTuplePatternContext(p *TuplePatternContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_tuplePattern
 }
 
 func (*TuplePatternContext) IsTuplePatternContext() {}
@@ -16602,7 +18296,7 @@ func (*TuplePatternContext) IsTuplePatternContext() {}
 func NewTuplePatternContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TuplePatternContext {
 	var p = new(TuplePatternContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_tuplePattern
@@ -16655,39 +18349,27 @@ func (s *TuplePatternContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 }
 
 func (p *MojoParser) TuplePattern() (localctx ITuplePatternContext) {
-	this := p
-	_ = this
-
 	localctx = NewTuplePatternContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 168, MojoParserRULE_tuplePattern)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1438)
 		p.Match(MojoParserLPAREN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1440)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
-	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&90062655082986494) != 0 || (int64((_la-72)) & ^0x3f) == 0 && ((int64(1)<<(_la-72))&4087) != 0 {
+	if ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&90062655082986494) != 0) || ((int64((_la-72)) & ^0x3f) == 0 && ((int64(1)<<(_la-72))&4087) != 0) {
 		{
 			p.SetState(1439)
 			p.TuplePatternElementList()
@@ -16697,9 +18379,23 @@ func (p *MojoParser) TuplePattern() (localctx ITuplePatternContext) {
 	{
 		p.SetState(1442)
 		p.Match(MojoParserRPAREN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITuplePatternElementListContext is an interface to support dynamic dispatch.
@@ -16709,20 +18405,31 @@ type ITuplePatternElementListContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllTuplePatternElement() []ITuplePatternElementContext
+	TuplePatternElement(i int) ITuplePatternElementContext
+	AllCOMMA() []antlr.TerminalNode
+	COMMA(i int) antlr.TerminalNode
+
 	// IsTuplePatternElementListContext differentiates from other interfaces.
 	IsTuplePatternElementListContext()
 }
 
 type TuplePatternElementListContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTuplePatternElementListContext() *TuplePatternElementListContext {
 	var p = new(TuplePatternElementListContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_tuplePatternElementList
 	return p
+}
+
+func InitEmptyTuplePatternElementListContext(p *TuplePatternElementListContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_tuplePatternElementList
 }
 
 func (*TuplePatternElementListContext) IsTuplePatternElementListContext() {}
@@ -16730,7 +18437,7 @@ func (*TuplePatternElementListContext) IsTuplePatternElementListContext() {}
 func NewTuplePatternElementListContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TuplePatternElementListContext {
 	var p = new(TuplePatternElementListContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_tuplePatternElementList
@@ -16808,28 +18515,9 @@ func (s *TuplePatternElementListContext) Accept(visitor antlr.ParseTreeVisitor) 
 }
 
 func (p *MojoParser) TuplePatternElementList() (localctx ITuplePatternElementListContext) {
-	this := p
-	_ = this
-
 	localctx = NewTuplePatternElementListContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 170, MojoParserRULE_tuplePatternElementList)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -16838,12 +18526,19 @@ func (p *MojoParser) TuplePatternElementList() (localctx ITuplePatternElementLis
 	}
 	p.SetState(1449)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserCOMMA {
 		{
 			p.SetState(1445)
 			p.Match(MojoParserCOMMA)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1446)
@@ -16852,10 +18547,23 @@ func (p *MojoParser) TuplePatternElementList() (localctx ITuplePatternElementLis
 
 		p.SetState(1451)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITuplePatternElementContext is an interface to support dynamic dispatch.
@@ -16865,20 +18573,28 @@ type ITuplePatternElementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Pattern() IPatternContext
+
 	// IsTuplePatternElementContext differentiates from other interfaces.
 	IsTuplePatternElementContext()
 }
 
 type TuplePatternElementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTuplePatternElementContext() *TuplePatternElementContext {
 	var p = new(TuplePatternElementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_tuplePatternElement
 	return p
+}
+
+func InitEmptyTuplePatternElementContext(p *TuplePatternElementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_tuplePatternElement
 }
 
 func (*TuplePatternElementContext) IsTuplePatternElementContext() {}
@@ -16886,7 +18602,7 @@ func (*TuplePatternElementContext) IsTuplePatternElementContext() {}
 func NewTuplePatternElementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TuplePatternElementContext {
 	var p = new(TuplePatternElementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_tuplePatternElement
@@ -16931,35 +18647,25 @@ func (s *TuplePatternElementContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) TuplePatternElement() (localctx ITuplePatternElementContext) {
-	this := p
-	_ = this
-
 	localctx = NewTuplePatternElementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 172, MojoParserRULE_tuplePatternElement)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1452)
 		p.pattern(0)
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IOptionalPatternContext is an interface to support dynamic dispatch.
@@ -16969,20 +18675,29 @@ type IOptionalPatternContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	IdentifierPattern() IIdentifierPatternContext
+	QUESTION() antlr.TerminalNode
+
 	// IsOptionalPatternContext differentiates from other interfaces.
 	IsOptionalPatternContext()
 }
 
 type OptionalPatternContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyOptionalPatternContext() *OptionalPatternContext {
 	var p = new(OptionalPatternContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_optionalPattern
 	return p
+}
+
+func InitEmptyOptionalPatternContext(p *OptionalPatternContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_optionalPattern
 }
 
 func (*OptionalPatternContext) IsOptionalPatternContext() {}
@@ -16990,7 +18705,7 @@ func (*OptionalPatternContext) IsOptionalPatternContext() {}
 func NewOptionalPatternContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *OptionalPatternContext {
 	var p = new(OptionalPatternContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_optionalPattern
@@ -17039,28 +18754,8 @@ func (s *OptionalPatternContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) OptionalPattern() (localctx IOptionalPatternContext) {
-	this := p
-	_ = this
-
 	localctx = NewOptionalPatternContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 174, MojoParserRULE_optionalPattern)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1454)
@@ -17069,9 +18764,23 @@ func (p *MojoParser) OptionalPattern() (localctx IOptionalPatternContext) {
 	{
 		p.SetState(1455)
 		p.Match(MojoParserQUESTION)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IExpressionPatternContext is an interface to support dynamic dispatch.
@@ -17081,20 +18790,28 @@ type IExpressionPatternContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Expression() IExpressionContext
+
 	// IsExpressionPatternContext differentiates from other interfaces.
 	IsExpressionPatternContext()
 }
 
 type ExpressionPatternContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyExpressionPatternContext() *ExpressionPatternContext {
 	var p = new(ExpressionPatternContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_expressionPattern
 	return p
+}
+
+func InitEmptyExpressionPatternContext(p *ExpressionPatternContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_expressionPattern
 }
 
 func (*ExpressionPatternContext) IsExpressionPatternContext() {}
@@ -17102,7 +18819,7 @@ func (*ExpressionPatternContext) IsExpressionPatternContext() {}
 func NewExpressionPatternContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ExpressionPatternContext {
 	var p = new(ExpressionPatternContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_expressionPattern
@@ -17147,35 +18864,25 @@ func (s *ExpressionPatternContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) ExpressionPattern() (localctx IExpressionPatternContext) {
-	this := p
-	_ = this
-
 	localctx = NewExpressionPatternContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 176, MojoParserRULE_expressionPattern)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1457)
 		p.Expression()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributeContext is an interface to support dynamic dispatch.
@@ -17185,20 +18892,32 @@ type IAttributeContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AT() antlr.TerminalNode
+	DECIMAL_LITERAL() antlr.TerminalNode
+	AttributeIdentifier() IAttributeIdentifierContext
+	GenericArgumentClause() IGenericArgumentClauseContext
+	AttributeArgumentClause() IAttributeArgumentClauseContext
+
 	// IsAttributeContext differentiates from other interfaces.
 	IsAttributeContext()
 }
 
 type AttributeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributeContext() *AttributeContext {
 	var p = new(AttributeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attribute
 	return p
+}
+
+func InitEmptyAttributeContext(p *AttributeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attribute
 }
 
 func (*AttributeContext) IsAttributeContext() {}
@@ -17206,7 +18925,7 @@ func (*AttributeContext) IsAttributeContext() {}
 func NewAttributeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributeContext {
 	var p = new(AttributeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attribute
@@ -17291,40 +19010,32 @@ func (s *AttributeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Attribute() (localctx IAttributeContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 178, MojoParserRULE_attribute)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1469)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 183, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 183, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(1459)
 			p.Match(MojoParserAT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1460)
 			p.Match(MojoParserDECIMAL_LITERAL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 2:
@@ -17332,6 +19043,10 @@ func (p *MojoParser) Attribute() (localctx IAttributeContext) {
 		{
 			p.SetState(1461)
 			p.Match(MojoParserAT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1462)
@@ -17340,27 +19055,43 @@ func (p *MojoParser) Attribute() (localctx IAttributeContext) {
 		p.SetState(1464)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 181, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 181, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(1463)
 				p.GenericArgumentClause()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 		p.SetState(1467)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 182, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 182, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(1466)
 				p.AttributeArgumentClause()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributeIdentifierContext is an interface to support dynamic dispatch.
@@ -17370,20 +19101,30 @@ type IAttributeIdentifierContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AttributeName() IAttributeNameContext
+	PackageIdentifier() IPackageIdentifierContext
+	DOT() antlr.TerminalNode
+
 	// IsAttributeIdentifierContext differentiates from other interfaces.
 	IsAttributeIdentifierContext()
 }
 
 type AttributeIdentifierContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributeIdentifierContext() *AttributeIdentifierContext {
 	var p = new(AttributeIdentifierContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attributeIdentifier
 	return p
+}
+
+func InitEmptyAttributeIdentifierContext(p *AttributeIdentifierContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attributeIdentifier
 }
 
 func (*AttributeIdentifierContext) IsAttributeIdentifierContext() {}
@@ -17391,7 +19132,7 @@ func (*AttributeIdentifierContext) IsAttributeIdentifierContext() {}
 func NewAttributeIdentifierContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributeIdentifierContext {
 	var p = new(AttributeIdentifierContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attributeIdentifier
@@ -17456,33 +19197,13 @@ func (s *AttributeIdentifierContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) AttributeIdentifier() (localctx IAttributeIdentifierContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributeIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 180, MojoParserRULE_attributeIdentifier)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1474)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 184, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 184, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1471)
 			p.PackageIdentifier()
@@ -17490,15 +19211,31 @@ func (p *MojoParser) AttributeIdentifier() (localctx IAttributeIdentifierContext
 		{
 			p.SetState(1472)
 			p.Match(MojoParserDOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	{
 		p.SetState(1476)
 		p.AttributeName()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributeNameContext is an interface to support dynamic dispatch.
@@ -17508,20 +19245,28 @@ type IAttributeNameContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LabelIdentifier() ILabelIdentifierContext
+
 	// IsAttributeNameContext differentiates from other interfaces.
 	IsAttributeNameContext()
 }
 
 type AttributeNameContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributeNameContext() *AttributeNameContext {
 	var p = new(AttributeNameContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attributeName
 	return p
+}
+
+func InitEmptyAttributeNameContext(p *AttributeNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attributeName
 }
 
 func (*AttributeNameContext) IsAttributeNameContext() {}
@@ -17529,7 +19274,7 @@ func (*AttributeNameContext) IsAttributeNameContext() {}
 func NewAttributeNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributeNameContext {
 	var p = new(AttributeNameContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attributeName
@@ -17574,35 +19319,25 @@ func (s *AttributeNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) AttributeName() (localctx IAttributeNameContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributeNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 182, MojoParserRULE_attributeName)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1478)
 		p.LabelIdentifier()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributeArgumentClauseContext is an interface to support dynamic dispatch.
@@ -17612,20 +19347,32 @@ type IAttributeArgumentClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LPAREN() antlr.TerminalNode
+	RPAREN() antlr.TerminalNode
+	AttributeArguments() IAttributeArgumentsContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsAttributeArgumentClauseContext differentiates from other interfaces.
 	IsAttributeArgumentClauseContext()
 }
 
 type AttributeArgumentClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributeArgumentClauseContext() *AttributeArgumentClauseContext {
 	var p = new(AttributeArgumentClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attributeArgumentClause
 	return p
+}
+
+func InitEmptyAttributeArgumentClauseContext(p *AttributeArgumentClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attributeArgumentClause
 }
 
 func (*AttributeArgumentClauseContext) IsAttributeArgumentClauseContext() {}
@@ -17633,7 +19380,7 @@ func (*AttributeArgumentClauseContext) IsAttributeArgumentClauseContext() {}
 func NewAttributeArgumentClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributeArgumentClauseContext {
 	var p = new(AttributeArgumentClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attributeArgumentClause
@@ -17694,50 +19441,45 @@ func (s *AttributeArgumentClauseContext) Accept(visitor antlr.ParseTreeVisitor) 
 }
 
 func (p *MojoParser) AttributeArgumentClause() (localctx IAttributeArgumentClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributeArgumentClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 184, MojoParserRULE_attributeArgumentClause)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1480)
 		p.Match(MojoParserLPAREN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1488)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 186, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 186, p.GetParserRuleContext()) == 1 {
 		p.SetState(1484)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1481)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1486)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -17745,27 +19487,53 @@ func (p *MojoParser) AttributeArgumentClause() (localctx IAttributeArgumentClaus
 			p.AttributeArguments()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1493)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1490)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1495)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(1496)
 		p.Match(MojoParserRPAREN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributeArgumentContext is an interface to support dynamic dispatch.
@@ -17775,20 +19543,30 @@ type IAttributeArgumentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Expression() IExpressionContext
+	LabelIdentifier() ILabelIdentifierContext
+	COLON() antlr.TerminalNode
+
 	// IsAttributeArgumentContext differentiates from other interfaces.
 	IsAttributeArgumentContext()
 }
 
 type AttributeArgumentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributeArgumentContext() *AttributeArgumentContext {
 	var p = new(AttributeArgumentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attributeArgument
 	return p
+}
+
+func InitEmptyAttributeArgumentContext(p *AttributeArgumentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attributeArgument
 }
 
 func (*AttributeArgumentContext) IsAttributeArgumentContext() {}
@@ -17796,7 +19574,7 @@ func (*AttributeArgumentContext) IsAttributeArgumentContext() {}
 func NewAttributeArgumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributeArgumentContext {
 	var p = new(AttributeArgumentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attributeArgument
@@ -17861,33 +19639,13 @@ func (s *AttributeArgumentContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) AttributeArgument() (localctx IAttributeArgumentContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributeArgumentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 186, MojoParserRULE_attributeArgument)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1501)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 188, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 188, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1498)
 			p.LabelIdentifier()
@@ -17895,15 +19653,31 @@ func (p *MojoParser) AttributeArgument() (localctx IAttributeArgumentContext) {
 		{
 			p.SetState(1499)
 			p.Match(MojoParserCOLON)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	{
 		p.SetState(1503)
 		p.Expression()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributeArgumentsContext is an interface to support dynamic dispatch.
@@ -17913,20 +19687,33 @@ type IAttributeArgumentsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllAttributeArgument() []IAttributeArgumentContext
+	AttributeArgument(i int) IAttributeArgumentContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsAttributeArgumentsContext differentiates from other interfaces.
 	IsAttributeArgumentsContext()
 }
 
 type AttributeArgumentsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributeArgumentsContext() *AttributeArgumentsContext {
 	var p = new(AttributeArgumentsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attributeArguments
 	return p
+}
+
+func InitEmptyAttributeArgumentsContext(p *AttributeArgumentsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attributeArguments
 }
 
 func (*AttributeArgumentsContext) IsAttributeArgumentsContext() {}
@@ -17934,7 +19721,7 @@ func (*AttributeArgumentsContext) IsAttributeArgumentsContext() {}
 func NewAttributeArgumentsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributeArgumentsContext {
 	var p = new(AttributeArgumentsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attributeArguments
@@ -18053,28 +19840,9 @@ func (s *AttributeArgumentsContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) AttributeArguments() (localctx IAttributeArgumentsContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributeArgumentsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 188, MojoParserRULE_attributeArguments)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -18085,8 +19853,13 @@ func (p *MojoParser) AttributeArguments() (localctx IAttributeArgumentsContext) 
 	}
 	p.SetState(1517)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 190, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 190, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -18095,16 +19868,26 @@ func (p *MojoParser) AttributeArguments() (localctx IAttributeArgumentsContext) 
 			}
 			p.SetState(1510)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1507)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1512)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -18115,20 +19898,38 @@ func (p *MojoParser) AttributeArguments() (localctx IAttributeArgumentsContext) 
 		}
 		p.SetState(1519)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 190, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 190, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1521)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 191, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 191, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1520)
 			p.Eov()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAttributesContext is an interface to support dynamic dispatch.
@@ -18138,20 +19939,31 @@ type IAttributesContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllAttribute() []IAttributeContext
+	Attribute(i int) IAttributeContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsAttributesContext differentiates from other interfaces.
 	IsAttributesContext()
 }
 
 type AttributesContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAttributesContext() *AttributesContext {
 	var p = new(AttributesContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_attributes
 	return p
+}
+
+func InitEmptyAttributesContext(p *AttributesContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_attributes
 }
 
 func (*AttributesContext) IsAttributesContext() {}
@@ -18159,7 +19971,7 @@ func (*AttributesContext) IsAttributesContext() {}
 func NewAttributesContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AttributesContext {
 	var p = new(AttributesContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_attributes
@@ -18237,28 +20049,9 @@ func (s *AttributesContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Attributes() (localctx IAttributesContext) {
-	this := p
-	_ = this
-
 	localctx = NewAttributesContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 190, MojoParserRULE_attributes)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -18269,18 +20062,30 @@ func (p *MojoParser) Attributes() (localctx IAttributesContext) {
 	}
 	p.SetState(1530)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 193, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 193, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			p.SetState(1525)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			if _la == MojoParserEOL {
 				{
 					p.SetState(1524)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 			}
@@ -18292,10 +20097,26 @@ func (p *MojoParser) Attributes() (localctx IAttributesContext) {
 		}
 		p.SetState(1532)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 193, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 193, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IExpressionContext is an interface to support dynamic dispatch.
@@ -18305,20 +20126,29 @@ type IExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	PrefixExpression() IPrefixExpressionContext
+	BinaryExpressions() IBinaryExpressionsContext
+
 	// IsExpressionContext differentiates from other interfaces.
 	IsExpressionContext()
 }
 
 type ExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyExpressionContext() *ExpressionContext {
 	var p = new(ExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_expression
 	return p
+}
+
+func InitEmptyExpressionContext(p *ExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_expression
 }
 
 func (*ExpressionContext) IsExpressionContext() {}
@@ -18326,7 +20156,7 @@ func (*ExpressionContext) IsExpressionContext() {}
 func NewExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ExpressionContext {
 	var p = new(ExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_expression
@@ -18387,28 +20217,8 @@ func (s *ExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Expression() (localctx IExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 192, MojoParserRULE_expression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1533)
@@ -18417,15 +20227,27 @@ func (p *MojoParser) Expression() (localctx IExpressionContext) {
 	p.SetState(1535)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 194, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 194, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1534)
 			p.BinaryExpressions()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IExpressionsContext is an interface to support dynamic dispatch.
@@ -18435,20 +20257,33 @@ type IExpressionsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllExpression() []IExpressionContext
+	Expression(i int) IExpressionContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsExpressionsContext differentiates from other interfaces.
 	IsExpressionsContext()
 }
 
 type ExpressionsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyExpressionsContext() *ExpressionsContext {
 	var p = new(ExpressionsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_expressions
 	return p
+}
+
+func InitEmptyExpressionsContext(p *ExpressionsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_expressions
 }
 
 func (*ExpressionsContext) IsExpressionsContext() {}
@@ -18456,7 +20291,7 @@ func (*ExpressionsContext) IsExpressionsContext() {}
 func NewExpressionsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ExpressionsContext {
 	var p = new(ExpressionsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_expressions
@@ -18575,28 +20410,9 @@ func (s *ExpressionsContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) Expressions() (localctx IExpressionsContext) {
-	this := p
-	_ = this
-
 	localctx = NewExpressionsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 194, MojoParserRULE_expressions)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -18607,8 +20423,13 @@ func (p *MojoParser) Expressions() (localctx IExpressionsContext) {
 	}
 	p.SetState(1549)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 196, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 196, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -18617,16 +20438,26 @@ func (p *MojoParser) Expressions() (localctx IExpressionsContext) {
 			}
 			p.SetState(1542)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1539)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1544)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -18637,10 +20468,19 @@ func (p *MojoParser) Expressions() (localctx IExpressionsContext) {
 		}
 		p.SetState(1551)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 196, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 196, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1553)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserCOMMA || _la == MojoParserEOL {
@@ -18651,7 +20491,17 @@ func (p *MojoParser) Expressions() (localctx IExpressionsContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPrefixExpressionContext is an interface to support dynamic dispatch.
@@ -18661,20 +20511,29 @@ type IPrefixExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	PrefixOperator() IPrefixOperatorContext
+	PostfixExpression() IPostfixExpressionContext
+
 	// IsPrefixExpressionContext differentiates from other interfaces.
 	IsPrefixExpressionContext()
 }
 
 type PrefixExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPrefixExpressionContext() *PrefixExpressionContext {
 	var p = new(PrefixExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_prefixExpression
 	return p
+}
+
+func InitEmptyPrefixExpressionContext(p *PrefixExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_prefixExpression
 }
 
 func (*PrefixExpressionContext) IsPrefixExpressionContext() {}
@@ -18682,7 +20541,7 @@ func (*PrefixExpressionContext) IsPrefixExpressionContext() {}
 func NewPrefixExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PrefixExpressionContext {
 	var p = new(PrefixExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_prefixExpression
@@ -18743,31 +20602,15 @@ func (s *PrefixExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) PrefixExpression() (localctx IPrefixExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewPrefixExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 196, MojoParserRULE_prefixExpression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1559)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 198, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 198, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -18786,9 +20629,21 @@ func (p *MojoParser) PrefixExpression() (localctx IPrefixExpressionContext) {
 			p.PostfixExpression()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IBinaryExpressionContext is an interface to support dynamic dispatch.
@@ -18798,20 +20653,32 @@ type IBinaryExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	BinaryOperator() IBinaryOperatorContext
+	PrefixExpression() IPrefixExpressionContext
+	AssignmentOperator() IAssignmentOperatorContext
+	ConditionalOperator() IConditionalOperatorContext
+	TypeCastingOperator() ITypeCastingOperatorContext
+
 	// IsBinaryExpressionContext differentiates from other interfaces.
 	IsBinaryExpressionContext()
 }
 
 type BinaryExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyBinaryExpressionContext() *BinaryExpressionContext {
 	var p = new(BinaryExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_binaryExpression
 	return p
+}
+
+func InitEmptyBinaryExpressionContext(p *BinaryExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_binaryExpression
 }
 
 func (*BinaryExpressionContext) IsBinaryExpressionContext() {}
@@ -18819,7 +20686,7 @@ func (*BinaryExpressionContext) IsBinaryExpressionContext() {}
 func NewBinaryExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BinaryExpressionContext {
 	var p = new(BinaryExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_binaryExpression
@@ -18928,31 +20795,15 @@ func (s *BinaryExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) BinaryExpression() (localctx IBinaryExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewBinaryExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 198, MojoParserRULE_binaryExpression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1571)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 199, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 199, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -18993,9 +20844,21 @@ func (p *MojoParser) BinaryExpression() (localctx IBinaryExpressionContext) {
 			p.TypeCastingOperator()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IBinaryExpressionsContext is an interface to support dynamic dispatch.
@@ -19005,20 +20868,29 @@ type IBinaryExpressionsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllBinaryExpression() []IBinaryExpressionContext
+	BinaryExpression(i int) IBinaryExpressionContext
+
 	// IsBinaryExpressionsContext differentiates from other interfaces.
 	IsBinaryExpressionsContext()
 }
 
 type BinaryExpressionsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyBinaryExpressionsContext() *BinaryExpressionsContext {
 	var p = new(BinaryExpressionsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_binaryExpressions
 	return p
+}
+
+func InitEmptyBinaryExpressionsContext(p *BinaryExpressionsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_binaryExpressions
 }
 
 func (*BinaryExpressionsContext) IsBinaryExpressionsContext() {}
@@ -19026,7 +20898,7 @@ func (*BinaryExpressionsContext) IsBinaryExpressionsContext() {}
 func NewBinaryExpressionsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BinaryExpressionsContext {
 	var p = new(BinaryExpressionsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_binaryExpressions
@@ -19096,33 +20968,16 @@ func (s *BinaryExpressionsContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) BinaryExpressions() (localctx IBinaryExpressionsContext) {
-	this := p
-	_ = this
-
 	localctx = NewBinaryExpressionsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 200, MojoParserRULE_binaryExpressions)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1574)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_alt = 1
 	for ok := true; ok; ok = _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		switch _alt {
@@ -19133,15 +20988,29 @@ func (p *MojoParser) BinaryExpressions() (localctx IBinaryExpressionsContext) {
 			}
 
 		default:
-			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			goto errorExit
 		}
 
 		p.SetState(1576)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 200, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 200, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IConditionalOperatorContext is an interface to support dynamic dispatch.
@@ -19151,20 +21020,30 @@ type IConditionalOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	QUESTION() antlr.TerminalNode
+	Expression() IExpressionContext
+	COLON() antlr.TerminalNode
+
 	// IsConditionalOperatorContext differentiates from other interfaces.
 	IsConditionalOperatorContext()
 }
 
 type ConditionalOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyConditionalOperatorContext() *ConditionalOperatorContext {
 	var p = new(ConditionalOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_conditionalOperator
 	return p
+}
+
+func InitEmptyConditionalOperatorContext(p *ConditionalOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_conditionalOperator
 }
 
 func (*ConditionalOperatorContext) IsConditionalOperatorContext() {}
@@ -19172,7 +21051,7 @@ func (*ConditionalOperatorContext) IsConditionalOperatorContext() {}
 func NewConditionalOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ConditionalOperatorContext {
 	var p = new(ConditionalOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_conditionalOperator
@@ -19225,32 +21104,16 @@ func (s *ConditionalOperatorContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) ConditionalOperator() (localctx IConditionalOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewConditionalOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 202, MojoParserRULE_conditionalOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1578)
 		p.Match(MojoParserQUESTION)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1579)
@@ -19259,9 +21122,23 @@ func (p *MojoParser) ConditionalOperator() (localctx IConditionalOperatorContext
 	{
 		p.SetState(1580)
 		p.Match(MojoParserCOLON)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeCastingOperatorContext is an interface to support dynamic dispatch.
@@ -19271,20 +21148,30 @@ type ITypeCastingOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_IS() antlr.TerminalNode
+	Type_() IType_Context
+	KEYWORD_AS() antlr.TerminalNode
+
 	// IsTypeCastingOperatorContext differentiates from other interfaces.
 	IsTypeCastingOperatorContext()
 }
 
 type TypeCastingOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeCastingOperatorContext() *TypeCastingOperatorContext {
 	var p = new(TypeCastingOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeCastingOperator
 	return p
+}
+
+func InitEmptyTypeCastingOperatorContext(p *TypeCastingOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeCastingOperator
 }
 
 func (*TypeCastingOperatorContext) IsTypeCastingOperatorContext() {}
@@ -19292,7 +21179,7 @@ func (*TypeCastingOperatorContext) IsTypeCastingOperatorContext() {}
 func NewTypeCastingOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeCastingOperatorContext {
 	var p = new(TypeCastingOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeCastingOperator
@@ -19345,30 +21232,13 @@ func (s *TypeCastingOperatorContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) TypeCastingOperator() (localctx ITypeCastingOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeCastingOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 204, MojoParserRULE_typeCastingOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1586)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserKEYWORD_IS:
@@ -19376,6 +21246,10 @@ func (p *MojoParser) TypeCastingOperator() (localctx ITypeCastingOperatorContext
 		{
 			p.SetState(1582)
 			p.Match(MojoParserKEYWORD_IS)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1583)
@@ -19387,6 +21261,10 @@ func (p *MojoParser) TypeCastingOperator() (localctx ITypeCastingOperatorContext
 		{
 			p.SetState(1584)
 			p.Match(MojoParserKEYWORD_AS)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1585)
@@ -19394,10 +21272,21 @@ func (p *MojoParser) TypeCastingOperator() (localctx ITypeCastingOperatorContext
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPrimaryExpressionContext is an interface to support dynamic dispatch.
@@ -19407,20 +21296,38 @@ type IPrimaryExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LiteralExpression() ILiteralExpressionContext
+	DeclarationIdentifier() IDeclarationIdentifierContext
+	GenericArgumentClause() IGenericArgumentClauseContext
+	TypeIdentifier() ITypeIdentifierContext
+	DOT() antlr.TerminalNode
+	ClosureExpression() IClosureExpressionContext
+	ParenthesizedExpression() IParenthesizedExpressionContext
+	TupleExpression() ITupleExpressionContext
+	ImplicitMemberExpression() IImplicitMemberExpressionContext
+	WildcardExpression() IWildcardExpressionContext
+	StructConstructionExpression() IStructConstructionExpressionContext
+
 	// IsPrimaryExpressionContext differentiates from other interfaces.
 	IsPrimaryExpressionContext()
 }
 
 type PrimaryExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPrimaryExpressionContext() *PrimaryExpressionContext {
 	var p = new(PrimaryExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_primaryExpression
 	return p
+}
+
+func InitEmptyPrimaryExpressionContext(p *PrimaryExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_primaryExpression
 }
 
 func (*PrimaryExpressionContext) IsPrimaryExpressionContext() {}
@@ -19428,7 +21335,7 @@ func (*PrimaryExpressionContext) IsPrimaryExpressionContext() {}
 func NewPrimaryExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PrimaryExpressionContext {
 	var p = new(PrimaryExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_primaryExpression
@@ -19621,31 +21528,15 @@ func (s *PrimaryExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) PrimaryExpression() (localctx IPrimaryExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewPrimaryExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 206, MojoParserRULE_primaryExpression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1605)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 204, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 204, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -19662,12 +21553,14 @@ func (p *MojoParser) PrimaryExpression() (localctx IPrimaryExpressionContext) {
 		p.SetState(1591)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 202, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 202, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(1590)
 				p.GenericArgumentClause()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case 3:
@@ -19679,6 +21572,10 @@ func (p *MojoParser) PrimaryExpression() (localctx IPrimaryExpressionContext) {
 		{
 			p.SetState(1594)
 			p.Match(MojoParserDOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1595)
@@ -19687,12 +21584,14 @@ func (p *MojoParser) PrimaryExpression() (localctx IPrimaryExpressionContext) {
 		p.SetState(1597)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 203, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 203, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(1596)
 				p.GenericArgumentClause()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case 4:
@@ -19737,9 +21636,21 @@ func (p *MojoParser) PrimaryExpression() (localctx IPrimaryExpressionContext) {
 			p.StructConstructionExpression()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ILiteralExpressionContext is an interface to support dynamic dispatch.
@@ -19749,20 +21660,34 @@ type ILiteralExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	NumericOperatorLiteral() INumericOperatorLiteralContext
+	StringOperatorLiteral() IStringOperatorLiteralContext
+	StructLiteral() IStructLiteralContext
+	Literal() ILiteralContext
+	ArrayLiteral() IArrayLiteralContext
+	MapLiteral() IMapLiteralContext
+	ObjectLiteral() IObjectLiteralContext
+
 	// IsLiteralExpressionContext differentiates from other interfaces.
 	IsLiteralExpressionContext()
 }
 
 type LiteralExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyLiteralExpressionContext() *LiteralExpressionContext {
 	var p = new(LiteralExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_literalExpression
 	return p
+}
+
+func InitEmptyLiteralExpressionContext(p *LiteralExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_literalExpression
 }
 
 func (*LiteralExpressionContext) IsLiteralExpressionContext() {}
@@ -19770,7 +21695,7 @@ func (*LiteralExpressionContext) IsLiteralExpressionContext() {}
 func NewLiteralExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LiteralExpressionContext {
 	var p = new(LiteralExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_literalExpression
@@ -19911,31 +21836,15 @@ func (s *LiteralExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) LiteralExpression() (localctx ILiteralExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewLiteralExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 208, MojoParserRULE_literalExpression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1614)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 205, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 205, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -19985,9 +21894,21 @@ func (p *MojoParser) LiteralExpression() (localctx ILiteralExpressionContext) {
 			p.ObjectLiteral()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // INumericOperatorLiteralContext is an interface to support dynamic dispatch.
@@ -19997,20 +21918,29 @@ type INumericOperatorLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	NumericLiteral() INumericLiteralContext
+	SuffixLiteralOperator() ISuffixLiteralOperatorContext
+
 	// IsNumericOperatorLiteralContext differentiates from other interfaces.
 	IsNumericOperatorLiteralContext()
 }
 
 type NumericOperatorLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyNumericOperatorLiteralContext() *NumericOperatorLiteralContext {
 	var p = new(NumericOperatorLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_numericOperatorLiteral
 	return p
+}
+
+func InitEmptyNumericOperatorLiteralContext(p *NumericOperatorLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_numericOperatorLiteral
 }
 
 func (*NumericOperatorLiteralContext) IsNumericOperatorLiteralContext() {}
@@ -20018,7 +21948,7 @@ func (*NumericOperatorLiteralContext) IsNumericOperatorLiteralContext() {}
 func NewNumericOperatorLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *NumericOperatorLiteralContext {
 	var p = new(NumericOperatorLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_numericOperatorLiteral
@@ -20079,28 +22009,8 @@ func (s *NumericOperatorLiteralContext) Accept(visitor antlr.ParseTreeVisitor) i
 }
 
 func (p *MojoParser) NumericOperatorLiteral() (localctx INumericOperatorLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewNumericOperatorLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 210, MojoParserRULE_numericOperatorLiteral)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1616)
@@ -20111,7 +22021,17 @@ func (p *MojoParser) NumericOperatorLiteral() (localctx INumericOperatorLiteralC
 		p.SuffixLiteralOperator()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStringOperatorLiteralContext is an interface to support dynamic dispatch.
@@ -20121,20 +22041,30 @@ type IStringOperatorLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	PrefixLiteralOperator() IPrefixLiteralOperatorContext
+	StringLiteral() IStringLiteralContext
+	SuffixLiteralOperator() ISuffixLiteralOperatorContext
+
 	// IsStringOperatorLiteralContext differentiates from other interfaces.
 	IsStringOperatorLiteralContext()
 }
 
 type StringOperatorLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStringOperatorLiteralContext() *StringOperatorLiteralContext {
 	var p = new(StringOperatorLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_stringOperatorLiteral
 	return p
+}
+
+func InitEmptyStringOperatorLiteralContext(p *StringOperatorLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_stringOperatorLiteral
 }
 
 func (*StringOperatorLiteralContext) IsStringOperatorLiteralContext() {}
@@ -20142,7 +22072,7 @@ func (*StringOperatorLiteralContext) IsStringOperatorLiteralContext() {}
 func NewStringOperatorLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StringOperatorLiteralContext {
 	var p = new(StringOperatorLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_stringOperatorLiteral
@@ -20219,30 +22149,13 @@ func (s *StringOperatorLiteralContext) Accept(visitor antlr.ParseTreeVisitor) in
 }
 
 func (p *MojoParser) StringOperatorLiteral() (localctx IStringOperatorLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewStringOperatorLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 212, MojoParserRULE_stringOperatorLiteral)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1628)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserVALUE_IDENTIFIER:
@@ -20254,7 +22167,8 @@ func (p *MojoParser) StringOperatorLiteral() (localctx IStringOperatorLiteralCon
 		p.SetState(1620)
 
 		if !(p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS) {
-			panic(antlr.NewFailedPredicateException(p, "p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS", ""))
+			p.SetError(antlr.NewFailedPredicateException(p, "p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS", ""))
+			goto errorExit
 		}
 		{
 			p.SetState(1621)
@@ -20263,12 +22177,14 @@ func (p *MojoParser) StringOperatorLiteral() (localctx IStringOperatorLiteralCon
 		p.SetState(1623)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 206, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 206, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(1622)
 				p.SuffixLiteralOperator()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case MojoParserSTATIC_STRING_LITERAL, MojoParserINTERPOLATED_STRING_LITERAL:
@@ -20283,10 +22199,21 @@ func (p *MojoParser) StringOperatorLiteral() (localctx IStringOperatorLiteralCon
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ISuffixLiteralOperatorContext is an interface to support dynamic dispatch.
@@ -20296,20 +22223,29 @@ type ISuffixLiteralOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TYPE_IDENTIFIER() antlr.TerminalNode
+	VALUE_IDENTIFIER() antlr.TerminalNode
+
 	// IsSuffixLiteralOperatorContext differentiates from other interfaces.
 	IsSuffixLiteralOperatorContext()
 }
 
 type SuffixLiteralOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptySuffixLiteralOperatorContext() *SuffixLiteralOperatorContext {
 	var p = new(SuffixLiteralOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_suffixLiteralOperator
 	return p
+}
+
+func InitEmptySuffixLiteralOperatorContext(p *SuffixLiteralOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_suffixLiteralOperator
 }
 
 func (*SuffixLiteralOperatorContext) IsSuffixLiteralOperatorContext() {}
@@ -20317,7 +22253,7 @@ func (*SuffixLiteralOperatorContext) IsSuffixLiteralOperatorContext() {}
 func NewSuffixLiteralOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SuffixLiteralOperatorContext {
 	var p = new(SuffixLiteralOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_suffixLiteralOperator
@@ -20354,34 +22290,16 @@ func (s *SuffixLiteralOperatorContext) Accept(visitor antlr.ParseTreeVisitor) in
 }
 
 func (p *MojoParser) SuffixLiteralOperator() (localctx ISuffixLiteralOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewSuffixLiteralOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 214, MojoParserRULE_suffixLiteralOperator)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1630)
 
 	if !(p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS) {
-		panic(antlr.NewFailedPredicateException(p, "p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS", ""))
+		p.SetError(antlr.NewFailedPredicateException(p, "p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS", ""))
+		goto errorExit
 	}
 	{
 		p.SetState(1631)
@@ -20395,7 +22313,17 @@ func (p *MojoParser) SuffixLiteralOperator() (localctx ISuffixLiteralOperatorCon
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPrefixLiteralOperatorContext is an interface to support dynamic dispatch.
@@ -20405,20 +22333,28 @@ type IPrefixLiteralOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	VALUE_IDENTIFIER() antlr.TerminalNode
+
 	// IsPrefixLiteralOperatorContext differentiates from other interfaces.
 	IsPrefixLiteralOperatorContext()
 }
 
 type PrefixLiteralOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPrefixLiteralOperatorContext() *PrefixLiteralOperatorContext {
 	var p = new(PrefixLiteralOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_prefixLiteralOperator
 	return p
+}
+
+func InitEmptyPrefixLiteralOperatorContext(p *PrefixLiteralOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_prefixLiteralOperator
 }
 
 func (*PrefixLiteralOperatorContext) IsPrefixLiteralOperatorContext() {}
@@ -20426,7 +22362,7 @@ func (*PrefixLiteralOperatorContext) IsPrefixLiteralOperatorContext() {}
 func NewPrefixLiteralOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PrefixLiteralOperatorContext {
 	var p = new(PrefixLiteralOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_prefixLiteralOperator
@@ -20459,35 +22395,29 @@ func (s *PrefixLiteralOperatorContext) Accept(visitor antlr.ParseTreeVisitor) in
 }
 
 func (p *MojoParser) PrefixLiteralOperator() (localctx IPrefixLiteralOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewPrefixLiteralOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 216, MojoParserRULE_prefixLiteralOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1633)
 		p.Match(MojoParserVALUE_IDENTIFIER)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IArrayLiteralContext is an interface to support dynamic dispatch.
@@ -20497,20 +22427,32 @@ type IArrayLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LBRACK() antlr.TerminalNode
+	RBRACK() antlr.TerminalNode
+	ArrayLiteralItems() IArrayLiteralItemsContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsArrayLiteralContext differentiates from other interfaces.
 	IsArrayLiteralContext()
 }
 
 type ArrayLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyArrayLiteralContext() *ArrayLiteralContext {
 	var p = new(ArrayLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_arrayLiteral
 	return p
+}
+
+func InitEmptyArrayLiteralContext(p *ArrayLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_arrayLiteral
 }
 
 func (*ArrayLiteralContext) IsArrayLiteralContext() {}
@@ -20518,7 +22460,7 @@ func (*ArrayLiteralContext) IsArrayLiteralContext() {}
 func NewArrayLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArrayLiteralContext {
 	var p = new(ArrayLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_arrayLiteral
@@ -20579,50 +22521,45 @@ func (s *ArrayLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 }
 
 func (p *MojoParser) ArrayLiteral() (localctx IArrayLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewArrayLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 218, MojoParserRULE_arrayLiteral)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1635)
 		p.Match(MojoParserLBRACK)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1643)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 209, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 209, p.GetParserRuleContext()) == 1 {
 		p.SetState(1639)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1636)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1641)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -20630,27 +22567,53 @@ func (p *MojoParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 			p.ArrayLiteralItems()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1648)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1645)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1650)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(1651)
 		p.Match(MojoParserRBRACK)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IArrayLiteralItemsContext is an interface to support dynamic dispatch.
@@ -20660,20 +22623,33 @@ type IArrayLiteralItemsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllArrayLiteralItem() []IArrayLiteralItemContext
+	ArrayLiteralItem(i int) IArrayLiteralItemContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsArrayLiteralItemsContext differentiates from other interfaces.
 	IsArrayLiteralItemsContext()
 }
 
 type ArrayLiteralItemsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyArrayLiteralItemsContext() *ArrayLiteralItemsContext {
 	var p = new(ArrayLiteralItemsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_arrayLiteralItems
 	return p
+}
+
+func InitEmptyArrayLiteralItemsContext(p *ArrayLiteralItemsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_arrayLiteralItems
 }
 
 func (*ArrayLiteralItemsContext) IsArrayLiteralItemsContext() {}
@@ -20681,7 +22657,7 @@ func (*ArrayLiteralItemsContext) IsArrayLiteralItemsContext() {}
 func NewArrayLiteralItemsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArrayLiteralItemsContext {
 	var p = new(ArrayLiteralItemsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_arrayLiteralItems
@@ -20800,28 +22776,9 @@ func (s *ArrayLiteralItemsContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) ArrayLiteralItems() (localctx IArrayLiteralItemsContext) {
-	this := p
-	_ = this
-
 	localctx = NewArrayLiteralItemsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 220, MojoParserRULE_arrayLiteralItems)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -20832,8 +22789,13 @@ func (p *MojoParser) ArrayLiteralItems() (localctx IArrayLiteralItemsContext) {
 	}
 	p.SetState(1665)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 212, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 212, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -20842,16 +22804,26 @@ func (p *MojoParser) ArrayLiteralItems() (localctx IArrayLiteralItemsContext) {
 			}
 			p.SetState(1658)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1655)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1660)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -20862,20 +22834,38 @@ func (p *MojoParser) ArrayLiteralItems() (localctx IArrayLiteralItemsContext) {
 		}
 		p.SetState(1667)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 212, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 212, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1669)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 213, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 213, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1668)
 			p.Eov()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IArrayLiteralItemContext is an interface to support dynamic dispatch.
@@ -20885,20 +22875,28 @@ type IArrayLiteralItemContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Expression() IExpressionContext
+
 	// IsArrayLiteralItemContext differentiates from other interfaces.
 	IsArrayLiteralItemContext()
 }
 
 type ArrayLiteralItemContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyArrayLiteralItemContext() *ArrayLiteralItemContext {
 	var p = new(ArrayLiteralItemContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_arrayLiteralItem
 	return p
+}
+
+func InitEmptyArrayLiteralItemContext(p *ArrayLiteralItemContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_arrayLiteralItem
 }
 
 func (*ArrayLiteralItemContext) IsArrayLiteralItemContext() {}
@@ -20906,7 +22904,7 @@ func (*ArrayLiteralItemContext) IsArrayLiteralItemContext() {}
 func NewArrayLiteralItemContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArrayLiteralItemContext {
 	var p = new(ArrayLiteralItemContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_arrayLiteralItem
@@ -20951,35 +22949,25 @@ func (s *ArrayLiteralItemContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) ArrayLiteralItem() (localctx IArrayLiteralItemContext) {
-	this := p
-	_ = this
-
 	localctx = NewArrayLiteralItemContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 222, MojoParserRULE_arrayLiteralItem)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1671)
 		p.Expression()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IMapLiteralContext is an interface to support dynamic dispatch.
@@ -20989,20 +22977,32 @@ type IMapLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LCURLY() antlr.TerminalNode
+	RCURLY() antlr.TerminalNode
+	MapLiteralItems() IMapLiteralItemsContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsMapLiteralContext differentiates from other interfaces.
 	IsMapLiteralContext()
 }
 
 type MapLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyMapLiteralContext() *MapLiteralContext {
 	var p = new(MapLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_mapLiteral
 	return p
+}
+
+func InitEmptyMapLiteralContext(p *MapLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_mapLiteral
 }
 
 func (*MapLiteralContext) IsMapLiteralContext() {}
@@ -21010,7 +23010,7 @@ func (*MapLiteralContext) IsMapLiteralContext() {}
 func NewMapLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MapLiteralContext {
 	var p = new(MapLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_mapLiteral
@@ -21071,50 +23071,45 @@ func (s *MapLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) MapLiteral() (localctx IMapLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewMapLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 224, MojoParserRULE_mapLiteral)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1673)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1681)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 215, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 215, p.GetParserRuleContext()) == 1 {
 		p.SetState(1677)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1674)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1679)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -21122,27 +23117,53 @@ func (p *MojoParser) MapLiteral() (localctx IMapLiteralContext) {
 			p.MapLiteralItems()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1686)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1683)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1688)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(1689)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IMapLiteralItemsContext is an interface to support dynamic dispatch.
@@ -21152,20 +23173,33 @@ type IMapLiteralItemsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllMapLiteralItem() []IMapLiteralItemContext
+	MapLiteralItem(i int) IMapLiteralItemContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsMapLiteralItemsContext differentiates from other interfaces.
 	IsMapLiteralItemsContext()
 }
 
 type MapLiteralItemsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyMapLiteralItemsContext() *MapLiteralItemsContext {
 	var p = new(MapLiteralItemsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_mapLiteralItems
 	return p
+}
+
+func InitEmptyMapLiteralItemsContext(p *MapLiteralItemsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_mapLiteralItems
 }
 
 func (*MapLiteralItemsContext) IsMapLiteralItemsContext() {}
@@ -21173,7 +23207,7 @@ func (*MapLiteralItemsContext) IsMapLiteralItemsContext() {}
 func NewMapLiteralItemsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MapLiteralItemsContext {
 	var p = new(MapLiteralItemsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_mapLiteralItems
@@ -21292,28 +23326,9 @@ func (s *MapLiteralItemsContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) MapLiteralItems() (localctx IMapLiteralItemsContext) {
-	this := p
-	_ = this
-
 	localctx = NewMapLiteralItemsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 226, MojoParserRULE_mapLiteralItems)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -21324,8 +23339,13 @@ func (p *MojoParser) MapLiteralItems() (localctx IMapLiteralItemsContext) {
 	}
 	p.SetState(1703)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 218, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 218, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -21334,16 +23354,26 @@ func (p *MojoParser) MapLiteralItems() (localctx IMapLiteralItemsContext) {
 			}
 			p.SetState(1696)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1693)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1698)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -21354,20 +23384,38 @@ func (p *MojoParser) MapLiteralItems() (localctx IMapLiteralItemsContext) {
 		}
 		p.SetState(1705)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 218, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 218, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1707)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 219, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 219, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1706)
 			p.Eov()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IMapLiteralItemContext is an interface to support dynamic dispatch.
@@ -21377,20 +23425,31 @@ type IMapLiteralItemContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	COLON() antlr.TerminalNode
+	Expression() IExpressionContext
+	StringLiteral() IStringLiteralContext
+	IntegerLiteral() IIntegerLiteralContext
+
 	// IsMapLiteralItemContext differentiates from other interfaces.
 	IsMapLiteralItemContext()
 }
 
 type MapLiteralItemContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyMapLiteralItemContext() *MapLiteralItemContext {
 	var p = new(MapLiteralItemContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_mapLiteralItem
 	return p
+}
+
+func InitEmptyMapLiteralItemContext(p *MapLiteralItemContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_mapLiteralItem
 }
 
 func (*MapLiteralItemContext) IsMapLiteralItemContext() {}
@@ -21398,7 +23457,7 @@ func (*MapLiteralItemContext) IsMapLiteralItemContext() {}
 func NewMapLiteralItemContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MapLiteralItemContext {
 	var p = new(MapLiteralItemContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_mapLiteralItem
@@ -21479,31 +23538,14 @@ func (s *MapLiteralItemContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) MapLiteralItem() (localctx IMapLiteralItemContext) {
-	this := p
-	_ = this
-
 	localctx = NewMapLiteralItemContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 228, MojoParserRULE_mapLiteralItem)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1711)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserSTATIC_STRING_LITERAL, MojoParserINTERPOLATED_STRING_LITERAL:
@@ -21519,18 +23561,33 @@ func (p *MojoParser) MapLiteralItem() (localctx IMapLiteralItemContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 	{
 		p.SetState(1713)
 		p.Match(MojoParserCOLON)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1714)
 		p.Expression()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IObjectLiteralContext is an interface to support dynamic dispatch.
@@ -21540,20 +23597,32 @@ type IObjectLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LCURLY() antlr.TerminalNode
+	RCURLY() antlr.TerminalNode
+	ObjectLiteralItems() IObjectLiteralItemsContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsObjectLiteralContext differentiates from other interfaces.
 	IsObjectLiteralContext()
 }
 
 type ObjectLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyObjectLiteralContext() *ObjectLiteralContext {
 	var p = new(ObjectLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_objectLiteral
 	return p
+}
+
+func InitEmptyObjectLiteralContext(p *ObjectLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_objectLiteral
 }
 
 func (*ObjectLiteralContext) IsObjectLiteralContext() {}
@@ -21561,7 +23630,7 @@ func (*ObjectLiteralContext) IsObjectLiteralContext() {}
 func NewObjectLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ObjectLiteralContext {
 	var p = new(ObjectLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_objectLiteral
@@ -21622,50 +23691,45 @@ func (s *ObjectLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) ObjectLiteral() (localctx IObjectLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewObjectLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 230, MojoParserRULE_objectLiteral)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1716)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1724)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 222, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 222, p.GetParserRuleContext()) == 1 {
 		p.SetState(1720)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1717)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1722)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -21673,27 +23737,53 @@ func (p *MojoParser) ObjectLiteral() (localctx IObjectLiteralContext) {
 			p.ObjectLiteralItems()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(1729)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1726)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1731)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(1732)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IObjectLiteralItemsContext is an interface to support dynamic dispatch.
@@ -21703,20 +23793,33 @@ type IObjectLiteralItemsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllObjectLiteralItem() []IObjectLiteralItemContext
+	ObjectLiteralItem(i int) IObjectLiteralItemContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsObjectLiteralItemsContext differentiates from other interfaces.
 	IsObjectLiteralItemsContext()
 }
 
 type ObjectLiteralItemsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyObjectLiteralItemsContext() *ObjectLiteralItemsContext {
 	var p = new(ObjectLiteralItemsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_objectLiteralItems
 	return p
+}
+
+func InitEmptyObjectLiteralItemsContext(p *ObjectLiteralItemsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_objectLiteralItems
 }
 
 func (*ObjectLiteralItemsContext) IsObjectLiteralItemsContext() {}
@@ -21724,7 +23827,7 @@ func (*ObjectLiteralItemsContext) IsObjectLiteralItemsContext() {}
 func NewObjectLiteralItemsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ObjectLiteralItemsContext {
 	var p = new(ObjectLiteralItemsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_objectLiteralItems
@@ -21843,28 +23946,9 @@ func (s *ObjectLiteralItemsContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) ObjectLiteralItems() (localctx IObjectLiteralItemsContext) {
-	this := p
-	_ = this
-
 	localctx = NewObjectLiteralItemsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 232, MojoParserRULE_objectLiteralItems)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -21875,8 +23959,13 @@ func (p *MojoParser) ObjectLiteralItems() (localctx IObjectLiteralItemsContext) 
 	}
 	p.SetState(1746)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 225, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 225, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -21885,16 +23974,26 @@ func (p *MojoParser) ObjectLiteralItems() (localctx IObjectLiteralItemsContext) 
 			}
 			p.SetState(1739)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1736)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1741)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -21905,20 +24004,38 @@ func (p *MojoParser) ObjectLiteralItems() (localctx IObjectLiteralItemsContext) 
 		}
 		p.SetState(1748)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 225, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 225, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1750)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 226, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 226, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1749)
 			p.Eov()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IObjectLiteralItemContext is an interface to support dynamic dispatch.
@@ -21928,20 +24045,30 @@ type IObjectLiteralItemContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	PathIdentifier() IPathIdentifierContext
+	COLON() antlr.TerminalNode
+	Expression() IExpressionContext
+
 	// IsObjectLiteralItemContext differentiates from other interfaces.
 	IsObjectLiteralItemContext()
 }
 
 type ObjectLiteralItemContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyObjectLiteralItemContext() *ObjectLiteralItemContext {
 	var p = new(ObjectLiteralItemContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_objectLiteralItem
 	return p
+}
+
+func InitEmptyObjectLiteralItemContext(p *ObjectLiteralItemContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_objectLiteralItem
 }
 
 func (*ObjectLiteralItemContext) IsObjectLiteralItemContext() {}
@@ -21949,7 +24076,7 @@ func (*ObjectLiteralItemContext) IsObjectLiteralItemContext() {}
 func NewObjectLiteralItemContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ObjectLiteralItemContext {
 	var p = new(ObjectLiteralItemContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_objectLiteralItem
@@ -22014,28 +24141,9 @@ func (s *ObjectLiteralItemContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) ObjectLiteralItem() (localctx IObjectLiteralItemContext) {
-	this := p
-	_ = this
-
 	localctx = NewObjectLiteralItemContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 234, MojoParserRULE_objectLiteralItem)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -22044,12 +24152,19 @@ func (p *MojoParser) ObjectLiteralItem() (localctx IObjectLiteralItemContext) {
 	}
 	p.SetState(1755)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserCOLON {
 		{
 			p.SetState(1753)
 			p.Match(MojoParserCOLON)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1754)
@@ -22058,7 +24173,17 @@ func (p *MojoParser) ObjectLiteralItem() (localctx IObjectLiteralItemContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStructLiteralContext is an interface to support dynamic dispatch.
@@ -22068,20 +24193,29 @@ type IStructLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeIdentifier() ITypeIdentifierContext
+	ObjectLiteral() IObjectLiteralContext
+
 	// IsStructLiteralContext differentiates from other interfaces.
 	IsStructLiteralContext()
 }
 
 type StructLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStructLiteralContext() *StructLiteralContext {
 	var p = new(StructLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_structLiteral
 	return p
+}
+
+func InitEmptyStructLiteralContext(p *StructLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_structLiteral
 }
 
 func (*StructLiteralContext) IsStructLiteralContext() {}
@@ -22089,7 +24223,7 @@ func (*StructLiteralContext) IsStructLiteralContext() {}
 func NewStructLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StructLiteralContext {
 	var p = new(StructLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_structLiteral
@@ -22150,28 +24284,8 @@ func (s *StructLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) StructLiteral() (localctx IStructLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewStructLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 236, MojoParserRULE_structLiteral)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1757)
@@ -22182,7 +24296,17 @@ func (p *MojoParser) StructLiteral() (localctx IStructLiteralContext) {
 		p.ObjectLiteral()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStructConstructionExpressionContext is an interface to support dynamic dispatch.
@@ -22192,20 +24316,29 @@ type IStructConstructionExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeIdentifier() ITypeIdentifierContext
+	FunctionCallSuffix() IFunctionCallSuffixContext
+
 	// IsStructConstructionExpressionContext differentiates from other interfaces.
 	IsStructConstructionExpressionContext()
 }
 
 type StructConstructionExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStructConstructionExpressionContext() *StructConstructionExpressionContext {
 	var p = new(StructConstructionExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_structConstructionExpression
 	return p
+}
+
+func InitEmptyStructConstructionExpressionContext(p *StructConstructionExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_structConstructionExpression
 }
 
 func (*StructConstructionExpressionContext) IsStructConstructionExpressionContext() {}
@@ -22213,7 +24346,7 @@ func (*StructConstructionExpressionContext) IsStructConstructionExpressionContex
 func NewStructConstructionExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StructConstructionExpressionContext {
 	var p = new(StructConstructionExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_structConstructionExpression
@@ -22274,28 +24407,8 @@ func (s *StructConstructionExpressionContext) Accept(visitor antlr.ParseTreeVisi
 }
 
 func (p *MojoParser) StructConstructionExpression() (localctx IStructConstructionExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewStructConstructionExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 238, MojoParserRULE_structConstructionExpression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1760)
@@ -22306,7 +24419,17 @@ func (p *MojoParser) StructConstructionExpression() (localctx IStructConstructio
 		p.FunctionCallSuffix()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IClosureExpressionContext is an interface to support dynamic dispatch.
@@ -22316,20 +24439,35 @@ type IClosureExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LCURLY() antlr.TerminalNode
+	Statements() IStatementsContext
+	RCURLY() antlr.TerminalNode
+	ClosureParameters() IClosureParametersContext
+	RIGHT_ARROW() antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+	Type_() IType_Context
+
 	// IsClosureExpressionContext differentiates from other interfaces.
 	IsClosureExpressionContext()
 }
 
 type ClosureExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyClosureExpressionContext() *ClosureExpressionContext {
 	var p = new(ClosureExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_closureExpression
 	return p
+}
+
+func InitEmptyClosureExpressionContext(p *ClosureExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_closureExpression
 }
 
 func (*ClosureExpressionContext) IsClosureExpressionContext() {}
@@ -22337,7 +24475,7 @@ func (*ClosureExpressionContext) IsClosureExpressionContext() {}
 func NewClosureExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ClosureExpressionContext {
 	var p = new(ClosureExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_closureExpression
@@ -22434,37 +24572,26 @@ func (s *ClosureExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) ClosureExpression() (localctx IClosureExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewClosureExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 240, MojoParserRULE_closureExpression)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1794)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 232, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 232, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(1763)
 			p.Match(MojoParserLCURLY)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1764)
@@ -22473,6 +24600,10 @@ func (p *MojoParser) ClosureExpression() (localctx IClosureExpressionContext) {
 		{
 			p.SetState(1765)
 			p.Match(MojoParserRCURLY)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 2:
@@ -22480,6 +24611,10 @@ func (p *MojoParser) ClosureExpression() (localctx IClosureExpressionContext) {
 		{
 			p.SetState(1767)
 			p.Match(MojoParserLCURLY)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1768)
@@ -22487,38 +24622,62 @@ func (p *MojoParser) ClosureExpression() (localctx IClosureExpressionContext) {
 		}
 		p.SetState(1772)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1769)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1774)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
 			p.SetState(1775)
 			p.Match(MojoParserRIGHT_ARROW)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		p.SetState(1783)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 230, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 230, p.GetParserRuleContext()) == 1 {
 			p.SetState(1779)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1776)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1781)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -22526,19 +24685,31 @@ func (p *MojoParser) ClosureExpression() (localctx IClosureExpressionContext) {
 				p.type_(0)
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 		p.SetState(1788)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(1785)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(1790)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -22548,11 +24719,27 @@ func (p *MojoParser) ClosureExpression() (localctx IClosureExpressionContext) {
 		{
 			p.SetState(1792)
 			p.Match(MojoParserRCURLY)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IClosureParametersContext is an interface to support dynamic dispatch.
@@ -22562,20 +24749,33 @@ type IClosureParametersContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllClosureParameter() []IClosureParameterContext
+	ClosureParameter(i int) IClosureParameterContext
+	AllEov() []IEovContext
+	Eov(i int) IEovContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsClosureParametersContext differentiates from other interfaces.
 	IsClosureParametersContext()
 }
 
 type ClosureParametersContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyClosureParametersContext() *ClosureParametersContext {
 	var p = new(ClosureParametersContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_closureParameters
 	return p
+}
+
+func InitEmptyClosureParametersContext(p *ClosureParametersContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_closureParameters
 }
 
 func (*ClosureParametersContext) IsClosureParametersContext() {}
@@ -22583,7 +24783,7 @@ func (*ClosureParametersContext) IsClosureParametersContext() {}
 func NewClosureParametersContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ClosureParametersContext {
 	var p = new(ClosureParametersContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_closureParameters
@@ -22702,28 +24902,9 @@ func (s *ClosureParametersContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) ClosureParameters() (localctx IClosureParametersContext) {
-	this := p
-	_ = this
-
 	localctx = NewClosureParametersContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 242, MojoParserRULE_closureParameters)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -22734,8 +24915,13 @@ func (p *MojoParser) ClosureParameters() (localctx IClosureParametersContext) {
 	}
 	p.SetState(1808)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 234, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 234, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -22744,16 +24930,26 @@ func (p *MojoParser) ClosureParameters() (localctx IClosureParametersContext) {
 			}
 			p.SetState(1801)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(1798)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(1803)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -22764,20 +24960,38 @@ func (p *MojoParser) ClosureParameters() (localctx IClosureParametersContext) {
 		}
 		p.SetState(1810)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 234, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 234, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1812)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 235, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 235, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1811)
 			p.Eov()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IClosureParameterContext is an interface to support dynamic dispatch.
@@ -22787,20 +25001,29 @@ type IClosureParameterContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	FunctionParameter() IFunctionParameterContext
+	LabelIdentifier() ILabelIdentifierContext
+
 	// IsClosureParameterContext differentiates from other interfaces.
 	IsClosureParameterContext()
 }
 
 type ClosureParameterContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyClosureParameterContext() *ClosureParameterContext {
 	var p = new(ClosureParameterContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_closureParameter
 	return p
+}
+
+func InitEmptyClosureParameterContext(p *ClosureParameterContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_closureParameter
 }
 
 func (*ClosureParameterContext) IsClosureParameterContext() {}
@@ -22808,7 +25031,7 @@ func (*ClosureParameterContext) IsClosureParameterContext() {}
 func NewClosureParameterContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ClosureParameterContext {
 	var p = new(ClosureParameterContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_closureParameter
@@ -22869,31 +25092,15 @@ func (s *ClosureParameterContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) ClosureParameter() (localctx IClosureParameterContext) {
-	this := p
-	_ = this
-
 	localctx = NewClosureParameterContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 244, MojoParserRULE_closureParameter)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1816)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 236, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 236, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -22908,9 +25115,21 @@ func (p *MojoParser) ClosureParameter() (localctx IClosureParameterContext) {
 			p.LabelIdentifier()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IImplicitMemberExpressionContext is an interface to support dynamic dispatch.
@@ -22920,20 +25139,29 @@ type IImplicitMemberExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DOT() antlr.TerminalNode
+	LabelIdentifier() ILabelIdentifierContext
+
 	// IsImplicitMemberExpressionContext differentiates from other interfaces.
 	IsImplicitMemberExpressionContext()
 }
 
 type ImplicitMemberExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyImplicitMemberExpressionContext() *ImplicitMemberExpressionContext {
 	var p = new(ImplicitMemberExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_implicitMemberExpression
 	return p
+}
+
+func InitEmptyImplicitMemberExpressionContext(p *ImplicitMemberExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_implicitMemberExpression
 }
 
 func (*ImplicitMemberExpressionContext) IsImplicitMemberExpressionContext() {}
@@ -22941,7 +25169,7 @@ func (*ImplicitMemberExpressionContext) IsImplicitMemberExpressionContext() {}
 func NewImplicitMemberExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImplicitMemberExpressionContext {
 	var p = new(ImplicitMemberExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_implicitMemberExpression
@@ -22990,39 +25218,33 @@ func (s *ImplicitMemberExpressionContext) Accept(visitor antlr.ParseTreeVisitor)
 }
 
 func (p *MojoParser) ImplicitMemberExpression() (localctx IImplicitMemberExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewImplicitMemberExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 246, MojoParserRULE_implicitMemberExpression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1818)
 		p.Match(MojoParserDOT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1819)
 		p.LabelIdentifier()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IParenthesizedExpressionContext is an interface to support dynamic dispatch.
@@ -23032,20 +25254,32 @@ type IParenthesizedExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LPAREN() antlr.TerminalNode
+	RPAREN() antlr.TerminalNode
+	Expression() IExpressionContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsParenthesizedExpressionContext differentiates from other interfaces.
 	IsParenthesizedExpressionContext()
 }
 
 type ParenthesizedExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyParenthesizedExpressionContext() *ParenthesizedExpressionContext {
 	var p = new(ParenthesizedExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_parenthesizedExpression
 	return p
+}
+
+func InitEmptyParenthesizedExpressionContext(p *ParenthesizedExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_parenthesizedExpression
 }
 
 func (*ParenthesizedExpressionContext) IsParenthesizedExpressionContext() {}
@@ -23053,7 +25287,7 @@ func (*ParenthesizedExpressionContext) IsParenthesizedExpressionContext() {}
 func NewParenthesizedExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ParenthesizedExpressionContext {
 	var p = new(ParenthesizedExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_parenthesizedExpression
@@ -23114,46 +25348,41 @@ func (s *ParenthesizedExpressionContext) Accept(visitor antlr.ParseTreeVisitor) 
 }
 
 func (p *MojoParser) ParenthesizedExpression() (localctx IParenthesizedExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewParenthesizedExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 248, MojoParserRULE_parenthesizedExpression)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1821)
 		p.Match(MojoParserLPAREN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1825)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1822)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1827)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 
@@ -23164,24 +25393,48 @@ func (p *MojoParser) ParenthesizedExpression() (localctx IParenthesizedExpressio
 
 	p.SetState(1832)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(1829)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(1834)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(1835)
 		p.Match(MojoParserRPAREN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITupleExpressionContext is an interface to support dynamic dispatch.
@@ -23191,20 +25444,33 @@ type ITupleExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LPAREN() antlr.TerminalNode
+	RPAREN() antlr.TerminalNode
+	AllTupleElement() []ITupleElementContext
+	TupleElement(i int) ITupleElementContext
+	AllCOMMA() []antlr.TerminalNode
+	COMMA(i int) antlr.TerminalNode
+
 	// IsTupleExpressionContext differentiates from other interfaces.
 	IsTupleExpressionContext()
 }
 
 type TupleExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTupleExpressionContext() *TupleExpressionContext {
 	var p = new(TupleExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_tupleExpression
 	return p
+}
+
+func InitEmptyTupleExpressionContext(p *TupleExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_tupleExpression
 }
 
 func (*TupleExpressionContext) IsTupleExpressionContext() {}
@@ -23212,7 +25478,7 @@ func (*TupleExpressionContext) IsTupleExpressionContext() {}
 func NewTupleExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TupleExpressionContext {
 	var p = new(TupleExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_tupleExpression
@@ -23298,41 +25564,34 @@ func (s *TupleExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) TupleExpression() (localctx ITupleExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewTupleExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 250, MojoParserRULE_tupleExpression)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1849)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 240, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 240, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(1837)
 			p.Match(MojoParserLPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1838)
 			p.Match(MojoParserRPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 2:
@@ -23340,6 +25599,10 @@ func (p *MojoParser) TupleExpression() (localctx ITupleExpressionContext) {
 		{
 			p.SetState(1839)
 			p.Match(MojoParserLPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1840)
@@ -23347,12 +25610,19 @@ func (p *MojoParser) TupleExpression() (localctx ITupleExpressionContext) {
 		}
 		p.SetState(1843)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for ok := true; ok; ok = _la == MojoParserCOMMA {
 			{
 				p.SetState(1841)
 				p.Match(MojoParserCOMMA)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 			{
 				p.SetState(1842)
@@ -23361,16 +25631,35 @@ func (p *MojoParser) TupleExpression() (localctx ITupleExpressionContext) {
 
 			p.SetState(1845)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
 			p.SetState(1847)
 			p.Match(MojoParserRPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITupleElementContext is an interface to support dynamic dispatch.
@@ -23380,20 +25669,30 @@ type ITupleElementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Expression() IExpressionContext
+	LabelIdentifier() ILabelIdentifierContext
+	COLON() antlr.TerminalNode
+
 	// IsTupleElementContext differentiates from other interfaces.
 	IsTupleElementContext()
 }
 
 type TupleElementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTupleElementContext() *TupleElementContext {
 	var p = new(TupleElementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_tupleElement
 	return p
+}
+
+func InitEmptyTupleElementContext(p *TupleElementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_tupleElement
 }
 
 func (*TupleElementContext) IsTupleElementContext() {}
@@ -23401,7 +25700,7 @@ func (*TupleElementContext) IsTupleElementContext() {}
 func NewTupleElementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TupleElementContext {
 	var p = new(TupleElementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_tupleElement
@@ -23466,31 +25765,15 @@ func (s *TupleElementContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 }
 
 func (p *MojoParser) TupleElement() (localctx ITupleElementContext) {
-	this := p
-	_ = this
-
 	localctx = NewTupleElementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 252, MojoParserRULE_tupleElement)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1856)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 241, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 241, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -23507,15 +25790,31 @@ func (p *MojoParser) TupleElement() (localctx ITupleElementContext) {
 		{
 			p.SetState(1853)
 			p.Match(MojoParserCOLON)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1854)
 			p.Expression()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IWildcardExpressionContext is an interface to support dynamic dispatch.
@@ -23525,20 +25824,28 @@ type IWildcardExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	UNDERSCORE() antlr.TerminalNode
+
 	// IsWildcardExpressionContext differentiates from other interfaces.
 	IsWildcardExpressionContext()
 }
 
 type WildcardExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyWildcardExpressionContext() *WildcardExpressionContext {
 	var p = new(WildcardExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_wildcardExpression
 	return p
+}
+
+func InitEmptyWildcardExpressionContext(p *WildcardExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_wildcardExpression
 }
 
 func (*WildcardExpressionContext) IsWildcardExpressionContext() {}
@@ -23546,7 +25853,7 @@ func (*WildcardExpressionContext) IsWildcardExpressionContext() {}
 func NewWildcardExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *WildcardExpressionContext {
 	var p = new(WildcardExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_wildcardExpression
@@ -23579,35 +25886,29 @@ func (s *WildcardExpressionContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) WildcardExpression() (localctx IWildcardExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewWildcardExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 254, MojoParserRULE_wildcardExpression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1858)
 		p.Match(MojoParserUNDERSCORE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPostfixExpressionContext is an interface to support dynamic dispatch.
@@ -23617,20 +25918,31 @@ type IPostfixExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	PrimaryExpression() IPrimaryExpressionContext
+	AllSuffixExpression() []ISuffixExpressionContext
+	SuffixExpression(i int) ISuffixExpressionContext
+	PostfixOperator() IPostfixOperatorContext
+
 	// IsPostfixExpressionContext differentiates from other interfaces.
 	IsPostfixExpressionContext()
 }
 
 type PostfixExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPostfixExpressionContext() *PostfixExpressionContext {
 	var p = new(PostfixExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_postfixExpression
 	return p
+}
+
+func InitEmptyPostfixExpressionContext(p *PostfixExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_postfixExpression
 }
 
 func (*PostfixExpressionContext) IsPostfixExpressionContext() {}
@@ -23638,7 +25950,7 @@ func (*PostfixExpressionContext) IsPostfixExpressionContext() {}
 func NewPostfixExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PostfixExpressionContext {
 	var p = new(PostfixExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_postfixExpression
@@ -23740,28 +26052,8 @@ func (s *PostfixExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) PostfixExpression() (localctx IPostfixExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewPostfixExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 256, MojoParserRULE_postfixExpression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
@@ -23771,8 +26063,13 @@ func (p *MojoParser) PostfixExpression() (localctx IPostfixExpressionContext) {
 	}
 	p.SetState(1864)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 242, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 242, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -23783,20 +26080,38 @@ func (p *MojoParser) PostfixExpression() (localctx IPostfixExpressionContext) {
 		}
 		p.SetState(1866)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 242, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 242, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(1868)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 243, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 243, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1867)
 			p.PostfixOperator()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ISuffixExpressionContext is an interface to support dynamic dispatch.
@@ -23806,20 +26121,30 @@ type ISuffixExpressionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	FunctionCallSuffix() IFunctionCallSuffixContext
+	ExplicitMemberSuffix() IExplicitMemberSuffixContext
+	SubscriptSuffix() ISubscriptSuffixContext
+
 	// IsSuffixExpressionContext differentiates from other interfaces.
 	IsSuffixExpressionContext()
 }
 
 type SuffixExpressionContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptySuffixExpressionContext() *SuffixExpressionContext {
 	var p = new(SuffixExpressionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_suffixExpression
 	return p
+}
+
+func InitEmptySuffixExpressionContext(p *SuffixExpressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_suffixExpression
 }
 
 func (*SuffixExpressionContext) IsSuffixExpressionContext() {}
@@ -23827,7 +26152,7 @@ func (*SuffixExpressionContext) IsSuffixExpressionContext() {}
 func NewSuffixExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SuffixExpressionContext {
 	var p = new(SuffixExpressionContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_suffixExpression
@@ -23904,30 +26229,13 @@ func (s *SuffixExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) SuffixExpression() (localctx ISuffixExpressionContext) {
-	this := p
-	_ = this
-
 	localctx = NewSuffixExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 258, MojoParserRULE_suffixExpression)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1873)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserLCURLY, MojoParserLPAREN:
@@ -23952,10 +26260,21 @@ func (p *MojoParser) SuffixExpression() (localctx ISuffixExpressionContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IExplicitMemberSuffixContext is an interface to support dynamic dispatch.
@@ -23965,20 +26284,34 @@ type IExplicitMemberSuffixContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DOT() antlr.TerminalNode
+	PURE_DECIMAL_DIGITS() antlr.TerminalNode
+	Identifier() IIdentifierContext
+	GenericArgumentClause() IGenericArgumentClauseContext
+	LPAREN() antlr.TerminalNode
+	ArgumentNames() IArgumentNamesContext
+	RPAREN() antlr.TerminalNode
+
 	// IsExplicitMemberSuffixContext differentiates from other interfaces.
 	IsExplicitMemberSuffixContext()
 }
 
 type ExplicitMemberSuffixContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyExplicitMemberSuffixContext() *ExplicitMemberSuffixContext {
 	var p = new(ExplicitMemberSuffixContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_explicitMemberSuffix
 	return p
+}
+
+func InitEmptyExplicitMemberSuffixContext(p *ExplicitMemberSuffixContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_explicitMemberSuffix
 }
 
 func (*ExplicitMemberSuffixContext) IsExplicitMemberSuffixContext() {}
@@ -23986,7 +26319,7 @@ func (*ExplicitMemberSuffixContext) IsExplicitMemberSuffixContext() {}
 func NewExplicitMemberSuffixContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ExplicitMemberSuffixContext {
 	var p = new(ExplicitMemberSuffixContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_explicitMemberSuffix
@@ -24079,41 +26412,32 @@ func (s *ExplicitMemberSuffixContext) Accept(visitor antlr.ParseTreeVisitor) int
 }
 
 func (p *MojoParser) ExplicitMemberSuffix() (localctx IExplicitMemberSuffixContext) {
-	this := p
-	_ = this
-
 	localctx = NewExplicitMemberSuffixContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 260, MojoParserRULE_explicitMemberSuffix)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1875)
 		p.Match(MojoParserDOT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(1885)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserPURE_DECIMAL_DIGITS:
 		{
 			p.SetState(1876)
 			p.Match(MojoParserPURE_DECIMAL_DIGITS)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case MojoParserVALUE_IDENTIFIER, MojoParserIMPLICIT_PARAMETER_NAME:
@@ -24124,16 +26448,22 @@ func (p *MojoParser) ExplicitMemberSuffix() (localctx IExplicitMemberSuffixConte
 		p.SetState(1883)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 245, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 245, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(1878)
 				p.GenericArgumentClause()
 			}
 
-		} else if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 245, p.GetParserRuleContext()) == 2 {
+		} else if p.HasError() { // JIM
+			goto errorExit
+		} else if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 245, p.GetParserRuleContext()) == 2 {
 			{
 				p.SetState(1879)
 				p.Match(MojoParserLPAREN)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 			{
 				p.SetState(1880)
@@ -24142,15 +26472,32 @@ func (p *MojoParser) ExplicitMemberSuffix() (localctx IExplicitMemberSuffixConte
 			{
 				p.SetState(1881)
 				p.Match(MojoParserRPAREN)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ISubscriptSuffixContext is an interface to support dynamic dispatch.
@@ -24160,20 +26507,30 @@ type ISubscriptSuffixContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LBRACK() antlr.TerminalNode
+	FunctionCallArguments() IFunctionCallArgumentsContext
+	RBRACK() antlr.TerminalNode
+
 	// IsSubscriptSuffixContext differentiates from other interfaces.
 	IsSubscriptSuffixContext()
 }
 
 type SubscriptSuffixContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptySubscriptSuffixContext() *SubscriptSuffixContext {
 	var p = new(SubscriptSuffixContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_subscriptSuffix
 	return p
+}
+
+func InitEmptySubscriptSuffixContext(p *SubscriptSuffixContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_subscriptSuffix
 }
 
 func (*SubscriptSuffixContext) IsSubscriptSuffixContext() {}
@@ -24181,7 +26538,7 @@ func (*SubscriptSuffixContext) IsSubscriptSuffixContext() {}
 func NewSubscriptSuffixContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SubscriptSuffixContext {
 	var p = new(SubscriptSuffixContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_subscriptSuffix
@@ -24234,32 +26591,16 @@ func (s *SubscriptSuffixContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) SubscriptSuffix() (localctx ISubscriptSuffixContext) {
-	this := p
-	_ = this
-
 	localctx = NewSubscriptSuffixContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 262, MojoParserRULE_subscriptSuffix)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1887)
 		p.Match(MojoParserLBRACK)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1888)
@@ -24268,9 +26609,23 @@ func (p *MojoParser) SubscriptSuffix() (localctx ISubscriptSuffixContext) {
 	{
 		p.SetState(1889)
 		p.Match(MojoParserRBRACK)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionCallSuffixContext is an interface to support dynamic dispatch.
@@ -24280,20 +26635,29 @@ type IFunctionCallSuffixContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TrailingClosures() ITrailingClosuresContext
+	FunctionCallArgumentClause() IFunctionCallArgumentClauseContext
+
 	// IsFunctionCallSuffixContext differentiates from other interfaces.
 	IsFunctionCallSuffixContext()
 }
 
 type FunctionCallSuffixContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionCallSuffixContext() *FunctionCallSuffixContext {
 	var p = new(FunctionCallSuffixContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionCallSuffix
 	return p
+}
+
+func InitEmptyFunctionCallSuffixContext(p *FunctionCallSuffixContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionCallSuffix
 }
 
 func (*FunctionCallSuffixContext) IsFunctionCallSuffixContext() {}
@@ -24301,7 +26665,7 @@ func (*FunctionCallSuffixContext) IsFunctionCallSuffixContext() {}
 func NewFunctionCallSuffixContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionCallSuffixContext {
 	var p = new(FunctionCallSuffixContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionCallSuffix
@@ -24362,36 +26726,24 @@ func (s *FunctionCallSuffixContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) FunctionCallSuffix() (localctx IFunctionCallSuffixContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionCallSuffixContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 264, MojoParserRULE_functionCallSuffix)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1896)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 248, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 248, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		p.SetState(1892)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserLPAREN {
@@ -24413,9 +26765,21 @@ func (p *MojoParser) FunctionCallSuffix() (localctx IFunctionCallSuffixContext) 
 			p.FunctionCallArgumentClause()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionCallArgumentClauseContext is an interface to support dynamic dispatch.
@@ -24425,20 +26789,30 @@ type IFunctionCallArgumentClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LPAREN() antlr.TerminalNode
+	RPAREN() antlr.TerminalNode
+	FunctionCallArguments() IFunctionCallArgumentsContext
+
 	// IsFunctionCallArgumentClauseContext differentiates from other interfaces.
 	IsFunctionCallArgumentClauseContext()
 }
 
 type FunctionCallArgumentClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionCallArgumentClauseContext() *FunctionCallArgumentClauseContext {
 	var p = new(FunctionCallArgumentClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionCallArgumentClause
 	return p
+}
+
+func InitEmptyFunctionCallArgumentClauseContext(p *FunctionCallArgumentClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionCallArgumentClause
 }
 
 func (*FunctionCallArgumentClauseContext) IsFunctionCallArgumentClauseContext() {}
@@ -24446,7 +26820,7 @@ func (*FunctionCallArgumentClauseContext) IsFunctionCallArgumentClauseContext() 
 func NewFunctionCallArgumentClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionCallArgumentClauseContext {
 	var p = new(FunctionCallArgumentClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionCallArgumentClause
@@ -24499,40 +26873,32 @@ func (s *FunctionCallArgumentClauseContext) Accept(visitor antlr.ParseTreeVisito
 }
 
 func (p *MojoParser) FunctionCallArgumentClause() (localctx IFunctionCallArgumentClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionCallArgumentClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 266, MojoParserRULE_functionCallArgumentClause)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1904)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 249, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 249, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(1898)
 			p.Match(MojoParserLPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1899)
 			p.Match(MojoParserRPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 2:
@@ -24540,6 +26906,10 @@ func (p *MojoParser) FunctionCallArgumentClause() (localctx IFunctionCallArgumen
 		{
 			p.SetState(1900)
 			p.Match(MojoParserLPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1901)
@@ -24548,11 +26918,27 @@ func (p *MojoParser) FunctionCallArgumentClause() (localctx IFunctionCallArgumen
 		{
 			p.SetState(1902)
 			p.Match(MojoParserRPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionCallArgumentsContext is an interface to support dynamic dispatch.
@@ -24562,20 +26948,31 @@ type IFunctionCallArgumentsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllFunctionCallArgument() []IFunctionCallArgumentContext
+	FunctionCallArgument(i int) IFunctionCallArgumentContext
+	AllCOMMA() []antlr.TerminalNode
+	COMMA(i int) antlr.TerminalNode
+
 	// IsFunctionCallArgumentsContext differentiates from other interfaces.
 	IsFunctionCallArgumentsContext()
 }
 
 type FunctionCallArgumentsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionCallArgumentsContext() *FunctionCallArgumentsContext {
 	var p = new(FunctionCallArgumentsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionCallArguments
 	return p
+}
+
+func InitEmptyFunctionCallArgumentsContext(p *FunctionCallArgumentsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionCallArguments
 }
 
 func (*FunctionCallArgumentsContext) IsFunctionCallArgumentsContext() {}
@@ -24583,7 +26980,7 @@ func (*FunctionCallArgumentsContext) IsFunctionCallArgumentsContext() {}
 func NewFunctionCallArgumentsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionCallArgumentsContext {
 	var p = new(FunctionCallArgumentsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionCallArguments
@@ -24661,28 +27058,9 @@ func (s *FunctionCallArgumentsContext) Accept(visitor antlr.ParseTreeVisitor) in
 }
 
 func (p *MojoParser) FunctionCallArguments() (localctx IFunctionCallArgumentsContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionCallArgumentsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 268, MojoParserRULE_functionCallArguments)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -24691,12 +27069,19 @@ func (p *MojoParser) FunctionCallArguments() (localctx IFunctionCallArgumentsCon
 	}
 	p.SetState(1911)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserCOMMA {
 		{
 			p.SetState(1907)
 			p.Match(MojoParserCOMMA)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1908)
@@ -24705,10 +27090,23 @@ func (p *MojoParser) FunctionCallArguments() (localctx IFunctionCallArgumentsCon
 
 		p.SetState(1913)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionCallArgumentContext is an interface to support dynamic dispatch.
@@ -24718,20 +27116,31 @@ type IFunctionCallArgumentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Expression() IExpressionContext
+	LabelIdentifier() ILabelIdentifierContext
+	COLON() antlr.TerminalNode
+	Operator() IOperatorContext
+
 	// IsFunctionCallArgumentContext differentiates from other interfaces.
 	IsFunctionCallArgumentContext()
 }
 
 type FunctionCallArgumentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionCallArgumentContext() *FunctionCallArgumentContext {
 	var p = new(FunctionCallArgumentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionCallArgument
 	return p
+}
+
+func InitEmptyFunctionCallArgumentContext(p *FunctionCallArgumentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionCallArgument
 }
 
 func (*FunctionCallArgumentContext) IsFunctionCallArgumentContext() {}
@@ -24739,7 +27148,7 @@ func (*FunctionCallArgumentContext) IsFunctionCallArgumentContext() {}
 func NewFunctionCallArgumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionCallArgumentContext {
 	var p = new(FunctionCallArgumentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionCallArgument
@@ -24820,31 +27229,15 @@ func (s *FunctionCallArgumentContext) Accept(visitor antlr.ParseTreeVisitor) int
 }
 
 func (p *MojoParser) FunctionCallArgument() (localctx IFunctionCallArgumentContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionCallArgumentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 270, MojoParserRULE_functionCallArgument)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(1924)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 251, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 251, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
@@ -24861,6 +27254,10 @@ func (p *MojoParser) FunctionCallArgument() (localctx IFunctionCallArgumentConte
 		{
 			p.SetState(1916)
 			p.Match(MojoParserCOLON)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1917)
@@ -24883,15 +27280,31 @@ func (p *MojoParser) FunctionCallArgument() (localctx IFunctionCallArgumentConte
 		{
 			p.SetState(1921)
 			p.Match(MojoParserCOLON)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(1922)
 			p.Operator()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITrailingClosuresContext is an interface to support dynamic dispatch.
@@ -24901,20 +27314,29 @@ type ITrailingClosuresContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	ClosureExpression() IClosureExpressionContext
+	LabeledTrailingClosures() ILabeledTrailingClosuresContext
+
 	// IsTrailingClosuresContext differentiates from other interfaces.
 	IsTrailingClosuresContext()
 }
 
 type TrailingClosuresContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTrailingClosuresContext() *TrailingClosuresContext {
 	var p = new(TrailingClosuresContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_trailingClosures
 	return p
+}
+
+func InitEmptyTrailingClosuresContext(p *TrailingClosuresContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_trailingClosures
 }
 
 func (*TrailingClosuresContext) IsTrailingClosuresContext() {}
@@ -24922,7 +27344,7 @@ func (*TrailingClosuresContext) IsTrailingClosuresContext() {}
 func NewTrailingClosuresContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TrailingClosuresContext {
 	var p = new(TrailingClosuresContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_trailingClosures
@@ -24983,28 +27405,8 @@ func (s *TrailingClosuresContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) TrailingClosures() (localctx ITrailingClosuresContext) {
-	this := p
-	_ = this
-
 	localctx = NewTrailingClosuresContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 272, MojoParserRULE_trailingClosures)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1926)
@@ -25013,15 +27415,27 @@ func (p *MojoParser) TrailingClosures() (localctx ITrailingClosuresContext) {
 	p.SetState(1928)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 252, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 252, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1927)
 			p.LabeledTrailingClosures()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ILabeledTrailingClosuresContext is an interface to support dynamic dispatch.
@@ -25031,20 +27445,29 @@ type ILabeledTrailingClosuresContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllLabeledTrailingClosure() []ILabeledTrailingClosureContext
+	LabeledTrailingClosure(i int) ILabeledTrailingClosureContext
+
 	// IsLabeledTrailingClosuresContext differentiates from other interfaces.
 	IsLabeledTrailingClosuresContext()
 }
 
 type LabeledTrailingClosuresContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyLabeledTrailingClosuresContext() *LabeledTrailingClosuresContext {
 	var p = new(LabeledTrailingClosuresContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_labeledTrailingClosures
 	return p
+}
+
+func InitEmptyLabeledTrailingClosuresContext(p *LabeledTrailingClosuresContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_labeledTrailingClosures
 }
 
 func (*LabeledTrailingClosuresContext) IsLabeledTrailingClosuresContext() {}
@@ -25052,7 +27475,7 @@ func (*LabeledTrailingClosuresContext) IsLabeledTrailingClosuresContext() {}
 func NewLabeledTrailingClosuresContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LabeledTrailingClosuresContext {
 	var p = new(LabeledTrailingClosuresContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_labeledTrailingClosures
@@ -25122,33 +27545,16 @@ func (s *LabeledTrailingClosuresContext) Accept(visitor antlr.ParseTreeVisitor) 
 }
 
 func (p *MojoParser) LabeledTrailingClosures() (localctx ILabeledTrailingClosuresContext) {
-	this := p
-	_ = this
-
 	localctx = NewLabeledTrailingClosuresContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 274, MojoParserRULE_labeledTrailingClosures)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1931)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_alt = 1
 	for ok := true; ok; ok = _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		switch _alt {
@@ -25159,15 +27565,29 @@ func (p *MojoParser) LabeledTrailingClosures() (localctx ILabeledTrailingClosure
 			}
 
 		default:
-			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			goto errorExit
 		}
 
 		p.SetState(1933)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 253, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 253, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ILabeledTrailingClosureContext is an interface to support dynamic dispatch.
@@ -25177,20 +27597,30 @@ type ILabeledTrailingClosureContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Identifier() IIdentifierContext
+	COLON() antlr.TerminalNode
+	ClosureExpression() IClosureExpressionContext
+
 	// IsLabeledTrailingClosureContext differentiates from other interfaces.
 	IsLabeledTrailingClosureContext()
 }
 
 type LabeledTrailingClosureContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyLabeledTrailingClosureContext() *LabeledTrailingClosureContext {
 	var p = new(LabeledTrailingClosureContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_labeledTrailingClosure
 	return p
+}
+
+func InitEmptyLabeledTrailingClosureContext(p *LabeledTrailingClosureContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_labeledTrailingClosure
 }
 
 func (*LabeledTrailingClosureContext) IsLabeledTrailingClosureContext() {}
@@ -25198,7 +27628,7 @@ func (*LabeledTrailingClosureContext) IsLabeledTrailingClosureContext() {}
 func NewLabeledTrailingClosureContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LabeledTrailingClosureContext {
 	var p = new(LabeledTrailingClosureContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_labeledTrailingClosure
@@ -25263,28 +27693,8 @@ func (s *LabeledTrailingClosureContext) Accept(visitor antlr.ParseTreeVisitor) i
 }
 
 func (p *MojoParser) LabeledTrailingClosure() (localctx ILabeledTrailingClosureContext) {
-	this := p
-	_ = this
-
 	localctx = NewLabeledTrailingClosureContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 276, MojoParserRULE_labeledTrailingClosure)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1935)
@@ -25293,13 +27703,27 @@ func (p *MojoParser) LabeledTrailingClosure() (localctx ILabeledTrailingClosureC
 	{
 		p.SetState(1936)
 		p.Match(MojoParserCOLON)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(1937)
 		p.ClosureExpression()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IArgumentNamesContext is an interface to support dynamic dispatch.
@@ -25309,20 +27733,29 @@ type IArgumentNamesContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllArgumentName() []IArgumentNameContext
+	ArgumentName(i int) IArgumentNameContext
+
 	// IsArgumentNamesContext differentiates from other interfaces.
 	IsArgumentNamesContext()
 }
 
 type ArgumentNamesContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyArgumentNamesContext() *ArgumentNamesContext {
 	var p = new(ArgumentNamesContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_argumentNames
 	return p
+}
+
+func InitEmptyArgumentNamesContext(p *ArgumentNamesContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_argumentNames
 }
 
 func (*ArgumentNamesContext) IsArgumentNamesContext() {}
@@ -25330,7 +27763,7 @@ func (*ArgumentNamesContext) IsArgumentNamesContext() {}
 func NewArgumentNamesContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArgumentNamesContext {
 	var p = new(ArgumentNamesContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_argumentNames
@@ -25400,28 +27833,9 @@ func (s *ArgumentNamesContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) ArgumentNames() (localctx IArgumentNamesContext) {
-	this := p
-	_ = this
-
 	localctx = NewArgumentNamesContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 278, MojoParserRULE_argumentNames)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -25430,9 +27844,12 @@ func (p *MojoParser) ArgumentNames() (localctx IArgumentNamesContext) {
 	}
 	p.SetState(1943)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
-	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&536870910) != 0 || _la == MojoParserVALUE_IDENTIFIER {
+	for ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&536870910) != 0) || _la == MojoParserVALUE_IDENTIFIER {
 		{
 			p.SetState(1940)
 			p.ArgumentName()
@@ -25440,10 +27857,23 @@ func (p *MojoParser) ArgumentNames() (localctx IArgumentNamesContext) {
 
 		p.SetState(1945)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IArgumentNameContext is an interface to support dynamic dispatch.
@@ -25453,20 +27883,29 @@ type IArgumentNameContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LabelIdentifier() ILabelIdentifierContext
+	COLON() antlr.TerminalNode
+
 	// IsArgumentNameContext differentiates from other interfaces.
 	IsArgumentNameContext()
 }
 
 type ArgumentNameContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyArgumentNameContext() *ArgumentNameContext {
 	var p = new(ArgumentNameContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_argumentName
 	return p
+}
+
+func InitEmptyArgumentNameContext(p *ArgumentNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_argumentName
 }
 
 func (*ArgumentNameContext) IsArgumentNameContext() {}
@@ -25474,7 +27913,7 @@ func (*ArgumentNameContext) IsArgumentNameContext() {}
 func NewArgumentNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArgumentNameContext {
 	var p = new(ArgumentNameContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_argumentName
@@ -25523,28 +27962,8 @@ func (s *ArgumentNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 }
 
 func (p *MojoParser) ArgumentName() (localctx IArgumentNameContext) {
-	this := p
-	_ = this
-
 	localctx = NewArgumentNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 280, MojoParserRULE_argumentName)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(1946)
@@ -25553,9 +27972,23 @@ func (p *MojoParser) ArgumentName() (localctx IArgumentNameContext) {
 	{
 		p.SetState(1947)
 		p.Match(MojoParserCOLON)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IType_Context is an interface to support dynamic dispatch.
@@ -25565,20 +27998,33 @@ type IType_Context interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	BasicType() IBasicTypeContext
+	FunctionType() IFunctionTypeContext
+	Type_() IType_Context
+	BANG() antlr.TerminalNode
+	QUESTION() antlr.TerminalNode
+	ELLIPSIS() antlr.TerminalNode
+
 	// IsType_Context differentiates from other interfaces.
 	IsType_Context()
 }
 
 type Type_Context struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyType_Context() *Type_Context {
 	var p = new(Type_Context)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_type_
 	return p
+}
+
+func InitEmptyType_Context(p *Type_Context) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_type_
 }
 
 func (*Type_Context) IsType_Context() {}
@@ -25586,7 +28032,7 @@ func (*Type_Context) IsType_Context() {}
 func NewType_Context(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Type_Context {
 	var p = new(Type_Context)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_type_
@@ -25679,39 +28125,24 @@ func (p *MojoParser) Type_() (localctx IType_Context) {
 }
 
 func (p *MojoParser) type_(_p int) (localctx IType_Context) {
-	this := p
-	_ = this
-
 	var _parentctx antlr.ParserRuleContext = p.GetParserRuleContext()
+
 	_parentState := p.GetState()
 	localctx = NewType_Context(p, p.GetParserRuleContext(), _parentState)
 	var _prevctx IType_Context = localctx
 	var _ antlr.ParserRuleContext = _prevctx // TODO: To prevent unused variable warning.
 	_startState := 282
 	p.EnterRecursionRule(localctx, 282, MojoParserRULE_type_, _p)
-
-	defer func() {
-		p.UnrollRecursionContexts(_parentctx)
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(1952)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 255, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 255, p.GetParserRuleContext()) {
 	case 1:
 		{
 			p.SetState(1950)
@@ -25724,12 +28155,19 @@ func (p *MojoParser) type_(_p int) (localctx IType_Context) {
 			p.FunctionType()
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
 	p.SetState(1962)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 257, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 257, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			if p.GetParseListeners() != nil {
@@ -25738,18 +28176,27 @@ func (p *MojoParser) type_(_p int) (localctx IType_Context) {
 			_prevctx = localctx
 			p.SetState(1960)
 			p.GetErrorHandler().Sync(p)
-			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 256, p.GetParserRuleContext()) {
+			if p.HasError() {
+				goto errorExit
+			}
+
+			switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 256, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewType_Context(p, _parentctx, _parentState)
 				p.PushNewRecursionContext(localctx, _startState, MojoParserRULE_type_)
 				p.SetState(1954)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
+					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
+					goto errorExit
 				}
 				{
 					p.SetState(1955)
 					p.Match(MojoParserBANG)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 			case 2:
@@ -25758,11 +28205,16 @@ func (p *MojoParser) type_(_p int) (localctx IType_Context) {
 				p.SetState(1956)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 2)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
+					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
+					goto errorExit
 				}
 				{
 					p.SetState(1957)
 					p.Match(MojoParserQUESTION)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 			case 3:
@@ -25771,22 +28223,45 @@ func (p *MojoParser) type_(_p int) (localctx IType_Context) {
 				p.SetState(1958)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 1)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 1)", ""))
+					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 1)", ""))
+					goto errorExit
 				}
 				{
 					p.SetState(1959)
 					p.Match(MojoParserELLIPSIS)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
+			case antlr.ATNInvalidAltNumber:
+				goto errorExit
 			}
 
 		}
 		p.SetState(1964)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 257, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 257, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.UnrollRecursionContexts(_parentctx)
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IBasicTypeContext is an interface to support dynamic dispatch.
@@ -25795,21 +28270,25 @@ type IBasicTypeContext interface {
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
-
 	// IsBasicTypeContext differentiates from other interfaces.
 	IsBasicTypeContext()
 }
 
 type BasicTypeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyBasicTypeContext() *BasicTypeContext {
 	var p = new(BasicTypeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_basicType
 	return p
+}
+
+func InitEmptyBasicTypeContext(p *BasicTypeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_basicType
 }
 
 func (*BasicTypeContext) IsBasicTypeContext() {}
@@ -25817,7 +28296,7 @@ func (*BasicTypeContext) IsBasicTypeContext() {}
 func NewBasicTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BasicTypeContext {
 	var p = new(BasicTypeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_basicType
@@ -25827,8 +28306,8 @@ func NewBasicTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 
 func (s *BasicTypeContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *BasicTypeContext) CopyFrom(ctx *BasicTypeContext) {
-	s.BaseParserRuleContext.CopyFrom(ctx.BaseParserRuleContext)
+func (s *BasicTypeContext) CopyAll(ctx *BasicTypeContext) {
+	s.CopyFrom(&ctx.BaseParserRuleContext)
 }
 
 func (s *BasicTypeContext) GetRuleContext() antlr.RuleContext {
@@ -25840,15 +28319,15 @@ func (s *BasicTypeContext) ToStringTree(ruleNames []string, recog antlr.Recogniz
 }
 
 type IntersectionContext struct {
-	*BasicTypeContext
+	BasicTypeContext
 }
 
 func NewIntersectionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *IntersectionContext {
 	var p = new(IntersectionContext)
 
-	p.BasicTypeContext = NewEmptyBasicTypeContext()
+	InitEmptyBasicTypeContext(&p.BasicTypeContext)
 	p.parser = parser
-	p.CopyFrom(ctx.(*BasicTypeContext))
+	p.CopyAll(ctx.(*BasicTypeContext))
 
 	return p
 }
@@ -26003,15 +28482,15 @@ func (s *IntersectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 }
 
 type PrimeContext struct {
-	*BasicTypeContext
+	BasicTypeContext
 }
 
 func NewPrimeContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *PrimeContext {
 	var p = new(PrimeContext)
 
-	p.BasicTypeContext = NewEmptyBasicTypeContext()
+	InitEmptyBasicTypeContext(&p.BasicTypeContext)
 	p.parser = parser
-	p.CopyFrom(ctx.(*BasicTypeContext))
+	p.CopyAll(ctx.(*BasicTypeContext))
 
 	return p
 }
@@ -26047,15 +28526,15 @@ func (s *PrimeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 type UnionContext struct {
-	*BasicTypeContext
+	BasicTypeContext
 }
 
 func NewUnionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *UnionContext {
 	var p = new(UnionContext)
 
-	p.BasicTypeContext = NewEmptyBasicTypeContext()
+	InitEmptyBasicTypeContext(&p.BasicTypeContext)
 	p.parser = parser
-	p.CopyFrom(ctx.(*BasicTypeContext))
+	p.CopyAll(ctx.(*BasicTypeContext))
 
 	return p
 }
@@ -26214,10 +28693,8 @@ func (p *MojoParser) BasicType() (localctx IBasicTypeContext) {
 }
 
 func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
-	this := p
-	_ = this
-
 	var _parentctx antlr.ParserRuleContext = p.GetParserRuleContext()
+
 	_parentState := p.GetState()
 	localctx = NewBasicTypeContext(p, p.GetParserRuleContext(), _parentState)
 	var _prevctx IBasicTypeContext = localctx
@@ -26225,22 +28702,6 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 	_startState := 284
 	p.EnterRecursionRule(localctx, 284, MojoParserRULE_basicType, _p)
 	var _la int
-
-	defer func() {
-		p.UnrollRecursionContexts(_parentctx)
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -26257,8 +28718,13 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
 	p.SetState(2032)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 271, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 271, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			if p.GetParseListeners() != nil {
@@ -26267,17 +28733,25 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 			_prevctx = localctx
 			p.SetState(2030)
 			p.GetErrorHandler().Sync(p)
-			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 270, p.GetParserRuleContext()) {
+			if p.HasError() {
+				goto errorExit
+			}
+
+			switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 270, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewUnionContext(p, NewBasicTypeContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, MojoParserRULE_basicType)
 				p.SetState(1968)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
+					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
+					goto errorExit
 				}
 				p.SetState(1970)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				if _la == MojoParserAT {
@@ -26289,6 +28763,9 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 				}
 				p.SetState(1975)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -26299,39 +28776,67 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 					{
 						p.SetState(1973)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
 				}
 				p.SetState(1980)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				for _la == MojoParserEOL {
 					{
 						p.SetState(1977)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
 					p.SetState(1982)
 					p.GetErrorHandler().Sync(p)
+					if p.HasError() {
+						goto errorExit
+					}
 					_la = p.GetTokenStream().LA(1)
 				}
 				{
 					p.SetState(1983)
 					p.Match(MojoParserPIPE)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 				p.SetState(1987)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				for _la == MojoParserEOL {
 					{
 						p.SetState(1984)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
 					p.SetState(1989)
 					p.GetErrorHandler().Sync(p)
+					if p.HasError() {
+						goto errorExit
+					}
 					_la = p.GetTokenStream().LA(1)
 				}
 				{
@@ -26341,17 +28846,19 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 				p.SetState(1992)
 				p.GetErrorHandler().Sync(p)
 
-				if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 262, p.GetParserRuleContext()) == 1 {
+				if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 262, p.GetParserRuleContext()) == 1 {
 					{
 						p.SetState(1991)
 						p.Attributes()
 					}
 
+				} else if p.HasError() { // JIM
+					goto errorExit
 				}
 				p.SetState(1997)
 				p.GetErrorHandler().Sync(p)
 
-				if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 263, p.GetParserRuleContext()) == 1 {
+				if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 263, p.GetParserRuleContext()) == 1 {
 					{
 						p.SetState(1994)
 						p.FollowingDocument()
@@ -26359,8 +28866,14 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 					{
 						p.SetState(1995)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
+				} else if p.HasError() { // JIM
+					goto errorExit
 				}
 
 			case 2:
@@ -26369,10 +28882,14 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 				p.SetState(1999)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 2)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
+					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
+					goto errorExit
 				}
 				p.SetState(2001)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				if _la == MojoParserAT {
@@ -26384,6 +28901,9 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 				}
 				p.SetState(2006)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -26394,39 +28914,67 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 					{
 						p.SetState(2004)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
 				}
 				p.SetState(2011)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				for _la == MojoParserEOL {
 					{
 						p.SetState(2008)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
 					p.SetState(2013)
 					p.GetErrorHandler().Sync(p)
+					if p.HasError() {
+						goto errorExit
+					}
 					_la = p.GetTokenStream().LA(1)
 				}
 				{
 					p.SetState(2014)
 					p.Match(MojoParserAND)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 				p.SetState(2018)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 
 				for _la == MojoParserEOL {
 					{
 						p.SetState(2015)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
 					p.SetState(2020)
 					p.GetErrorHandler().Sync(p)
+					if p.HasError() {
+						goto errorExit
+					}
 					_la = p.GetTokenStream().LA(1)
 				}
 				{
@@ -26436,17 +28984,19 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 				p.SetState(2023)
 				p.GetErrorHandler().Sync(p)
 
-				if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 268, p.GetParserRuleContext()) == 1 {
+				if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 268, p.GetParserRuleContext()) == 1 {
 					{
 						p.SetState(2022)
 						p.Attributes()
 					}
 
+				} else if p.HasError() { // JIM
+					goto errorExit
 				}
 				p.SetState(2028)
 				p.GetErrorHandler().Sync(p)
 
-				if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 269, p.GetParserRuleContext()) == 1 {
+				if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 269, p.GetParserRuleContext()) == 1 {
 					{
 						p.SetState(2025)
 						p.FollowingDocument()
@@ -26454,19 +29004,43 @@ func (p *MojoParser) basicType(_p int) (localctx IBasicTypeContext) {
 					{
 						p.SetState(2026)
 						p.Match(MojoParserEOL)
+						if p.HasError() {
+							// Recognition error - abort rule
+							goto errorExit
+						}
 					}
 
+				} else if p.HasError() { // JIM
+					goto errorExit
 				}
 
+			case antlr.ATNInvalidAltNumber:
+				goto errorExit
 			}
 
 		}
 		p.SetState(2034)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 271, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 271, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.UnrollRecursionContexts(_parentctx)
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPrimeTypeContext is an interface to support dynamic dispatch.
@@ -26476,20 +29050,31 @@ type IPrimeTypeContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	ArrayType() IArrayTypeContext
+	MapType() IMapTypeContext
+	TupleType() ITupleTypeContext
+	TypeIdentifier() ITypeIdentifierContext
+
 	// IsPrimeTypeContext differentiates from other interfaces.
 	IsPrimeTypeContext()
 }
 
 type PrimeTypeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPrimeTypeContext() *PrimeTypeContext {
 	var p = new(PrimeTypeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_primeType
 	return p
+}
+
+func InitEmptyPrimeTypeContext(p *PrimeTypeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_primeType
 }
 
 func (*PrimeTypeContext) IsPrimeTypeContext() {}
@@ -26497,7 +29082,7 @@ func (*PrimeTypeContext) IsPrimeTypeContext() {}
 func NewPrimeTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PrimeTypeContext {
 	var p = new(PrimeTypeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_primeType
@@ -26590,30 +29175,13 @@ func (s *PrimeTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) PrimeType() (localctx IPrimeTypeContext) {
-	this := p
-	_ = this
-
 	localctx = NewPrimeTypeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 286, MojoParserRULE_primeType)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2039)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserLBRACK:
@@ -26645,10 +29213,21 @@ func (p *MojoParser) PrimeType() (localctx IPrimeTypeContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeAnnotationContext is an interface to support dynamic dispatch.
@@ -26658,20 +29237,30 @@ type ITypeAnnotationContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Type_() IType_Context
+	COLON() antlr.TerminalNode
+	Attributes() IAttributesContext
+
 	// IsTypeAnnotationContext differentiates from other interfaces.
 	IsTypeAnnotationContext()
 }
 
 type TypeAnnotationContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeAnnotationContext() *TypeAnnotationContext {
 	var p = new(TypeAnnotationContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeAnnotation
 	return p
+}
+
+func InitEmptyTypeAnnotationContext(p *TypeAnnotationContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeAnnotation
 }
 
 func (*TypeAnnotationContext) IsTypeAnnotationContext() {}
@@ -26679,7 +29268,7 @@ func (*TypeAnnotationContext) IsTypeAnnotationContext() {}
 func NewTypeAnnotationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeAnnotationContext {
 	var p = new(TypeAnnotationContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeAnnotation
@@ -26744,38 +29333,26 @@ func (s *TypeAnnotationContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) TypeAnnotation() (localctx ITypeAnnotationContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeAnnotationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 288, MojoParserRULE_typeAnnotation)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(2042)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserCOLON {
 		{
 			p.SetState(2041)
 			p.Match(MojoParserCOLON)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	}
@@ -26786,15 +29363,27 @@ func (p *MojoParser) TypeAnnotation() (localctx ITypeAnnotationContext) {
 	p.SetState(2046)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 274, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 274, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(2045)
 			p.Attributes()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeIdentifierContext is an interface to support dynamic dispatch.
@@ -26804,20 +29393,32 @@ type ITypeIdentifierContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllTypeIdentifierClause() []ITypeIdentifierClauseContext
+	TypeIdentifierClause(i int) ITypeIdentifierClauseContext
+	PackageIdentifier() IPackageIdentifierContext
+	AllDOT() []antlr.TerminalNode
+	DOT(i int) antlr.TerminalNode
+
 	// IsTypeIdentifierContext differentiates from other interfaces.
 	IsTypeIdentifierContext()
 }
 
 type TypeIdentifierContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeIdentifierContext() *TypeIdentifierContext {
 	var p = new(TypeIdentifierContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeIdentifier
 	return p
+}
+
+func InitEmptyTypeIdentifierContext(p *TypeIdentifierContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeIdentifier
 }
 
 func (*TypeIdentifierContext) IsTypeIdentifierContext() {}
@@ -26825,7 +29426,7 @@ func (*TypeIdentifierContext) IsTypeIdentifierContext() {}
 func NewTypeIdentifierContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeIdentifierContext {
 	var p = new(TypeIdentifierContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeIdentifier
@@ -26919,34 +29520,18 @@ func (s *TypeIdentifierContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) TypeIdentifier() (localctx ITypeIdentifierContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 290, MojoParserRULE_typeIdentifier)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(2051)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserVALUE_IDENTIFIER {
@@ -26957,6 +29542,10 @@ func (p *MojoParser) TypeIdentifier() (localctx ITypeIdentifierContext) {
 		{
 			p.SetState(2049)
 			p.Match(MojoParserDOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	}
@@ -26966,13 +29555,22 @@ func (p *MojoParser) TypeIdentifier() (localctx ITypeIdentifierContext) {
 	}
 	p.SetState(2058)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 276, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 276, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
 				p.SetState(2054)
 				p.Match(MojoParserDOT)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 			{
 				p.SetState(2055)
@@ -26982,10 +29580,26 @@ func (p *MojoParser) TypeIdentifier() (localctx ITypeIdentifierContext) {
 		}
 		p.SetState(2060)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 276, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 276, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeIdentifierClauseContext is an interface to support dynamic dispatch.
@@ -26995,20 +29609,29 @@ type ITypeIdentifierClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TypeName() ITypeNameContext
+	GenericArgumentClause() IGenericArgumentClauseContext
+
 	// IsTypeIdentifierClauseContext differentiates from other interfaces.
 	IsTypeIdentifierClauseContext()
 }
 
 type TypeIdentifierClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeIdentifierClauseContext() *TypeIdentifierClauseContext {
 	var p = new(TypeIdentifierClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeIdentifierClause
 	return p
+}
+
+func InitEmptyTypeIdentifierClauseContext(p *TypeIdentifierClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeIdentifierClause
 }
 
 func (*TypeIdentifierClauseContext) IsTypeIdentifierClauseContext() {}
@@ -27016,7 +29639,7 @@ func (*TypeIdentifierClauseContext) IsTypeIdentifierClauseContext() {}
 func NewTypeIdentifierClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeIdentifierClauseContext {
 	var p = new(TypeIdentifierClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeIdentifierClause
@@ -27077,28 +29700,8 @@ func (s *TypeIdentifierClauseContext) Accept(visitor antlr.ParseTreeVisitor) int
 }
 
 func (p *MojoParser) TypeIdentifierClause() (localctx ITypeIdentifierClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeIdentifierClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 292, MojoParserRULE_typeIdentifierClause)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2061)
@@ -27107,15 +29710,27 @@ func (p *MojoParser) TypeIdentifierClause() (localctx ITypeIdentifierClauseConte
 	p.SetState(2063)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 277, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 277, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(2062)
 			p.GenericArgumentClause()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeNameContext is an interface to support dynamic dispatch.
@@ -27125,20 +29740,28 @@ type ITypeNameContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	TYPE_IDENTIFIER() antlr.TerminalNode
+
 	// IsTypeNameContext differentiates from other interfaces.
 	IsTypeNameContext()
 }
 
 type TypeNameContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeNameContext() *TypeNameContext {
 	var p = new(TypeNameContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeName
 	return p
+}
+
+func InitEmptyTypeNameContext(p *TypeNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeName
 }
 
 func (*TypeNameContext) IsTypeNameContext() {}
@@ -27146,7 +29769,7 @@ func (*TypeNameContext) IsTypeNameContext() {}
 func NewTypeNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeNameContext {
 	var p = new(TypeNameContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeName
@@ -27179,35 +29802,29 @@ func (s *TypeNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) TypeName() (localctx ITypeNameContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 294, MojoParserRULE_typeName)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2065)
 		p.Match(MojoParserTYPE_IDENTIFIER)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITupleTypeContext is an interface to support dynamic dispatch.
@@ -27217,20 +29834,32 @@ type ITupleTypeContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LPAREN() antlr.TerminalNode
+	RPAREN() antlr.TerminalNode
+	TupleTypeElements() ITupleTypeElementsContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsTupleTypeContext differentiates from other interfaces.
 	IsTupleTypeContext()
 }
 
 type TupleTypeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTupleTypeContext() *TupleTypeContext {
 	var p = new(TupleTypeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_tupleType
 	return p
+}
+
+func InitEmptyTupleTypeContext(p *TupleTypeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_tupleType
 }
 
 func (*TupleTypeContext) IsTupleTypeContext() {}
@@ -27238,7 +29867,7 @@ func (*TupleTypeContext) IsTupleTypeContext() {}
 func NewTupleTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TupleTypeContext {
 	var p = new(TupleTypeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_tupleType
@@ -27299,50 +29928,45 @@ func (s *TupleTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) TupleType() (localctx ITupleTypeContext) {
-	this := p
-	_ = this
-
 	localctx = NewTupleTypeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 296, MojoParserRULE_tupleType)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2067)
 		p.Match(MojoParserLPAREN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(2075)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 279, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 279, p.GetParserRuleContext()) == 1 {
 		p.SetState(2071)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == MojoParserEOL {
 			{
 				p.SetState(2068)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 			p.SetState(2073)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
@@ -27350,27 +29974,53 @@ func (p *MojoParser) TupleType() (localctx ITupleTypeContext) {
 			p.TupleTypeElements()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	p.SetState(2080)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(2077)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(2082)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
 		p.SetState(2083)
 		p.Match(MojoParserRPAREN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITupleTypeElementsContext is an interface to support dynamic dispatch.
@@ -27380,20 +30030,33 @@ type ITupleTypeElementsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllTupleTypeElement() []ITupleTypeElementContext
+	TupleTypeElement(i int) ITupleTypeElementContext
+	AllEovWithDocument() []IEovWithDocumentContext
+	EovWithDocument(i int) IEovWithDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsTupleTypeElementsContext differentiates from other interfaces.
 	IsTupleTypeElementsContext()
 }
 
 type TupleTypeElementsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTupleTypeElementsContext() *TupleTypeElementsContext {
 	var p = new(TupleTypeElementsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_tupleTypeElements
 	return p
+}
+
+func InitEmptyTupleTypeElementsContext(p *TupleTypeElementsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_tupleTypeElements
 }
 
 func (*TupleTypeElementsContext) IsTupleTypeElementsContext() {}
@@ -27401,7 +30064,7 @@ func (*TupleTypeElementsContext) IsTupleTypeElementsContext() {}
 func NewTupleTypeElementsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TupleTypeElementsContext {
 	var p = new(TupleTypeElementsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_tupleTypeElements
@@ -27520,28 +30183,9 @@ func (s *TupleTypeElementsContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) TupleTypeElements() (localctx ITupleTypeElementsContext) {
-	this := p
-	_ = this
-
 	localctx = NewTupleTypeElementsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 298, MojoParserRULE_tupleTypeElements)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -27552,8 +30196,13 @@ func (p *MojoParser) TupleTypeElements() (localctx ITupleTypeElementsContext) {
 	}
 	p.SetState(2097)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 282, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 282, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -27562,16 +30211,26 @@ func (p *MojoParser) TupleTypeElements() (localctx ITupleTypeElementsContext) {
 			}
 			p.SetState(2090)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(2087)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(2092)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -27582,20 +30241,38 @@ func (p *MojoParser) TupleTypeElements() (localctx ITupleTypeElementsContext) {
 		}
 		p.SetState(2099)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 282, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 282, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(2101)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 283, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 283, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(2100)
 			p.EovWithDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITupleTypeElementContext is an interface to support dynamic dispatch.
@@ -27605,20 +30282,31 @@ type ITupleTypeElementContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Type_() IType_Context
+	DeclarationIdentifier() IDeclarationIdentifierContext
+	Attributes() IAttributesContext
+	COLON() antlr.TerminalNode
+
 	// IsTupleTypeElementContext differentiates from other interfaces.
 	IsTupleTypeElementContext()
 }
 
 type TupleTypeElementContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTupleTypeElementContext() *TupleTypeElementContext {
 	var p = new(TupleTypeElementContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_tupleTypeElement
 	return p
+}
+
+func InitEmptyTupleTypeElementContext(p *TupleTypeElementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_tupleTypeElement
 }
 
 func (*TupleTypeElementContext) IsTupleTypeElementContext() {}
@@ -27626,7 +30314,7 @@ func (*TupleTypeElementContext) IsTupleTypeElementContext() {}
 func NewTupleTypeElementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TupleTypeElementContext {
 	var p = new(TupleTypeElementContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_tupleTypeElement
@@ -27707,50 +30395,40 @@ func (s *TupleTypeElementContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) TupleTypeElement() (localctx ITupleTypeElementContext) {
-	this := p
-	_ = this
-
 	localctx = NewTupleTypeElementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 300, MojoParserRULE_tupleTypeElement)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(2107)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 285, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 285, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(2103)
 			p.DeclarationIdentifier()
 		}
 		p.SetState(2105)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserCOLON {
 			{
 				p.SetState(2104)
 				p.Match(MojoParserCOLON)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 	{
 		p.SetState(2109)
@@ -27758,6 +30436,9 @@ func (p *MojoParser) TupleTypeElement() (localctx ITupleTypeElementContext) {
 	}
 	p.SetState(2111)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -27768,7 +30449,17 @@ func (p *MojoParser) TupleTypeElement() (localctx ITupleTypeElementContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFunctionTypeContext is an interface to support dynamic dispatch.
@@ -27778,20 +30469,31 @@ type IFunctionTypeContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	FunctionParameterClause() IFunctionParameterClauseContext
+	ArrowOperator() IArrowOperatorContext
+	Type_() IType_Context
+	Attributes() IAttributesContext
+
 	// IsFunctionTypeContext differentiates from other interfaces.
 	IsFunctionTypeContext()
 }
 
 type FunctionTypeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFunctionTypeContext() *FunctionTypeContext {
 	var p = new(FunctionTypeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_functionType
 	return p
+}
+
+func InitEmptyFunctionTypeContext(p *FunctionTypeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_functionType
 }
 
 func (*FunctionTypeContext) IsFunctionTypeContext() {}
@@ -27799,7 +30501,7 @@ func (*FunctionTypeContext) IsFunctionTypeContext() {}
 func NewFunctionTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionTypeContext {
 	var p = new(FunctionTypeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_functionType
@@ -27892,28 +30594,8 @@ func (s *FunctionTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 }
 
 func (p *MojoParser) FunctionType() (localctx IFunctionTypeContext) {
-	this := p
-	_ = this
-
 	localctx = NewFunctionTypeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 302, MojoParserRULE_functionType)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2113)
@@ -27930,15 +30612,27 @@ func (p *MojoParser) FunctionType() (localctx IFunctionTypeContext) {
 	p.SetState(2117)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 287, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 287, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(2116)
 			p.Attributes()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IArrayTypeContext is an interface to support dynamic dispatch.
@@ -27948,20 +30642,31 @@ type IArrayTypeContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LBRACK() antlr.TerminalNode
+	Type_() IType_Context
+	RBRACK() antlr.TerminalNode
+	Attributes() IAttributesContext
+
 	// IsArrayTypeContext differentiates from other interfaces.
 	IsArrayTypeContext()
 }
 
 type ArrayTypeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyArrayTypeContext() *ArrayTypeContext {
 	var p = new(ArrayTypeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_arrayType
 	return p
+}
+
+func InitEmptyArrayTypeContext(p *ArrayTypeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_arrayType
 }
 
 func (*ArrayTypeContext) IsArrayTypeContext() {}
@@ -27969,7 +30674,7 @@ func (*ArrayTypeContext) IsArrayTypeContext() {}
 func NewArrayTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArrayTypeContext {
 	var p = new(ArrayTypeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_arrayType
@@ -28038,33 +30743,18 @@ func (s *ArrayTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) ArrayType() (localctx IArrayTypeContext) {
-	this := p
-	_ = this
-
 	localctx = NewArrayTypeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 304, MojoParserRULE_arrayType)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2119)
 		p.Match(MojoParserLBRACK)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(2120)
@@ -28072,6 +30762,9 @@ func (p *MojoParser) ArrayType() (localctx IArrayTypeContext) {
 	}
 	p.SetState(2122)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -28084,9 +30777,23 @@ func (p *MojoParser) ArrayType() (localctx IArrayTypeContext) {
 	{
 		p.SetState(2124)
 		p.Match(MojoParserRBRACK)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IMapTypeContext is an interface to support dynamic dispatch.
@@ -28096,20 +30803,34 @@ type IMapTypeContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	LCURLY() antlr.TerminalNode
+	AllType_() []IType_Context
+	Type_(i int) IType_Context
+	RCURLY() antlr.TerminalNode
+	KeyAttributes() IKeyAttributesContext
+	COLON() antlr.TerminalNode
+	Attributes() IAttributesContext
+
 	// IsMapTypeContext differentiates from other interfaces.
 	IsMapTypeContext()
 }
 
 type MapTypeContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyMapTypeContext() *MapTypeContext {
 	var p = new(MapTypeContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_mapType
 	return p
+}
+
+func InitEmptyMapTypeContext(p *MapTypeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_mapType
 }
 
 func (*MapTypeContext) IsMapTypeContext() {}
@@ -28117,7 +30838,7 @@ func (*MapTypeContext) IsMapTypeContext() {}
 func NewMapTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MapTypeContext {
 	var p = new(MapTypeContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_mapType
@@ -28231,33 +30952,18 @@ func (s *MapTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) MapType() (localctx IMapTypeContext) {
-	this := p
-	_ = this
-
 	localctx = NewMapTypeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 306, MojoParserRULE_mapType)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2126)
 		p.Match(MojoParserLCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(2127)
@@ -28265,6 +30971,9 @@ func (p *MojoParser) MapType() (localctx IMapTypeContext) {
 	}
 	p.SetState(2129)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -28276,12 +30985,19 @@ func (p *MojoParser) MapType() (localctx IMapTypeContext) {
 	}
 	p.SetState(2132)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserCOLON {
 		{
 			p.SetState(2131)
 			p.Match(MojoParserCOLON)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	}
@@ -28291,6 +31007,9 @@ func (p *MojoParser) MapType() (localctx IMapTypeContext) {
 	}
 	p.SetState(2136)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -28303,9 +31022,23 @@ func (p *MojoParser) MapType() (localctx IMapTypeContext) {
 	{
 		p.SetState(2138)
 		p.Match(MojoParserRCURLY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IKeyAttributesContext is an interface to support dynamic dispatch.
@@ -28315,20 +31048,28 @@ type IKeyAttributesContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Attributes() IAttributesContext
+
 	// IsKeyAttributesContext differentiates from other interfaces.
 	IsKeyAttributesContext()
 }
 
 type KeyAttributesContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyKeyAttributesContext() *KeyAttributesContext {
 	var p = new(KeyAttributesContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_keyAttributes
 	return p
+}
+
+func InitEmptyKeyAttributesContext(p *KeyAttributesContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_keyAttributes
 }
 
 func (*KeyAttributesContext) IsKeyAttributesContext() {}
@@ -28336,7 +31077,7 @@ func (*KeyAttributesContext) IsKeyAttributesContext() {}
 func NewKeyAttributesContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *KeyAttributesContext {
 	var p = new(KeyAttributesContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_keyAttributes
@@ -28381,35 +31122,25 @@ func (s *KeyAttributesContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) KeyAttributes() (localctx IKeyAttributesContext) {
-	this := p
-	_ = this
-
 	localctx = NewKeyAttributesContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 308, MojoParserRULE_keyAttributes)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2140)
 		p.Attributes()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeInheritanceClauseContext is an interface to support dynamic dispatch.
@@ -28419,20 +31150,31 @@ type ITypeInheritanceClauseContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	COLON() antlr.TerminalNode
+	TypeInheritances() ITypeInheritancesContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsTypeInheritanceClauseContext differentiates from other interfaces.
 	IsTypeInheritanceClauseContext()
 }
 
 type TypeInheritanceClauseContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeInheritanceClauseContext() *TypeInheritanceClauseContext {
 	var p = new(TypeInheritanceClauseContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeInheritanceClause
 	return p
+}
+
+func InitEmptyTypeInheritanceClauseContext(p *TypeInheritanceClauseContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeInheritanceClause
 }
 
 func (*TypeInheritanceClauseContext) IsTypeInheritanceClauseContext() {}
@@ -28440,7 +31182,7 @@ func (*TypeInheritanceClauseContext) IsTypeInheritanceClauseContext() {}
 func NewTypeInheritanceClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeInheritanceClauseContext {
 	var p = new(TypeInheritanceClauseContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeInheritanceClause
@@ -28497,46 +31239,41 @@ func (s *TypeInheritanceClauseContext) Accept(visitor antlr.ParseTreeVisitor) in
 }
 
 func (p *MojoParser) TypeInheritanceClause() (localctx ITypeInheritanceClauseContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeInheritanceClauseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 310, MojoParserRULE_typeInheritanceClause)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2142)
 		p.Match(MojoParserCOLON)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(2146)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserEOL {
 		{
 			p.SetState(2143)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 		p.SetState(2148)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
@@ -28544,7 +31281,17 @@ func (p *MojoParser) TypeInheritanceClause() (localctx ITypeInheritanceClauseCon
 		p.TypeInheritances()
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeInheritancesContext is an interface to support dynamic dispatch.
@@ -28554,20 +31301,33 @@ type ITypeInheritancesContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllTypeInheritance() []ITypeInheritanceContext
+	TypeInheritance(i int) ITypeInheritanceContext
+	AllEovWithDocument() []IEovWithDocumentContext
+	EovWithDocument(i int) IEovWithDocumentContext
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsTypeInheritancesContext differentiates from other interfaces.
 	IsTypeInheritancesContext()
 }
 
 type TypeInheritancesContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeInheritancesContext() *TypeInheritancesContext {
 	var p = new(TypeInheritancesContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeInheritances
 	return p
+}
+
+func InitEmptyTypeInheritancesContext(p *TypeInheritancesContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeInheritances
 }
 
 func (*TypeInheritancesContext) IsTypeInheritancesContext() {}
@@ -28575,7 +31335,7 @@ func (*TypeInheritancesContext) IsTypeInheritancesContext() {}
 func NewTypeInheritancesContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeInheritancesContext {
 	var p = new(TypeInheritancesContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeInheritances
@@ -28694,28 +31454,9 @@ func (s *TypeInheritancesContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 }
 
 func (p *MojoParser) TypeInheritances() (localctx ITypeInheritancesContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeInheritancesContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 312, MojoParserRULE_typeInheritances)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	var _alt int
 
@@ -28726,8 +31467,13 @@ func (p *MojoParser) TypeInheritances() (localctx ITypeInheritancesContext) {
 	}
 	p.SetState(2163)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 294, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 294, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
@@ -28736,16 +31482,26 @@ func (p *MojoParser) TypeInheritances() (localctx ITypeInheritancesContext) {
 			}
 			p.SetState(2156)
 			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
 			_la = p.GetTokenStream().LA(1)
 
 			for _la == MojoParserEOL {
 				{
 					p.SetState(2153)
 					p.Match(MojoParserEOL)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
 				}
 
 				p.SetState(2158)
 				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
 				_la = p.GetTokenStream().LA(1)
 			}
 			{
@@ -28756,20 +31512,38 @@ func (p *MojoParser) TypeInheritances() (localctx ITypeInheritancesContext) {
 		}
 		p.SetState(2165)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 294, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 294, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 	p.SetState(2167)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 295, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 295, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(2166)
 			p.EovWithDocument()
 		}
 
+	} else if p.HasError() { // JIM
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ITypeInheritanceContext is an interface to support dynamic dispatch.
@@ -28779,20 +31553,29 @@ type ITypeInheritanceContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	BasicType() IBasicTypeContext
+	Attributes() IAttributesContext
+
 	// IsTypeInheritanceContext differentiates from other interfaces.
 	IsTypeInheritanceContext()
 }
 
 type TypeInheritanceContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyTypeInheritanceContext() *TypeInheritanceContext {
 	var p = new(TypeInheritanceContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_typeInheritance
 	return p
+}
+
+func InitEmptyTypeInheritanceContext(p *TypeInheritanceContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_typeInheritance
 }
 
 func (*TypeInheritanceContext) IsTypeInheritanceContext() {}
@@ -28800,7 +31583,7 @@ func (*TypeInheritanceContext) IsTypeInheritanceContext() {}
 func NewTypeInheritanceContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeInheritanceContext {
 	var p = new(TypeInheritanceContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_typeInheritance
@@ -28861,28 +31644,9 @@ func (s *TypeInheritanceContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) TypeInheritance() (localctx ITypeInheritanceContext) {
-	this := p
-	_ = this
-
 	localctx = NewTypeInheritanceContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 314, MojoParserRULE_typeInheritance)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -28891,6 +31655,9 @@ func (p *MojoParser) TypeInheritance() (localctx ITypeInheritanceContext) {
 	}
 	p.SetState(2171)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == MojoParserAT {
@@ -28901,7 +31668,17 @@ func (p *MojoParser) TypeInheritance() (localctx ITypeInheritanceContext) {
 
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IDeclarationIdentifierContext is an interface to support dynamic dispatch.
@@ -28911,20 +31688,29 @@ type IDeclarationIdentifierContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	VALUE_IDENTIFIER() antlr.TerminalNode
+	KeywordAsIdentifierInDeclarations() IKeywordAsIdentifierInDeclarationsContext
+
 	// IsDeclarationIdentifierContext differentiates from other interfaces.
 	IsDeclarationIdentifierContext()
 }
 
 type DeclarationIdentifierContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyDeclarationIdentifierContext() *DeclarationIdentifierContext {
 	var p = new(DeclarationIdentifierContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_declarationIdentifier
 	return p
+}
+
+func InitEmptyDeclarationIdentifierContext(p *DeclarationIdentifierContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_declarationIdentifier
 }
 
 func (*DeclarationIdentifierContext) IsDeclarationIdentifierContext() {}
@@ -28932,7 +31718,7 @@ func (*DeclarationIdentifierContext) IsDeclarationIdentifierContext() {}
 func NewDeclarationIdentifierContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DeclarationIdentifierContext {
 	var p = new(DeclarationIdentifierContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_declarationIdentifier
@@ -28981,30 +31767,13 @@ func (s *DeclarationIdentifierContext) Accept(visitor antlr.ParseTreeVisitor) in
 }
 
 func (p *MojoParser) DeclarationIdentifier() (localctx IDeclarationIdentifierContext) {
-	this := p
-	_ = this
-
 	localctx = NewDeclarationIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 316, MojoParserRULE_declarationIdentifier)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2175)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserVALUE_IDENTIFIER:
@@ -29012,6 +31781,10 @@ func (p *MojoParser) DeclarationIdentifier() (localctx IDeclarationIdentifierCon
 		{
 			p.SetState(2173)
 			p.Match(MojoParserVALUE_IDENTIFIER)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_CONTINUE, MojoParserKEYWORD_ELSE, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FALSE, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_OR, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TRUE, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_XOR:
@@ -29022,10 +31795,21 @@ func (p *MojoParser) DeclarationIdentifier() (localctx IDeclarationIdentifierCon
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ILabelIdentifierContext is an interface to support dynamic dispatch.
@@ -29035,20 +31819,29 @@ type ILabelIdentifierContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	VALUE_IDENTIFIER() antlr.TerminalNode
+	KeywordAsIdentifierInLabels() IKeywordAsIdentifierInLabelsContext
+
 	// IsLabelIdentifierContext differentiates from other interfaces.
 	IsLabelIdentifierContext()
 }
 
 type LabelIdentifierContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyLabelIdentifierContext() *LabelIdentifierContext {
 	var p = new(LabelIdentifierContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_labelIdentifier
 	return p
+}
+
+func InitEmptyLabelIdentifierContext(p *LabelIdentifierContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_labelIdentifier
 }
 
 func (*LabelIdentifierContext) IsLabelIdentifierContext() {}
@@ -29056,7 +31849,7 @@ func (*LabelIdentifierContext) IsLabelIdentifierContext() {}
 func NewLabelIdentifierContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LabelIdentifierContext {
 	var p = new(LabelIdentifierContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_labelIdentifier
@@ -29105,30 +31898,13 @@ func (s *LabelIdentifierContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) LabelIdentifier() (localctx ILabelIdentifierContext) {
-	this := p
-	_ = this
-
 	localctx = NewLabelIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 318, MojoParserRULE_labelIdentifier)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2179)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserVALUE_IDENTIFIER:
@@ -29136,6 +31912,10 @@ func (p *MojoParser) LabelIdentifier() (localctx ILabelIdentifierContext) {
 		{
 			p.SetState(2177)
 			p.Match(MojoParserVALUE_IDENTIFIER)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case MojoParserKEYWORD_AND, MojoParserKEYWORD_AS, MojoParserKEYWORD_ATTRIBUTE, MojoParserKEYWORD_BREAK, MojoParserKEYWORD_CONST, MojoParserKEYWORD_CONTINUE, MojoParserKEYWORD_ELSE, MojoParserKEYWORD_ENUM, MojoParserKEYWORD_FALSE, MojoParserKEYWORD_FOR, MojoParserKEYWORD_FUNC, MojoParserKEYWORD_IF, MojoParserKEYWORD_IMPORT, MojoParserKEYWORD_IN, MojoParserKEYWORD_INTERFACE, MojoParserKEYWORD_IS, MojoParserKEYWORD_MATCH, MojoParserKEYWORD_NOT, MojoParserKEYWORD_NULL, MojoParserKEYWORD_OR, MojoParserKEYWORD_PACKAGE, MojoParserKEYWORD_RETURN, MojoParserKEYWORD_STRUCT, MojoParserKEYWORD_TRUE, MojoParserKEYWORD_TYPE, MojoParserKEYWORD_VAR, MojoParserKEYWORD_WHILE, MojoParserKEYWORD_XOR:
@@ -29146,10 +31926,21 @@ func (p *MojoParser) LabelIdentifier() (localctx ILabelIdentifierContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPathIdentifierContext is an interface to support dynamic dispatch.
@@ -29159,20 +31950,31 @@ type IPathIdentifierContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllDeclarationIdentifier() []IDeclarationIdentifierContext
+	DeclarationIdentifier(i int) IDeclarationIdentifierContext
+	AllDOT() []antlr.TerminalNode
+	DOT(i int) antlr.TerminalNode
+
 	// IsPathIdentifierContext differentiates from other interfaces.
 	IsPathIdentifierContext()
 }
 
 type PathIdentifierContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPathIdentifierContext() *PathIdentifierContext {
 	var p = new(PathIdentifierContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_pathIdentifier
 	return p
+}
+
+func InitEmptyPathIdentifierContext(p *PathIdentifierContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_pathIdentifier
 }
 
 func (*PathIdentifierContext) IsPathIdentifierContext() {}
@@ -29180,7 +31982,7 @@ func (*PathIdentifierContext) IsPathIdentifierContext() {}
 func NewPathIdentifierContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PathIdentifierContext {
 	var p = new(PathIdentifierContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_pathIdentifier
@@ -29258,28 +32060,9 @@ func (s *PathIdentifierContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) PathIdentifier() (localctx IPathIdentifierContext) {
-	this := p
-	_ = this
-
 	localctx = NewPathIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 320, MojoParserRULE_pathIdentifier)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -29288,12 +32071,19 @@ func (p *MojoParser) PathIdentifier() (localctx IPathIdentifierContext) {
 	}
 	p.SetState(2186)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == MojoParserDOT {
 		{
 			p.SetState(2182)
 			p.Match(MojoParserDOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		{
 			p.SetState(2183)
@@ -29302,10 +32092,23 @@ func (p *MojoParser) PathIdentifier() (localctx IPathIdentifierContext) {
 
 		p.SetState(2188)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IIdentifierContext is an interface to support dynamic dispatch.
@@ -29315,20 +32118,29 @@ type IIdentifierContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	VALUE_IDENTIFIER() antlr.TerminalNode
+	IMPLICIT_PARAMETER_NAME() antlr.TerminalNode
+
 	// IsIdentifierContext differentiates from other interfaces.
 	IsIdentifierContext()
 }
 
 type IdentifierContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyIdentifierContext() *IdentifierContext {
 	var p = new(IdentifierContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_identifier
 	return p
+}
+
+func InitEmptyIdentifierContext(p *IdentifierContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_identifier
 }
 
 func (*IdentifierContext) IsIdentifierContext() {}
@@ -29336,7 +32148,7 @@ func (*IdentifierContext) IsIdentifierContext() {}
 func NewIdentifierContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *IdentifierContext {
 	var p = new(IdentifierContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_identifier
@@ -29373,28 +32185,9 @@ func (s *IdentifierContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Identifier() (localctx IIdentifierContext) {
-	this := p
-	_ = this
-
 	localctx = NewIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 322, MojoParserRULE_identifier)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -29409,7 +32202,17 @@ func (p *MojoParser) Identifier() (localctx IIdentifierContext) {
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IKeywordAsIdentifierInDeclarationsContext is an interface to support dynamic dispatch.
@@ -29419,20 +32222,51 @@ type IKeywordAsIdentifierInDeclarationsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_AND() antlr.TerminalNode
+	KEYWORD_AS() antlr.TerminalNode
+	KEYWORD_ATTRIBUTE() antlr.TerminalNode
+	KEYWORD_BREAK() antlr.TerminalNode
+	KEYWORD_CONST() antlr.TerminalNode
+	KEYWORD_CONTINUE() antlr.TerminalNode
+	KEYWORD_ELSE() antlr.TerminalNode
+	KEYWORD_ENUM() antlr.TerminalNode
+	KEYWORD_FALSE() antlr.TerminalNode
+	KEYWORD_FUNC() antlr.TerminalNode
+	KEYWORD_IF() antlr.TerminalNode
+	KEYWORD_IMPORT() antlr.TerminalNode
+	KEYWORD_IN() antlr.TerminalNode
+	KEYWORD_INTERFACE() antlr.TerminalNode
+	KEYWORD_IS() antlr.TerminalNode
+	KEYWORD_MATCH() antlr.TerminalNode
+	KEYWORD_NOT() antlr.TerminalNode
+	KEYWORD_NULL() antlr.TerminalNode
+	KEYWORD_OR() antlr.TerminalNode
+	KEYWORD_PACKAGE() antlr.TerminalNode
+	KEYWORD_STRUCT() antlr.TerminalNode
+	KEYWORD_TRUE() antlr.TerminalNode
+	KEYWORD_TYPE() antlr.TerminalNode
+	KEYWORD_XOR() antlr.TerminalNode
+
 	// IsKeywordAsIdentifierInDeclarationsContext differentiates from other interfaces.
 	IsKeywordAsIdentifierInDeclarationsContext()
 }
 
 type KeywordAsIdentifierInDeclarationsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyKeywordAsIdentifierInDeclarationsContext() *KeywordAsIdentifierInDeclarationsContext {
 	var p = new(KeywordAsIdentifierInDeclarationsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_keywordAsIdentifierInDeclarations
 	return p
+}
+
+func InitEmptyKeywordAsIdentifierInDeclarationsContext(p *KeywordAsIdentifierInDeclarationsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_keywordAsIdentifierInDeclarations
 }
 
 func (*KeywordAsIdentifierInDeclarationsContext) IsKeywordAsIdentifierInDeclarationsContext() {}
@@ -29440,7 +32274,7 @@ func (*KeywordAsIdentifierInDeclarationsContext) IsKeywordAsIdentifierInDeclarat
 func NewKeywordAsIdentifierInDeclarationsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *KeywordAsIdentifierInDeclarationsContext {
 	var p = new(KeywordAsIdentifierInDeclarationsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_keywordAsIdentifierInDeclarations
@@ -29565,28 +32399,9 @@ func (s *KeywordAsIdentifierInDeclarationsContext) Accept(visitor antlr.ParseTre
 }
 
 func (p *MojoParser) KeywordAsIdentifierInDeclarations() (localctx IKeywordAsIdentifierInDeclarationsContext) {
-	this := p
-	_ = this
-
 	localctx = NewKeywordAsIdentifierInDeclarationsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 324, MojoParserRULE_keywordAsIdentifierInDeclarations)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -29601,7 +32416,17 @@ func (p *MojoParser) KeywordAsIdentifierInDeclarations() (localctx IKeywordAsIde
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IKeywordAsIdentifierInLabelsContext is an interface to support dynamic dispatch.
@@ -29611,20 +32436,55 @@ type IKeywordAsIdentifierInLabelsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_AND() antlr.TerminalNode
+	KEYWORD_AS() antlr.TerminalNode
+	KEYWORD_ATTRIBUTE() antlr.TerminalNode
+	KEYWORD_BREAK() antlr.TerminalNode
+	KEYWORD_CONST() antlr.TerminalNode
+	KEYWORD_CONTINUE() antlr.TerminalNode
+	KEYWORD_ELSE() antlr.TerminalNode
+	KEYWORD_ENUM() antlr.TerminalNode
+	KEYWORD_FALSE() antlr.TerminalNode
+	KEYWORD_FOR() antlr.TerminalNode
+	KEYWORD_FUNC() antlr.TerminalNode
+	KEYWORD_IF() antlr.TerminalNode
+	KEYWORD_IMPORT() antlr.TerminalNode
+	KEYWORD_IN() antlr.TerminalNode
+	KEYWORD_INTERFACE() antlr.TerminalNode
+	KEYWORD_IS() antlr.TerminalNode
+	KEYWORD_MATCH() antlr.TerminalNode
+	KEYWORD_NOT() antlr.TerminalNode
+	KEYWORD_NULL() antlr.TerminalNode
+	KEYWORD_OR() antlr.TerminalNode
+	KEYWORD_PACKAGE() antlr.TerminalNode
+	KEYWORD_RETURN() antlr.TerminalNode
+	KEYWORD_STRUCT() antlr.TerminalNode
+	KEYWORD_TRUE() antlr.TerminalNode
+	KEYWORD_TYPE() antlr.TerminalNode
+	KEYWORD_VAR() antlr.TerminalNode
+	KEYWORD_WHILE() antlr.TerminalNode
+	KEYWORD_XOR() antlr.TerminalNode
+
 	// IsKeywordAsIdentifierInLabelsContext differentiates from other interfaces.
 	IsKeywordAsIdentifierInLabelsContext()
 }
 
 type KeywordAsIdentifierInLabelsContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyKeywordAsIdentifierInLabelsContext() *KeywordAsIdentifierInLabelsContext {
 	var p = new(KeywordAsIdentifierInLabelsContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_keywordAsIdentifierInLabels
 	return p
+}
+
+func InitEmptyKeywordAsIdentifierInLabelsContext(p *KeywordAsIdentifierInLabelsContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_keywordAsIdentifierInLabels
 }
 
 func (*KeywordAsIdentifierInLabelsContext) IsKeywordAsIdentifierInLabelsContext() {}
@@ -29632,7 +32492,7 @@ func (*KeywordAsIdentifierInLabelsContext) IsKeywordAsIdentifierInLabelsContext(
 func NewKeywordAsIdentifierInLabelsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *KeywordAsIdentifierInLabelsContext {
 	var p = new(KeywordAsIdentifierInLabelsContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_keywordAsIdentifierInLabels
@@ -29773,28 +32633,9 @@ func (s *KeywordAsIdentifierInLabelsContext) Accept(visitor antlr.ParseTreeVisit
 }
 
 func (p *MojoParser) KeywordAsIdentifierInLabels() (localctx IKeywordAsIdentifierInLabelsContext) {
-	this := p
-	_ = this
-
 	localctx = NewKeywordAsIdentifierInLabelsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 326, MojoParserRULE_keywordAsIdentifierInLabels)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -29809,7 +32650,17 @@ func (p *MojoParser) KeywordAsIdentifierInLabels() (localctx IKeywordAsIdentifie
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IDocumentContext is an interface to support dynamic dispatch.
@@ -29819,20 +32670,31 @@ type IDocumentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllLINE_DOCUMENT() []antlr.TerminalNode
+	LINE_DOCUMENT(i int) antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsDocumentContext differentiates from other interfaces.
 	IsDocumentContext()
 }
 
 type DocumentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyDocumentContext() *DocumentContext {
 	var p = new(DocumentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_document
 	return p
+}
+
+func InitEmptyDocumentContext(p *DocumentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_document
 }
 
 func (*DocumentContext) IsDocumentContext() {}
@@ -29840,7 +32702,7 @@ func (*DocumentContext) IsDocumentContext() {}
 func NewDocumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DocumentContext {
 	var p = new(DocumentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_document
@@ -29885,57 +32747,70 @@ func (s *DocumentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Document() (localctx IDocumentContext) {
-	this := p
-	_ = this
-
 	localctx = NewDocumentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 328, MojoParserRULE_document)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2195)
 		p.Match(MojoParserLINE_DOCUMENT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(2200)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 300, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 300, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
 				p.SetState(2196)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 			{
 				p.SetState(2197)
 				p.Match(MojoParserLINE_DOCUMENT)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 		p.SetState(2202)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 300, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 300, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IFollowingDocumentContext is an interface to support dynamic dispatch.
@@ -29945,20 +32820,31 @@ type IFollowingDocumentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllFOLLOWING_LINE_DOCUMENT() []antlr.TerminalNode
+	FOLLOWING_LINE_DOCUMENT(i int) antlr.TerminalNode
+	AllEOL() []antlr.TerminalNode
+	EOL(i int) antlr.TerminalNode
+
 	// IsFollowingDocumentContext differentiates from other interfaces.
 	IsFollowingDocumentContext()
 }
 
 type FollowingDocumentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyFollowingDocumentContext() *FollowingDocumentContext {
 	var p = new(FollowingDocumentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_followingDocument
 	return p
+}
+
+func InitEmptyFollowingDocumentContext(p *FollowingDocumentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_followingDocument
 }
 
 func (*FollowingDocumentContext) IsFollowingDocumentContext() {}
@@ -29966,7 +32852,7 @@ func (*FollowingDocumentContext) IsFollowingDocumentContext() {}
 func NewFollowingDocumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FollowingDocumentContext {
 	var p = new(FollowingDocumentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_followingDocument
@@ -30011,57 +32897,70 @@ func (s *FollowingDocumentContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) FollowingDocument() (localctx IFollowingDocumentContext) {
-	this := p
-	_ = this
-
 	localctx = NewFollowingDocumentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 330, MojoParserRULE_followingDocument)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2203)
 		p.Match(MojoParserFOLLOWING_LINE_DOCUMENT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	p.SetState(2208)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 301, p.GetParserRuleContext())
-
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 301, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
 				p.SetState(2204)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 			{
 				p.SetState(2205)
 				p.Match(MojoParserFOLLOWING_LINE_DOCUMENT)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
 		p.SetState(2210)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 301, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 301, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IAssignmentOperatorContext is an interface to support dynamic dispatch.
@@ -30071,20 +32970,28 @@ type IAssignmentOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	EQUAL() antlr.TerminalNode
+
 	// IsAssignmentOperatorContext differentiates from other interfaces.
 	IsAssignmentOperatorContext()
 }
 
 type AssignmentOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyAssignmentOperatorContext() *AssignmentOperatorContext {
 	var p = new(AssignmentOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_assignmentOperator
 	return p
+}
+
+func InitEmptyAssignmentOperatorContext(p *AssignmentOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_assignmentOperator
 }
 
 func (*AssignmentOperatorContext) IsAssignmentOperatorContext() {}
@@ -30092,7 +32999,7 @@ func (*AssignmentOperatorContext) IsAssignmentOperatorContext() {}
 func NewAssignmentOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AssignmentOperatorContext {
 	var p = new(AssignmentOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_assignmentOperator
@@ -30125,35 +33032,29 @@ func (s *AssignmentOperatorContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) AssignmentOperator() (localctx IAssignmentOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewAssignmentOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 332, MojoParserRULE_assignmentOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2211)
 		p.Match(MojoParserEQUAL)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // INegatePrefixOperatorContext is an interface to support dynamic dispatch.
@@ -30163,20 +33064,28 @@ type INegatePrefixOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	MINUS() antlr.TerminalNode
+
 	// IsNegatePrefixOperatorContext differentiates from other interfaces.
 	IsNegatePrefixOperatorContext()
 }
 
 type NegatePrefixOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyNegatePrefixOperatorContext() *NegatePrefixOperatorContext {
 	var p = new(NegatePrefixOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_negatePrefixOperator
 	return p
+}
+
+func InitEmptyNegatePrefixOperatorContext(p *NegatePrefixOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_negatePrefixOperator
 }
 
 func (*NegatePrefixOperatorContext) IsNegatePrefixOperatorContext() {}
@@ -30184,7 +33093,7 @@ func (*NegatePrefixOperatorContext) IsNegatePrefixOperatorContext() {}
 func NewNegatePrefixOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *NegatePrefixOperatorContext {
 	var p = new(NegatePrefixOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_negatePrefixOperator
@@ -30217,35 +33126,29 @@ func (s *NegatePrefixOperatorContext) Accept(visitor antlr.ParseTreeVisitor) int
 }
 
 func (p *MojoParser) NegatePrefixOperator() (localctx INegatePrefixOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewNegatePrefixOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 334, MojoParserRULE_negatePrefixOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2213)
 		p.Match(MojoParserMINUS)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IArrowOperatorContext is an interface to support dynamic dispatch.
@@ -30255,20 +33158,28 @@ type IArrowOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	RIGHT_ARROW() antlr.TerminalNode
+
 	// IsArrowOperatorContext differentiates from other interfaces.
 	IsArrowOperatorContext()
 }
 
 type ArrowOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyArrowOperatorContext() *ArrowOperatorContext {
 	var p = new(ArrowOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_arrowOperator
 	return p
+}
+
+func InitEmptyArrowOperatorContext(p *ArrowOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_arrowOperator
 }
 
 func (*ArrowOperatorContext) IsArrowOperatorContext() {}
@@ -30276,7 +33187,7 @@ func (*ArrowOperatorContext) IsArrowOperatorContext() {}
 func NewArrowOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArrowOperatorContext {
 	var p = new(ArrowOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_arrowOperator
@@ -30309,35 +33220,29 @@ func (s *ArrowOperatorContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) ArrowOperator() (localctx IArrowOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewArrowOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 336, MojoParserRULE_arrowOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2215)
 		p.Match(MojoParserRIGHT_ARROW)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IRangeOperatorContext is an interface to support dynamic dispatch.
@@ -30347,20 +33252,28 @@ type IRangeOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DOT_DOT() antlr.TerminalNode
+
 	// IsRangeOperatorContext differentiates from other interfaces.
 	IsRangeOperatorContext()
 }
 
 type RangeOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyRangeOperatorContext() *RangeOperatorContext {
 	var p = new(RangeOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_rangeOperator
 	return p
+}
+
+func InitEmptyRangeOperatorContext(p *RangeOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_rangeOperator
 }
 
 func (*RangeOperatorContext) IsRangeOperatorContext() {}
@@ -30368,7 +33281,7 @@ func (*RangeOperatorContext) IsRangeOperatorContext() {}
 func NewRangeOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *RangeOperatorContext {
 	var p = new(RangeOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_rangeOperator
@@ -30401,35 +33314,29 @@ func (s *RangeOperatorContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) RangeOperator() (localctx IRangeOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewRangeOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 338, MojoParserRULE_rangeOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2217)
 		p.Match(MojoParserDOT_DOT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IHalfOpenRangeOperatorContext is an interface to support dynamic dispatch.
@@ -30439,20 +33346,28 @@ type IHalfOpenRangeOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DOT_DOT_LT() antlr.TerminalNode
+
 	// IsHalfOpenRangeOperatorContext differentiates from other interfaces.
 	IsHalfOpenRangeOperatorContext()
 }
 
 type HalfOpenRangeOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyHalfOpenRangeOperatorContext() *HalfOpenRangeOperatorContext {
 	var p = new(HalfOpenRangeOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_halfOpenRangeOperator
 	return p
+}
+
+func InitEmptyHalfOpenRangeOperatorContext(p *HalfOpenRangeOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_halfOpenRangeOperator
 }
 
 func (*HalfOpenRangeOperatorContext) IsHalfOpenRangeOperatorContext() {}
@@ -30460,7 +33375,7 @@ func (*HalfOpenRangeOperatorContext) IsHalfOpenRangeOperatorContext() {}
 func NewHalfOpenRangeOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *HalfOpenRangeOperatorContext {
 	var p = new(HalfOpenRangeOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_halfOpenRangeOperator
@@ -30493,35 +33408,29 @@ func (s *HalfOpenRangeOperatorContext) Accept(visitor antlr.ParseTreeVisitor) in
 }
 
 func (p *MojoParser) HalfOpenRangeOperator() (localctx IHalfOpenRangeOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewHalfOpenRangeOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 340, MojoParserRULE_halfOpenRangeOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2219)
 		p.Match(MojoParserDOT_DOT_LT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IBinaryOperatorContext is an interface to support dynamic dispatch.
@@ -30531,20 +33440,32 @@ type IBinaryOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	RangeOperator() IRangeOperatorContext
+	HalfOpenRangeOperator() IHalfOpenRangeOperatorContext
+	Operator() IOperatorContext
+	KEYWORD_AND() antlr.TerminalNode
+	KEYWORD_OR() antlr.TerminalNode
+
 	// IsBinaryOperatorContext differentiates from other interfaces.
 	IsBinaryOperatorContext()
 }
 
 type BinaryOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyBinaryOperatorContext() *BinaryOperatorContext {
 	var p = new(BinaryOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_binaryOperator
 	return p
+}
+
+func InitEmptyBinaryOperatorContext(p *BinaryOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_binaryOperator
 }
 
 func (*BinaryOperatorContext) IsBinaryOperatorContext() {}
@@ -30552,7 +33473,7 @@ func (*BinaryOperatorContext) IsBinaryOperatorContext() {}
 func NewBinaryOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BinaryOperatorContext {
 	var p = new(BinaryOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_binaryOperator
@@ -30637,30 +33558,13 @@ func (s *BinaryOperatorContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) BinaryOperator() (localctx IBinaryOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewBinaryOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 342, MojoParserRULE_binaryOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2226)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserDOT_DOT:
@@ -30689,6 +33593,10 @@ func (p *MojoParser) BinaryOperator() (localctx IBinaryOperatorContext) {
 		{
 			p.SetState(2224)
 			p.Match(MojoParserKEYWORD_AND)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case MojoParserKEYWORD_OR:
@@ -30696,13 +33604,28 @@ func (p *MojoParser) BinaryOperator() (localctx IBinaryOperatorContext) {
 		{
 			p.SetState(2225)
 			p.Match(MojoParserKEYWORD_OR)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPrefixOperatorContext is an interface to support dynamic dispatch.
@@ -30712,20 +33635,29 @@ type IPrefixOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Operator() IOperatorContext
+	KEYWORD_NOT() antlr.TerminalNode
+
 	// IsPrefixOperatorContext differentiates from other interfaces.
 	IsPrefixOperatorContext()
 }
 
 type PrefixOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPrefixOperatorContext() *PrefixOperatorContext {
 	var p = new(PrefixOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_prefixOperator
 	return p
+}
+
+func InitEmptyPrefixOperatorContext(p *PrefixOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_prefixOperator
 }
 
 func (*PrefixOperatorContext) IsPrefixOperatorContext() {}
@@ -30733,7 +33665,7 @@ func (*PrefixOperatorContext) IsPrefixOperatorContext() {}
 func NewPrefixOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PrefixOperatorContext {
 	var p = new(PrefixOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_prefixOperator
@@ -30782,30 +33714,13 @@ func (s *PrefixOperatorContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) PrefixOperator() (localctx IPrefixOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewPrefixOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 344, MojoParserRULE_prefixOperator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2230)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserDOT, MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserOPERATOR_HEAD_OTHER:
@@ -30820,13 +33735,28 @@ func (p *MojoParser) PrefixOperator() (localctx IPrefixOperatorContext) {
 		{
 			p.SetState(2229)
 			p.Match(MojoParserKEYWORD_NOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IPostfixOperatorContext is an interface to support dynamic dispatch.
@@ -30836,20 +33766,29 @@ type IPostfixOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	PLUS_PLUS() antlr.TerminalNode
+	MINUS_MINUS() antlr.TerminalNode
+
 	// IsPostfixOperatorContext differentiates from other interfaces.
 	IsPostfixOperatorContext()
 }
 
 type PostfixOperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyPostfixOperatorContext() *PostfixOperatorContext {
 	var p = new(PostfixOperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_postfixOperator
 	return p
+}
+
+func InitEmptyPostfixOperatorContext(p *PostfixOperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_postfixOperator
 }
 
 func (*PostfixOperatorContext) IsPostfixOperatorContext() {}
@@ -30857,7 +33796,7 @@ func (*PostfixOperatorContext) IsPostfixOperatorContext() {}
 func NewPostfixOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PostfixOperatorContext {
 	var p = new(PostfixOperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_postfixOperator
@@ -30894,28 +33833,9 @@ func (s *PostfixOperatorContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) PostfixOperator() (localctx IPostfixOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewPostfixOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 346, MojoParserRULE_postfixOperator)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -30930,7 +33850,17 @@ func (p *MojoParser) PostfixOperator() (localctx IPostfixOperatorContext) {
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IOperatorContext is an interface to support dynamic dispatch.
@@ -30940,20 +33870,32 @@ type IOperatorContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Operator_head() IOperator_headContext
+	Operator_characters() IOperator_charactersContext
+	Dot_operator_head() IDot_operator_headContext
+	AllDot_operator_character() []IDot_operator_characterContext
+	Dot_operator_character(i int) IDot_operator_characterContext
+
 	// IsOperatorContext differentiates from other interfaces.
 	IsOperatorContext()
 }
 
 type OperatorContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyOperatorContext() *OperatorContext {
 	var p = new(OperatorContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_operator
 	return p
+}
+
+func InitEmptyOperatorContext(p *OperatorContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_operator
 }
 
 func (*OperatorContext) IsOperatorContext() {}
@@ -30961,7 +33903,7 @@ func (*OperatorContext) IsOperatorContext() {}
 func NewOperatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *OperatorContext {
 	var p = new(OperatorContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_operator
@@ -31079,32 +34021,15 @@ func (s *OperatorContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Operator() (localctx IOperatorContext) {
-	this := p
-	_ = this
-
 	localctx = NewOperatorContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 348, MojoParserRULE_operator)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.SetState(2245)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserOPERATOR_HEAD_OTHER:
@@ -31116,12 +34041,14 @@ func (p *MojoParser) Operator() (localctx IOperatorContext) {
 		p.SetState(2236)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 304, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 304, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(2235)
 				p.Operator_characters()
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case MojoParserDOT:
@@ -31132,8 +34059,13 @@ func (p *MojoParser) Operator() (localctx IOperatorContext) {
 		}
 		p.SetState(2242)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 305, p.GetParserRuleContext())
-
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 305, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 		for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 			if _alt == 1 {
 				{
@@ -31144,14 +34076,31 @@ func (p *MojoParser) Operator() (localctx IOperatorContext) {
 			}
 			p.SetState(2244)
 			p.GetErrorHandler().Sync(p)
-			_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 305, p.GetParserRuleContext())
+			if p.HasError() {
+				goto errorExit
+			}
+			_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 305, p.GetParserRuleContext())
+			if p.HasError() {
+				goto errorExit
+			}
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IOperator_charactersContext is an interface to support dynamic dispatch.
@@ -31161,20 +34110,29 @@ type IOperator_charactersContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	AllOperator_character() []IOperator_characterContext
+	Operator_character(i int) IOperator_characterContext
+
 	// IsOperator_charactersContext differentiates from other interfaces.
 	IsOperator_charactersContext()
 }
 
 type Operator_charactersContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyOperator_charactersContext() *Operator_charactersContext {
 	var p = new(Operator_charactersContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_operator_characters
 	return p
+}
+
+func InitEmptyOperator_charactersContext(p *Operator_charactersContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_operator_characters
 }
 
 func (*Operator_charactersContext) IsOperator_charactersContext() {}
@@ -31182,7 +34140,7 @@ func (*Operator_charactersContext) IsOperator_charactersContext() {}
 func NewOperator_charactersContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Operator_charactersContext {
 	var p = new(Operator_charactersContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_operator_characters
@@ -31252,33 +34210,16 @@ func (s *Operator_charactersContext) Accept(visitor antlr.ParseTreeVisitor) inte
 }
 
 func (p *MojoParser) Operator_characters() (localctx IOperator_charactersContext) {
-	this := p
-	_ = this
-
 	localctx = NewOperator_charactersContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 350, MojoParserRULE_operator_characters)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	p.SetState(2249)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 	_alt = 1
 	for ok := true; ok; ok = _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		switch _alt {
@@ -31286,7 +34227,8 @@ func (p *MojoParser) Operator_characters() (localctx IOperator_charactersContext
 			p.SetState(2247)
 
 			if !(p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS) {
-				panic(antlr.NewFailedPredicateException(p, "p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS", ""))
+				p.SetError(antlr.NewFailedPredicateException(p, "p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS", ""))
+				goto errorExit
 			}
 			{
 				p.SetState(2248)
@@ -31294,15 +34236,29 @@ func (p *MojoParser) Operator_characters() (localctx IOperator_charactersContext
 			}
 
 		default:
-			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			goto errorExit
 		}
 
 		p.SetState(2251)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 307, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 307, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IOperator_characterContext is an interface to support dynamic dispatch.
@@ -31312,20 +34268,29 @@ type IOperator_characterContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	Operator_head() IOperator_headContext
+	OPERATOR_FOLLOWING_CHARACTER() antlr.TerminalNode
+
 	// IsOperator_characterContext differentiates from other interfaces.
 	IsOperator_characterContext()
 }
 
 type Operator_characterContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyOperator_characterContext() *Operator_characterContext {
 	var p = new(Operator_characterContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_operator_character
 	return p
+}
+
+func InitEmptyOperator_characterContext(p *Operator_characterContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_operator_character
 }
 
 func (*Operator_characterContext) IsOperator_characterContext() {}
@@ -31333,7 +34298,7 @@ func (*Operator_characterContext) IsOperator_characterContext() {}
 func NewOperator_characterContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Operator_characterContext {
 	var p = new(Operator_characterContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_operator_character
@@ -31382,30 +34347,13 @@ func (s *Operator_characterContext) Accept(visitor antlr.ParseTreeVisitor) inter
 }
 
 func (p *MojoParser) Operator_character() (localctx IOperator_characterContext) {
-	this := p
-	_ = this
-
 	localctx = NewOperator_characterContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 352, MojoParserRULE_operator_character)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2255)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserOPERATOR_HEAD_OTHER:
@@ -31420,13 +34368,28 @@ func (p *MojoParser) Operator_character() (localctx IOperator_characterContext) 
 		{
 			p.SetState(2254)
 			p.Match(MojoParserOPERATOR_FOLLOWING_CHARACTER)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IOperator_headContext is an interface to support dynamic dispatch.
@@ -31436,20 +34399,42 @@ type IOperator_headContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	SLASH() antlr.TerminalNode
+	EQUAL() antlr.TerminalNode
+	MINUS() antlr.TerminalNode
+	PLUS() antlr.TerminalNode
+	BANG() antlr.TerminalNode
+	STAR() antlr.TerminalNode
+	PERCENT() antlr.TerminalNode
+	AND() antlr.TerminalNode
+	PIPE() antlr.TerminalNode
+	LT() antlr.TerminalNode
+	GT() antlr.TerminalNode
+	CARET() antlr.TerminalNode
+	TILDE() antlr.TerminalNode
+	QUESTION() antlr.TerminalNode
+	OPERATOR_HEAD_OTHER() antlr.TerminalNode
+
 	// IsOperator_headContext differentiates from other interfaces.
 	IsOperator_headContext()
 }
 
 type Operator_headContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyOperator_headContext() *Operator_headContext {
 	var p = new(Operator_headContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_operator_head
 	return p
+}
+
+func InitEmptyOperator_headContext(p *Operator_headContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_operator_head
 }
 
 func (*Operator_headContext) IsOperator_headContext() {}
@@ -31457,7 +34442,7 @@ func (*Operator_headContext) IsOperator_headContext() {}
 func NewOperator_headContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Operator_headContext {
 	var p = new(Operator_headContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_operator_head
@@ -31546,31 +34531,15 @@ func (s *Operator_headContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) Operator_head() (localctx IOperator_headContext) {
-	this := p
-	_ = this
-
 	localctx = NewOperator_headContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 354, MojoParserRULE_operator_head)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2259)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE:
@@ -31592,13 +34561,28 @@ func (p *MojoParser) Operator_head() (localctx IOperator_headContext) {
 		{
 			p.SetState(2258)
 			p.Match(MojoParserOPERATOR_HEAD_OTHER)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IDot_operator_headContext is an interface to support dynamic dispatch.
@@ -31608,20 +34592,28 @@ type IDot_operator_headContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DOT() antlr.TerminalNode
+
 	// IsDot_operator_headContext differentiates from other interfaces.
 	IsDot_operator_headContext()
 }
 
 type Dot_operator_headContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyDot_operator_headContext() *Dot_operator_headContext {
 	var p = new(Dot_operator_headContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_dot_operator_head
 	return p
+}
+
+func InitEmptyDot_operator_headContext(p *Dot_operator_headContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_dot_operator_head
 }
 
 func (*Dot_operator_headContext) IsDot_operator_headContext() {}
@@ -31629,7 +34621,7 @@ func (*Dot_operator_headContext) IsDot_operator_headContext() {}
 func NewDot_operator_headContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Dot_operator_headContext {
 	var p = new(Dot_operator_headContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_dot_operator_head
@@ -31662,35 +34654,29 @@ func (s *Dot_operator_headContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 func (p *MojoParser) Dot_operator_head() (localctx IDot_operator_headContext) {
-	this := p
-	_ = this
-
 	localctx = NewDot_operator_headContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 356, MojoParserRULE_dot_operator_head)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2261)
 		p.Match(MojoParserDOT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IDot_operator_characterContext is an interface to support dynamic dispatch.
@@ -31700,20 +34686,29 @@ type IDot_operator_characterContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	DOT() antlr.TerminalNode
+	Operator_character() IOperator_characterContext
+
 	// IsDot_operator_characterContext differentiates from other interfaces.
 	IsDot_operator_characterContext()
 }
 
 type Dot_operator_characterContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyDot_operator_characterContext() *Dot_operator_characterContext {
 	var p = new(Dot_operator_characterContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_dot_operator_character
 	return p
+}
+
+func InitEmptyDot_operator_characterContext(p *Dot_operator_characterContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_dot_operator_character
 }
 
 func (*Dot_operator_characterContext) IsDot_operator_characterContext() {}
@@ -31721,7 +34716,7 @@ func (*Dot_operator_characterContext) IsDot_operator_characterContext() {}
 func NewDot_operator_characterContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Dot_operator_characterContext {
 	var p = new(Dot_operator_characterContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_dot_operator_character
@@ -31770,30 +34765,13 @@ func (s *Dot_operator_characterContext) Accept(visitor antlr.ParseTreeVisitor) i
 }
 
 func (p *MojoParser) Dot_operator_character() (localctx IDot_operator_characterContext) {
-	this := p
-	_ = this
-
 	localctx = NewDot_operator_characterContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 358, MojoParserRULE_dot_operator_character)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2265)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserDOT:
@@ -31801,6 +34779,10 @@ func (p *MojoParser) Dot_operator_character() (localctx IDot_operator_characterC
 		{
 			p.SetState(2263)
 			p.Match(MojoParserDOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case MojoParserLT, MojoParserGT, MojoParserBANG, MojoParserQUESTION, MojoParserAND, MojoParserMINUS, MojoParserEQUAL, MojoParserPIPE, MojoParserSLASH, MojoParserPLUS, MojoParserSTAR, MojoParserPERCENT, MojoParserCARET, MojoParserTILDE, MojoParserOPERATOR_HEAD_OTHER, MojoParserOPERATOR_FOLLOWING_CHARACTER:
@@ -31811,10 +34793,21 @@ func (p *MojoParser) Dot_operator_character() (localctx IDot_operator_characterC
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // ILiteralContext is an interface to support dynamic dispatch.
@@ -31824,20 +34817,31 @@ type ILiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	NumericLiteral() INumericLiteralContext
+	StringLiteral() IStringLiteralContext
+	BoolLiteral() IBoolLiteralContext
+	NullLiteral() INullLiteralContext
+
 	// IsLiteralContext differentiates from other interfaces.
 	IsLiteralContext()
 }
 
 type LiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyLiteralContext() *LiteralContext {
 	var p = new(LiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_literal
 	return p
+}
+
+func InitEmptyLiteralContext(p *LiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_literal
 }
 
 func (*LiteralContext) IsLiteralContext() {}
@@ -31845,7 +34849,7 @@ func (*LiteralContext) IsLiteralContext() {}
 func NewLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LiteralContext {
 	var p = new(LiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_literal
@@ -31938,30 +34942,13 @@ func (s *LiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Literal() (localctx ILiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 360, MojoParserRULE_literal)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2271)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserMINUS, MojoParserBINARY_LITERAL, MojoParserOCTAL_LITERAL, MojoParserDECIMAL_LITERAL, MojoParserPURE_DECIMAL_DIGITS, MojoParserHEXADECIMAL_LITERAL, MojoParserFLOAT_LITERAL:
@@ -31993,10 +34980,21 @@ func (p *MojoParser) Literal() (localctx ILiteralContext) {
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IBoolLiteralContext is an interface to support dynamic dispatch.
@@ -32006,20 +35004,29 @@ type IBoolLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_TRUE() antlr.TerminalNode
+	KEYWORD_FALSE() antlr.TerminalNode
+
 	// IsBoolLiteralContext differentiates from other interfaces.
 	IsBoolLiteralContext()
 }
 
 type BoolLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyBoolLiteralContext() *BoolLiteralContext {
 	var p = new(BoolLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_boolLiteral
 	return p
+}
+
+func InitEmptyBoolLiteralContext(p *BoolLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_boolLiteral
 }
 
 func (*BoolLiteralContext) IsBoolLiteralContext() {}
@@ -32027,7 +35034,7 @@ func (*BoolLiteralContext) IsBoolLiteralContext() {}
 func NewBoolLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BoolLiteralContext {
 	var p = new(BoolLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_boolLiteral
@@ -32064,28 +35071,9 @@ func (s *BoolLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) BoolLiteral() (localctx IBoolLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewBoolLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 362, MojoParserRULE_boolLiteral)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -32100,7 +35088,17 @@ func (p *MojoParser) BoolLiteral() (localctx IBoolLiteralContext) {
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // INullLiteralContext is an interface to support dynamic dispatch.
@@ -32110,20 +35108,28 @@ type INullLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	KEYWORD_NULL() antlr.TerminalNode
+
 	// IsNullLiteralContext differentiates from other interfaces.
 	IsNullLiteralContext()
 }
 
 type NullLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyNullLiteralContext() *NullLiteralContext {
 	var p = new(NullLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_nullLiteral
 	return p
+}
+
+func InitEmptyNullLiteralContext(p *NullLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_nullLiteral
 }
 
 func (*NullLiteralContext) IsNullLiteralContext() {}
@@ -32131,7 +35137,7 @@ func (*NullLiteralContext) IsNullLiteralContext() {}
 func NewNullLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *NullLiteralContext {
 	var p = new(NullLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_nullLiteral
@@ -32164,35 +35170,29 @@ func (s *NullLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 }
 
 func (p *MojoParser) NullLiteral() (localctx INullLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewNullLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 364, MojoParserRULE_nullLiteral)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(2275)
 		p.Match(MojoParserKEYWORD_NULL)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // INumericLiteralContext is an interface to support dynamic dispatch.
@@ -32202,20 +35202,30 @@ type INumericLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	IntegerLiteral() IIntegerLiteralContext
+	NegatePrefixOperator() INegatePrefixOperatorContext
+	FLOAT_LITERAL() antlr.TerminalNode
+
 	// IsNumericLiteralContext differentiates from other interfaces.
 	IsNumericLiteralContext()
 }
 
 type NumericLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyNumericLiteralContext() *NumericLiteralContext {
 	var p = new(NumericLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_numericLiteral
 	return p
+}
+
+func InitEmptyNumericLiteralContext(p *NumericLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_numericLiteral
 }
 
 func (*NumericLiteralContext) IsNumericLiteralContext() {}
@@ -32223,7 +35233,7 @@ func (*NumericLiteralContext) IsNumericLiteralContext() {}
 func NewNumericLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *NumericLiteralContext {
 	var p = new(NumericLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_numericLiteral
@@ -32288,36 +35298,24 @@ func (s *NumericLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) NumericLiteral() (localctx INumericLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewNumericLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 366, MojoParserRULE_numericLiteral)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2285)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 314, p.GetParserRuleContext()) {
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 314, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		p.SetState(2278)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserMINUS {
@@ -32336,6 +35334,9 @@ func (p *MojoParser) NumericLiteral() (localctx INumericLiteralContext) {
 		p.EnterOuterAlt(localctx, 2)
 		p.SetState(2282)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserMINUS {
@@ -32348,11 +35349,27 @@ func (p *MojoParser) NumericLiteral() (localctx INumericLiteralContext) {
 		{
 			p.SetState(2284)
 			p.Match(MojoParserFLOAT_LITERAL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IIntegerLiteralContext is an interface to support dynamic dispatch.
@@ -32362,20 +35379,32 @@ type IIntegerLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	BINARY_LITERAL() antlr.TerminalNode
+	OCTAL_LITERAL() antlr.TerminalNode
+	DECIMAL_LITERAL() antlr.TerminalNode
+	PURE_DECIMAL_DIGITS() antlr.TerminalNode
+	HEXADECIMAL_LITERAL() antlr.TerminalNode
+
 	// IsIntegerLiteralContext differentiates from other interfaces.
 	IsIntegerLiteralContext()
 }
 
 type IntegerLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyIntegerLiteralContext() *IntegerLiteralContext {
 	var p = new(IntegerLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_integerLiteral
 	return p
+}
+
+func InitEmptyIntegerLiteralContext(p *IntegerLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_integerLiteral
 }
 
 func (*IntegerLiteralContext) IsIntegerLiteralContext() {}
@@ -32383,7 +35412,7 @@ func (*IntegerLiteralContext) IsIntegerLiteralContext() {}
 func NewIntegerLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *IntegerLiteralContext {
 	var p = new(IntegerLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_integerLiteral
@@ -32432,28 +35461,9 @@ func (s *IntegerLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface
 }
 
 func (p *MojoParser) IntegerLiteral() (localctx IIntegerLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewIntegerLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 368, MojoParserRULE_integerLiteral)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -32468,7 +35478,17 @@ func (p *MojoParser) IntegerLiteral() (localctx IIntegerLiteralContext) {
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IStringLiteralContext is an interface to support dynamic dispatch.
@@ -32478,20 +35498,29 @@ type IStringLiteralContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	STATIC_STRING_LITERAL() antlr.TerminalNode
+	INTERPOLATED_STRING_LITERAL() antlr.TerminalNode
+
 	// IsStringLiteralContext differentiates from other interfaces.
 	IsStringLiteralContext()
 }
 
 type StringLiteralContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyStringLiteralContext() *StringLiteralContext {
 	var p = new(StringLiteralContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_stringLiteral
 	return p
+}
+
+func InitEmptyStringLiteralContext(p *StringLiteralContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_stringLiteral
 }
 
 func (*StringLiteralContext) IsStringLiteralContext() {}
@@ -32499,7 +35528,7 @@ func (*StringLiteralContext) IsStringLiteralContext() {}
 func NewStringLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StringLiteralContext {
 	var p = new(StringLiteralContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_stringLiteral
@@ -32536,28 +35565,9 @@ func (s *StringLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 }
 
 func (p *MojoParser) StringLiteral() (localctx IStringLiteralContext) {
-	this := p
-	_ = this
-
 	localctx = NewStringLiteralContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 370, MojoParserRULE_stringLiteral)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -32572,7 +35582,17 @@ func (p *MojoParser) StringLiteral() (localctx IStringLiteralContext) {
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IEosContext is an interface to support dynamic dispatch.
@@ -32582,20 +35602,29 @@ type IEosContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	SEMI() antlr.TerminalNode
+	EOL() antlr.TerminalNode
+
 	// IsEosContext differentiates from other interfaces.
 	IsEosContext()
 }
 
 type EosContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyEosContext() *EosContext {
 	var p = new(EosContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_eos
 	return p
+}
+
+func InitEmptyEosContext(p *EosContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_eos
 }
 
 func (*EosContext) IsEosContext() {}
@@ -32603,7 +35632,7 @@ func (*EosContext) IsEosContext() {}
 func NewEosContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *EosContext {
 	var p = new(EosContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_eos
@@ -32640,28 +35669,9 @@ func (s *EosContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Eos() (localctx IEosContext) {
-	this := p
-	_ = this
-
 	localctx = NewEosContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 372, MojoParserRULE_eos)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -32676,7 +35686,17 @@ func (p *MojoParser) Eos() (localctx IEosContext) {
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IEovContext is an interface to support dynamic dispatch.
@@ -32686,20 +35706,29 @@ type IEovContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	COMMA() antlr.TerminalNode
+	EOL() antlr.TerminalNode
+
 	// IsEovContext differentiates from other interfaces.
 	IsEovContext()
 }
 
 type EovContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyEovContext() *EovContext {
 	var p = new(EovContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_eov
 	return p
+}
+
+func InitEmptyEovContext(p *EovContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_eov
 }
 
 func (*EovContext) IsEovContext() {}
@@ -32707,7 +35736,7 @@ func (*EovContext) IsEovContext() {}
 func NewEovContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *EovContext {
 	var p = new(EovContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_eov
@@ -32744,28 +35773,9 @@ func (s *EovContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 }
 
 func (p *MojoParser) Eov() (localctx IEovContext) {
-	this := p
-	_ = this
-
 	localctx = NewEovContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 374, MojoParserRULE_eov)
 	var _la int
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -32780,7 +35790,17 @@ func (p *MojoParser) Eov() (localctx IEovContext) {
 		}
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IEosWithDocumentContext is an interface to support dynamic dispatch.
@@ -32790,20 +35810,30 @@ type IEosWithDocumentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	SEMI() antlr.TerminalNode
+	FollowingDocument() IFollowingDocumentContext
+	EOL() antlr.TerminalNode
+
 	// IsEosWithDocumentContext differentiates from other interfaces.
 	IsEosWithDocumentContext()
 }
 
 type EosWithDocumentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyEosWithDocumentContext() *EosWithDocumentContext {
 	var p = new(EosWithDocumentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_eosWithDocument
 	return p
+}
+
+func InitEmptyEosWithDocumentContext(p *EosWithDocumentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_eosWithDocument
 }
 
 func (*EosWithDocumentContext) IsEosWithDocumentContext() {}
@@ -32811,7 +35841,7 @@ func (*EosWithDocumentContext) IsEosWithDocumentContext() {}
 func NewEosWithDocumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *EosWithDocumentContext {
 	var p = new(EosWithDocumentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_eosWithDocument
@@ -32864,31 +35894,15 @@ func (s *EosWithDocumentContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) EosWithDocument() (localctx IEosWithDocumentContext) {
-	this := p
-	_ = this
-
 	localctx = NewEosWithDocumentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 376, MojoParserRULE_eosWithDocument)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2305)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserSEMI:
@@ -32896,9 +35910,16 @@ func (p *MojoParser) EosWithDocument() (localctx IEosWithDocumentContext) {
 		{
 			p.SetState(2295)
 			p.Match(MojoParserSEMI)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		p.SetState(2299)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -32909,6 +35930,10 @@ func (p *MojoParser) EosWithDocument() (localctx IEosWithDocumentContext) {
 			{
 				p.SetState(2297)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
 		}
@@ -32917,6 +35942,9 @@ func (p *MojoParser) EosWithDocument() (localctx IEosWithDocumentContext) {
 		p.EnterOuterAlt(localctx, 2)
 		p.SetState(2302)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -32929,13 +35957,28 @@ func (p *MojoParser) EosWithDocument() (localctx IEosWithDocumentContext) {
 		{
 			p.SetState(2304)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 // IEovWithDocumentContext is an interface to support dynamic dispatch.
@@ -32945,20 +35988,30 @@ type IEovWithDocumentContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Getter signatures
+	COMMA() antlr.TerminalNode
+	FollowingDocument() IFollowingDocumentContext
+	EOL() antlr.TerminalNode
+
 	// IsEovWithDocumentContext differentiates from other interfaces.
 	IsEovWithDocumentContext()
 }
 
 type EovWithDocumentContext struct {
-	*antlr.BaseParserRuleContext
+	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
 func NewEmptyEovWithDocumentContext() *EovWithDocumentContext {
 	var p = new(EovWithDocumentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = MojoParserRULE_eovWithDocument
 	return p
+}
+
+func InitEmptyEovWithDocumentContext(p *EovWithDocumentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MojoParserRULE_eovWithDocument
 }
 
 func (*EovWithDocumentContext) IsEovWithDocumentContext() {}
@@ -32966,7 +36019,7 @@ func (*EovWithDocumentContext) IsEovWithDocumentContext() {}
 func NewEovWithDocumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *EovWithDocumentContext {
 	var p = new(EovWithDocumentContext)
 
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
 	p.RuleIndex = MojoParserRULE_eovWithDocument
@@ -33019,31 +36072,15 @@ func (s *EovWithDocumentContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 }
 
 func (p *MojoParser) EovWithDocument() (localctx IEovWithDocumentContext) {
-	this := p
-	_ = this
-
 	localctx = NewEovWithDocumentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 378, MojoParserRULE_eovWithDocument)
 	var _la int
 
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
 	p.SetState(2317)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
 
 	switch p.GetTokenStream().LA(1) {
 	case MojoParserCOMMA:
@@ -33051,11 +36088,15 @@ func (p *MojoParser) EovWithDocument() (localctx IEovWithDocumentContext) {
 		{
 			p.SetState(2307)
 			p.Match(MojoParserCOMMA)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 		p.SetState(2311)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 318, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 318, p.GetParserRuleContext()) == 1 {
 			{
 				p.SetState(2308)
 				p.FollowingDocument()
@@ -33063,14 +36104,23 @@ func (p *MojoParser) EovWithDocument() (localctx IEovWithDocumentContext) {
 			{
 				p.SetState(2309)
 				p.Match(MojoParserEOL)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
 
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case MojoParserEOL, MojoParserFOLLOWING_LINE_DOCUMENT:
 		p.EnterOuterAlt(localctx, 2)
 		p.SetState(2314)
 		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 
 		if _la == MojoParserFOLLOWING_LINE_DOCUMENT {
@@ -33083,13 +36133,28 @@ func (p *MojoParser) EovWithDocument() (localctx IEovWithDocumentContext) {
 		{
 			p.SetState(2316)
 			p.Match(MojoParserEOL)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
 	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
 func (p *MojoParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex int) bool {
@@ -33142,9 +36207,6 @@ func (p *MojoParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex in
 }
 
 func (p *MojoParser) Pattern_Sempred(localctx antlr.RuleContext, predIndex int) bool {
-	this := p
-	_ = this
-
 	switch predIndex {
 	case 0:
 		return p.Precpred(p.GetParserRuleContext(), 2)
@@ -33155,9 +36217,6 @@ func (p *MojoParser) Pattern_Sempred(localctx antlr.RuleContext, predIndex int) 
 }
 
 func (p *MojoParser) StringOperatorLiteral_Sempred(localctx antlr.RuleContext, predIndex int) bool {
-	this := p
-	_ = this
-
 	switch predIndex {
 	case 1:
 		return p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS
@@ -33168,9 +36227,6 @@ func (p *MojoParser) StringOperatorLiteral_Sempred(localctx antlr.RuleContext, p
 }
 
 func (p *MojoParser) SuffixLiteralOperator_Sempred(localctx antlr.RuleContext, predIndex int) bool {
-	this := p
-	_ = this
-
 	switch predIndex {
 	case 2:
 		return p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS
@@ -33181,9 +36237,6 @@ func (p *MojoParser) SuffixLiteralOperator_Sempred(localctx antlr.RuleContext, p
 }
 
 func (p *MojoParser) Type__Sempred(localctx antlr.RuleContext, predIndex int) bool {
-	this := p
-	_ = this
-
 	switch predIndex {
 	case 3:
 		return p.Precpred(p.GetParserRuleContext(), 3)
@@ -33200,9 +36253,6 @@ func (p *MojoParser) Type__Sempred(localctx antlr.RuleContext, predIndex int) bo
 }
 
 func (p *MojoParser) BasicType_Sempred(localctx antlr.RuleContext, predIndex int) bool {
-	this := p
-	_ = this
-
 	switch predIndex {
 	case 6:
 		return p.Precpred(p.GetParserRuleContext(), 3)
@@ -33216,9 +36266,6 @@ func (p *MojoParser) BasicType_Sempred(localctx antlr.RuleContext, predIndex int
 }
 
 func (p *MojoParser) Operator_characters_Sempred(localctx antlr.RuleContext, predIndex int) bool {
-	this := p
-	_ = this
-
 	switch predIndex {
 	case 8:
 		return p.GetTokenStream().Get(p.GetTokenStream().Index()-1).GetTokenType() != MojoParserWS
