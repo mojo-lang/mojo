@@ -270,6 +270,7 @@ functionParameter
 
 enumDeclaration
   : KEYWORD_ENUM enumName genericParameterClause? (EOL* typeInheritanceClause)? EOL* enumBody
+  | KEYWORD_TYPE enumName assignmentOperator KEYWORD_ENUM genericParameterClause? (EOL* typeInheritanceClause)? EOL* enumBody
   ;
 
 enumBody : LCURLY (followingDocument)? (EOL* enumMembers)? EOL* RCURLY ;
@@ -284,7 +285,8 @@ enumMember
 
 // GRAMMAR OF A STRUCTURE DECLARATION
 structDeclaration
- : KEYWORD_TYPE structName genericParameterClause? structType
+ : (KEYWORD_TYPE | KEYWORD_STRUCT) structName genericParameterClause? structType
+ | KEYWORD_TYPE structName assignmentOperator KEYWORD_STRUCT genericParameterClause? structType
  ;
 
 structName : typeName;
@@ -318,7 +320,9 @@ structMemberDeclaration
 // GRAMMAR OF A INTERFACE DECLARATION
 
 interfaceDeclaration
-  : KEYWORD_INTERFACE interfaceName genericParameterClause? interfaceType;
+  : KEYWORD_INTERFACE interfaceName genericParameterClause? interfaceType
+  | KEYWORD_TYPE interfaceName assignmentOperator KEYWORD_INTERFACE genericParameterClause? interfaceType
+  ;
 
 interfaceName : typeName ;
 interfaceType : (EOL* typeInheritanceClause)? EOL* interfaceBody;
@@ -417,7 +421,7 @@ expression
     : prefixExpression binaryExpressions?
     ;
 
-expressions : expression (eov EOL* expression)* eov?;
+//expressions : expression (eov EOL* expression)* eov?;
 
 // GRAMMAR OF A PREFIX EXPRESSION
 prefixExpression

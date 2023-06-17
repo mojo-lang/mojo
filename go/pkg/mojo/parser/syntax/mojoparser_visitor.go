@@ -304,9 +304,6 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#expression.
 	VisitExpression(ctx *ExpressionContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#expressions.
-	VisitExpressions(ctx *ExpressionsContext) interface{}
-
 	// Visit a parse tree produced by MojoParser#prefixExpression.
 	VisitPrefixExpression(ctx *PrefixExpressionContext) interface{}
 

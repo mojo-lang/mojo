@@ -403,10 +403,6 @@ func (v *BaseMojoParserVisitor) VisitExpression(ctx *ExpressionContext) interfac
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitExpressions(ctx *ExpressionsContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseMojoParserVisitor) VisitPrefixExpression(ctx *PrefixExpressionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
