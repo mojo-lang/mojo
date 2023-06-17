@@ -221,7 +221,7 @@ func (e *ExpressionVisitor) VisitPrimaryExpression(ctx *PrimaryExpressionContext
 		return wildcardCtx.Accept(e)
 	}
 
-	if tupleCtx := ctx.TupleExpression(); tupleCtx != nil {
+	if tupleCtx := ctx.TupleLiteralExpression(); tupleCtx != nil {
 		return tupleCtx.Accept(e)
 	}
 
@@ -415,7 +415,7 @@ func (e *ExpressionVisitor) VisitWildcardExpression(ctx *WildcardExpressionConte
 	return nil
 }
 
-func (e *ExpressionVisitor) VisitTupleExpression(ctx *TupleExpressionContext) interface{} {
+func (e *ExpressionVisitor) VisitTupleExpression(ctx *TupleLiteralExpressionContext) interface{} {
 	elementCtxes := ctx.AllTupleElement()
 	tupleExpr := &lang.TupleExpr{
 		StartPosition: GetPosition(ctx.GetStart()),

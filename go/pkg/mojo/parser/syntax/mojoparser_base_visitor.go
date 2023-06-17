@@ -487,6 +487,18 @@ func (v *BaseMojoParserVisitor) VisitStructConstructionExpression(ctx *StructCon
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitMatchExprSuffix(ctx *MatchExprSuffixContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitMatchExprCases(ctx *MatchExprCasesContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitMatchExprCase(ctx *MatchExprCaseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitClosureExpression(ctx *ClosureExpressionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -507,7 +519,7 @@ func (v *BaseMojoParserVisitor) VisitParenthesizedExpression(ctx *ParenthesizedE
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitTupleExpression(ctx *TupleExpressionContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitTupleLiteralExpression(ctx *TupleLiteralExpressionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

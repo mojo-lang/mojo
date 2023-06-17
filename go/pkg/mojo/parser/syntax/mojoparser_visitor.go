@@ -367,6 +367,15 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#structConstructionExpression.
 	VisitStructConstructionExpression(ctx *StructConstructionExpressionContext) interface{}
 
+	// Visit a parse tree produced by MojoParser#matchExprSuffix.
+	VisitMatchExprSuffix(ctx *MatchExprSuffixContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#matchExprCases.
+	VisitMatchExprCases(ctx *MatchExprCasesContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#matchExprCase.
+	VisitMatchExprCase(ctx *MatchExprCaseContext) interface{}
+
 	// Visit a parse tree produced by MojoParser#closureExpression.
 	VisitClosureExpression(ctx *ClosureExpressionContext) interface{}
 
@@ -382,8 +391,8 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#parenthesizedExpression.
 	VisitParenthesizedExpression(ctx *ParenthesizedExpressionContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#tupleExpression.
-	VisitTupleExpression(ctx *TupleExpressionContext) interface{}
+	// Visit a parse tree produced by MojoParser#tupleLiteralExpression.
+	VisitTupleLiteralExpression(ctx *TupleLiteralExpressionContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#tupleElement.
 	VisitTupleElement(ctx *TupleElementContext) interface{}

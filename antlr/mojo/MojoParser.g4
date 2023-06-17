@@ -52,7 +52,9 @@ statement
  | floatingStatement
  ;
 
-floatingStatement : document;
+floatingStatement
+    : document
+    ;
 
 statements
     : statement (eos EOL* statement)* SEMI?
@@ -403,7 +405,9 @@ attributes : attribute (EOL? attribute)* ;
 // Expressions
 
 // GRAMMAR OF AN EXPRESSION
-expression : prefixExpression binaryExpressions? ;
+expression
+    : prefixExpression binaryExpressions?
+    ;
 
 expressions : expression (eov EOL* expression)* eov?;
 
@@ -438,8 +442,8 @@ primaryExpression
  | declarationIdentifier genericArgumentClause?
  | typeIdentifier DOT declarationIdentifier genericArgumentClause?
  | closureExpression
+ | tupleLiteralExpression
  | parenthesizedExpression
- | tupleExpression
  | implicitMemberExpression
  | wildcardExpression
  | structConstructionExpression
@@ -476,7 +480,7 @@ arrayLiteralItems
   : arrayLiteralItem (eov EOL* arrayLiteralItem)* eov?
  ;
  
-arrayLiteralItem : expression ;
+arrayLiteralItem : expression | ELLIPSIS ;
 
 mapLiteral
    : LCURLY (EOL* mapLiteralItems)? EOL* RCURLY
@@ -517,9 +521,14 @@ structConstructionExpression
     : typeIdentifier functionCallSuffix
     ;
 
+//matchExpression : KEYWORD_MATCH expression EOL* LCURLY (EOL* matchExprCases)? EOL* RCURLY;
+matchExprSuffix : KEYWORD_MATCH EOL* LCURLY (EOL* matchExprCases)? EOL* RCURLY;
+matchExprCases : matchExprCase (eos EOL* matchExprCase)* eos?;
+matchExprCase : pattern EOL* RIGHT_RIGHT_ARROWS EOL* expression;
+
 // GRAMMAR OF A CLOSURE EXPRESSION
 closureExpression
-    : LCURLY statements RCURLY
+    : LCURLY EOL* statements EOL* RCURLY
     | LCURLY closureParameters EOL* RIGHT_ARROW (EOL* type_)? EOL* statements RCURLY
     ;
 
@@ -545,7 +554,7 @@ parenthesizedExpression
       ) EOL* RPAREN ;
 // GRAMMAR OF A TUPLE EXPRESSION
 
-tupleExpression
+tupleLiteralExpression
  : LPAREN RPAREN
  | LPAREN tupleElement (COMMA tupleElement)+ RPAREN
  ;
@@ -553,6 +562,7 @@ tupleExpression
 tupleElement
  : expression
  | labelIdentifier COLON expression
+ | ELLIPSIS
  ;
 
 // GRAMMAR OF A WILDCARD EXPRESSION
@@ -566,6 +576,8 @@ suffixExpression
     : functionCallSuffix
     | explicitMemberSuffix
     | subscriptSuffix
+    | matchExprSuffix
+    | typeCastingOperator
     ;
 
 explicitMemberSuffix:
@@ -586,9 +598,8 @@ functionCallSuffix
 	;
 
 functionCallArgumentClause
- : LPAREN RPAREN
- | LPAREN functionCallArguments RPAREN
- //| expression
+ : LPAREN EOL* RPAREN
+ | LPAREN EOL* functionCallArguments EOL* RPAREN
  ;
 
 functionCallArguments : functionCallArgument ( COMMA functionCallArgument )* ;
@@ -596,8 +607,8 @@ functionCallArguments : functionCallArgument ( COMMA functionCallArgument )* ;
 functionCallArgument
  : expression
  | labelIdentifier COLON expression
- | operator
- | labelIdentifier COLON operator
+ //| operator
+ //| labelIdentifier COLON operator
  ;
 
 trailingClosures:
@@ -615,9 +626,12 @@ argumentName : labelIdentifier COLON ;
 type_
  : basicType
  | functionType
- | type_ BANG
- | type_ QUESTION
- | type_ ELLIPSIS
+ | type_ BANG     // unit
+ | type_ QUESTION // optional
+ | type_ STAR     // reference
+ | type_ PLUS     // public  RESERVED
+ | type_ MINUS    // private RESERVED
+ | type_ ELLIPSIS // type list
  ;
 
 basicType
@@ -737,7 +751,7 @@ keywordAsIdentifierInDeclarations
     | KEYWORD_ENUM
     | KEYWORD_FALSE
     | KEYWORD_FUNC
-    | KEYWORD_IF
+    //| KEYWORD_IF
     | KEYWORD_IMPORT
     | KEYWORD_IN
     | KEYWORD_INTERFACE
@@ -765,7 +779,7 @@ keywordAsIdentifierInLabels
     | KEYWORD_FALSE
     | KEYWORD_FOR
     | KEYWORD_FUNC
-    | KEYWORD_IF
+    //| KEYWORD_IF
     | KEYWORD_ELSE
     | KEYWORD_IMPORT
     | KEYWORD_IN
@@ -885,11 +899,11 @@ prefixOperator
  the ++ operator in a++.b is treated as a postfix unary operator (a++ .b
  rather than a ++ .b)."
  */
-postfixOperator: PLUS_PLUS | MINUS_MINUS;
+postfixOperator: PLUS_PLUS | MINUS_MINUS | ELLIPSIS;
 
 operator
   : operator_head     operator_characters?
-  | dot_operator_head (dot_operator_character)*
+  | dot_operator_head (dot_operator_character)+
   ;
 
 operator_characters: (
