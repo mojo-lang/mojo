@@ -15,6 +15,14 @@ func (v *BaseMojoParserVisitor) VisitStatement(ctx *StatementContext) interface{
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitIfModifier(ctx *IfModifierContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitWhileModifier(ctx *WhileModifierContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitFloatingStatement(ctx *FloatingStatementContext) interface{} {
 	return v.VisitChildren(ctx)
 }

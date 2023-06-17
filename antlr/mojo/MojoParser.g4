@@ -45,12 +45,20 @@ mojoFile : EOL* (statements)? EOL* EOF;
 // GRAMMAR OF A STATEMENT
 statement
  : declaration
- | expression
+ | expression (ifModifier | whileModifier)?
  | loopStatement
  | branchStatement
  | controlTransferStatement
  | floatingStatement
  ;
+
+ifModifier
+    : KEYWORD_IF expression
+    ;
+
+whileModifier
+    : KEYWORD_WHILE expression
+    ;
 
 floatingStatement
     : document
@@ -112,8 +120,8 @@ elseClause
 // GRAMMAR OF A MATCH STATEMENT
 
 matchStatement : KEYWORD_MATCH expression EOL* LCURLY (EOL* matchCases)? EOL* RCURLY  ;
-matchCases : matchCase (eos EOL* matchCase)* eos;
-matchCase : pattern EOL* RIGHT_RIGHT_ARROWS EOL* ( codeBlock | expression )  ;
+matchCases : matchCase (eos EOL* matchCase)* eos?;
+matchCase : pattern ifModifier? EOL* RIGHT_RIGHT_ARROWS EOL* ( codeBlock | expression )  ;
 
 // GRAMMAR OF A CONTROL TRANSFER STATEMENT
 
