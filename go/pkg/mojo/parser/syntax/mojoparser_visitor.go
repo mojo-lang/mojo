@@ -322,11 +322,23 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#binaryExpression.
 	VisitBinaryExpression(ctx *BinaryExpressionContext) interface{}
 
+	// Visit a parse tree produced by MojoParser#prefixCallOperator.
+	VisitPrefixCallOperator(ctx *PrefixCallOperatorContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#infixCallOperator.
+	VisitInfixCallOperator(ctx *InfixCallOperatorContext) interface{}
+
 	// Visit a parse tree produced by MojoParser#binaryExpressions.
 	VisitBinaryExpressions(ctx *BinaryExpressionsContext) interface{}
 
+	// Visit a parse tree produced by MojoParser#inOperator.
+	VisitInOperator(ctx *InOperatorContext) interface{}
+
 	// Visit a parse tree produced by MojoParser#conditionalOperator.
 	VisitConditionalOperator(ctx *ConditionalOperatorContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#ifOperator.
+	VisitIfOperator(ctx *IfOperatorContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#typeCastingOperator.
 	VisitTypeCastingOperator(ctx *TypeCastingOperatorContext) interface{}

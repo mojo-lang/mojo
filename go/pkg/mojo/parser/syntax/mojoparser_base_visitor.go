@@ -427,11 +427,27 @@ func (v *BaseMojoParserVisitor) VisitBinaryExpression(ctx *BinaryExpressionConte
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitPrefixCallOperator(ctx *PrefixCallOperatorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitInfixCallOperator(ctx *InfixCallOperatorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitBinaryExpressions(ctx *BinaryExpressionsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitInOperator(ctx *InOperatorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitConditionalOperator(ctx *ConditionalOperatorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitIfOperator(ctx *IfOperatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

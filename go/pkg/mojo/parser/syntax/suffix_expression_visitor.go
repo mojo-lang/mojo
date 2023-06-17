@@ -78,7 +78,7 @@ func (e *SuffixExpressionVisitor) VisitExplicitMemberSuffix(ctx *ExplicitMemberS
 		return &lang.ExplicitMemberExpr{Member: identifier.GetText()}
 	}
 
-	if decimal := ctx.PURE_DECIMAL_DIGITS(); decimal != nil {
+	if decimal := ctx.DECIMAL_LITERAL(); decimal != nil {
 		return &lang.ExplicitMemberExpr{Member: decimal.GetText()}
 	}
 

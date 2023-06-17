@@ -440,19 +440,37 @@ prefixExpression
 // GRAMMAR OF A BINARY EXPRESSION
 binaryExpression
   : binaryOperator prefixExpression
-  | assignmentOperator prefixExpression
-  | conditionalOperator prefixExpression
-  | typeCastingOperator
+  //| COMMA prefixExpression // comma-expression / tuple-expression
+  //| assignmentOperator prefixExpression
+  | conditionalOperator prefixExpression // conditional-expression
+  | inOperator prefixExpression  // in-expression
+  | ifOperator prefixExpression // if-expression
+  //| typeCastingOperator // type-casting-expression
+  | infixCallOperator prefixExpression // infix-call-expression
+  ;
+
+prefixCallOperator
+    : labelIdentifier
+    ;
+
+infixCallOperator
+    : VALUE_IDENTIFIER
   ;
 
 binaryExpressions : binaryExpression+ ;
 
+inOperator
+    : BANG KEYWORD_IN | KEYWORD_IN
+    ;
+
 // GRAMMAR OF A CONDITIONAL OPERATOR
 conditionalOperator : QUESTION expression COLON ;
+ifOperator: KEYWORD_IF expression KEYWORD_ELSE;
 
 // GRAMMAR OF A TYPE_CASTING OPERATOR
+// is pattern
 typeCastingOperator
-  : KEYWORD_IS type_
+  : (BANG KEYWORD_IS | KEYWORD_IS) (type_ | pattern)
   | KEYWORD_AS type_
   ;
 
@@ -467,6 +485,7 @@ primaryExpression
  | implicitMemberExpression
  | wildcardExpression
  | structConstructionExpression
+ | ELLIPSIS
  //| key_path_expression
  ;
 
@@ -600,14 +619,15 @@ suffixExpression
     | typeCastingOperator
     ;
 
-explicitMemberSuffix:
-	DOT (
-		PURE_DECIMAL_DIGITS
+explicitMemberSuffix
+    : DOT
+		 ( DECIMAL_LITERAL
 		| identifier (
 			genericArgumentClause
 			| LPAREN argumentNames RPAREN
 		)?
-	);
+	     )
+	;
 
 subscriptSuffix: LBRACK functionCallArguments RBRACK;
 
