@@ -65,12 +65,9 @@ func (v *ValueDeclarationVisitor) VisitVariableDeclaration(ctx *VariableDeclarat
 }
 
 func (v *ValueDeclarationVisitor) VisitPatternInitializers(ctx *PatternInitializersContext) interface{} {
-	initializerCtxes := ctx.AllPatternInitializer()
 	var decls []*lang.ValueDecl
-	for _, c := range initializerCtxes {
-		if decl, ok := c.Accept(v).(*lang.ValueDecl); ok && decl != nil {
-			decls = append(decls, decl)
-		}
+	if decl, ok := ctx.PatternInitializer().Accept(v).(*lang.ValueDecl); ok && decl != nil {
+		decls = append(decls, decl)
 	}
 	if len(decls) > 0 {
 		return decls

@@ -211,10 +211,12 @@ importType : typeName importTypeAsClause?;
 
 constantDeclaration
   : KEYWORD_CONST patternInitializers
+  | KEYWORD_CONST LCURLY EOL* documentedPatternInitializer (eos EOL* documentedPatternInitializer)* eos? EOL* RCURLY
   ;
+
+//FIXME will has error in golang parser if remove the patternInitializers
 patternInitializers
-  : patternInitializer (eov EOL*  patternInitializer)*
-  | LCURLY EOL* documentedPatternInitializer (eov EOL* documentedPatternInitializer)* eov? EOL* RCURLY
+  : patternInitializer
   ;
 
 documentedPatternInitializer : (document EOL)? (attributes EOL)? patternInitializer;
@@ -228,7 +230,8 @@ initializer : assignmentOperator EOL* expression  ;
 
 variableDeclaration
   : KEYWORD_VAR patternInitializers
-  | identifierPattern COLON_EQUAL expression
+  | pattern COLON_EQUAL expression
+  | KEYWORD_VAR LCURLY EOL* documentedPatternInitializer (eos EOL* documentedPatternInitializer)* eos? EOL* RCURLY
   ;
 
 // GRAMMAR OF A TYPE ALIAS DECLARATION
