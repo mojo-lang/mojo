@@ -49,10 +49,10 @@ statement
  | loopStatement
  | branchStatement
  | controlTransferStatement
- | freeFloatingDocument
+ | floatingStatement
  ;
 
-freeFloatingDocument : document;
+floatingStatement : document;
 
 statements
     : statement (eos EOL* statement)* SEMI?
@@ -87,7 +87,7 @@ optionalBindingCondition
 
 // GRAMMAR OF A REPEAT-WHILE STATEMENT
 
-//repeatWhileStatement : KEYWORD_REPEATE codeBlock KEYWORD_WHILE expression ;
+// repeatWhileStatement : KEYWORD_REPEAT codeBlock KEYWORD_WHILE expression ;
 
 // GRAMMAR OF A BRANCH STATEMENT
 
@@ -269,7 +269,7 @@ enumMembers : enumMember (eovWithDocument EOL* enumMember)* eovWithDocument?;
 
 enumMember
  : (document EOL)? (attributes EOL)? declarationIdentifier attributes? (EOL* initializer)?
- | freeFloatingDocument
+ | floatingStatement
  ;
 
 // GRAMMAR OF A STRUCTURE DECLARATION
@@ -298,7 +298,7 @@ structMember
  | typeAliasDeclaration
  | structMemberDeclaration
  )
- | freeFloatingDocument
+ | floatingStatement
  ;
 
 structMemberDeclaration
@@ -324,7 +324,7 @@ interfaceMember
  ( typeAliasDeclaration
  | interfaceMethodDeclaration
  )
- | freeFloatingDocument
+ | floatingStatement
  ;
 
 // GRAMMAR OF A INTERFACE METHOD DECLARATION

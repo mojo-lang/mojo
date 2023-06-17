@@ -52,7 +52,7 @@ func (s *StatementsVisitor) VisitStatement(ctx *StatementContext) interface{} {
 		}
 	}
 
-	if documentCtx := ctx.FreeFloatingDocument(); documentCtx != nil {
+	if documentCtx := ctx.FloatingStatement(); documentCtx != nil {
 		if document := GetFreeFloatingDocument(documentCtx); document != nil {
 			return document
 		}

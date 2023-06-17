@@ -62,7 +62,7 @@ func mojoparserParserInit() {
 		"OPERATOR_FOLLOWING_CHARACTER",
 	}
 	staticData.RuleNames = []string{
-		"mojoFile", "statement", "freeFloatingDocument", "statements", "loopStatement",
+		"mojoFile", "statement", "floatingStatement", "statements", "loopStatement",
 		"forInStatement", "whileStatement", "conditions", "condition", "optionalBindingCondition",
 		"branchStatement", "ifStatement", "elseClause", "matchStatement", "matchCases",
 		"matchCase", "controlTransferStatement", "breakStatement", "continueStatement",
@@ -1386,7 +1386,7 @@ const (
 const (
 	MojoParserRULE_mojoFile                          = 0
 	MojoParserRULE_statement                         = 1
-	MojoParserRULE_freeFloatingDocument              = 2
+	MojoParserRULE_floatingStatement                 = 2
 	MojoParserRULE_statements                        = 3
 	MojoParserRULE_loopStatement                     = 4
 	MojoParserRULE_forInStatement                    = 5
@@ -1783,7 +1783,7 @@ type IStatementContext interface {
 	LoopStatement() ILoopStatementContext
 	BranchStatement() IBranchStatementContext
 	ControlTransferStatement() IControlTransferStatementContext
-	FreeFloatingDocument() IFreeFloatingDocumentContext
+	FloatingStatement() IFloatingStatementContext
 
 	// IsStatementContext differentiates from other interfaces.
 	IsStatementContext()
@@ -1901,10 +1901,10 @@ func (s *StatementContext) ControlTransferStatement() IControlTransferStatementC
 	return t.(IControlTransferStatementContext)
 }
 
-func (s *StatementContext) FreeFloatingDocument() IFreeFloatingDocumentContext {
+func (s *StatementContext) FloatingStatement() IFloatingStatementContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IFreeFloatingDocumentContext); ok {
+		if _, ok := ctx.(IFloatingStatementContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -1914,7 +1914,7 @@ func (s *StatementContext) FreeFloatingDocument() IFreeFloatingDocumentContext {
 		return nil
 	}
 
-	return t.(IFreeFloatingDocumentContext)
+	return t.(IFloatingStatementContext)
 }
 
 func (s *StatementContext) GetRuleContext() antlr.RuleContext {
@@ -1984,7 +1984,7 @@ func (p *MojoParser) Statement() (localctx IStatementContext) {
 		p.EnterOuterAlt(localctx, 6)
 		{
 			p.SetState(402)
-			p.FreeFloatingDocument()
+			p.FloatingStatement()
 		}
 
 	case antlr.ATNInvalidAltNumber:
@@ -2004,8 +2004,8 @@ errorExit:
 	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
-// IFreeFloatingDocumentContext is an interface to support dynamic dispatch.
-type IFreeFloatingDocumentContext interface {
+// IFloatingStatementContext is an interface to support dynamic dispatch.
+type IFloatingStatementContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
@@ -2014,43 +2014,43 @@ type IFreeFloatingDocumentContext interface {
 	// Getter signatures
 	Document() IDocumentContext
 
-	// IsFreeFloatingDocumentContext differentiates from other interfaces.
-	IsFreeFloatingDocumentContext()
+	// IsFloatingStatementContext differentiates from other interfaces.
+	IsFloatingStatementContext()
 }
 
-type FreeFloatingDocumentContext struct {
+type FloatingStatementContext struct {
 	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyFreeFloatingDocumentContext() *FreeFloatingDocumentContext {
-	var p = new(FreeFloatingDocumentContext)
+func NewEmptyFloatingStatementContext() *FloatingStatementContext {
+	var p = new(FloatingStatementContext)
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MojoParserRULE_freeFloatingDocument
+	p.RuleIndex = MojoParserRULE_floatingStatement
 	return p
 }
 
-func InitEmptyFreeFloatingDocumentContext(p *FreeFloatingDocumentContext) {
+func InitEmptyFloatingStatementContext(p *FloatingStatementContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MojoParserRULE_freeFloatingDocument
+	p.RuleIndex = MojoParserRULE_floatingStatement
 }
 
-func (*FreeFloatingDocumentContext) IsFreeFloatingDocumentContext() {}
+func (*FloatingStatementContext) IsFloatingStatementContext() {}
 
-func NewFreeFloatingDocumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FreeFloatingDocumentContext {
-	var p = new(FreeFloatingDocumentContext)
+func NewFloatingStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FloatingStatementContext {
+	var p = new(FloatingStatementContext)
 
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = MojoParserRULE_freeFloatingDocument
+	p.RuleIndex = MojoParserRULE_floatingStatement
 
 	return p
 }
 
-func (s *FreeFloatingDocumentContext) GetParser() antlr.Parser { return s.parser }
+func (s *FloatingStatementContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *FreeFloatingDocumentContext) Document() IDocumentContext {
+func (s *FloatingStatementContext) Document() IDocumentContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(IDocumentContext); ok {
@@ -2066,27 +2066,27 @@ func (s *FreeFloatingDocumentContext) Document() IDocumentContext {
 	return t.(IDocumentContext)
 }
 
-func (s *FreeFloatingDocumentContext) GetRuleContext() antlr.RuleContext {
+func (s *FloatingStatementContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *FreeFloatingDocumentContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *FloatingStatementContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *FreeFloatingDocumentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+func (s *FloatingStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
 	case MojoParserVisitor:
-		return t.VisitFreeFloatingDocument(s)
+		return t.VisitFloatingStatement(s)
 
 	default:
 		return t.VisitChildren(s)
 	}
 }
 
-func (p *MojoParser) FreeFloatingDocument() (localctx IFreeFloatingDocumentContext) {
-	localctx = NewFreeFloatingDocumentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 4, MojoParserRULE_freeFloatingDocument)
+func (p *MojoParser) FloatingStatement() (localctx IFloatingStatementContext) {
+	localctx = NewFloatingStatementContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 4, MojoParserRULE_floatingStatement)
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(405)
@@ -13744,7 +13744,7 @@ type IEnumMemberContext interface {
 	AllAttributes() []IAttributesContext
 	Attributes(i int) IAttributesContext
 	Initializer() IInitializerContext
-	FreeFloatingDocument() IFreeFloatingDocumentContext
+	FloatingStatement() IFloatingStatementContext
 
 	// IsEnumMemberContext differentiates from other interfaces.
 	IsEnumMemberContext()
@@ -13879,10 +13879,10 @@ func (s *EnumMemberContext) Initializer() IInitializerContext {
 	return t.(IInitializerContext)
 }
 
-func (s *EnumMemberContext) FreeFloatingDocument() IFreeFloatingDocumentContext {
+func (s *EnumMemberContext) FloatingStatement() IFloatingStatementContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IFreeFloatingDocumentContext); ok {
+		if _, ok := ctx.(IFloatingStatementContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -13892,7 +13892,7 @@ func (s *EnumMemberContext) FreeFloatingDocument() IFreeFloatingDocumentContext 
 		return nil
 	}
 
-	return t.(IFreeFloatingDocumentContext)
+	return t.(IFloatingStatementContext)
 }
 
 func (s *EnumMemberContext) GetRuleContext() antlr.RuleContext {
@@ -14030,7 +14030,7 @@ func (p *MojoParser) EnumMember() (localctx IEnumMemberContext) {
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(1158)
-			p.FreeFloatingDocument()
+			p.FloatingStatement()
 		}
 
 	case antlr.ATNInvalidAltNumber:
@@ -15024,7 +15024,7 @@ type IStructMemberContext interface {
 	AllEOL() []antlr.TerminalNode
 	EOL(i int) antlr.TerminalNode
 	Attributes() IAttributesContext
-	FreeFloatingDocument() IFreeFloatingDocumentContext
+	FloatingStatement() IFloatingStatementContext
 
 	// IsStructMemberContext differentiates from other interfaces.
 	IsStructMemberContext()
@@ -15182,10 +15182,10 @@ func (s *StructMemberContext) Attributes() IAttributesContext {
 	return t.(IAttributesContext)
 }
 
-func (s *StructMemberContext) FreeFloatingDocument() IFreeFloatingDocumentContext {
+func (s *StructMemberContext) FloatingStatement() IFloatingStatementContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IFreeFloatingDocumentContext); ok {
+		if _, ok := ctx.(IFloatingStatementContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -15195,7 +15195,7 @@ func (s *StructMemberContext) FreeFloatingDocument() IFreeFloatingDocumentContex
 		return nil
 	}
 
-	return t.(IFreeFloatingDocumentContext)
+	return t.(IFloatingStatementContext)
 }
 
 func (s *StructMemberContext) GetRuleContext() antlr.RuleContext {
@@ -15319,7 +15319,7 @@ func (p *MojoParser) StructMember() (localctx IStructMemberContext) {
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(1246)
-			p.FreeFloatingDocument()
+			p.FloatingStatement()
 		}
 
 	case antlr.ATNInvalidAltNumber:
@@ -16482,7 +16482,7 @@ type IInterfaceMemberContext interface {
 	AllEOL() []antlr.TerminalNode
 	EOL(i int) antlr.TerminalNode
 	Attributes() IAttributesContext
-	FreeFloatingDocument() IFreeFloatingDocumentContext
+	FloatingStatement() IFloatingStatementContext
 
 	// IsInterfaceMemberContext differentiates from other interfaces.
 	IsInterfaceMemberContext()
@@ -16592,10 +16592,10 @@ func (s *InterfaceMemberContext) Attributes() IAttributesContext {
 	return t.(IAttributesContext)
 }
 
-func (s *InterfaceMemberContext) FreeFloatingDocument() IFreeFloatingDocumentContext {
+func (s *InterfaceMemberContext) FloatingStatement() IFloatingStatementContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IFreeFloatingDocumentContext); ok {
+		if _, ok := ctx.(IFloatingStatementContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -16605,7 +16605,7 @@ func (s *InterfaceMemberContext) FreeFloatingDocument() IFreeFloatingDocumentCon
 		return nil
 	}
 
-	return t.(IFreeFloatingDocumentContext)
+	return t.(IFloatingStatementContext)
 }
 
 func (s *InterfaceMemberContext) GetRuleContext() antlr.RuleContext {
@@ -16711,7 +16711,7 @@ func (p *MojoParser) InterfaceMember() (localctx IInterfaceMemberContext) {
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(1339)
-			p.FreeFloatingDocument()
+			p.FloatingStatement()
 		}
 
 	case antlr.ATNInvalidAltNumber:

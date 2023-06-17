@@ -15,7 +15,7 @@ func (v *BaseMojoParserVisitor) VisitStatement(ctx *StatementContext) interface{
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMojoParserVisitor) VisitFreeFloatingDocument(ctx *FreeFloatingDocumentContext) interface{} {
+func (v *BaseMojoParserVisitor) VisitFloatingStatement(ctx *FloatingStatementContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

@@ -13,8 +13,8 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#statement.
 	VisitStatement(ctx *StatementContext) interface{}
 
-	// Visit a parse tree produced by MojoParser#freeFloatingDocument.
-	VisitFreeFloatingDocument(ctx *FreeFloatingDocumentContext) interface{}
+	// Visit a parse tree produced by MojoParser#floatingStatement.
+	VisitFloatingStatement(ctx *FloatingStatementContext) interface{}
 
 	// Visit a parse tree produced by MojoParser#statements.
 	VisitStatements(ctx *StatementsContext) interface{}

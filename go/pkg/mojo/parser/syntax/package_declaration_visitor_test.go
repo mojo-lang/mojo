@@ -20,16 +20,16 @@ func TestPackageDeclarationVisitor_VisitPackageDeclaration(t *testing.T) {
 	}`
 	parser := &Parser{}
 	file, err := parser.ParseString(context.Empty(), packageDecl)
-	assert.NoError(t, err)
-
-	pkg := getPackage(file)
-	assert.NotNil(t, pkg)
-
-	assert.Equal(t, "Apache", pkg.License)
-	assert.Equal(t, "../core", pkg.Dependencies["mojo.core"].Path)
-	assert.Equal(t, "../document", pkg.Dependencies["mojo.document"].Path)
-	assert.Equal(t, uint64(1), pkg.Dependencies["mojo.core"].Version.Range.Start.Minor)
-	assert.Equal(t, uint64(2), pkg.Dependencies["mojo.core"].Version.Range.End.Minor)
+	if assert.NoError(t, err) {
+		pkg := getPackage(file)
+		if assert.NotNil(t, pkg) {
+			assert.Equal(t, "Apache", pkg.License)
+			assert.Equal(t, "../core", pkg.Dependencies["mojo.core"].Path)
+			assert.Equal(t, "../document", pkg.Dependencies["mojo.document"].Path)
+			assert.Equal(t, uint64(1), pkg.Dependencies["mojo.core"].Version.Range.Start.Minor)
+			assert.Equal(t, uint64(2), pkg.Dependencies["mojo.core"].Version.Range.End.Minor)
+		}
+	}
 }
 
 func TestPackageDeclarationVisitor_VisitPackageDeclaration2(t *testing.T) {
@@ -43,14 +43,14 @@ func TestPackageDeclarationVisitor_VisitPackageDeclaration2(t *testing.T) {
 	}`
 	parser := &Parser{}
 	file, err := parser.ParseString(context.Empty(), packageDecl)
-	assert.NoError(t, err)
-
-	pkg := getPackage(file)
-	assert.NotNil(t, pkg)
-
-	assert.Equal(t, "Apache", pkg.License)
-	assert.Equal(t, uint64(1), pkg.Dependencies["mojo.core"].Version.Range.Start.Minor)
-	assert.Equal(t, uint64(2), pkg.Dependencies["mojo.core"].Version.Range.End.Minor)
+	if assert.NoError(t, err) {
+		pkg := getPackage(file)
+		if assert.NotNil(t, pkg) {
+			assert.Equal(t, "Apache", pkg.License)
+			assert.Equal(t, uint64(1), pkg.Dependencies["mojo.core"].Version.Range.Start.Minor)
+			assert.Equal(t, uint64(2), pkg.Dependencies["mojo.core"].Version.Range.End.Minor)
+		}
+	}
 }
 
 func getPackage(file *lang.SourceFile) *lang.Package {

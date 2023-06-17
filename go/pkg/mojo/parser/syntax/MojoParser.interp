@@ -191,7 +191,7 @@ OPERATOR_FOLLOWING_CHARACTER
 rule names:
 mojoFile
 statement
-freeFloatingDocument
+floatingStatement
 statements
 loopStatement
 forInStatement

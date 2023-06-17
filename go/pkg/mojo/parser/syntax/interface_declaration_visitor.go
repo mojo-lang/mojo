@@ -120,7 +120,7 @@ func (i *InterfaceDeclarationVisitor) VisitInterfaceMembers(ctx *InterfaceMember
 }
 
 func (i *InterfaceDeclarationVisitor) VisitInterfaceMember(ctx *InterfaceMemberContext) interface{} {
-	if freeDocument := ctx.FreeFloatingDocument(); freeDocument != nil {
+	if freeDocument := ctx.FloatingStatement(); freeDocument != nil {
 		return GetFreeFloatingDocument(freeDocument)
 	} else {
 		document := GetDocument(ctx.Document())

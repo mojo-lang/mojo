@@ -15,7 +15,7 @@ func NewDocumentVisitor() *DocumentVisitor {
 	return &DocumentVisitor{}
 }
 
-func GetFreeFloatingDocument(ctx IFreeFloatingDocumentContext) *lang.Document {
+func GetFreeFloatingDocument(ctx IFloatingStatementContext) *lang.Document {
 	if ctx != nil {
 		if document, ok := ctx.Accept(NewDocumentVisitor()).(*lang.Document); ok {
 			return document
@@ -142,7 +142,7 @@ func (d *DocumentVisitor) VisitEosWithDocument(ctx *EosWithDocumentContext) inte
 	return nil
 }
 
-func (d *DocumentVisitor) VisitFreeFloatingDocument(ctx *FreeFloatingDocumentContext) interface{} {
+func (d *DocumentVisitor) VisitFloatingStatement(ctx *FloatingStatementContext) interface{} {
 	if ctx != nil {
 		return GetDocument(ctx.Document())
 	}

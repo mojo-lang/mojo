@@ -245,7 +245,7 @@ func (s *StructDeclarationVisitor) VisitStructMember(ctx *StructMemberContext) i
 		}
 	}
 
-	if freeFloatingDocumentContext := ctx.FreeFloatingDocument(); freeFloatingDocumentContext != nil {
+	if freeFloatingDocumentContext := ctx.FloatingStatement(); freeFloatingDocumentContext != nil {
 		return GetFreeFloatingDocument(freeFloatingDocumentContext)
 	}
 

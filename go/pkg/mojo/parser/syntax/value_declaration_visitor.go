@@ -115,7 +115,7 @@ func (v *ValueDeclarationVisitor) VisitIdentifierPattern(ctx *IdentifierPatternC
 }
 
 func (v *ValueDeclarationVisitor) VisitEnumMember(ctx *EnumMemberContext) interface{} {
-	if freeFloatingDocumentCtx := ctx.FreeFloatingDocument(); freeFloatingDocumentCtx != nil {
+	if freeFloatingDocumentCtx := ctx.FloatingStatement(); freeFloatingDocumentCtx != nil {
 		return GetFreeFloatingDocument(freeFloatingDocumentCtx)
 	}
 

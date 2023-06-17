@@ -13,11 +13,12 @@ func ParseVariableDecl(t *testing.T, decl string) *lang.VariableDecl {
 	parser := &Parser{}
 	file, err := parser.ParseString(context.Empty(), decl)
 
-	assert.NoError(t, err)
-	if len(file.Statements) > 0 {
-		statement := file.Statements[0]
-		if d := statement.GetDeclaration(); d != nil {
-			return d.GetVariableDecl()
+	if assert.NoError(t, err) {
+		if len(file.Statements) > 0 {
+			statement := file.Statements[0]
+			if d := statement.GetDeclaration(); d != nil {
+				return d.GetVariableDecl()
+			}
 		}
 	}
 
