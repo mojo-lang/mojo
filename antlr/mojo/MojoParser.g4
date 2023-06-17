@@ -360,9 +360,11 @@ pattern
  : wildcardPattern typeAnnotation?
  | identifierPattern typeAnnotation?
  | tuplePattern typeAnnotation?
- //| enum_value_pattern
+ | arrayPattern typeAnnotation?
+ | type_ attributes?
+ | enumValuePattern
  | optionalPattern
- | KEYWORD_IS type_
+ | BANG? KEYWORD_IS type_
  | pattern KEYWORD_AS type_
  | expressionPattern
  ;
@@ -381,11 +383,17 @@ tuplePattern : LPAREN tuplePatternElementList? RPAREN  ;
 tuplePatternElementList
 	:	tuplePatternElement (COMMA tuplePatternElement)*
 	;
-tuplePatternElement : pattern  ;
+tuplePatternElement : pattern | ELLIPSIS ;
+
+arrayPattern : LBRACK arrayPatternElements? RBRACK;
+arrayPatternElements
+    : arrayPatternElement (COMMA arrayPatternElement)*
+    ;
+arrayPatternElement: pattern | ELLIPSIS;
 
 // GRAMMAR OF AN ENUMERATION CASE PATTERN
 
-//enum_value_pattern : typeIdentifier? DOT enum_case_name tuple_pattern? ;
+enumValuePattern : typeIdentifier? DOT declarationIdentifier tuplePattern? ;
 
 // GRAMMAR OF AN OPTIONAL PATTERN
 optionalPattern : identifierPattern QUESTION ;

@@ -274,6 +274,18 @@ type MojoParserVisitor interface {
 	// Visit a parse tree produced by MojoParser#tuplePatternElement.
 	VisitTuplePatternElement(ctx *TuplePatternElementContext) interface{}
 
+	// Visit a parse tree produced by MojoParser#arrayPattern.
+	VisitArrayPattern(ctx *ArrayPatternContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#arrayPatternElements.
+	VisitArrayPatternElements(ctx *ArrayPatternElementsContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#arrayPatternElement.
+	VisitArrayPatternElement(ctx *ArrayPatternElementContext) interface{}
+
+	// Visit a parse tree produced by MojoParser#enumValuePattern.
+	VisitEnumValuePattern(ctx *EnumValuePatternContext) interface{}
+
 	// Visit a parse tree produced by MojoParser#optionalPattern.
 	VisitOptionalPattern(ctx *OptionalPatternContext) interface{}
 

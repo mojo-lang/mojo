@@ -363,6 +363,22 @@ func (v *BaseMojoParserVisitor) VisitTuplePatternElement(ctx *TuplePatternElemen
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseMojoParserVisitor) VisitArrayPattern(ctx *ArrayPatternContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitArrayPatternElements(ctx *ArrayPatternElementsContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitArrayPatternElement(ctx *ArrayPatternElementContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitEnumValuePattern(ctx *EnumValuePatternContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseMojoParserVisitor) VisitOptionalPattern(ctx *OptionalPatternContext) interface{} {
 	return v.VisitChildren(ctx)
 }
