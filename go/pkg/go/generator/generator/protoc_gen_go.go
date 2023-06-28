@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/fatih/structtag"
@@ -193,47 +194,23 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 			}
 
 			if ignore, _ := valDecl.GetBoolAttribute(db.IgnoreAttributeFullName); ignore {
-				_ = tags.Set(&structtag.Tag{
-					Key:  "db",
-					Name: "-",
-				})
-				_ = tags.Set(&structtag.Tag{
-					Key:  "gorm",
-					Name: "-",
-				})
+				_ = AddTagsOptions(tags, "db", fieldName, "-")
+				_ = AddTagsOptions(tags, "gorm", "", "-")
 			} else {
 				if dbJson, _ := valDecl.GetBoolAttribute(db.JSONAttributeFullName); dbJson {
-					if tag, _ := tags.Get("db"); tag == nil {
-						_ = tags.Set(&structtag.Tag{
-							Key:  "db",
-							Name: fieldName,
-						})
-					}
-					tags.AddOptions("db", "json")
+					_ = AddTagsOptions(tags, "db", fieldName, "json")
 				}
 				if dbExplode, err := valDecl.GetStringAttribute(db.ExplodeAttributeFullName); err == nil {
-					if tag, _ := tags.Get("db"); tag == nil {
-						_ = tags.Set(&structtag.Tag{
-							Key:  "db",
-							Name: fieldName,
-						})
-					}
 					if len(dbExplode) > 0 {
-						tags.AddOptions("db", "explode="+dbExplode)
+						_ = AddTagsOptions(tags, "db", fieldName, "explode="+dbExplode)
 					} else {
-						tags.AddOptions("db", "explode")
+						_ = AddTagsOptions(tags, "db", "", "explode")
 					}
 				}
 
 				addPrimaryKey := func(key string) {
-					if tag, _ := tags.Get("db"); tag == nil {
-						_ = tags.Set(&structtag.Tag{
-							Key:  "db",
-							Name: fieldName,
-						})
-					}
-					tags.AddOptions("db", key+"=true")
-					_ = tags.Set(&structtag.Tag{Key: "gorm", Name: "primaryKey"})
+					_ = AddTagsOptions(tags, "db", fieldName, key+"=true")
+					_ = AddTagsOptions(tags, "gorm", "", "primaryKey")
 				}
 
 				if v, err := valDecl.GetBoolAttribute(db.PrimaryKeyAttributeFullName); err == nil && v {
@@ -245,25 +222,29 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 				}
 
 				if valDecl.HasAttribute(db.IndexAttributeFullName) {
-					if tag, _ := tags.Get("db"); tag == nil {
-						_ = tags.Set(&structtag.Tag{
-							Key:  "db",
-							Name: fieldName,
-						})
-					}
-					tags.AddOptions("db", "index=true")
-					_ = tags.Set(&structtag.Tag{Key: "gorm", Name: "index"})
+					_ = AddTagsOptions(tags, "db", fieldName, "index=true")
+					_ = AddTagsOptions(tags, "gorm", "", "index")
 				}
 
 				if foreignKey, _ := valDecl.GetStringAttribute(db.ForeignKeyAttributeFullName); len(foreignKey) > 0 {
-					if tag, _ := tags.Get("db"); tag == nil {
-						_ = tags.Set(&structtag.Tag{
-							Key:  "db",
-							Name: fieldName,
-						})
+					_ = AddTagsOptions(tags, "db", fieldName, "foreignKey="+foreignKey)
+					_ = AddTagsOptions(tags, "gorm", "", "foreignKey:"+strcase.ToCamel(foreignKey))
+				}
+
+				if maxLength, _ := valDecl.GetIntegerAttribute(core.MaxLengthAttributeName); maxLength > 0 {
+					if valDecl.Type.GetFullName() == core.StringTypeFullName {
+						if maxLength < 256 {
+							_ = AddTagsOptions(tags, "gorm", "", "type:varchar("+strconv.Itoa(int(maxLength))+")")
+						}
 					}
-					tags.AddOptions("db", "foreignKey="+foreignKey)
-					_ = tags.Set(&structtag.Tag{Key: "gorm", Name: "foreignKey:" + strcase.ToCamel(foreignKey)})
+				}
+			}
+
+			if tag, _ := tags.Get("gorm"); tag != nil {
+				if len(tag.Options) > 0 {
+					options := strings.Join(tag.Options, ";")
+					tag.Name = tag.Name + ";" + options
+					tag.Options = []string{}
 				}
 			}
 		})
@@ -285,6 +266,34 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 	}
 
 	return genFiles, nil
+}
+
+func AddTagsOptions(tags *structtag.Tags, key string, name string, options ...string) error {
+	if len(name) == 0 && len(options) == 0 {
+		return nil
+	}
+
+	if tag, _ := tags.Get(key); tag == nil {
+		if len(name) == 0 {
+			name = options[0]
+			options = options[1:]
+		}
+
+		err := tags.Set(&structtag.Tag{
+			Key:  key,
+			Name: name,
+		})
+		if err != nil {
+			return err
+		}
+
+		if len(options) > 0 {
+			tags.AddOptions(key, options...)
+		}
+	} else {
+		tags.AddOptions(key, options...)
+	}
+	return nil
 }
 
 type stringMethodRenamer struct {
