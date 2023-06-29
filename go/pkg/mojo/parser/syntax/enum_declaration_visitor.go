@@ -66,14 +66,14 @@ func (e *EnumDeclarationVisitor) VisitEnumMembers(ctx *EnumMembersContext) inter
 	t.StartPosition = GetPosition(ctx.GetStart())
 	t.EndPosition = GetPosition(ctx.GetStop())
 
-	documentCtxes := ctx.AllEovWithDocument()
+	documentCtxes := ctx.AllEosWithDocument()
 	memberCtxes := ctx.AllEnumMember()
 	var freeDocument *lang.Document
 	for i, memberCtx := range memberCtxes {
 		member := memberCtx.Accept(NewValueDeclarationVisitor())
 		var document *lang.Document
 		if i < len(documentCtxes) {
-			document = GetEovDocument(documentCtxes[i])
+			document = GetEosDocument(documentCtxes[i])
 		}
 
 		if value, ok := member.(*lang.ValueDecl); ok {

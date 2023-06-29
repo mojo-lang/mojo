@@ -279,7 +279,7 @@ enumDeclaration
 enumBody : LCURLY (followingDocument)? (EOL* enumMembers)? EOL* RCURLY ;
 
 enumName: typeName;
-enumMembers : enumMember (eovWithDocument EOL* enumMember)* eovWithDocument?;
+enumMembers : enumMember (eosWithDocument EOL* enumMember)* eosWithDocument?;
 
 enumMember
  : (document EOL)? (attributes EOL)? declarationIdentifier attributes? (EOL* initializer)?

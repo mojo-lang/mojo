@@ -801,12 +801,12 @@ func mojoparserParserInit() {
 		1, 0, 0, 0, 1195, 1196, 1, 0, 0, 0, 1196, 1198, 1, 0, 0, 0, 1197, 1195,
 		1, 0, 0, 0, 1198, 1199, 5, 33, 0, 0, 1199, 125, 1, 0, 0, 0, 1200, 1201,
 		3, 318, 159, 0, 1201, 127, 1, 0, 0, 0, 1202, 1214, 3, 130, 65, 0, 1203,
-		1207, 3, 402, 201, 0, 1204, 1206, 5, 88, 0, 0, 1205, 1204, 1, 0, 0, 0,
+		1207, 3, 400, 200, 0, 1204, 1206, 5, 88, 0, 0, 1205, 1204, 1, 0, 0, 0,
 		1206, 1209, 1, 0, 0, 0, 1207, 1205, 1, 0, 0, 0, 1207, 1208, 1, 0, 0, 0,
 		1208, 1210, 1, 0, 0, 0, 1209, 1207, 1, 0, 0, 0, 1210, 1211, 3, 130, 65,
 		0, 1211, 1213, 1, 0, 0, 0, 1212, 1203, 1, 0, 0, 0, 1213, 1216, 1, 0, 0,
 		0, 1214, 1212, 1, 0, 0, 0, 1214, 1215, 1, 0, 0, 0, 1215, 1218, 1, 0, 0,
-		0, 1216, 1214, 1, 0, 0, 0, 1217, 1219, 3, 402, 201, 0, 1218, 1217, 1, 0,
+		0, 1216, 1214, 1, 0, 0, 0, 1217, 1219, 3, 400, 200, 0, 1218, 1217, 1, 0,
 		0, 0, 1218, 1219, 1, 0, 0, 0, 1219, 129, 1, 0, 0, 0, 1220, 1221, 3, 352,
 		176, 0, 1221, 1222, 5, 88, 0, 0, 1222, 1224, 1, 0, 0, 0, 1223, 1220, 1,
 		0, 0, 0, 1223, 1224, 1, 0, 0, 0, 1224, 1228, 1, 0, 0, 0, 1225, 1226, 3,
@@ -14284,8 +14284,8 @@ type IEnumMembersContext interface {
 	// Getter signatures
 	AllEnumMember() []IEnumMemberContext
 	EnumMember(i int) IEnumMemberContext
-	AllEovWithDocument() []IEovWithDocumentContext
-	EovWithDocument(i int) IEovWithDocumentContext
+	AllEosWithDocument() []IEosWithDocumentContext
+	EosWithDocument(i int) IEosWithDocumentContext
 	AllEOL() []antlr.TerminalNode
 	EOL(i int) antlr.TerminalNode
 
@@ -14366,20 +14366,20 @@ func (s *EnumMembersContext) EnumMember(i int) IEnumMemberContext {
 	return t.(IEnumMemberContext)
 }
 
-func (s *EnumMembersContext) AllEovWithDocument() []IEovWithDocumentContext {
+func (s *EnumMembersContext) AllEosWithDocument() []IEosWithDocumentContext {
 	children := s.GetChildren()
 	len := 0
 	for _, ctx := range children {
-		if _, ok := ctx.(IEovWithDocumentContext); ok {
+		if _, ok := ctx.(IEosWithDocumentContext); ok {
 			len++
 		}
 	}
 
-	tst := make([]IEovWithDocumentContext, len)
+	tst := make([]IEosWithDocumentContext, len)
 	i := 0
 	for _, ctx := range children {
-		if t, ok := ctx.(IEovWithDocumentContext); ok {
-			tst[i] = t.(IEovWithDocumentContext)
+		if t, ok := ctx.(IEosWithDocumentContext); ok {
+			tst[i] = t.(IEosWithDocumentContext)
 			i++
 		}
 	}
@@ -14387,11 +14387,11 @@ func (s *EnumMembersContext) AllEovWithDocument() []IEovWithDocumentContext {
 	return tst
 }
 
-func (s *EnumMembersContext) EovWithDocument(i int) IEovWithDocumentContext {
+func (s *EnumMembersContext) EosWithDocument(i int) IEosWithDocumentContext {
 	var t antlr.RuleContext
 	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IEovWithDocumentContext); ok {
+		if _, ok := ctx.(IEosWithDocumentContext); ok {
 			if j == i {
 				t = ctx.(antlr.RuleContext)
 				break
@@ -14404,7 +14404,7 @@ func (s *EnumMembersContext) EovWithDocument(i int) IEovWithDocumentContext {
 		return nil
 	}
 
-	return t.(IEovWithDocumentContext)
+	return t.(IEosWithDocumentContext)
 }
 
 func (s *EnumMembersContext) AllEOL() []antlr.TerminalNode {
@@ -14458,7 +14458,7 @@ func (p *MojoParser) EnumMembers() (localctx IEnumMembersContext) {
 		if _alt == 1 {
 			{
 				p.SetState(1203)
-				p.EovWithDocument()
+				p.EosWithDocument()
 			}
 			p.SetState(1207)
 			p.GetErrorHandler().Sync(p)
@@ -14506,7 +14506,7 @@ func (p *MojoParser) EnumMembers() (localctx IEnumMembersContext) {
 	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 132, p.GetParserRuleContext()) == 1 {
 		{
 			p.SetState(1217)
-			p.EovWithDocument()
+			p.EosWithDocument()
 		}
 
 	} else if p.HasError() { // JIM
