@@ -259,10 +259,11 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 			f.Content = string(bs)
 		}
 
-		bs, err = newStringMethodRenamer().Inject(f.Name, []byte(f.Content))
-		if err == nil {
-			f.Content = string(bs)
-		}
+		// disable the renamer, which will make the message failed to convert to Proto.Message.V1 interface.
+		// bs, err = newStringMethodRenamer().Inject(f.Name, []byte(f.Content))
+		// if err == nil {
+		// 	f.Content = string(bs)
+		// }
 	}
 
 	return genFiles, nil
@@ -296,25 +297,25 @@ func AddTagsOptions(tags *structtag.Tags, key string, name string, options ...st
 	return nil
 }
 
-type stringMethodRenamer struct {
-	injection.Injector
-}
-
-func newStringMethodRenamer() *stringMethodRenamer {
-	in := &stringMethodRenamer{}
-	in.OnFunction = in.onFunction
-	return in
-}
-
-func (r *stringMethodRenamer) onFunction(ctx context.Context, function *ast.FuncDecl, areaAppender func(area injection.Area)) {
-	if function.Recv != nil && len(function.Recv.List) > 0 {
-		name := function.Name
-		if name.Name == "String" {
-			areaAppender(&injection.TextArea{
-				Start:   name.Pos(),
-				End:     name.End(),
-				Content: "ToText",
-			})
-		}
-	}
-}
+// type stringMethodRenamer struct {
+// 	injection.Injector
+// }
+//
+// func newStringMethodRenamer() *stringMethodRenamer {
+// 	in := &stringMethodRenamer{}
+// 	in.OnFunction = in.onFunction
+// 	return in
+// }
+//
+// func (r *stringMethodRenamer) onFunction(ctx context.Context, function *ast.FuncDecl, areaAppender func(area injection.Area)) {
+// 	if function.Recv != nil && len(function.Recv.List) > 0 {
+// 		name := function.Name
+// 		if name.Name == "String" {
+// 			areaAppender(&injection.TextArea{
+// 				Start:   name.Pos(),
+// 				End:     name.End(),
+// 				Content: "ToText",
+// 			})
+// 		}
+// 	}
+// }
