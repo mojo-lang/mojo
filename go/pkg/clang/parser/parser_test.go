@@ -3,7 +3,7 @@ package parser
 import (
 	"testing"
 
-	"github.com/alecthomas/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParser_ParseFile1(t *testing.T) {

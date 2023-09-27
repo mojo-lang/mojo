@@ -3,7 +3,7 @@ package syntax
 import (
 	"testing"
 
-	"github.com/alecthomas/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParser_VisitParameterTypeList1(t *testing.T) {
