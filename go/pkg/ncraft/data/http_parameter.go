@@ -76,6 +76,10 @@ func (p *HTTPParameter) IsElementScalar() bool {
 	return false
 }
 
+func (p *HTTPParameter) IsRawStyle() bool {
+	return p != nil && p.Style == "raw"
+}
+
 func (p *HTTPParameter) GetEnclosingField() *Field {
 	return p.GetField().GetEnclosingField()
 }

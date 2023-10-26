@@ -423,6 +423,7 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
 		return logs.NewErrorw("failed to compile the binding field")
 	}
 
+	param.Style, _ = decl.GetStringAttribute(http.StyleAttributeFullName)
 	param.Field.Name = decl.Name
 
 	if enclosing != nil {

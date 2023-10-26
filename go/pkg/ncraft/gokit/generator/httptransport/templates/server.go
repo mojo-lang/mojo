@@ -29,11 +29,16 @@ var ServerDecodeTemplate = `
 			return nil, nhttp.WrapError(err, 400, "cannot read body of http request")
 		}
 		if len(buf) > 0 {
+			{{- if and $binding.Body $binding.Body.IsRawStyle}}
+			req.{{GoName $binding.Body.Name}} = string(buf)
+			{{else}}
 			{{- if not $binding.Body}}
 			if err = jsoniter.ConfigFastest.Unmarshal(buf, &req); err != nil {
 			{{else}}
+			{{- if not $binding.Body.IsScalar}}
 			req.{{GoName $binding.Body.Name}} = {{if $binding.Body.IsMap}}make({{$binding.Body.GetGoTypeName}}){{else if $binding.Body.IsArray}}{{$binding.Body.GetGoTypeName}}{}{{else}}&{{$binding.Body.GetGoTypeName}}{}{{end}}
-			if err = jsoniter.ConfigFastest.Unmarshal(buf, {{if $binding.Body.IsArray}}&{{end}}req.{{GoName $binding.Body.Field.Name}}); err != nil {
+			{{end -}}
+			if err = jsoniter.ConfigFastest.Unmarshal(buf, {{if or (or $binding.Body.IsMap $binding.Body.IsArray) $binding.Body.IsScalar}}&{{end}}req.{{GoName $binding.Body.Field.Name}}); err != nil {
 			{{end -}}
 				const size = 8196
 				if len(buf) > size {
@@ -44,6 +49,7 @@ var ServerDecodeTemplate = `
 					fmt.Sprintf("request body '%s': cannot parse non-json request body", buf),
 				)
 			}
+			{{end -}}
 		}
 
 		pathParams := mux.Vars(r)

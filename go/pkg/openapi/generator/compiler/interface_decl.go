@@ -292,6 +292,12 @@ func compileRequestBody(ctx context.Context, method *lang.FunctionDecl) *openapi
 			return nil
 		}
 
+		if style, _ := body.GetStringAttribute(http.StyleAttributeFullName); len(style) > 0 {
+			if style == "raw" {
+				schema.GetSchema().Format = "Bytes"
+			}
+		}
+
 		requestBody := &openapi.RequestBody{
 			Description: nil,
 			Content:     nil,

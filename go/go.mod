@@ -10,12 +10,12 @@ require (
 	github.com/go-clang/clang-v10 v0.0.0-20211120055647-b59749ef6dbb
 	github.com/goccy/go-graphviz v0.1.1
 	github.com/json-iterator/go v1.1.12
-	github.com/mojo-lang/core/go v0.0.0-20230926065453-7ad245584474
+	github.com/mojo-lang/core/go v0.0.0-20231009061615-f75fad8ff39f
 	github.com/mojo-lang/db/go v0.0.0-20230427100802-d945e09a3155
-	github.com/mojo-lang/document/go v0.0.0-20230926070241-a8158f367f02
+	github.com/mojo-lang/document/go v0.0.0-20231009062124-1063661ebfdd
 	github.com/mojo-lang/geom/go v0.0.0-20230427100520-a11933f5eda2
-	github.com/mojo-lang/http/go v0.0.0-20230427095618-4ac8e30ae2b4
-	github.com/mojo-lang/lang/go v0.0.0-20230926102213-68c93dfd720f
+	github.com/mojo-lang/http/go v0.0.0-20231026054523-2cf45f147a95
+	github.com/mojo-lang/lang/go v0.0.0-20231010080053-8365ee3ed1cd
 	github.com/mojo-lang/openapi/go v0.0.0-20230630084314-2d55e0a46279
 	github.com/mojo-lang/protobuf/go v0.0.0-20230630075708-42c4f66198d9
 	github.com/mojo-lang/rpc/go v0.0.0-20230427100006-63752a043553
