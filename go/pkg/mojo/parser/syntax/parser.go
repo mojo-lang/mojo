@@ -44,6 +44,11 @@ func New(options core.Options) *Parser {
 	}
 }
 
+func ParseExpression(expr string) (*lang.Expression, error) {
+	parser := &Parser{}
+	return parser.ParseExpression(expr)
+}
+
 func (p *Parser) ParseExpression(expr string) (*lang.Expression, error) {
 	if file, err := p.ParseString(context.Empty(), expr); err != nil {
 		return nil, err

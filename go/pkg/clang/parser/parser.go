@@ -23,6 +23,11 @@ type Diagnostic struct {
 	Offset   uint32
 }
 
+const (
+	OnlyMainFileFlag        = "onlyMainFile"        // default is true
+	ExcludeSystemHeaderFlag = "excludeSystemHeader" // default is true
+)
+
 type Parser struct {
 	Options     core.Options
 	Diagnostics []*Diagnostic
@@ -117,7 +122,7 @@ func (p *Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile,
 		p.Diagnostics = append(p.Diagnostics, dia)
 
 		if i < 8 {
-			logs.Warnw("found diagnostics", "problem", d.Spelling(), "file", fileName)
+			logs.Warnw("found diagnostics", "problem", d.Spelling(), "file", fileName, "line", dia.Line, "column", dia.Column)
 		}
 	}
 
@@ -136,11 +141,21 @@ func (p *Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile,
 			return clang.ChildVisit_Continue
 		}
 
-		if !cursor.Location().IsFromMainFile() {
-			return clang.ChildVisit_Continue
+		if p.Options.HasValue(OnlyMainFileFlag) && !p.Options.GetBool(OnlyMainFileFlag) {
+		} else {
+			if !cursor.Location().IsFromMainFile() {
+				return clang.ChildVisit_Continue
+			}
 		}
 
-		logs.Debugw("visit a cursor", "cursor", cursor.Spelling(), "kind", cursor.Kind().Spelling(), "USR", cursor.USR())
+		if p.Options.HasValue(ExcludeSystemHeaderFlag) && !p.Options.GetBool(ExcludeSystemHeaderFlag) {
+		} else {
+			if cursor.Location().IsInSystemHeader() {
+				return clang.ChildVisit_Continue
+			}
+		}
+
+		// logs.Debugw("visit a cursor", "cursor", cursor.Spelling(), "kind", cursor.Kind().Spelling(), "USR", cursor.USR())
 
 		switch cursor.Kind() {
 		case clang.Cursor_ClassTemplate:
@@ -197,6 +212,10 @@ func (p *Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile,
 			return clang.ChildVisit_Recurse
 		case clang.Cursor_EnumConstantDecl:
 			name := cursor.Spelling()
+			if cursor.IsAnonymous() {
+				name = "anonymous"
+			}
+
 			value := cursor.EnumConstantDeclValue()
 			en := parent.Type().Spelling()
 			if e, ok := enums[en]; ok {
@@ -211,12 +230,14 @@ func (p *Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile,
 			return clang.ChildVisit_Recurse
 		case clang.Cursor_StructDecl:
 			typ := cursor.Type()
-			decl := &lang.StructDecl{
-				Name: typ.Spelling(),
-				Type: &lang.StructType{},
+			if _, ok := structs[typ.Spelling()]; !ok {
+				decl := &lang.StructDecl{
+					Name: typ.Spelling(),
+					Type: &lang.StructType{},
+				}
+				structs[decl.Name] = decl
+				sourceFile.Statements = append(sourceFile.Statements, lang.NewStructDeclStatement(decl))
 			}
-			structs[decl.Name] = decl
-			sourceFile.Statements = append(sourceFile.Statements, lang.NewStructDeclStatement(decl))
 			return clang.ChildVisit_Recurse
 		case clang.Cursor_FieldDecl:
 			typ := cursor.Type()
@@ -262,7 +283,32 @@ func (p *Parser) ParseFile(fileName string, cmdArgs []string) (*lang.SourceFile,
 		logs.Warnw("There were problems while analyzing the given file")
 	}
 
-	return sourceFile, nil
+	return refineUnnamedStructs(sourceFile), nil
+}
+
+func refineUnnamedStructs(src *lang.SourceFile) *lang.SourceFile {
+	typdefs := make(map[string]*lang.TypeAliasDecl)
+	for _, stmt := range src.GetStatements() {
+		if decl := stmt.GetDeclaration().GetTypeAliasDecl(); decl != nil {
+			typdefs[decl.GetType().GetName()] = decl
+		}
+	}
+
+	for _, stmt := range src.GetStatements() {
+		if decl := stmt.GetDeclaration().GetStructDecl(); decl != nil {
+			if strings.Contains(decl.Name, "(unnamed struct") {
+				if alias, ok := typdefs[decl.Name]; ok {
+					name := alias.Name
+					alias.Type.Name = name
+					decl.Name = name
+				} else {
+					logs.Errorw("failed to rename the unnamed struct", "name", decl.Name, "file", src.Name)
+				}
+			}
+		}
+	}
+
+	return src
 }
 
 func parseFunction(cursor clang.Cursor) *lang.FunctionDecl {
@@ -277,6 +323,10 @@ func parseFunction(cursor clang.Cursor) *lang.FunctionDecl {
 		decl.Attributes = append(decl.Attributes, lang.NewBoolAttribute("", "c_static"))
 	case clang.SC_Extern:
 		decl.Attributes = append(decl.Attributes, lang.NewBoolAttribute("", "c_extern"))
+	}
+
+	if cursor.IsFunctionInlined() {
+		decl.Attributes = append(decl.Attributes, lang.NewBoolAttribute("", "c_inline"))
 	}
 
 	typ := cursor.Type()
