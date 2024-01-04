@@ -68,7 +68,7 @@ func CompileStructDecl(ctx context.Context, decl *lang.StructDecl) error {
 
 	components := context.OpenAPIComponents(thisCtx)
 
-	// add an dummy schema first for recursion reference
+	// add a dummy schema first for recursion reference
 	components.Schemas[decl.GetFullName()] = &openapi.Schema{
 		Title: "DUMMY",
 		Type:  0,
@@ -159,6 +159,7 @@ func compileStructDecl(ctx context.Context, decl *lang.StructDecl) (*openapi.Ref
 		} else {
 			s := &openapi.Schema{}
 			s.Title = schema.Title
+			s.Type = openapi.Schema_TYPE_OBJECT
 			s.Description = schema.Description
 
 			if len(schema.Properties) > 0 {
