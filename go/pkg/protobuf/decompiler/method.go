@@ -66,7 +66,23 @@ func CompileMethodRequest(ctx context.Context, method *lang.FunctionDecl) (*lang
 
 	pagination, _ := lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName)
 	if pagination {
-		req.Type.Fields = append(req.Type.Fields, compiler.PaginationRequestFields()...)
+		req.Type.MergeFields(compiler.PaginationRequestFields())
+	}
+
+	if query, _ := lang.GetBoolAttribute(method.Attributes, core.QueryAttributeName); query {
+		req.Type.MergeFields(compiler.QueryRequestFields())
+
+		pkg := context.Package(ctx)
+		cp := pkg.ResolvedDependencies["mojo.core"]
+		ids := []*lang.Identifier{
+			cp.GetIdentifier("mojo.core.FieldMask"),
+			cp.GetIdentifier("mojo.core.Ordering"),
+		}
+
+		service.ResolvedIdentifiers = lang.MergeDependencies(service.ResolvedIdentifiers, ids)
+
+		sf := context.SourceFile(ctx)
+		sf.ResolvedIdentifiers = lang.MergeDependencies(sf.ResolvedIdentifiers, ids)
 	}
 
 	return req, nil
@@ -131,7 +147,7 @@ func compileArrayTypeResponse(ctx context.Context, method *lang.FunctionDecl, pa
 	}
 
 	if pagination {
-		resp.Type.Fields = append(resp.Type.Fields, compiler.PaginationResponseFields()...)
+		resp.Type.MergeFields(compiler.PaginationResponseFields())
 	}
 
 	return resp, nil
