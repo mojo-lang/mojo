@@ -500,6 +500,33 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
 	return nil
 }
 
+func (s *Services) compileAllOfBindingFields(ctx context.Context, schema *openapi.Schema, index map[string]*openapi.Schema) []*data.Field {
+	if schema == nil || schema.Type != openapi.Schema_TYPE_OBJECT {
+		return nil
+	}
+
+	var fields []*data.Field
+	for name, item := range schema.Properties {
+		f := s.compileBindingField(ctx, item.GetSchemaOf(index), index)
+		if f == nil {
+			logs.Errorw("failed to compile the schema", "schema", schema.Title)
+		} else {
+			f.Name = strcase.ToSnake(name)
+			fields = append(fields, f)
+		}
+	}
+
+	for _, c := range schema.AllOf {
+		sch := c.GetSchemaOf(index)
+		fs := s.compileAllOfBindingFields(ctx, sch, index)
+		if len(fs) > 0 {
+			fields = append(fields, fs...)
+		}
+	}
+
+	return fields
+}
+
 func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Schema, index map[string]*openapi.Schema) *data.Field {
 	if schema == nil {
 		// error
@@ -678,13 +705,9 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
 				Extensions: make(map[string]interface{}),
 			}
 
-			for name, item := range schema.Properties {
-				f := s.compileBindingField(ctx, item.GetSchemaOf(index), index)
-				if f == nil {
-					println("")
-				}
-				f.Name = strcase.ToSnake(name)
-				field.Type.Message.Fields = append(field.Type.Message.Fields, f)
+			fs := s.compileAllOfBindingFields(ctx, schema, index)
+			if len(fs) > 0 {
+				field.Type.Message.Fields = append(field.Type.Message.Fields, fs...)
 			}
 		}
 	}

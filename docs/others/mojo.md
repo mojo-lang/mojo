@@ -216,12 +216,12 @@
 	1. 赋值语句
 	2. 表达式语句
 	3. 类型定义语句
-	​```
+	```
 	type Geometry {
 	}
 	enum Geometry_type {
 	}
-	​```
+	```
 	3. 函数定义语句
 	func function() {
 	}

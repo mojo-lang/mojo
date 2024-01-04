@@ -16,7 +16,7 @@ require (
 	github.com/mojo-lang/geom/go v0.0.0-20231010083419-ae85d486df78
 	github.com/mojo-lang/http/go v0.0.0-20231026054523-2cf45f147a95
 	github.com/mojo-lang/lang/go v0.0.0-20231221042403-5791599856f1
-	github.com/mojo-lang/openapi/go v0.0.0-20231010075400-647a31937bde
+	github.com/mojo-lang/openapi/go v0.0.0-20240104072634-11b492bf84c9
 	github.com/mojo-lang/protobuf/go v0.0.0-20231010083050-67d0430d7b2c
 	github.com/mojo-lang/rpc/go v0.0.0-20231010083250-7a2c9f3f5f32
 	github.com/mojo-lang/yaml/go v0.0.0-20231010072828-fb7b8987a3f0
