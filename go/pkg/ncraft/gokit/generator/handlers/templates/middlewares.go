@@ -83,6 +83,7 @@ func WrapEndpoints(in svc.Endpoints, options map[string]interface{}) svc.Endpoin
 }
 
 func WrapService(in pb.{{.Interface.ServerName}}, options map[string]interface{}) pb.{{.Interface.ServerName}} {
+	_ = options
 	return in
 }
 `
