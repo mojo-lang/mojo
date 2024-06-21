@@ -2,7 +2,6 @@ package java
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -55,8 +54,12 @@ func (b Builder) protocJava() error {
 
 	cmd.Dir = path.Join(b.GetAbsolutePath(), "protobuf")
 
+	//$ protoc --plugin=protoc-gen-grpc-java \
+	//--grpc-java_out="$OUTPUT_FILE" --proto_path="$DIR_OF_PROTO_FILE" "$PROTO_FILE"
+
 	// cmd.Args = append(cmd.Args, "--go_out=.")
 	cmd.Args = append(cmd.Args, "--java_out=.")
+	cmd.Args = append(cmd.Args, "--grpc-java_out=.")
 	for _, file := range b.Files {
 		if file.IsEmpty() {
 			continue
@@ -96,7 +99,7 @@ func (b Builder) protocJava() error {
 
 	for _, domain := range []string{"ai", "biz", "cn", "com", "edu", "gov", "net", "org", "info", "io", "tech"} {
 		srcDir := path.Join(b.GetAbsolutePath(), "protobuf", domain)
-		_, err := ioutil.ReadDir(srcDir)
+		_, err := os.ReadDir(srcDir)
 		if err == nil {
 			if err = copy.Copy(srcDir, path.Join(destDir, domain)); err != nil {
 				return err
