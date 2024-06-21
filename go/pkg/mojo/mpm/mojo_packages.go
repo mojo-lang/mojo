@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"sort"
@@ -163,9 +163,9 @@ type mojoPackage struct {
 }
 
 func parseGoMod(projectPath string) map[string]*mojoPackage {
-	contents, _ := ioutil.ReadFile(path.Join(projectPath, "go.mod"))
+	contents, _ := os.ReadFile(path.Join(projectPath, "go.mod"))
 	if len(contents) == 0 {
-		contents, _ = ioutil.ReadFile(path.Join(projectPath, "go", "go.mod"))
+		contents, _ = os.ReadFile(path.Join(projectPath, "go", "go.mod"))
 	}
 
 	p, err := go_mod_parser.Parse("go.mod", contents, nil)
@@ -263,7 +263,7 @@ func compileMojoPackage(pkg *mojoPackage) (*lang.Package, *BinaryFile, error) {
 				return nil
 			}
 
-			content, err := ioutil.ReadFile(path)
+			content, err := os.ReadFile(path)
 			if err != nil {
 				return err
 			}
@@ -302,7 +302,7 @@ func savePackage(projectPath string, pkg *lang.Package, pb *BinaryFile) error {
 		}
 		fileName := path.Join(projectPath, "pkg/mojo/mpm/mojo", pkg.Name+".binary")
 
-		err = ioutil.WriteFile(fileName, bytes, fs.ModePerm)
+		err = os.WriteFile(fileName, bytes, fs.ModePerm)
 		if err != nil {
 			return err
 		}
@@ -311,7 +311,7 @@ func savePackage(projectPath string, pkg *lang.Package, pb *BinaryFile) error {
 	if pb != nil {
 		fileName := path.Join(projectPath, "pkg/mojo/mpm/mojo", pkg.Name+".pb.binary")
 		bytes := pb.Encode()
-		err := ioutil.WriteFile(fileName, bytes, fs.ModePerm)
+		err := os.WriteFile(fileName, bytes, fs.ModePerm)
 		if err != nil {
 			return err
 		}
