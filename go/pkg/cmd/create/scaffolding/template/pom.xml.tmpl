@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.18</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>{{.Organization}}</groupId>
+    <artifactId>{{.Name}}</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <name>{{.Name}}</name>
+    <description>{{.FullName}} api and service</description>
+    <packaging>pom</packaging>
+    <url>{{.Repository}}</url>
+    <inceptionYear>2024</inceptionYear>
+
+    <organization>
+        <name>{{.Organization}}</name>
+        <url>{{.Organization}}</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>{{.Author}}</id>
+            <name>{{.Author}}</name>
+            <email>{{.Email}}</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+8</timezone>
+            <url>https://github.com/{{.Author}}</url>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <java.version>17</java.version>
+        <grpc.version>1.64.0</grpc.version>
+        <protobuf.version>3.23.3</protobuf.version>
+
+        <fastjson.version>2.0.31</fastjson.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
+        <!-- gRPC dependencies -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+
+        <!-- gRPC use this kind of annotation, but not import them directly -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <!-- JSON 解析器和生成器 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>aliyun</id>
+            <url>https://maven.aliyun.com/repository/central</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-plugin</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <modules>
+		<module>java</module>
+		<module>service-java</module>
+    </modules>
+
+    <reporting>
+        <outputDirectory>target/site</outputDirectory>
+    </reporting>
+</project>
