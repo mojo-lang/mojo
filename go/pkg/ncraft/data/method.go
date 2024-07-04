@@ -28,6 +28,13 @@ type Method struct {
 	Extensions map[string]interface{}
 }
 
+func (m *Method) GetFirstBinding() *HTTPBinding {
+	if m != nil && len(m.Bindings) > 0 {
+		return m.Bindings[0]
+	}
+	return nil
+}
+
 func (m *Method) GetRequest() *Message {
 	if m != nil {
 		return m.Request

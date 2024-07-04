@@ -1,18 +1,19 @@
 package java
 
 import (
-	"errors"
+	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/go/pkg/context"
+	"github.com/mojo-lang/mojo/go/pkg/java/generator"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"github.com/otiai10/copy"
+	"github.com/pkg/errors"
 	"os"
 	"os/exec"
 	"path"
 
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
-	"github.com/otiai10/copy"
-
 	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
-	"github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
+	gogen "github.com/mojo-lang/mojo/go/pkg/go/generator/generator"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 )
 
@@ -23,11 +24,6 @@ type Builder struct {
 }
 
 func (b Builder) protocJava() error {
-	if !b.APIEnabled {
-		logs.Infow("disable generation, skip to build java.")
-		return nil
-	}
-
 	if b.Package == nil {
 		return errors.New("")
 	}
@@ -38,7 +34,7 @@ func (b Builder) protocJava() error {
 		wd := dep.GetExtraString("workingDir")
 		p := dep.GetExtraString("path")
 		if len(wd) == 0 && len(p) == 0 {
-			pbDir, err := generator.GenerateMojoPackageProtobuf(dep)
+			pbDir, err := gogen.GenerateMojoPackageProtobuf(dep)
 			if err != nil {
 				logs.Errorw("failed to generate mojo package's protobuf files", "package", dep.FullName, "error", err)
 				return err
@@ -93,7 +89,7 @@ func (b Builder) protocJava() error {
 		}
 	}
 
-	if err := util.DeepClearFiles(destDir, ".pb.java"); err != nil {
+	if err := util.DeepClearGeneratedFiles(destDir, ".java"); err != nil {
 		return err
 	}
 
@@ -114,9 +110,51 @@ func (b Builder) protocJava() error {
 	return nil
 }
 
+func (b Builder) build() error {
+	logs.Infow("java begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
+
+	cmp := generator.NewCompiler()
+	options := make(core.Options)
+
+	err := cmp.CompilePackage(context.WithOptions(context.Empty(), options), b.Package)
+	if err != nil {
+		logs.Errorw("failed to compile java", "package", b.Package.FullName, "error", err.Error())
+		return err
+	}
+
+	services := cmp.Services
+	err = generator.GenerateService(services, b.Output)
+	if err != nil {
+		logs.Errorw("generate java failed", "pwd", b.PWD, "path", b.Path, "package", b.Package.FullName, "error", err.Error())
+		return err
+	}
+
+	return nil
+}
+
 func (b Builder) Build() error {
-	// protoc the protobuf files to golang files
+	if !b.APIEnabled {
+		logs.Infow("disable generation, skip to build java.")
+		return nil
+	}
+	logs.Infow("begin to build file.", "pwd", b.PWD, "path", b.Path)
+
+	if len(b.Output) == 0 {
+		b.Output = util.GetAbsolutePath(b.PWD, b.Path)
+	}
+	b.Output = path.Join(b.Output, "java")
+
+	// protoc the protobuf files to java files
 	if err := b.protocJava(); err != nil {
+		return err
+	}
+
+	// other java files builder
+	if err := b.build(); err != nil {
+		return err
+	}
+
+	if err := generator.UpdateProtoJavaFiles(b.Output); err != nil {
 		return err
 	}
 

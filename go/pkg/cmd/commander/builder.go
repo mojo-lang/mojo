@@ -1,6 +1,7 @@
 package commander
 
 import (
+	"github.com/mojo-lang/mojo/go/pkg/cmd/build/ncraft/boot"
 	"path"
 	"strings"
 
@@ -52,7 +53,7 @@ func (b *Builder) Execute() error {
 	if len(b.Targets) == 0 {
 		b.Targets = "api"
 
-		if core.IsExist(path.Join(b.Path, "service-go")) {
+		if core.IsExist(path.Join(b.Path, "service-go")) || core.IsExist(path.Join(b.Path, "service-java")) {
 			b.Targets = "api,service"
 		}
 	}
@@ -112,6 +113,10 @@ func (b *Builder) Execute() error {
 		switch b.Engine {
 		case "gokit":
 			if err := b.buildGokit("service"); err != nil {
+				return err
+			}
+		case "boot":
+			if err := b.buildBoot("service"); err != nil {
 				return err
 			}
 		}
@@ -201,6 +206,20 @@ func (b *Builder) buildDocument() error {
 
 func (b *Builder) buildGokit(ncraftType string) error {
 	return gokit.Builder{
+		Builder: builder.Builder{
+			PWD:        b.Pwd,
+			Path:       b.Path,
+			Package:    b.Package,
+			APIEnabled: b.APIEnabled,
+		},
+		Type:       ncraftType,
+		Output:     b.Output,
+		Repository: b.Repository,
+	}.Build()
+}
+
+func (b *Builder) buildBoot(ncraftType string) error {
+	return boot.Builder{
 		Builder: builder.Builder{
 			PWD:        b.Pwd,
 			Path:       b.Path,

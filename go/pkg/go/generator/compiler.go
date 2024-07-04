@@ -47,10 +47,18 @@ func (c *Compiler) CompilePackage(pkg *lang.Package) (util.GeneratedFiles, error
 		return nil, err
 	}
 
+	ctx := context.WithType(context.Empty(), pkg)
 	for _, p := range pkg.Children {
-		err = c.compilePackage(context.Empty(), p)
+		err = c.compilePackage(ctx, p)
 		if err != nil {
 			return nil, err
+		}
+
+		for _, cp := range p.Children {
+			err = c.compilePackage(context.WithType(ctx, p), cp)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 

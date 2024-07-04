@@ -20,30 +20,30 @@ var sidecars embed.FS
 type FileGetter = func(path string) ([]byte, error)
 
 func Service(path string) ([]byte, error) {
-	return fileContent(services, path, "service-go/")
+	return FileContent(services, path, "service-go/")
 }
 
 func Client(path string) ([]byte, error) {
-	return fileContent(clients, path, "")
+	return FileContent(clients, path, "")
 }
 
 func Sidecar(path string) ([]byte, error) {
-	return fileContent(clients, path, "")
+	return FileContent(clients, path, "")
 }
 
 func ServiceNames() []string {
-	return fileNames(services, "service-go/")
+	return FileNames(services, "service-go/")
 }
 
 func ClientNames() []string {
-	return fileNames(clients, "")
+	return FileNames(clients, "")
 }
 
 func SidecarNames() []string {
-	return fileNames(sidecars, "")
+	return FileNames(sidecars, "")
 }
 
-func fileContent(fs embed.FS, path string, prefix string) ([]byte, error) {
+func FileContent(fs embed.FS, path string, prefix string) ([]byte, error) {
 	f, err := fs.Open(path2.Join(prefix, path))
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func fileContent(fs embed.FS, path string, prefix string) ([]byte, error) {
 	return b, nil
 }
 
-func fileNames(efs embed.FS, prefixTrim string) []string {
+func FileNames(efs embed.FS, prefixTrim string) []string {
 	var names []string
 	err := fs.WalkDir(efs, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {

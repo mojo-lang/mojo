@@ -30,7 +30,13 @@ type HTTPBinding struct {
 	// binding methods
 	Parent *Method
 
+	Java *JavaBinding
+
 	Extensions map[string]interface{}
+}
+
+type JavaBinding struct {
+	RequestMappingName string
 }
 
 func (b *HTTPBinding) GetResponseBody() *Field {

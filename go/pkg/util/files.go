@@ -59,7 +59,7 @@ func hasSuffix(file string, suffixes ...string) bool {
 
 func IsAllGeneratedFile(path string) bool {
 	if core.IsExist(path) {
-		content, err := ioutil.ReadFile(path)
+		content, err := os.ReadFile(path)
 		if err != nil {
 			return false
 		}
@@ -67,7 +67,8 @@ func IsAllGeneratedFile(path string) bool {
 		firstLine, _ := bufio.NewReader(bytes.NewReader(content)).ReadString('\n')
 		firstLine = strings.TrimSpace(firstLine)
 
-		return strings.HasPrefix(firstLine, "// Code generated") &&
+		return (strings.HasPrefix(firstLine, "// Code generated") ||
+			strings.HasPrefix(firstLine, "// Generated ")) &&
 			(strings.HasSuffix(firstLine, "DO NOT EDIT.") ||
 				strings.HasSuffix(firstLine, "DO NOT EDIT!"))
 	}
