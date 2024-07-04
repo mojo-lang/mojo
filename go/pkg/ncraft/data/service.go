@@ -46,7 +46,8 @@ type GoService struct {
 }
 
 type JavaService struct {
-	PackageName string
+	PackageName        string
+	ServicePackageName string // will include names like: v1
 }
 
 func (s *Service) HasImported() bool {

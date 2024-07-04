@@ -5,6 +5,7 @@ import (
 )
 
 type PathGuard struct {
+	DisableClear       bool
 	OnlyClearGenerated bool
 	Suffixes           []string
 
@@ -13,6 +14,10 @@ type PathGuard struct {
 
 func (g *PathGuard) Check(path string) error {
 	if core.IsExist(path) {
+		if g.DisableClear {
+			return nil
+		}
+
 		err := g.Clear(path)
 		if err != nil {
 			return err

@@ -2,6 +2,10 @@ module github.com/mojo-lang/mojo/go
 
 go 1.20
 
+replace (
+	github.com/mojo-lang/lang/go => ../../lang/go
+)
+
 require (
 	github.com/antlr4-go/antlr/v4 v4.13.0
 	github.com/edwin-luijten/go_mod_parser v0.0.0-20190307065647-27b9ee14b099
@@ -25,7 +29,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v2 v2.26.0
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.33.0
 )
 
 require (

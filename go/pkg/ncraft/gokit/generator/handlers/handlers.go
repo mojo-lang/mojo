@@ -266,6 +266,7 @@ func isValidFunc(f *ast.FuncDecl, m methodMap, svcName string) bool {
 
 // receiveTypeToString accepts an *ast.FuncDecl.Recv recv, and returns the
 // string of the recv type.
+//
 //	func (s Foo) Test() {} -> "Foo"
 func receiveTypeToString(recv *ast.FieldList) string {
 	if recv == nil ||

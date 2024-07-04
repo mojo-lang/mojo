@@ -39,7 +39,7 @@ type Options struct {
 	HandlerTemplate *HandlerTemplate
 }
 
-func (o Options) SyncTo(ds *data.Service) {
+func (o *Options) SyncTo(ds *data.Service) {
 	ds.CombinedAPI = o.MixedInAPI
 	ds.Go.RepositoryPath = o.Repository
 	ds.Go.ApiRepositoryPath = o.ApiRepository

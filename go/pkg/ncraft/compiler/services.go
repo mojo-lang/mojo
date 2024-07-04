@@ -25,6 +25,8 @@ type Services struct {
 	Data []*data.Service
 
 	Interfaces []*data.Interface
+
+	Entities []*data.Message
 }
 
 func CompilePackage(ctx context.Context, pkg *lang.Package) ([]*data.Service, error) {
@@ -73,6 +75,10 @@ func (s *Services) CompileInterface(ctx context.Context, decl *lang.InterfaceDec
 		Go: &data.GoService{
 			PackageName: pkgName,
 		},
+		Java: &data.JavaService{
+			PackageName:        "",
+			ServicePackageName: "",
+		},
 		Extensions: make(map[string]interface{}),
 	}
 
@@ -99,9 +105,27 @@ func (s *Services) CompileInterface(ctx context.Context, decl *lang.InterfaceDec
 
 	service.Go.ImportedTypePaths = unifyStringArray(service.Go.ImportedTypePaths)
 
+	service.Java.ServicePackageName = GetJavaPackageName(pkg.GetOrganization(), pkg.FullName)
+	if pkg.IsVersionTag() {
+		service.Java.PackageName = GetJavaPackageName(pkg.GetOrganization(), pkg.ParentName())
+	} else {
+		service.Java.PackageName = service.Java.ServicePackageName
+	}
+
 	s.Data = append(s.Data, service)
 	s.Interfaces = append(s.Interfaces, service.Interface)
 
+	return nil
+}
+
+func (s *Services) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
+	if decl != nil && decl.HasAttribute("entity") {
+		if msg, err := s.CompileMessage(ctx, decl); err != nil {
+			logs.Warnw("")
+		} else {
+			s.Entities = append(s.Entities, msg)
+		}
+	}
 	return nil
 }
 
@@ -118,6 +142,26 @@ func unifyStringArray(array []string) []string {
 	}
 	sort.Strings(result)
 	return result
+}
+
+func MethodActionName(name string) (action string, standard bool) {
+	ns := strings.Split(name, "_")
+	if len(ns) > 0 {
+		if ns[0] == "batch" && len(ns) > 1 {
+			action = ns[0] + "_" + ns[1]
+			switch ns[1] {
+			case "get", "list", "create", "update", "delete":
+				standard = true
+			}
+		} else {
+			action = ns[0]
+			switch action {
+			case "get", "list", "create", "update", "delete":
+				standard = true
+			}
+		}
+	}
+	return
 }
 
 func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, service *data.Service) error {
@@ -192,6 +236,31 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
 	}
 	if m.Response, err = s.CompileMessage(thisCtx, resp); err != nil {
 		return err
+	}
+
+	action, standard := MethodActionName(m.Name)
+	if standard {
+		m.StandardName = action
+	} else {
+		m.CustomName = action
+	}
+
+	if m.StandardName == "list" {
+		m.Response.Java = &data.JavaMessage{
+			Name:         "Pagination<" + m.Response.Fields[0].Type.Java.BareName + ">",
+			BareName:     m.Response.Fields[0].Type.Java.Name,
+			GRpcName:     JavaGRpcTypeName(m.Response.Name),
+			IsPagination: true,
+		}
+	} else {
+		m.Response.Java = &data.JavaMessage{
+			Name:             "Result<" + JavaTypeName(m.Response.Name) + ">",
+			BareName:         JavaTypeName(m.Response.Name),
+			GRpcName:         JavaGRpcTypeName(m.Response.Name),
+			NeedConvert:      JavaNeedConvert(m.Response.Name),
+			GRpc2HttpConvert: JavaGRpc2HttpConvert(m.Response.Name),
+			Http2GrpcConvert: JavaHttp2GRpcConvert(m.Response.Name),
+		}
 	}
 
 	var httpResponse *data.HTTPResponse
@@ -301,6 +370,7 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 		Decl:        decl,
 		PackageName: decl.PackageName,
 		Name:        decl.Name,
+		IsNull:      decl.Name == "Null",
 		Go:          &data.GoMessage{},
 		Extensions:  make(map[string]interface{}),
 	}
@@ -309,6 +379,7 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 		t := f.GetType()
 		fieldType := &data.FieldType{
 			Go:         &data.GoFieldType{},
+			Java:       &data.JavaFieldType{},
 			Extensions: make(map[string]interface{}),
 		}
 
@@ -317,17 +388,39 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 			if len(t.GenericArguments) == 1 {
 				fieldType.Name = t.GenericArguments[0].Name
 				fieldType.IsArray = true
+				fieldType.Java.BareName = JavaTypeName(fieldType.Name)
+				fieldType.Java.GRpcName = JavaGRpcTypeName(fieldType.Name)
+				fieldType.Java.Name = "List<" + fieldType.Java.BareName + ">"
+				fieldType.Java.NeedConvert = JavaNeedConvert(fieldType.Name)
+				fieldType.Java.Http2GrpcConvert = JavaHttp2GRpcConvert(fieldType.Name)
+				fieldType.Java.GRpc2HttpConvert = JavaGRpc2HttpConvert(fieldType.Name)
+				if fieldType.Java.NeedConvert {
+					fieldType.Java.Http2GrpcConvert += "List"
+					fieldType.Java.GRpc2HttpConvert += "List"
+				}
 			}
 		case core.MapTypeFullName:
 			if len(t.GenericArguments) == 2 {
 				fieldType.KeyType = &data.FieldType{
 					Name: t.GenericArguments[0].Name,
 				}
+				fieldType.KeyType.Java = &data.JavaFieldType{
+					Name:     JavaTypeName(fieldType.KeyType.Name),
+					GRpcName: JavaGRpcTypeName(fieldType.KeyType.Name),
+				}
 				fieldType.Name = t.GenericArguments[1].Name
 				fieldType.IsMap = true
+				fieldType.Java.BareName = JavaTypeName(fieldType.Name)
+				fieldType.Java.GRpcName = JavaGRpcTypeName(fieldType.Name)
+				fieldType.Java.Name = "Map<" + fieldType.KeyType.Java.Name + "," + fieldType.Java.BareName + ">"
 			}
 		default:
 			fieldType.Name = t.Name
+			fieldType.Java.Name = JavaTypeName(t.Name)
+			fieldType.Java.BareName = fieldType.Java.Name
+			fieldType.Java.GRpcName = JavaGRpcTypeName(t.Name)
+			fieldType.Java.NeedConvert = JavaNeedConvert(t.Name)
+			fieldType.Java.Http2GrpcConvert = JavaHttp2GRpcConvert(t.Name)
 		}
 
 		if t.TypeDeclaration.GetStructDecl() != nil {
@@ -362,6 +455,8 @@ func (s *Services) compileBindings(ctx context.Context, methodName string, path 
 		Path:       p,
 		Label:      strcase.ToCamel(method.Name) + data.EnglishNumber(index),
 		Parent:     dm,
+		Response:   &data.HTTPResponse{},
+		Java:       &data.JavaBinding{RequestMappingName: JavaRequestMappingName(methodName)},
 		Extensions: make(map[string]interface{}),
 	}
 
@@ -395,6 +490,19 @@ func (s *Services) compileBindings(ctx context.Context, methodName string, path 
 				!(strings.HasPrefix(goTypeName, "map[") || strings.HasPrefix(goTypeName, "[]")) {
 				binding.Body = parameter
 				break
+			}
+		}
+	}
+	switch strings.ToUpper(binding.Verb) {
+	case "POST", "PUT", "GET":
+		typ := method.GetSignature().GetResult().GetType()
+		if name := typ.GetName(); len(name) > 0 && name != "Null" {
+			// any field which has @http.body, or the whole response type.
+			binding.Response.Body = &data.Field{
+				Name: "",
+				Type: &data.FieldType{
+					Name: typ.GetName(),
+				},
 			}
 		}
 	}
