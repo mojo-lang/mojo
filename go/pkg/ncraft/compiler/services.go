@@ -360,7 +360,46 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
 		}
 	}
 
+	if err = s.compileJavaBindings(ctx, m); err != nil {
+		return err
+	}
+
 	service.Interface.Methods = append(service.Interface.Methods, m)
+	return nil
+}
+
+func (s *Services) compileJavaBindings(ctx context.Context, method *data.Method) error {
+	_ = ctx
+	if method == nil || len(method.Bindings) == 0 {
+		return nil
+	}
+
+	binding := method.Bindings[0]
+	if binding.Body != nil {
+		fieldName := binding.Body.Field.Name
+		for _, field := range method.Request.Fields {
+			if field.Name == fieldName {
+				field.Java = &data.JavaField{
+					RequestBody: true,
+				}
+			}
+		}
+	}
+
+	for _, param := range binding.Parameters {
+		fieldName := param.Field.Name
+		for _, field := range method.Request.Fields {
+			if field.Name == fieldName {
+				if param.Location == "path" {
+					field.Java = &data.JavaField{
+						ParamBindingName:  "@PathVariable",
+						ParamBindingValue: param.Name,
+					}
+				}
+			}
+		}
+	}
+
 	return nil
 }
 
