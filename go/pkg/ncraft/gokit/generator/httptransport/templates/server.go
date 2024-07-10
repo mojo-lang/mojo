@@ -170,9 +170,10 @@ func RegisterHttpHandler(router *mux.Router, endpoints Endpoints, tracer stdopen
 			router.Methods("{{$binding.Verb | ToUpper}}").Path("{{$binding.Path}}").Handler(
 				httptransport.NewServer(
 					endpoints.{{ToCamel $method.Name}}Endpoint,
-					DecodeHTTP{{$binding.Label}}Request,{{if $binding.GetResponseBody}}
+					DecodeHTTP{{$binding.Label}}Request,{{/* {{if $binding.GetResponseBody}}
 					EncodeHTTP{{ToCamel $method.Name}}Response,{{else}}
-					EncodeHTTPGenericResponse,{{end}}
+					EncodeHTTPGenericResponse,{{end}} */}}
+					EncodeHTTPGenericResponse,
 					addTracerOption("{{$method.Name}}")...,
 					//append(serverOptions, httptransport.ServerBefore(opentracing.HTTPToContext(tracer, "{{ToSnake $method.Name}}", logger)))...,
 			))
@@ -254,21 +255,21 @@ func errorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
 	{{end}}
 {{end}}
 
-{{range $method := .Interface.Methods}}
+{{/* {{range $method := .Interface.Methods}}
     {{range $binding := $method.Bindings}}
 	    {{if $binding.GetResponseBody}}
 func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.ResponseWriter, response interface{}) error {
-	r := response.(*{{GoPackageName $method.Response.Body.Name}}.{{$method.Response.Body.Name}})
+	r := response.(*{{GoPackageName $binding.Response.Body.Name}}.{{$binding.Response.Body.Name}})
     
-	{{range $h, $v := $method.Response.Headers}}
+	{{range $h, $v := $binding.Response.Headers}}
 	w.Header().Set("{{$h}}", "{{$v}}")
 	{{end}}
 
-	cnt, err := w.Write([]byte(r.{{$method.Response.Body.Name}}))
+	cnt, err := w.Write([]byte(r.{{$binding.Response.Body.Name}}))
 	if err != nil {
 		return err
 	}
-	responseCnt := len(r.{{$method.Response.Body.Name}})
+	responseCnt := len(r.{{$binding.Response.Body.Name}})
 	if cnt != responseCnt {
 		return errors.Errorf("wrong to write response content expect %d, but %d written", responseCnt, cnt)
 	}
@@ -277,7 +278,7 @@ func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.Respon
 }
         {{end}}
     {{end}}
-{{end}}
+{{end}} */}}
 
 // EncodeHTTPGenericResponse is a transport/http.EncodeResponseFunc that encodes
 // the response as JSON to the response writer. Primarily useful in a server.
