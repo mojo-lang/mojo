@@ -24,7 +24,8 @@ type GoMessage struct {
 
 type JavaMessage struct {
 	Name         string // may be in wrap style, like Result<T>, Pagination<T>
-	BareName     string
+	RawName      string // Result
+	ParamName    string // <T>
 	GRpcName     string
 	IsPagination bool
 

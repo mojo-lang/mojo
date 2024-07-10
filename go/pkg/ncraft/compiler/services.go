@@ -247,15 +247,17 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
 
 	if m.StandardName == "list" {
 		m.Response.Java = &data.JavaMessage{
-			Name:         "Pagination<" + m.Response.Fields[0].Type.Java.BareName + ">",
-			BareName:     m.Response.Fields[0].Type.Java.Name,
+			Name:         "Pagination<" + m.Response.Fields[0].Type.Java.ParamName + ">",
+			RawName:      "Pagination",
+			ParamName:    m.Response.Fields[0].Type.Java.Name,
 			GRpcName:     JavaGRpcTypeName(m.Response.Name),
 			IsPagination: true,
 		}
 	} else {
 		m.Response.Java = &data.JavaMessage{
 			Name:             "Result<" + JavaTypeName(m.Response.Name) + ">",
-			BareName:         JavaTypeName(m.Response.Name),
+			RawName:          "Result",
+			ParamName:        JavaTypeName(m.Response.Name),
 			GRpcName:         JavaGRpcTypeName(m.Response.Name),
 			NeedConvert:      JavaNeedConvert(m.Response.Name),
 			GRpc2HttpConvert: JavaGRpc2HttpConvert(m.Response.Name),
@@ -427,9 +429,10 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 			if len(t.GenericArguments) == 1 {
 				fieldType.Name = t.GenericArguments[0].Name
 				fieldType.IsArray = true
-				fieldType.Java.BareName = JavaTypeName(fieldType.Name)
+				fieldType.Java.ParamName = JavaTypeName(fieldType.Name)
 				fieldType.Java.GRpcName = JavaGRpcTypeName(fieldType.Name)
-				fieldType.Java.Name = "List<" + fieldType.Java.BareName + ">"
+				fieldType.Java.Name = "List<" + fieldType.Java.ParamName + ">"
+				fieldType.Java.RawName = "List"
 				fieldType.Java.NeedConvert = JavaNeedConvert(fieldType.Name)
 				fieldType.Java.Http2GrpcConvert = JavaHttp2GRpcConvert(fieldType.Name)
 				fieldType.Java.GRpc2HttpConvert = JavaGRpc2HttpConvert(fieldType.Name)
@@ -449,14 +452,15 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 				}
 				fieldType.Name = t.GenericArguments[1].Name
 				fieldType.IsMap = true
-				fieldType.Java.BareName = JavaTypeName(fieldType.Name)
+				fieldType.Java.ParamName = JavaTypeName(fieldType.Name)
 				fieldType.Java.GRpcName = JavaGRpcTypeName(fieldType.Name)
-				fieldType.Java.Name = "Map<" + fieldType.KeyType.Java.Name + "," + fieldType.Java.BareName + ">"
+				fieldType.Java.Name = "Map<" + fieldType.KeyType.Java.Name + "," + fieldType.Java.ParamName + ">"
+				fieldType.Java.RawName = "Map"
 			}
 		default:
 			fieldType.Name = t.Name
 			fieldType.Java.Name = JavaTypeName(t.Name)
-			fieldType.Java.BareName = fieldType.Java.Name
+			fieldType.Java.ParamName = fieldType.Java.Name
 			fieldType.Java.GRpcName = JavaGRpcTypeName(t.Name)
 			fieldType.Java.NeedConvert = JavaNeedConvert(t.Name)
 			fieldType.Java.Http2GrpcConvert = JavaHttp2GRpcConvert(t.Name)

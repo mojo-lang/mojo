@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import org.mojolang.mojo.core.Null;
 import org.mojolang.mojo.core.Result;
-import org.mojolang.mojo.core.Exception;
+import org.mojolang.mojo.core.ErrorException;
 import org.mojolang.mojo.core.ErrorCodes;
 import org.mojolang.mojo.core.Pagination;
 import {{.Java.PackageName}}.*;
@@ -41,7 +41,7 @@ public class {{ToCamel .Interface.Name}}HttpFallbackFactory implements FallbackF
             {{range $m := $.Interface.Methods}}
             @Override
             public {{$m.Response.Java.Name}} {{ToLowerCamel $m.Name}}({{range $i, $f := $m.Request.Fields}}{{if gt $i 0}}, {{end}}{{$f.Type.Java.Name}} {{ToLowerCamel $f.Name}}{{end}}) {
-                 throw new Exception(ErrorCodes.INTERNAL_ERROR, "failed to {{$m.Name}}.");
+                 return {{$m.Response.Java.RawName}}.fail(new ErrorException(ErrorCodes.INTERNAL_ERROR, "failed to {{$m.Name}}."));
             }
             {{end}}
         };
