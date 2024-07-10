@@ -75,44 +75,11 @@ func (m *{{.Name}}Model) BatchGet(ids []string) ([]*{{.Name}}, error) {
     return {{ToLowerCamel .Name}}s, m.DB.Find(&{{ToLowerCamel .Name}}s, ids).Error
 }
 
-func (m *{{.Name}}Model) Query(fields *core.Object, filter string, pagination *Pagination) ([]*{{.Name}}, error) {
+func (m *{{.Name}}Model) Query(query *db.ListQuery) ([]*{{.Name}}, error) {
     var {{ToLowerCamel .Name}}s []*{{.Name}}
 
     tx := m.DB.DB
-
-
-
-    if len(name) > 0 {
-        tx = tx.Where("name = ?", name)
-    }
-    if len(projectId) > 0 {
-        tx = tx.Where("project_id = ?", projectId)
-    }
-    if len(fuzzingId) > 0 {
-        tx = tx.Where("fuzzing_id = ?", fuzzingId)
-    }
-    if len(operationName) > 0 {
-        tx = tx.Where("operation_name = ?", operationName)
-    }
-    if done != nil {
-        if done.Val {
-            tx = tx.Where("state = ? or state = ? or state = ?", abfuzz.{{.Name}}StateFinished, abfuzz.{{.Name}}StateStopped, abfuzz.{{.Name}}StateFailed)
-        } else {
-            tx = tx.Where("state <> ?", abfuzz.{{.Name}}StateFinished).
-                Where("state <> ?", abfuzz.{{.Name}}StateStopped).
-                Where("state <> ?", abfuzz.{{.Name}}StateFailed)
-        }
-    }
-    if p := platform.Format(); len(p) > 0 {
-        tx = tx.Where("platform = ?", p)
-    }
-    if len(lang) > 0 {
-        tx = tx.Where("language = ?", lang)
-    }
-    if lv := langVm.Format(); len(lv) > 0 {
-        tx = tx.Where("lang_vm = ?", lv)
-    }
-
+    query.Apply(tx)
     return {{ToLowerCamel .Name}}s, tx.Find(&{{ToLowerCamel .Name}}s).Error
 }
 

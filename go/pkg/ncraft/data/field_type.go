@@ -54,9 +54,10 @@ type GoFieldType struct {
 }
 
 type JavaFieldType struct {
-	Name     string
-	BareName string
-	GRpcName string
+	Name      string
+	ParamName string
+	RawName   string
+	GRpcName  string
 
 	NeedConvert      bool
 	GRpc2HttpConvert string
