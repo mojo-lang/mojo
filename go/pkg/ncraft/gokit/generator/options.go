@@ -3,7 +3,6 @@ package generator
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"strings"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
@@ -14,7 +13,6 @@ import (
 	_go "github.com/mojo-lang/mojo/go/pkg/ncraft/go"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/handlers"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/httptransport"
-	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/model"
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/gokit/generator/templates"
 	"github.com/mojo-lang/mojo/go/pkg/util"
 )
@@ -75,17 +73,17 @@ func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, g
 	svcName := strcase.ToKebab(ds.Interface.BaredName)
 
 	for _, tmplPath := range tmplPaths {
-		if tmplPath == model.TemplatePath {
-			m := model.Model{}
-			if files, err := m.Generate(tmplPath, ds); err != nil {
-				logs.Errorw("failed to generate model templates files", "err", err.Error())
-			} else {
-				if len(files) == 0 {
-					continue
-				}
-				codeGenFiles = append(codeGenFiles, files...)
-			}
-		}
+		//if tmplPath == model.TemplatePath {
+		//	m := model.Model{}
+		//	if files, err := m.Generate(tmplPath, ds); err != nil {
+		//		logs.Errorw("failed to generate model templates files", "err", err.Error())
+		//	} else {
+		//		if len(files) == 0 {
+		//			continue
+		//		}
+		//		codeGenFiles = append(codeGenFiles, files...)
+		//	}
+		//}
 
 		// Re-derive the actual path for this file based on the service output
 		// path provided by the ncraft main.go
@@ -146,7 +144,7 @@ func generateTemplateFile(tmplPath string, actualPath string, ds *data.Service, 
 		}
 	}
 
-	codeBytes, err := ioutil.ReadAll(genCode)
+	codeBytes, err := io.ReadAll(genCode)
 	if err != nil {
 		return nil, err
 	}
