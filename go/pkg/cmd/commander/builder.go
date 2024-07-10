@@ -99,11 +99,6 @@ func (b *Builder) Execute() error {
 		return err
 	}
 
-	// generate the target package to java
-	if err := b.buildJava(); err != nil {
-		return err
-	}
-
 	// compile the resource to sql orm file (including sql script, create table)
 	if b.NcraftAllEnabled || b.NcraftServiceEnabled {
 		if len(b.Engine) == 0 {
@@ -124,6 +119,11 @@ func (b *Builder) Execute() error {
 	if b.NcraftAllEnabled || b.NcraftClientEnabled {
 	}
 	if b.NcraftAllEnabled || b.NcraftSidecarEnabled {
+	}
+
+	// generate the target package to java
+	if err := b.buildJava(); err != nil {
+		return err
 	}
 
 	return nil
