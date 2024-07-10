@@ -38,6 +38,6 @@ public interface {{.Interface.BaredName}}Http {
     {{range $m := $.Interface.Methods}}
     {{if $m.GetFirstBinding.Response.Body}}@ResponseBody{{end}}
     @{{$m.GetFirstBinding.Java.RequestMappingName}}("{{$m.GetFirstBinding.Path}}")
-    {{$m.Response.Java.Name}} {{ToLowerCamel $m.Name}}({{range $i, $f := $m.Request.Fields}}{{if gt $i 0}}, {{end}}{{$f.Type.Java.Name}} {{ToLowerCamel $f.Name}}{{end}});
+    {{$m.Response.Java.Name}} {{ToLowerCamel $m.Name}}({{range $i, $f := $m.Request.Fields}}{{if gt $i 0}}, {{end}}{{if $f.JavaRequestBody}}@RequestBody {{else if $f.HasJavaParamBinding}}{{$f.JavaParamBinding}} {{end}}{{$f.Type.Java.Name}} {{ToLowerCamel $f.Name}}{{end}});
     {{end}}
 }

@@ -33,12 +33,10 @@ func JavaTypeName(name string) string {
 		return "float"
 	case "Double", "Float64":
 		return "double"
-	case "StringValue":
-		return "String"
 	case "Ordering", "FieldMask":
 		return "String"
 	case "Object":
-		return "Map<String, Object>"
+		return "org.mojolang.mojo.core.Object"
 	default:
 		return name
 	}
@@ -73,8 +71,6 @@ func JavaHttp2GRpcConvert(name string) string {
 		return "FieldMasks.fromString"
 	case "Ordering":
 		return "Orderings.fromString"
-	case "Object":
-		return "Objects.of"
 	}
 	return ""
 }
@@ -85,15 +81,13 @@ func JavaGRpc2HttpConvert(name string) string {
 		return "FieldMasks.toString"
 	case "Ordering":
 		return "Orderings.toString"
-	case "Object":
-		return "Objects.to"
 	}
 	return ""
 }
 
 func JavaNeedConvert(name string) bool {
 	switch name {
-	case "FieldMask", "Ordering", "Object":
+	case "FieldMask", "Ordering":
 		return true
 	}
 	return false

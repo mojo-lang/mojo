@@ -24,6 +24,24 @@ type GoField struct {
 }
 
 type JavaField struct {
+	RequestBody       bool
+	ParamBindingName  string
+	ParamBindingValue string
+}
+
+func (f *Field) JavaRequestBody() bool {
+	return f != nil && f.Java != nil && f.Java.RequestBody
+}
+
+func (f *Field) HasJavaParamBinding() bool {
+	return f != nil && f.Java != nil && len(f.Java.ParamBindingName) > 0
+}
+
+func (f *Field) JavaParamBinding() string {
+	if f != nil && f.Java != nil && f.HasJavaParamBinding() {
+		return f.Java.ParamBindingName + "(\"" + f.Java.ParamBindingValue + "\")"
+	}
+	return ""
 }
 
 func (f *Field) GetType() *FieldType {
