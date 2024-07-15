@@ -78,6 +78,9 @@ var (
 				},
 			}},
 		},
+		Document: &lang.Document{
+			Lines: []*lang.Document_Line{{Content: `the mojo expression for DB query`}},
+		},
 	}
 
 	order = &lang.ValueDecl{
@@ -101,6 +104,9 @@ var (
 					}),
 				},
 			}},
+		},
+		Document: &lang.Document{
+			Lines: []*lang.Document_Line{{Content: `setting the order field for result, like "name desc"`}},
 		},
 	}
 
@@ -126,6 +132,9 @@ var (
 				},
 			}},
 		},
+		Document: &lang.Document{
+			Lines: []*lang.Document_Line{{Content: `control the fields which need to be retrieved`}},
+		},
 	}
 
 	unique = &lang.ValueDecl{
@@ -149,6 +158,9 @@ var (
 					}),
 				},
 			}},
+		},
+		Document: &lang.Document{
+			Lines: []*lang.Document_Line{{Content: `make the fields which returns are unique, equals to "SELECT DISTINCT" in sql`}},
 		},
 	}
 )

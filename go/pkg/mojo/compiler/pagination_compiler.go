@@ -78,6 +78,9 @@ var (
 				},
 			}},
 		},
+		Document: &lang.Document{
+			Lines: []*lang.Document_Line{{Content: "the page size for pagination request"}},
+		},
 	}
 
 	pageToken = &lang.ValueDecl{
@@ -101,6 +104,9 @@ var (
 					}),
 				},
 			}},
+		},
+		Document: &lang.Document{
+			Lines: []*lang.Document_Line{{Content: `the page token for pagination request, usually like "1", "2" ...`}},
 		},
 	}
 
@@ -126,6 +132,9 @@ var (
 				},
 			}},
 		},
+		Document: &lang.Document{
+			Lines: []*lang.Document_Line{{Content: `skip the first items count for the request`}},
+		},
 	}
 
 	totalCount = &lang.ValueDecl{
@@ -150,6 +159,9 @@ var (
 				},
 			}},
 		},
+		Document: &lang.Document{
+			Lines: []*lang.Document_Line{{Content: `total items count for the request`}},
+		},
 	}
 
 	nextPageToken = &lang.ValueDecl{
@@ -173,6 +185,9 @@ var (
 					}),
 				},
 			}},
+		},
+		Document: &lang.Document{
+			Lines: []*lang.Document_Line{{Content: `the next page token for the response, the page token in next page request should use this value`}},
 		},
 	}
 )
