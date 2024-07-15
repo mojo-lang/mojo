@@ -245,6 +245,24 @@ func CompileParameters(ctx context.Context, method *lang.FunctionDecl, httpMetho
 	if pagination, _ := lang.GetBoolAttribute(method.Attributes, core.PaginationAttributeName); pagination {
 		params = append(params, langcompiler.PaginationRequestFields()...)
 	}
+	if query, _ := lang.GetBoolAttribute(method.Attributes, core.QueryAttributeName); query {
+		params = append(params, langcompiler.QueryRequestFields()...)
+
+		pkg := context.Package(ctx)
+		cp := pkg.ResolvedDependencies["mojo.core"]
+		ids := []*lang.Identifier{
+			cp.GetIdentifier("mojo.core.FieldMask"),
+			cp.GetIdentifier("mojo.core.Ordering"),
+		}
+
+		if service := context.InterfaceDecl(ctx); service != nil {
+			service.ResolvedIdentifiers = lang.MergeDependencies(service.ResolvedIdentifiers, ids)
+		}
+
+		if sf := context.SourceFile(ctx); sf != nil {
+			sf.ResolvedIdentifiers = lang.MergeDependencies(sf.ResolvedIdentifiers, ids)
+		}
+	}
 
 	for _, param := range params {
 		if param.HasAttribute(http.BodyAttributeFullName) {
