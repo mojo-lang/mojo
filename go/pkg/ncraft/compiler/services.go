@@ -245,7 +245,22 @@ func (s *Services) CompileMethod(ctx context.Context, decl *lang.FunctionDecl, s
 		m.CustomName = action
 	}
 
-	if m.StandardName == "list" {
+	likePagination := func() bool {
+		if decl.HasAttribute(core.PaginationAttributeName) {
+			return true
+		} else if m.StandardName == "list" {
+			return true
+		} else if len(m.StandardName) == 0 { // customName
+			return m.Response != nil &&
+				len(m.Response.Fields) == 3 &&
+				m.Response.Fields[0].GetType().IsArray &&
+				m.Response.Fields[1].Name == "total_count" &&
+				m.Response.Fields[2].Name == "next_page_token"
+		}
+		return false
+	}
+
+	if likePagination() {
 		m.Response.Java = &data.JavaMessage{
 			Name:         "Pagination<" + m.Response.Fields[0].Type.Java.ParamName + ">",
 			RawName:      "Pagination",
