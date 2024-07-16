@@ -23,6 +23,7 @@ func generateFiles(files []*util.GeneratedFile, output string) error {
 		Suffixes:           []string{".java"},
 	}
 	for _, file := range files {
+		file.SkipIfUserCodeMixed = true
 		if err := file.WriteTo(output, guard); err != nil {
 			return err
 		}
