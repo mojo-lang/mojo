@@ -46,6 +46,7 @@ import (
 )
 
 var _ nclient.Config
+const FullServiceName = "{{.PackageFullName}}.{{.Interface.Name}}"
 
 func NewEndpoints(options map[string]interface{}) svc.Endpoints {
 	// Business domain.
@@ -76,8 +77,6 @@ func NewEndpoints(options map[string]interface{}) svc.Endpoints {
 }
 
 func RegisterService(cfg nserver.Config, r *mux.Router, s *grpc.Server) svc.Endpoints {
-    const FullServiceName = "{{.Go.PackageName}}.{{.Interface.Name}}"
-
     // tracing init
 	tracer, c := tracing.New(FullServiceName)
     if c != nil {
@@ -112,22 +111,6 @@ func RegisterService(cfg nserver.Config, r *mux.Router, s *grpc.Server) svc.Endp
         options["count"] = count
         options["latency"] = latency
     }
-
-    sdConfig := sd.NewConfig("sd")
-    sdClient := sd.New(sdConfig, logger)
-
-    if sdClient != nil {
-        url := "etcd://"+ network.GetHost() + ":" + getGrpcPort(cfg.GrpcAddr)
-        err := sdClient.Register(url, FullServiceName, []string{})
-        if err != nil {
-            panic(err)
-        }
-        defer sdClient.Deregister()
-    }
-
-    // required service clients ...
-    //xxClient := xx_client.New(nclient.NewConfig("xx"), sdClient.Instancer(FullServiceName), tracer, logger)
-    //defer xxClient.Close()
 
     endpoints := NewEndpoints(options)
 
@@ -238,6 +221,17 @@ func Run(cfg nserver.Config) {
         })
     }
     {{else}}_ = endpoints{{end}}
+
+    sdConfig := sd.NewConfig("sd")
+    sdClient := sd.New(sdConfig, kit.Logger())
+    if sdClient != nil {
+        url := network.GetHost() + ":" + getGrpcPort(cfg.GrpcAddr)
+        err := sdClient.Register(url, FullServiceName, []string{})
+        if err != nil {
+            panic(err)
+        }
+        defer sdClient.Deregister()
+    }
 
 	// Run!
 	logs.Info("{{.Go.PackageName}}.{{.Interface.ServerName}}", " started.")
