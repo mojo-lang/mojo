@@ -3,6 +3,7 @@
 
 package {{.Java.PackageName}}.service;
 
+import lombok.RequiredArgsConstructor;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +23,18 @@ import {{.Java.ServicePackageName}}.*;
 import {{.Java.PackageName}}.service.{{ToCamel .Interface.Name}}Impl;
 
 @Service
+@RequiredArgsConstructor
 public class {{ToCamel .Interface.BaredName}}HttpImpl implements {{ToCamel .Interface.BaredName}}Http {
     private static final Logger LOGGER = LoggerFactory.getLogger({{ToCamel .Interface.BaredName}}HttpImpl.class);
 
     @Autowired
-    private {{ToCamel .Interface.BaredName}}Impl {{ToLowerCamel .Interface.BaredName}}Impl;
+    private final {{ToCamel .Interface.BaredName}}Impl {{ToLowerCamel .Interface.BaredName}}Impl;
 
     {{range $m := $.Interface.Methods}}
     @Override
     public {{$m.Response.Java.Name}} {{ToLowerCamel $m.Name}}({{range $i, $f := $m.Request.Fields}}{{if gt $i 0}}, {{end}}{{$f.Type.Java.Name}} {{ToLowerCamel $f.Name}}{{end}}) {
         class {{ToCamel $m.Name}}Callback implements StreamObserver<{{$m.Response.Java.GRpcName}}> {
-            public {{$m.Response.Java.Name}} response;
+            public final {{$m.Response.Java.Name}} response = new {{$m.Response.Java.RawName}}<>();
 
             @Override
             public void onNext({{if $m.Response.Java.IsPagination}}{{$m.Response.Name}}{{else}}{{$m.Response.Java.GRpcName}}{{end}} value) {
@@ -44,6 +46,11 @@ public class {{ToCamel .Interface.BaredName}}HttpImpl implements {{ToCamel .Inte
 
             @Override
             public void onError(Throwable cause) {
+                if (cause instanceof org.mojolang.mojo.core.ErrorException) {
+                    this.response.setError(((org.mojolang.mojo.core.ErrorException)cause).toError());
+                } else {
+                    this.response.setError(500, cause.getMessage());
+                }
                 LOGGER.error("Error occurred, cause {}", cause.getMessage());
             }
 
