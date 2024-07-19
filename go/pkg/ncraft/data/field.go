@@ -39,7 +39,11 @@ func (f *Field) HasJavaParamBinding() bool {
 
 func (f *Field) JavaParamBinding() string {
 	if f != nil && f.Java != nil && f.HasJavaParamBinding() {
-		return f.Java.ParamBindingName + "(\"" + f.Java.ParamBindingValue + "\")"
+		if len(f.Java.ParamBindingValue) > 0 {
+			return f.Java.ParamBindingName + "(" + f.Java.ParamBindingValue + ")"
+		} else {
+			return f.Java.ParamBindingName
+		}
 	}
 	return ""
 }
