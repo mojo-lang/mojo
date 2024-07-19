@@ -410,9 +410,18 @@ func (s *Services) compileJavaBindings(ctx context.Context, method *data.Method)
 				if param.Location == "path" {
 					field.Java = &data.JavaField{
 						ParamBindingName:  "@PathVariable",
-						ParamBindingValue: param.Name,
+						ParamBindingValue: "\"" + param.Name + "\"",
 					}
 				}
+			}
+		}
+	}
+
+	for _, field := range method.Request.Fields {
+		if field.Java == nil {
+			field.Java = &data.JavaField{
+				ParamBindingName:  "@RequestParam",
+				ParamBindingValue: "name = \"" + field.Name + "\", required = false",
 			}
 		}
 	}
