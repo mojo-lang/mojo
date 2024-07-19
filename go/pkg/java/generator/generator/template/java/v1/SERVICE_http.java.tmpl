@@ -32,7 +32,7 @@ import {{.Java.ServicePackageName}}.factory.{{ToCamel .Interface.Name}}HttpFallb
 
 
 @Component
-@FeignClient(contextId = "{{ToLowerCamel .Interface.Name}}RemoteAPI", value = ServiceNameConstants.SERVICE_{{ToUpper .Interface.Name}}, fallbackFactory = {{ToCamel .Interface.Name}}HttpFallbackFactory.class)
+@FeignClient(contextId = "{{ToLowerCamel .Interface.Name}}HttpClient", value = ServiceNameConstants.SERVICE_{{ToUpper .Interface.Name}}, fallbackFactory = {{ToCamel .Interface.Name}}HttpFallbackFactory.class, configuration = FeignClientConfig.class)
 @ConditionalOnMissingClass("{{.Java.PackageName}}.service.{{ToCamel .Interface.Name}}HttpImpl")
 public interface {{.Interface.BaredName}}Http {
     {{range $m := $.Interface.Methods}}
