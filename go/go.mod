@@ -2,10 +2,6 @@ module github.com/mojo-lang/mojo/go
 
 go 1.20
 
-replace (
-	github.com/mojo-lang/lang/go => ../../lang/go
-)
-
 require (
 	github.com/antlr4-go/antlr/v4 v4.13.0
 	github.com/edwin-luijten/go_mod_parser v0.0.0-20190307065647-27b9ee14b099
@@ -14,12 +10,12 @@ require (
 	github.com/go-clang/clang-v10 v0.0.0-20211120055647-b59749ef6dbb
 	github.com/goccy/go-graphviz v0.1.2
 	github.com/json-iterator/go v1.1.12
-	github.com/mojo-lang/core/go v0.0.0-20231220010621-d5541d691b2a
-	github.com/mojo-lang/db/go v0.0.0-20231010082619-1822aed7c28f
+	github.com/mojo-lang/core/go v0.0.0-20240718132104-5daa639555b5
+	github.com/mojo-lang/db/go v0.0.0-20240717081137-04f474db3557
 	github.com/mojo-lang/document/go v0.0.0-20231009062124-1063661ebfdd
 	github.com/mojo-lang/geom/go v0.0.0-20231010083419-ae85d486df78
-	github.com/mojo-lang/http/go v0.0.0-20231026054523-2cf45f147a95
-	github.com/mojo-lang/lang/go v0.0.0-20231221042403-5791599856f1
+	github.com/mojo-lang/http/go v0.0.0-20240627072315-89ee9c59b807
+	github.com/mojo-lang/lang/go v0.0.0-20240726065356-77211e8660f2
 	github.com/mojo-lang/openapi/go v0.0.0-20240104072634-11b492bf84c9
 	github.com/mojo-lang/protobuf/go v0.0.0-20231010083050-67d0430d7b2c
 	github.com/mojo-lang/rpc/go v0.0.0-20231010083250-7a2c9f3f5f32
