@@ -49,5 +49,7 @@ func (codec *{{CompactFullName .FullName}}Codec) Encode(ptr unsafe.Pointer, stre
 	{{ToLowerCamel .Name}} := (*{{.FullName}})(ptr)
 	if len({{ToLowerCamel .Name}}.{{.FieldName}}) > 0 {
         stream.WriteVal({{ToLowerCamel .Name}}.{{.FieldName}})
+    } else {
+        stream.WriteRaw("[]")
     }
 }
