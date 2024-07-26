@@ -24,8 +24,12 @@ func (g *Generator) generateDecl(decl data2.Decl, fileType string, template stri
 		if err != nil {
 			return err
 		}
+		suffix := ".go"
+		if len(fileType) > 0 {
+			suffix = "." + fileType + suffix
+		}
 		g.Files = append(g.Files, &util.GeneratedFile{
-			Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+"."+fileType+".go"),
+			Name:    path2.Join(packageToPath(decl.GetPackageName()), strcase.ToSnake(decl.GetFullName())+suffix),
 			Content: FormatCode(str),
 		})
 	}
