@@ -527,26 +527,34 @@ func (s *Services) compileBindings(ctx context.Context, methodName string, path 
 		Extensions: make(map[string]interface{}),
 	}
 
-	if len(method.Signature.GetParameters()) == 1 {
-		decl := method.Signature.ParameterDecl(0)
-		if b, _ := decl.GetBoolAttribute(protobuf.MethodRequestTypeAttributeName); b {
-			if structDecl := decl.Type.GetTypeDeclaration().GetStructDecl(); structDecl != nil {
-				err := structDecl.EachField(func(decl *lang.ValueDecl) error {
-					return s.compileBindingParameter(ctx, decl, pathParams, nil, binding)
-				})
-				if err != nil {
-					return nil, err
+	if d := dm.Request.Decl; d != nil {
+		err := d.EachField(func(decl *lang.ValueDecl) error {
+			return s.compileBindingParameter(ctx, decl, pathParams, nil, binding)
+		})
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		if len(method.Signature.GetParameters()) == 1 {
+			decl := method.Signature.ParameterDecl(0)
+			if b, _ := decl.GetBoolAttribute(protobuf.MethodRequestTypeAttributeName); b {
+				if structDecl := decl.Type.GetTypeDeclaration().GetStructDecl(); structDecl != nil {
+					err := structDecl.EachField(func(decl *lang.ValueDecl) error {
+						return s.compileBindingParameter(ctx, decl, pathParams, nil, binding)
+					})
+					if err != nil {
+						return nil, err
+					}
+				} else {
+					return nil, logs.NewErrorw("invalid request type", "method", method.FullName, "http-bind", methodName+":"+path)
 				}
-				return binding, nil
-			} else {
-				return nil, logs.NewErrorw("invalid request type", "method", method.FullName, "http-bind", methodName+":"+path)
 			}
 		}
-	}
 
-	for _, param := range method.Signature.GetParameters() {
-		if err := s.compileBindingParameter(ctx, param, pathParams, nil, binding); err != nil {
-			return nil, err
+		for _, param := range method.Signature.GetParameters() {
+			if err := s.compileBindingParameter(ctx, param, pathParams, nil, binding); err != nil {
+				return nil, err
+			}
 		}
 	}
 
