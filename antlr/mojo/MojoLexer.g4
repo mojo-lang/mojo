@@ -77,6 +77,7 @@ RIGHT_ARROW : '-' '>';
 
 DOT_DOT    : '.' '.';
 DOT_DOT_LT : '.' '.' '<';
+DOT_DOT_EQUAL : '.' '.' '=';
 
 ELLIPSIS : '.' '.' '.';
 

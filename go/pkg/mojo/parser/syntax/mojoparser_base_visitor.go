@@ -1,4 +1,4 @@
-// Code generated from MojoParser.g4 by ANTLR 4.13.0. DO NOT EDIT.
+// Code generated from MojoParser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package syntax // MojoParser
 import "github.com/antlr4-go/antlr/v4"
@@ -744,6 +744,10 @@ func (v *BaseMojoParserVisitor) VisitRangeOperator(ctx *RangeOperatorContext) in
 }
 
 func (v *BaseMojoParserVisitor) VisitHalfOpenRangeOperator(ctx *HalfOpenRangeOperatorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMojoParserVisitor) VisitCloseRangeOperator(ctx *CloseRangeOperatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

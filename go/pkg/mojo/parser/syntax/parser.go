@@ -46,7 +46,7 @@ func New(options core.Options) *Parser {
 
 func ParseExpression(expr string) (*lang.Expression, error) {
 	if len(expr) > 0 {
-		parser := &Parser{}
+		parser := New(nil)
 		return parser.ParseExpression(expr)
 	}
 	return nil, nil

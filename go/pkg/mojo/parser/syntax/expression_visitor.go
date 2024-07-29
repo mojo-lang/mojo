@@ -81,6 +81,22 @@ func (e *ExpressionVisitor) VisitBinaryExpression(ctx *BinaryExpressionContext) 
 					RightArgument: expression,
 				}
 			}
+		} else if inOperator := ctx.InOperator(); inOperator != nil {
+			if expression, ok := prefixExprCtx.Accept(e).(*lang.Expression); ok {
+				return &lang.BinaryExpr{
+					StartPosition: GetPosition(ctx.GetStart()),
+					EndPosition:   GetPosition(ctx.GetStop()),
+					Callee: &lang.BinaryExpr_Operator{
+						Operator: &lang.Operator{
+							StartPosition: GetPosition(inOperator.GetStart()),
+							EndPosition:   GetPosition(inOperator.GetStop()),
+							Symbol:        inOperator.GetText(),
+						},
+					},
+					LeftArgument:  nil,
+					RightArgument: expression,
+				}
+			}
 		} else if conditionalOperator := ctx.ConditionalOperator(); conditionalOperator != nil {
 			conditionalExpr := &lang.ConditionalExpr{
 				EndPosition: GetPosition(ctx.GetStop()),

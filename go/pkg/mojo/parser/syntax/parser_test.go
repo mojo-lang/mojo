@@ -14,3 +14,15 @@ func TestParser_ParseString(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, file)
 }
+
+func TestParser_ParseExpression(t *testing.T) {
+	expr, err := ParseExpression(`id in ['foo']`)
+	assert.NoError(t, err)
+	assert.NotNil(t, expr)
+}
+
+func TestParser_ParseExpression2(t *testing.T) {
+	expr, err := ParseExpression(`id in ['foo'] and id >= 'bar' and id < 'baz'`)
+	assert.NoError(t, err)
+	assert.NotNil(t, expr)
+}

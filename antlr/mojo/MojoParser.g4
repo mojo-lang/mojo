@@ -908,6 +908,7 @@ negatePrefixOperator : MINUS;
 arrowOperator	      : RIGHT_ARROW;
 rangeOperator	      : DOT_DOT ;
 halfOpenRangeOperator : DOT_DOT_LT;
+closeRangeOperator    : DOT_DOT_EQUAL;
 
 /**
  "If an operator has whitespace around both sides or around neither side,
@@ -917,6 +918,7 @@ halfOpenRangeOperator : DOT_DOT_LT;
 binaryOperator
     : rangeOperator
     | halfOpenRangeOperator
+    | closeRangeOperator
     | operator
     | KEYWORD_AND
     | KEYWORD_OR
