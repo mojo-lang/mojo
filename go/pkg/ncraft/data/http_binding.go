@@ -1,5 +1,7 @@
 package data
 
+import "strings"
+
 // HTTPBinding represents one of potentially several bindings from a gRPC
 // service method to a particular HTTP path/verb.
 type HTTPBinding struct {
@@ -37,6 +39,10 @@ type HTTPBinding struct {
 
 type JavaBinding struct {
 	RequestMappingName string
+}
+
+func (b *HTTPBinding) IsGet() bool {
+	return b != nil && strings.ToLower(b.Verb) == "get"
 }
 
 func (b *HTTPBinding) GetResponseBody() *Field {

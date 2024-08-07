@@ -392,7 +392,7 @@ func (s *Services) compileJavaBindings(ctx context.Context, method *data.Method)
 	}
 
 	binding := method.Bindings[0]
-	if binding.Body != nil {
+	if binding.Body != nil && !binding.IsGet() {
 		fieldName := binding.Body.Field.Name
 		for _, field := range method.Request.Fields {
 			if field.Name == fieldName {
