@@ -71,5 +71,10 @@ func (c *GeneratedFile) WriteTo(output string, guard *PathGuard) error {
 		}
 	}
 
-	return os.WriteFile(name, []byte(c.Content), 0666)
+	perm := os.FileMode(0o666)
+	if path.Ext(name) == ".sh" {
+		perm = os.ModePerm
+	}
+
+	return os.WriteFile(name, []byte(c.Content), perm)
 }
