@@ -161,8 +161,9 @@ func compileMapTypeResponse(ctx context.Context, method *lang.FunctionDecl) (*la
 	}
 
 	result.Attributes = lang.SetIntegerAttribute(result.Attributes, core.NumberAttributeName, 1)
-	val := result.GenericArguments[0]
-	name := transformer.Plural(strcase.ToSnake(val.Name))
+	// val := result.GenericArguments[0]
+	// name := transformer.Plural(strcase.ToSnake(val.Name))
+	name := "vals"
 
 	// generate the request message
 	resp := &lang.StructDecl{

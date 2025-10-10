@@ -3,17 +3,17 @@ package converter
 import (
 	"errors"
 	"fmt"
+	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf"
 	"strings"
 
 	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/db/go/pkg/mojo/db"
-	"google.golang.org/protobuf/runtime/protoimpl"
-
 	"github.com/mojo-lang/core/go/pkg/mojo"
+	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/db/go/pkg/mojo/db"
 	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
 	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"google.golang.org/protobuf/runtime/protoimpl"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
@@ -159,6 +159,19 @@ func (s Struct) compileStructInherit(ctx context.Context, inherit *lang.NominalT
 func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDecl, msgDescriptor *descriptor.Message) error {
 	file := context.SourceFile(ctx)
 
+	getFieldTypeOptions := func(typ *lang.NominalType) []string {
+		var options []string
+		if typ != nil {
+			if typ.HasAttribute(descriptor.FixedAttributeName) {
+				options = append(options, descriptor.FixedAttributeName)
+			}
+			if typ.HasAttribute(descriptor.SignedAttributeName) {
+				options = append(options, descriptor.SignedAttributeName)
+			}
+		}
+		return options
+	}
+
 	for _, field := range fields {
 		member := descriptor.NewField(msgDescriptor, field.Name)
 		fieldCtx := context.WithDescriptor(context.WithType(ctx, field), member)
@@ -173,7 +186,9 @@ func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDec
 					return errors.New(
 						fmt.Sprintf("failed to compile the type %s: %s", argument.Name, err.Error()))
 				}
-				member.SetType(t).SetTypeName(name)
+
+				options := getFieldTypeOptions(argument)
+				member.SetType(t, options...).SetTypeName(name, options...)
 			} else {
 				return errors.New(fmt.Sprintf("unexpect array type of %s", field.Type.Name))
 			}
@@ -187,7 +202,8 @@ func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDec
 						return errors.New(
 							fmt.Sprintf("failed to compile the type %s: %s", field.Type.Name, err.Error()))
 					}
-					member.SetType(t).SetTypeName(name)
+					options := getFieldTypeOptions(field.Type)
+					member.SetType(t, options...).SetTypeName(name, options...)
 					break
 				}
 
@@ -207,8 +223,9 @@ func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDec
 						return errors.New(
 							fmt.Sprintf("failed to compile the type %s: %s", argument.Name, err.Error()))
 					}
-					member.SetType(t)
-					member.SetTypeName(name)
+					options := getFieldTypeOptions(argument)
+					member.SetType(t, options...)
+					member.SetTypeName(name, options...)
 					member.SetName(strcase.ToSnake(name))
 
 					number, err := lang.GetIntegerAttribute(argument.Attributes, core.NumberAttributeName)
@@ -235,7 +252,8 @@ func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDec
 					fmt.Sprintf("failed to compile the type %s: %s", field.Type.Name, err.Error()))
 			}
 
-			member.SetType(t).SetTypeName(name)
+			options := getFieldTypeOptions(field.Type)
+			member.SetType(t, options...).SetTypeName(name, options...)
 		}
 
 		number, err := lang.GetIntegerAttribute(field.Type.Attributes, core.NumberAttributeName)
@@ -260,6 +278,10 @@ func (s Struct) compileStructFields(ctx context.Context, fields []*lang.ValueDec
 		setStringOption(core.KeyAttributeName, mojo.E_Key)
 		setStringOption(core.ReferenceAttributeName, mojo.E_Reference)
 		setStringOption(core.BackReferenceAttributeName, mojo.E_BackReference)
+
+		if field.HasAttribute(protobuf.PackedAttributeName) {
+			member.SetPacked()
+		}
 
 		if lang.HasAttribute(field.Type.Attributes, db.JSONAttributeName) {
 			member.SetBoolOption(mojo.E_DbJson, true)
