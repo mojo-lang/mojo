@@ -1,6 +1,6 @@
 module {{.Go.RepositoryPath}}
 
-go 1.16
+go 1.20
 
 {{if .CombinedAPI}}replace (
     {{.Go.ApiRepositoryPath}} => ../go
@@ -10,9 +10,9 @@ go 1.16
 require (
     {{.Go.ApiRepositoryPath}} v0.0.0
     github.com/etherlabsio/healthcheck/v2 v2.0.0
-    github.com/mojo-lang/core/go v0.0.0-20211228010257-772a79853c5e
-    github.com/mojo-lang/geom/go v0.0.0-20211217060203-19a1f652e101
-    github.com/ncraft-io/ncraft-gokit v0.0.0-20220322120959-b7d2795d6943
+    github.com/mojo-lang/core/go v0.0.0-20241101072631-6f07aa735416
+    github.com/mojo-lang/geom/go v0.0.0-20241213024810-29d49fe538cb
+    github.com/ncraft-io/ncraft-gokit v0.0.0-20251010014239-a2128f639bcf
 	github.com/HdrHistogram/hdrhistogram-go v1.0.1 // indirect
 	github.com/gin-gonic/gin v1.6.3 // indirect
 	github.com/go-kit/kit v0.10.0
