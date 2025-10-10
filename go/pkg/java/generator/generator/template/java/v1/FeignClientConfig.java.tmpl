@@ -1,0 +1,45 @@
+package {{.Java.ServicePackageName}};
+
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.support.config.FastJsonConfig;
+import com.alibaba.fastjson2.support.spring.http.converter.FastJsonHttpMessageConverter;
+import com.arcplus.residence.JsonCodec;
+import com.google.common.collect.Lists;
+import feign.codec.Decoder;
+import org.springframework.beans.BeansException;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.cloud.openfeign.support.SpringDecoder;
+import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
+
+@Configuration
+public class FeignClientConfig {
+    @Bean
+    public Decoder feignDecoder() {
+        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        fastJsonConfig.setWriterFeatures(JSONWriter.Feature.WriteMapNullValue);
+
+        FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
+        fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
+        fastJsonHttpMessageConverter.setSupportedMediaTypes(Lists.newArrayList(MediaType.APPLICATION_JSON_UTF8));
+
+        HttpMessageConverters httpMessageConverters = new HttpMessageConverters(fastJsonHttpMessageConverter);
+        ObjectFactory<HttpMessageConverters> objectFactory = new ObjectFactory<HttpMessageConverters>() {
+            @Override
+            public HttpMessageConverters getObject() throws BeansException {
+                return httpMessageConverters;
+            }
+        };
+
+        return new ResponseEntityDecoder(new SpringDecoder(objectFactory));
+    }
+
+//    public ObjectMapper customObjectMapper(){
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        //Customize as much as you want
+//        return objectMapper;
+//    }
+}
