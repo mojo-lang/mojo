@@ -9,6 +9,14 @@ var ServerDecodeTemplate = `
 	// body. Primarily useful in a server.
 	func DecodeHTTP{{$binding.Label}}Request(_ context.Context, r *http.Request) (interface{}, error) {
 		var req {{GoPackageName $binding.Parent.Request.Name}}.{{GoName $binding.Parent.Request.Name}}
+		
+		ri := interface{}(&req)
+		if decoder, ok := ri.(nhttp.RequestDecoder); ok {
+			if err := decoder.DecodeHttpRequest(r); err != nil {
+				return nil, nhttp.WrapError(err, 400, fmt.Sprintf("cannot decode the request to {{GoName $binding.Parent.Request.Name}} by customized RequestDecoder, err:%s", err.Error()))
+			}
+			return &req, nil
+		}
 
 		// to support gzip input
 		var reader io.ReadCloser
@@ -391,6 +399,7 @@ func headersToContext(ctx context.Context, r *http.Request) context.Context {
 	// Tune specific change.
 	// also add the request url
 	ctx = context.WithValue(ctx, "http-request-path", r.URL.Path)
+	ctx = context.WithValue(ctx, "http-request-query", r.URL.Query())	
 	ctx = context.WithValue(ctx, "transport", "HTTPJSON")
 
 	return ctx
