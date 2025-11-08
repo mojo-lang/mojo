@@ -1,0 +1,18 @@
+{
+    "title": "mojo.openapi.LintResult",
+    "description": "OpenAPI lint result",
+    "type": "object",
+    "properties": {
+        "operations": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.openapi.LintOperation"
+            }
+        },
+        "valid": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        }
+    }
+}

@@ -1,11 +1,11 @@
 package java
 
 import (
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	"github.com/mojo-lang/mojo/go/pkg/java/generator"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"github.com/otiai10/copy"
 	"github.com/pkg/errors"
 	"os"

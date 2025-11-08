@@ -1,0 +1,26 @@
+{
+    "title": "mojo.db.sql.ForeignKeyClause.TriggerAction",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "action": {
+            "title": "mojo.db.sql.ForeignKeyClause.TriggerAction.Action",
+            "type": "string",
+            "enum": [
+                "cascade",
+                "set_null",
+                "set_default",
+                "restrict",
+                "no_action"
+            ]
+        },
+        "trigger": {
+            "title": "mojo.db.sql.ForeignKeyClause.TriggerAction.Trigger",
+            "type": "string",
+            "enum": [
+                "updated",
+                "deleted"
+            ]
+        }
+    }
+}

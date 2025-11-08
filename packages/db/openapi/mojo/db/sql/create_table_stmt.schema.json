@@ -1,0 +1,33 @@
+{
+    "title": "mojo.db.sql.CreateTableStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CreateStmt"
+        },
+        {
+            "title": "mojo.db.sql.CreateTableStmt",
+            "type": "object",
+            "properties": {
+                "definition": {
+                    "title": "mojo.core.Union",
+                    "oneOf": [
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.TableDefinition"
+                        },
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.AsSubqueryClause"
+                        }
+                    ]
+                },
+                "ifNotExists": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "tableName": {
+                    "$ref": "#/components/schemas/mojo.db.sql.TableName"
+                }
+            }
+        }
+    ]
+}

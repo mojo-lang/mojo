@@ -3,7 +3,7 @@ package compiler
 import (
 	"strings"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core/strcase"
 )
 
 func GoName(name string) string {

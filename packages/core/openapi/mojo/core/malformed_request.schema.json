@@ -1,0 +1,15 @@
+{
+    "title": "mojo.core.MalformedRequest",
+    "description": "Describes violations in a client request. This error type focuses on the\nsyntactic aspects of the request.",
+    "type": "object",
+    "properties": {
+        "fieldViolations": {
+            "title": "mojo.core.Array",
+            "description": "Describes all violations in a client request.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.MalformedRequest.FieldViolation"
+            }
+        }
+    }
+}

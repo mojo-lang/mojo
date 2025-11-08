@@ -1,0 +1,69 @@
+{
+    "title": "mojo.lang.AttributeAliasDecl",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Decl"
+        },
+        {
+            "title": "mojo.lang.AttributeAliasDecl",
+            "type": "object",
+            "properties": {
+                "attribute": {
+                    "$ref": "#/components/schemas/mojo.lang.Attribute"
+                },
+                "attributes": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Attribute"
+                    }
+                },
+                "fullName": {
+                    "title": "mojo.core.String",
+                    "description": "",
+                    "type": "string"
+                },
+                "genericParameters": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.GenericParameter"
+                    }
+                },
+                "group": {
+                    "$ref": "#/components/schemas/mojo.lang.GroupDecl"
+                },
+                "name": {
+                    "title": "mojo.core.String",
+                    "description": "",
+                    "type": "string"
+                },
+                "namePosition": {
+                    "$ref": "#/components/schemas/mojo.lang.Position"
+                },
+                "resolvedIdentifiers": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Identifier"
+                    }
+                },
+                "scope": {
+                    "$ref": "#/components/schemas/mojo.lang.Scope"
+                },
+                "unresolvedIdentifiers": {
+                    "title": "mojo.core.Array",
+                    "description": "unresolved identifiers in this file",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Identifier"
+                    }
+                }
+            }
+        }
+    ]
+}

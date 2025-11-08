@@ -1,0 +1,26 @@
+{
+    "title": "mojo.db.sql.ConflictClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.ConflictClause",
+            "type": "object",
+            "properties": {
+                "action": {
+                    "title": "mojo.db.sql.ConflictClause.Action",
+                    "type": "string",
+                    "enum": [
+                        "rollback",
+                        "abort",
+                        "fail",
+                        "ignore",
+                        "replace"
+                    ]
+                }
+            }
+        }
+    ]
+}

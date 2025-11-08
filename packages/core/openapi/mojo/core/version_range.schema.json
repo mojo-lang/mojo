@@ -1,0 +1,21 @@
+{
+    "title": "mojo.core.VersionRange",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "end": {
+            "$ref": "#/components/schemas/mojo.core.Version"
+        },
+        "endIncluded": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "start": {
+            "$ref": "#/components/schemas/mojo.core.Version"
+        },
+        "startExcluded": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        }
+    }
+}

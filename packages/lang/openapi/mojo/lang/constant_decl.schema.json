@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.ConstantDecl",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.ValueDecl"
+        }
+    ]
+}

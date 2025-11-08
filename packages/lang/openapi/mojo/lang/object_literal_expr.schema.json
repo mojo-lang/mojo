@@ -1,0 +1,22 @@
+{
+    "title": "mojo.lang.ObjectLiteralExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        },
+        {
+            "title": "mojo.lang.ObjectLiteralExpr",
+            "type": "object",
+            "properties": {
+                "fields": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.ObjectLiteralExpr.Field"
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.CheckedCastExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

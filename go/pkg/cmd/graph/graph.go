@@ -2,6 +2,7 @@ package graph
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -10,7 +11,7 @@ import (
 	"runtime"
 
 	"github.com/goccy/go-graphviz"
-	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
 
 	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 	graph2 "github.com/mojo-lang/mojo/go/pkg/graph"
@@ -29,8 +30,15 @@ func (b Builder) Build() error {
 		return err
 	}
 
-	g := graphviz.New()
+	g, err := graphviz.New(context.Background())
+	if err != nil {
+		return err
+	}
+
 	graph, err := graphviz.ParseBytes(writer.Bytes())
+	if err != nil {
+		return err
+	}
 
 	imageFile, err := ioutil.TempDir("", "")
 	if err != nil {
@@ -42,7 +50,7 @@ func (b Builder) Build() error {
 	//	format = "png"
 	// }
 	imageFile = path.Join(imageFile, "modv."+format)
-	if err := g.RenderFilename(graph, graphviz.Format(format), imageFile); err != nil {
+	if err := g.RenderFilename(context.Background(), graph, graphviz.Format(format), imageFile); err != nil {
 		log.Fatal(err)
 	}
 

@@ -1,0 +1,21 @@
+{
+    "title": "mojo.db.sql.CastExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.ValueExpr"
+        },
+        {
+            "title": "mojo.db.sql.CastExpr",
+            "type": "object",
+            "properties": {
+                "target": {
+                    "$ref": "#/components/schemas/mojo.db.sql.DataType"
+                },
+                "value": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

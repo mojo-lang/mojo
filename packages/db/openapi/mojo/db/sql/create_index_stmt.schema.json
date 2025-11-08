@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.CreateIndexStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.DataDefinitionStmt"
+        }
+    ]
+}

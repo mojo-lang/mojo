@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.ContinueStmt",
+    "description": "ContinueStmt - The \"continue\" statement.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.ControlTransferStmt"
+        }
+    ]
+}

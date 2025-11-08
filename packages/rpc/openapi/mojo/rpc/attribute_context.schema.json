@@ -1,0 +1,36 @@
+{
+    "title": "mojo.rpc.AttributeContext",
+    "description": "An attribute is a piece of metadata that describes an activity on a network\nservice. For example, the size of an HTTP request, or the status code of\nan HTTP response.\n\nEach attribute has a type and a name, which is logically defined as\na proto message field in `AttributeContext`. The field type becomes the\nattribute type, and the field path becomes the attribute name. For example,\nthe attribute `source.ip` maps to field `AttributeContext.source.ip`.\n\nThis message definition is guaranteed not to have any wire breaking change.\nSo you can use it directly for passing attributes across different systems.\n\nNOTE: Different system may generate different subset of attributes. Please\nverify the system specification before relying on an attribute generated\na system.",
+    "type": "object",
+    "properties": {
+        "api": {
+            "$ref": "#/components/schemas/mojo.rpc.AttributeContext.Api"
+        },
+        "destination": {
+            "$ref": "#/components/schemas/mojo.rpc.AttributeContext.Peer"
+        },
+        "extensions": {
+            "title": "mojo.core.Array",
+            "description": "Supports extensions for advanced use cases, such as logs and metrics.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.Any"
+            }
+        },
+        "origin": {
+            "$ref": "#/components/schemas/mojo.rpc.AttributeContext.Peer"
+        },
+        "request": {
+            "$ref": "#/components/schemas/mojo.rpc.AttributeContext.Request"
+        },
+        "resource": {
+            "$ref": "#/components/schemas/mojo.rpc.AttributeContext.Resource"
+        },
+        "response": {
+            "$ref": "#/components/schemas/mojo.rpc.AttributeContext.Response"
+        },
+        "source": {
+            "$ref": "#/components/schemas/mojo.rpc.AttributeContext.Peer"
+        }
+    }
+}

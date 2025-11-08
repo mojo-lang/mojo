@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.IdentityExpr",
+    "description": "An expression node that does not affect the evaluation of its subexpression.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

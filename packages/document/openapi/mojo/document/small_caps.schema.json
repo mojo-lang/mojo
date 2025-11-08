@@ -1,0 +1,8 @@
+{
+    "title": "mojo.document.SmallCaps",
+    "description": "",
+    "type": "array",
+    "items": {
+        "$ref": "#/components/schemas/mojo.document.Inline"
+    }
+}

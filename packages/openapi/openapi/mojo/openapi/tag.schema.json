@@ -1,0 +1,21 @@
+{
+    "title": "mojo.openapi.Tag",
+    "description": "Allows adding meta data to a single tag that is used by the Operation Object.\nIt is not mandatory to have a Tag Object per tag used there.",
+    "type": "object",
+    "properties": {
+        "description": {
+            "$ref": "#/components/schemas/mojo.openapi.CachedDocument"
+        },
+        "externalDocs": {
+            "$ref": "#/components/schemas/mojo.openapi.ExternalDocument"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "description": "The name of the tag.",
+            "type": "string"
+        }
+    },
+    "required": [
+        "name"
+    ]
+}

@@ -1,0 +1,51 @@
+{
+    "title": "mojo.db.sql.InsertStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.DataManipulationStmt"
+        },
+        {
+            "title": "mojo.db.sql.InsertStmt",
+            "type": "object",
+            "properties": {
+                "into": {
+                    "$ref": "#/components/schemas/mojo.db.sql.IntoClause"
+                },
+                "returning": {
+                    "$ref": "#/components/schemas/mojo.db.sql.ReturningClause"
+                },
+                "type": {
+                    "title": "mojo.db.sql.InsertStmt.Type",
+                    "type": "string",
+                    "enum": [
+                        "insert",
+                        "replace",
+                        "insert_or_replace",
+                        "insert_or_rollback",
+                        "insert_or_abort",
+                        "insert_or_fail",
+                        "insert_or_ignore"
+                    ]
+                },
+                "upsert": {
+                    "$ref": "#/components/schemas/mojo.db.sql.UpsertClause"
+                },
+                "values": {
+                    "title": "mojo.core.Union",
+                    "oneOf": [
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.ValuesClause"
+                        },
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+                        }
+                    ]
+                },
+                "with": {
+                    "$ref": "#/components/schemas/mojo.db.sql.WithClause"
+                }
+            }
+        }
+    ]
+}

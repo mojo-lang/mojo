@@ -1,0 +1,40 @@
+{
+    "title": "mojo.geom.FeatureCollection",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "features": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.geom.Feature"
+            }
+        },
+        "keys": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "type": "string",
+            "enum": [
+                "FeatureCollection"
+            ]
+        },
+        "values": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.Value"
+            }
+        }
+    },
+    "required": [
+        "type",
+        "features"
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "title": "mojo.lang.InterfaceType",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "inheritePosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "inherits": {
+            "title": "mojo.core.Array",
+            "description": "",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.NominalType"
+            }
+        },
+        "methods": {
+            "title": "mojo.core.Array",
+            "description": "",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.FunctionDecl"
+            }
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        }
+    }
+}

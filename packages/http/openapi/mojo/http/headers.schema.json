@@ -1,0 +1,13 @@
+{
+    "title": "mojo.http.Headers",
+    "description": "",
+    "type": "object",
+    "additionalProperties": {
+        "title": "mojo.core.Array",
+        "type": "array",
+        "items": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

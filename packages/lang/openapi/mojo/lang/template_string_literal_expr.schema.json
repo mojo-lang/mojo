@@ -1,0 +1,18 @@
+{
+    "title": "mojo.lang.TemplateStringLiteralExpr",
+    "description": "TemplateStringLiteral - A template string literal.\n\nAn template string literal mixes expressions (which are evaluated and\nconverted into string form) within a string literal.\n\n```\n\"[$min..$max]\"\n```",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        },
+        {
+            "title": "mojo.lang.TemplateStringLiteralExpr",
+            "type": "object",
+            "properties": {
+                "value": {
+                    "$ref": "#/components/schemas/mojo.core.TemplateString"
+                }
+            }
+        }
+    ]
+}

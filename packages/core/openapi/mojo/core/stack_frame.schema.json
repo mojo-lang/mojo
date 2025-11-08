@@ -1,0 +1,60 @@
+{
+    "title": "mojo.core.StackFrame",
+    "description": "Represents a single frame in a stack\nSee src/google_breakpad/processor/stack_frame.h",
+    "type": "object",
+    "properties": {
+        "functionBase": {
+            "title": "mojo.core.Int64",
+            "description": "The start address of the function, may be omitted if debug symbols\nare not available.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "functionName": {
+            "title": "mojo.core.String",
+            "description": "The function name, may be omitted if debug symbols are not available.",
+            "type": "string"
+        },
+        "instruction": {
+            "title": "mojo.core.Int64",
+            "description": "The program counter location as an absolute virtual address.  For the\ninnermost called frame in a stack, this will be an exact program counter\nor instruction pointer value.  For all other frames, this will be within\nthe instruction that caused execution to branch to a called function,\nbut may not necessarily point to the exact beginning of that instruction.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "module": {
+            "$ref": "#/components/schemas/mojo.core.CodeModule"
+        },
+        "sourceFileName": {
+            "title": "mojo.core.String",
+            "description": "The source file name, may be omitted if debug symbols are not available.",
+            "type": "string"
+        },
+        "sourceLine": {
+            "title": "mojo.core.Int32",
+            "description": "The (1-based) source line number, may be omitted if debug symbols are\nnot available.",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "sourceLineBase": {
+            "title": "mojo.core.Int64",
+            "description": "The start address of the source line, may be omitted if debug symbols\nare not available.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "trust": {
+            "title": "mojo.core.StackFrame.Trust",
+            "description": "Amount of trust the stack walker has in the instruction pointer\nof this frame.",
+            "type": "string",
+            "enum": [
+                "scan",
+                "cfi_scan",
+                "fp",
+                "cfi",
+                "prewalked",
+                "context"
+            ]
+        }
+    },
+    "required": [
+        "instruction"
+    ]
+}

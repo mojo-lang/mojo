@@ -1,6 +1,6 @@
 package data
 
-import "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+import "github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
 
 // Message represents a protobuf Message, though greatly simplified.
 type Message struct {

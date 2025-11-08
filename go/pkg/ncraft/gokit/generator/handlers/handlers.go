@@ -10,8 +10,8 @@ import (
 	"go/token"
 	"io"
 
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core/strcase"
 	"github.com/pkg/errors"
 
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"

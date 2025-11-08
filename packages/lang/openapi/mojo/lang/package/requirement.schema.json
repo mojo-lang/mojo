@@ -1,0 +1,31 @@
+{
+    "title": "mojo.lang.Package.Requirement",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "branch": {
+            "title": "mojo.core.String",
+            "description": "",
+            "type": "string"
+        },
+        "commit": {
+            "$ref": "#/components/schemas/mojo.lang.Package.Requirement.Commit"
+        },
+        "path": {
+            "title": "mojo.core.String",
+            "description": "",
+            "type": "string"
+        },
+        "registry": {
+            "title": "mojo.core.String",
+            "description": "",
+            "type": "string"
+        },
+        "repository": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        },
+        "version": {
+            "$ref": "#/components/schemas/mojo.lang.Package.Requirement.Version"
+        }
+    }
+}

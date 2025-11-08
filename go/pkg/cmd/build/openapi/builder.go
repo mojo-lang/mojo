@@ -5,8 +5,8 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/openapi/generator"
 
-	"github.com/mojo-lang/core/go/pkg/logs"
-	api "github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
+	api "github.com/mojo-lang/mojo/packages/openapi/go/pkg/mojo/openapi"
 
 	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 )

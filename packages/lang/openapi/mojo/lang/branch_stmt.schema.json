@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.BranchStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        }
+    ]
+}

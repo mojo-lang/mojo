@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.ErrorStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        }
+    ]
+}

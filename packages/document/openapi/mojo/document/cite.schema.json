@@ -1,0 +1,21 @@
+{
+    "title": "mojo.document.Cite",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "citations": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Citation"
+            }
+        },
+        "inlines": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Inline"
+            }
+        }
+    }
+}

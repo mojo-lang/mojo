@@ -1,0 +1,22 @@
+{
+    "title": "mojo.geom.tile.TileId",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "level": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "x": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "y": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        }
+    }
+}

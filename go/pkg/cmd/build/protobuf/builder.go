@@ -7,8 +7,8 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/converter"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/generator"
 
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/protobuf/go/pkg/mojo/protobuf/descriptor"
 
 	"github.com/mojo-lang/mojo/go/pkg/cmd/build/builder"
 )

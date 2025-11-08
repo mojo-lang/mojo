@@ -1,0 +1,19 @@
+{
+    "title": "mojo.db.sql.CollateClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.CollateClause",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

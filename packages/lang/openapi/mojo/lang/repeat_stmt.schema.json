@@ -1,0 +1,18 @@
+{
+    "title": "mojo.lang.RepeatStmt",
+    "description": "RepeatStmt - repeat/while statement. After type-checking, the\ncondition is of type Builtin.Int1.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LoopStmt"
+        },
+        {
+            "title": "mojo.lang.RepeatStmt",
+            "type": "object",
+            "properties": {
+                "condition": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                }
+            }
+        }
+    ]
+}

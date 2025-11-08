@@ -1,0 +1,40 @@
+{
+    "title": "mojo.geom.tile.VectorTile.Value",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "boolValue": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "doubleValue": {
+            "title": "mojo.core.Float64",
+            "type": "number",
+            "format": "Float64"
+        },
+        "floatValue": {
+            "title": "mojo.core.Float32",
+            "type": "number",
+            "format": "Float32"
+        },
+        "intValue": {
+            "title": "mojo.core.Int64",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "sintValue": {
+            "title": "mojo.core.Int64",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "stringValue": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "uintValue": {
+            "title": "mojo.core.UInt64",
+            "type": "integer",
+            "format": "UInt64"
+        }
+    }
+}

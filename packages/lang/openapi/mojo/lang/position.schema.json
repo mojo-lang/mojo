@@ -1,0 +1,46 @@
+{
+    "title": "mojo.lang.Position",
+    "description": "Positions\n\nPosition describes an arbitrary source position\nincluding the file, line, and column location.\nA Position is valid if the line number is \u003e 0.\n",
+    "type": "object",
+    "properties": {
+        "column": {
+            "title": "mojo.core.Int64",
+            "description": "column number, starting at 1 (byte count)",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "filename": {
+            "title": "mojo.core.String",
+            "description": "filename, if any",
+            "type": "string"
+        },
+        "leadingComments": {
+            "title": "mojo.core.Array",
+            "description": "the comment before the AST node",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.Comment"
+            }
+        },
+        "line": {
+            "title": "mojo.core.Int64",
+            "description": "line number, starting at 1",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "offset": {
+            "title": "mojo.core.Int64",
+            "description": "offset, starting at 0 (byte count)",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "tailingComments": {
+            "title": "mojo.core.Array",
+            "description": "usually exist in the end position of the AST node\nand only one of the following situations:\n```mojo\n   a = 5 // following line comment \n```",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.Comment"
+            }
+        }
+    }
+}

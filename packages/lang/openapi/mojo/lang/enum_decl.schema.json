@@ -1,0 +1,21 @@
+{
+    "title": "mojo.lang.EnumDecl",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.TypeDecl"
+        },
+        {
+            "title": "mojo.lang.EnumDecl",
+            "type": "object",
+            "properties": {
+                "scope": {
+                    "$ref": "#/components/schemas/mojo.lang.Scope"
+                },
+                "type": {
+                    "$ref": "#/components/schemas/mojo.lang.EnumType"
+                }
+            }
+        }
+    ]
+}

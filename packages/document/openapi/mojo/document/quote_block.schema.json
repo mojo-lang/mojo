@@ -1,0 +1,14 @@
+{
+    "title": "mojo.document.QuoteBlock",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "blocks": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Block"
+            }
+        }
+    }
+}

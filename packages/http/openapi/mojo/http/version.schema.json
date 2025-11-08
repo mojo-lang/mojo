@@ -1,0 +1,17 @@
+{
+    "title": "mojo.http.Version",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "major": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "minor": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        }
+    }
+}

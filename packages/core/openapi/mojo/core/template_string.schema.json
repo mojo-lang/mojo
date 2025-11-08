@@ -1,0 +1,14 @@
+{
+    "title": "mojo.core.TemplateString",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "segments": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.TemplateString.Segment"
+            }
+        }
+    }
+}

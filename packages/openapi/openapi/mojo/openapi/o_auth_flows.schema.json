@@ -1,0 +1,19 @@
+{
+    "title": "mojo.openapi.OAuthFlows",
+    "description": "Allows configuration of the supported OAuth Flows.",
+    "type": "object",
+    "properties": {
+        "authorizationCode": {
+            "$ref": "#/components/schemas/mojo.openapi.OAuthFlow"
+        },
+        "clientCredentials": {
+            "$ref": "#/components/schemas/mojo.openapi.OAuthFlow"
+        },
+        "implicit": {
+            "$ref": "#/components/schemas/mojo.openapi.OAuthFlow"
+        },
+        "password": {
+            "$ref": "#/components/schemas/mojo.openapi.OAuthFlow"
+        }
+    }
+}

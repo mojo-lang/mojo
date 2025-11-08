@@ -1,0 +1,18 @@
+{
+    "title": "mojo.lang.UnaryExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.ApplyExpr"
+        },
+        {
+            "title": "mojo.lang.UnaryExpr",
+            "type": "object",
+            "properties": {
+                "argument": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                }
+            }
+        }
+    ]
+}

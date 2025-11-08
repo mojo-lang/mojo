@@ -1,0 +1,20 @@
+{
+    "title": "mojo.lang.ObjectLiteralExpr.Field",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "value": {
+            "$ref": "#/components/schemas/mojo.lang.Expression"
+        }
+    }
+}

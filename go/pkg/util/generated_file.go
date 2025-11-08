@@ -6,8 +6,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
 )
 
 type GeneratedFile struct {

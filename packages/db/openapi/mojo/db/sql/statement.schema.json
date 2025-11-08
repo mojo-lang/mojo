@@ -1,0 +1,71 @@
+{
+    "title": "mojo.db.sql.Statement",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.AlterTableStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.AnalyzeSmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.AttachStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.BeginStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CommitStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CreateIndexStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CreateTableStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CreateTriggerStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CreateViewStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CreateVirtualTableStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.DeleteStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.DetachStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.DropStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.EndStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.InsertStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.PragmaStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.ReindexStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.ReleaseStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.RollbackStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.UpdateStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.VacuumStmt"
+        }
+    ]
+}

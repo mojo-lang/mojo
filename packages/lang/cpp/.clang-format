@@ -1,0 +1,139 @@
+---
+Language:        Cpp
+
+# The extra indent or outdent of access modifiers
+AccessModifierOffset: -4
+
+# Align parameters on the open bracket
+AlignAfterOpenBracket: Align
+
+AlignEscapedNewlinesLeft: true
+
+AlignOperands: true
+
+AlignTrailingComments: true
+
+AllowAllParametersOfDeclarationOnNextLine: false
+
+# Disallows contracting simple braced statements to a single line
+AllowShortBlocksOnASingleLine: false
+
+# Short case labels wont't be contracted to a single line
+AllowShortCaseLabelsOnASingleLine: false
+
+# If (a) return; cannot be put on a single line
+AllowShortIfStatementsOnASingleLine: false
+
+# While (true) continue; cannot be put on a single line
+AllowShortLoopsOnASingleLine: false
+
+#Inline
+AllowShortFunctionsOnASingleLine: None
+
+# Break after return type automatically. PenaltyReturnTypeOnItsOwnLine is taken into account.
+AlwaysBreakAfterReturnType: None
+
+AlwaysBreakBeforeMultilineStrings: true
+
+AlwaysBreakTemplateDeclarations: true
+
+BinPackArguments: false
+BinPackParameters: false
+
+# Configure each individual brace in BraceWrapping
+BreakBeforeBraces: Custom
+
+# Control of individual brace wrapping cases
+BraceWrapping: {
+    AfterClass: 'false'
+    AfterControlStatement: 'false'
+    AfterEnum : 'false'
+    AfterFunction : 'false'
+    AfterNamespace : 'false'
+    AfterStruct : 'false'
+    AfterUnion : 'false'
+    BeforeCatch : 'true'
+    BeforeElse : 'true'
+    IndentBraces : 'false'
+}
+
+BreakBeforeBinaryOperators: None
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializersBeforeComma: false
+
+ColumnLimit: 90
+CommentPragmas:  '^ IWYU pragma:'
+
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+
+DerivePointerAlignment: false
+DisableFormat: false
+
+ExperimentalAutoDetectBinPacking: false
+
+ForEachMacros: [ foreach, Q_FOREACH, BOOST_FOREACH ]
+
+IncludeCategories:
+  - Regex:           '^<[a-z0-9_]+>$'
+    Priority:        1
+  - Regex:           '^<boost/'
+    Priority:        2
+  - Regex:           '^(<|")ncraft/(meta|traits)/'
+    Priority:        10
+  - Regex:           '^(<|")ncraft/(core|datetime|strings)/'
+    Priority:        11
+  - Regex:           '^(<|")ncraft/(buffer|convert|logging|format|stream|util)/'
+    Priority:        12
+  - Regex:           '^(<|")ncraft/(config|proto)/'
+    Priority:        14
+  - Regex:           '^(<|")ncraft/(concurrent|net)/'
+    Priority:        16
+  - Regex:           '^(<|")ncraft/(channel|handler|service)/'
+    Priority:        18
+  - Regex:           '^(<|")ncraft/(http|nrpc)/'
+    Priority:        20
+
+IndentWidth: 4
+IndentCaseLabels: true
+IndentWrappedFunctionNames: false
+IndentFunctionDeclarationAfterType: false
+
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: true
+
+NamespaceIndentation: None
+
+#
+PenaltyBreakBeforeFirstCallParameter: 200
+
+PenaltyBreakComment: 120
+PenaltyBreakString: 1000
+PenaltyBreakFirstLessLess: 120
+PenaltyExcessCharacter: 1000
+
+# High penalty to avoid line break just after return type
+PenaltyReturnTypeOnItsOwnLine: 10000
+
+# Pointer is aligned to left side
+PointerAlignment: Left
+PointerBindsToType: true
+
+SortIncludes: true
+
+SpaceAfterCStyleCast: false
+#SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 2
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+SpacesInContainerLiterals: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard: Cpp11
+TabWidth: 4
+UseTab: Never

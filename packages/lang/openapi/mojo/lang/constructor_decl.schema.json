@@ -1,0 +1,53 @@
+{
+    "title": "mojo.lang.ConstructorDecl",
+    "description": "ConstructorDecl - Declares a constructor for a type.  For example:\n\n```\ntype X {\n    x: Int\n}\n\nX(i : Int) {\n   x = i\n}\n```\ntype X\u003cT\u003e {\n\t    x : T\n}\n\nX\u003cInt @argument\u003e(i : Int)\n\nX\u003cT\u003e(i: T) {\n}",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Decl"
+        },
+        {
+            "title": "mojo.lang.ConstructorDecl",
+            "type": "object",
+            "properties": {
+                "attributes": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Attribute"
+                    }
+                },
+                "body": {
+                    "$ref": "#/components/schemas/mojo.lang.BlockStmt"
+                },
+                "fullName": {
+                    "title": "mojo.core.String",
+                    "description": "",
+                    "type": "string"
+                },
+                "genericParameters": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.GenericParameter"
+                    }
+                },
+                "name": {
+                    "title": "mojo.core.String",
+                    "description": "",
+                    "type": "string"
+                },
+                "namePosition": {
+                    "$ref": "#/components/schemas/mojo.lang.Position"
+                },
+                "scope": {
+                    "$ref": "#/components/schemas/mojo.lang.Scope"
+                },
+                "signature": {
+                    "$ref": "#/components/schemas/mojo.lang.FunctionSignature"
+                }
+            }
+        }
+    ]
+}

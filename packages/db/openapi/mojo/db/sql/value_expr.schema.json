@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.ValueExpr",
+    "description": "Specify a value.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

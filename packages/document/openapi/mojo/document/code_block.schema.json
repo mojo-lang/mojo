@@ -1,0 +1,21 @@
+{
+    "title": "mojo.document.CodeBlock",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "attribute": {
+            "$ref": "#/components/schemas/mojo.document.Attribute"
+        },
+        "language": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "lines": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Line"
+            }
+        }
+    }
+}

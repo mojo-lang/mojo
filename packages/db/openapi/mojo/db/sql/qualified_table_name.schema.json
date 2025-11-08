@@ -1,0 +1,27 @@
+{
+    "title": "mojo.db.sql.QualifiedTableName",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "alias": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "indexed": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "notIndexed": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "schema": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

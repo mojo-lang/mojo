@@ -1,0 +1,9 @@
+{
+    "title": "mojo.core.Environ",
+    "description": "",
+    "type": "object",
+    "additionalProperties": {
+        "title": "mojo.core.String",
+        "type": "string"
+    }
+}

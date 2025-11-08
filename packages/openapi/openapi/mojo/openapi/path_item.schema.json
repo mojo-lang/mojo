@@ -1,0 +1,60 @@
+{
+    "title": "mojo.openapi.PathItem",
+    "description": "Describes the operations available on a single path.\nA Path Item MAY be empty, due to ACL constraints.\nThe path itself is still exposed to the documentation viewer but they will not know which operations and parameters are available.",
+    "type": "object",
+    "properties": {
+        "delete": {
+            "$ref": "#/components/schemas/mojo.openapi.Operation"
+        },
+        "description": {
+            "$ref": "#/components/schemas/mojo.openapi.CachedDocument"
+        },
+        "get": {
+            "$ref": "#/components/schemas/mojo.openapi.Operation"
+        },
+        "head": {
+            "$ref": "#/components/schemas/mojo.openapi.Operation"
+        },
+        "options": {
+            "$ref": "#/components/schemas/mojo.openapi.Operation"
+        },
+        "parameters": {
+            "title": "mojo.core.Array",
+            "description": "A list of parameters that are applicable for all the operations described under this path. These parameters can be overridden at the operation level, but cannot be removed there. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location. The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.openapi.ReferenceableParameter"
+            }
+        },
+        "patch": {
+            "$ref": "#/components/schemas/mojo.openapi.Operation"
+        },
+        "post": {
+            "$ref": "#/components/schemas/mojo.openapi.Operation"
+        },
+        "put": {
+            "$ref": "#/components/schemas/mojo.openapi.Operation"
+        },
+        "ref": {
+            "title": "mojo.core.String",
+            "description": "Allows for an external definition of this path item.\nThe referenced structure MUST be in the format of a Path Item Object.\nIf there are conflicts between the referenced definition and this Path Item's definition,\nthe behavior is undefined.",
+            "type": "string"
+        },
+        "servers": {
+            "title": "mojo.core.Array",
+            "description": "An alternative server array to service all operations in this path.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.openapi.Server"
+            }
+        },
+        "summary": {
+            "title": "mojo.core.String",
+            "description": "An optional, string summary, intended to apply to all operations in this path.",
+            "type": "string"
+        },
+        "trace": {
+            "$ref": "#/components/schemas/mojo.openapi.Operation"
+        }
+    }
+}

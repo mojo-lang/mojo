@@ -1,0 +1,18 @@
+{
+    "title": "mojo.lang.GenericParameter",
+    "description": "A type declaration that can have generic parameters attached to it.  Because\nit has these generic parameters, it is always a DeclContext.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.TypeDecl"
+        },
+        {
+            "title": "mojo.lang.GenericParameter",
+            "type": "object",
+            "properties": {
+                "constraint": {
+                    "$ref": "#/components/schemas/mojo.lang.NominalType"
+                }
+            }
+        }
+    ]
+}

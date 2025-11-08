@@ -1,0 +1,18 @@
+{
+    "title": "mojo.lang.RangeLiteralExpr",
+    "description": "RangeLiteralExpr - Range literal, like '1..4'.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        },
+        {
+            "title": "mojo.lang.RangeLiteralExpr",
+            "type": "object",
+            "properties": {
+                "value": {
+                    "$ref": "#/components/schemas/mojo.core.IntRange"
+                }
+            }
+        }
+    ]
+}

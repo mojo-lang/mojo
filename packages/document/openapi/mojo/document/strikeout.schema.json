@@ -1,0 +1,8 @@
+{
+    "title": "mojo.document.Strikeout",
+    "description": "",
+    "type": "array",
+    "items": {
+        "$ref": "#/components/schemas/mojo.document.Inline"
+    }
+}

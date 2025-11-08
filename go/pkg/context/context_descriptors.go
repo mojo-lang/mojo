@@ -3,7 +3,7 @@ package context
 import (
 	"context"
 
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/packages/protobuf/go/pkg/mojo/protobuf/descriptor"
 )
 
 const DescriptorKey = "@descriptor"

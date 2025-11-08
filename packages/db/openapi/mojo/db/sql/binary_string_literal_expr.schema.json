@@ -1,0 +1,19 @@
+{
+    "title": "mojo.db.sql.BinaryStringLiteralExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        },
+        {
+            "title": "mojo.db.sql.BinaryStringLiteralExpr",
+            "type": "object",
+            "properties": {
+                "value": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

@@ -2,8 +2,8 @@ package syntax
 
 import (
 	"github.com/antlr4-go/antlr/v4"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/db/go/pkg/mojo/db/sql"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/db/go/pkg/mojo/db/sql"
 
 	sqlite "github.com/mojo-lang/mojo/go/pkg/sqlite/parser/syntax"
 )

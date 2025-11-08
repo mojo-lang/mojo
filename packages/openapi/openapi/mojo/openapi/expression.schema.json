@@ -1,0 +1,22 @@
+{
+    "title": "mojo.openapi.Expression",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "source": {
+            "$ref": "#/components/schemas/mojo.openapi.Expression.Source"
+        },
+        "type": {
+            "title": "mojo.openapi.Expression.Type",
+            "type": "string",
+            "enum": [
+                "url",
+                "method",
+                "statusCode",
+                "request",
+                "source",
+                "response"
+            ]
+        }
+    }
+}

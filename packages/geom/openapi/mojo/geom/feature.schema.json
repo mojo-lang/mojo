@@ -1,0 +1,44 @@
+{
+    "title": "mojo.geom.Feature",
+    "description": "GeoJSON Feature\n\n",
+    "type": "object",
+    "properties": {
+        "bbox": {
+            "$ref": "#/components/schemas/mojo.geom.BoundingBox"
+        },
+        "crs": {
+            "title": "mojo.geom.SpatialReference",
+            "type": "string",
+            "enum": [
+                "wgs84",
+                "gcj02",
+                "bd09",
+                "cgcs2000",
+                "sh2000"
+            ]
+        },
+        "geometry": {
+            "$ref": "#/components/schemas/mojo.geom.Geometry"
+        },
+        "id": {
+            "$ref": "#/components/schemas/mojo.core.Id"
+        },
+        "properties": {
+            "title": "mojo.core.Map",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.core.Value"
+            }
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "type": "string",
+            "enum": [
+                "Feature"
+            ]
+        }
+    },
+    "required": [
+        "type"
+    ]
+}

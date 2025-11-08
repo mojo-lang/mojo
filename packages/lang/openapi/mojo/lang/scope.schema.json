@@ -1,0 +1,18 @@
+{
+    "title": "mojo.lang.Scope",
+    "description": "A Scope maintains the set of named language entities declared\nin the scope and a link to the immediately surrounding (enclosing)\nscope.\n",
+    "type": "object",
+    "properties": {
+        "enclosing": {
+            "$ref": "#/components/schemas/mojo.lang.Scope"
+        },
+        "identifiers": {
+            "title": "mojo.core.Map",
+            "description": "`full_name` =\u003e `Identifier`",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.lang.Identifier"
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "title": "mojo.lang.FunctionSignature",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "parameter": {
+            "$ref": "#/components/schemas/mojo.lang.FunctionSignature.Parameter"
+        },
+        "result": {
+            "$ref": "#/components/schemas/mojo.lang.FunctionSignature.Result"
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        }
+    }
+}

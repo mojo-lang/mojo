@@ -1,0 +1,11 @@
+{
+    "title": "mojo.db.sql.DataType",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

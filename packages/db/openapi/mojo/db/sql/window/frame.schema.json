@@ -1,0 +1,37 @@
+{
+    "title": "mojo.db.sql.Window.Frame",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "currentRow": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "exclude": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "excludeNoOthers": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "group": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "lowerBound": {
+            "$ref": "#/components/schemas/mojo.db.sql.Window.Frame.Bound"
+        },
+        "ties": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "upperBound": {
+            "$ref": "#/components/schemas/mojo.db.sql.Window.Frame.Bound"
+        }
+    }
+}

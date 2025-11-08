@@ -1,0 +1,42 @@
+{
+    "title": "mojo.db.sql.ForeignKeyClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.ForeignKeyClause",
+            "type": "object",
+            "properties": {
+                "action": {
+                    "$ref": "#/components/schemas/mojo.db.sql.ForeignKeyClause.TriggerAction"
+                },
+                "columns": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "title": "mojo.core.String",
+                        "type": "string"
+                    }
+                },
+                "deferStrategy": {
+                    "$ref": "#/components/schemas/mojo.db.sql.DeferStrategy"
+                },
+                "match": {
+                    "title": "mojo.db.sql.ForeignKeyClause.MatchType",
+                    "type": "string",
+                    "enum": [
+                        "simple",
+                        "partial",
+                        "full"
+                    ]
+                },
+                "table": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

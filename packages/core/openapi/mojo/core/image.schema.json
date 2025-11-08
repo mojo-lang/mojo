@@ -1,0 +1,28 @@
+{
+    "title": "mojo.core.Image",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "link": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        },
+        "properties": {
+            "title": "mojo.core.Map",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.core.Value"
+            }
+        },
+        "timestamp": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        },
+        "title": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

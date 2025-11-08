@@ -1,0 +1,38 @@
+{
+    "title": "mojo.lang.Statement",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.ReturnStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.BreakStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ContinueStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.MatchStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.IfStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ForStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.WhileStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.RepeatStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.BlockStmt"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.Declaration"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expression"
+        }
+    ]
+}

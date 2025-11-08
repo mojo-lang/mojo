@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.IsExpr",
+    "description": "\\brief Represents a runtime type check query, 'a is T', where 'T' is a type\nand 'a' is a value of some related type. Evaluates to a Bool true if 'a' is\nof the type and 'a as T' would succeed, false otherwise.\n\nFIXME: We should support type queries with a runtime metatype value too.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.CheckedCastExpr"
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "title": "mojo.openapi.RequestBody",
+    "description": "Describes a single request body.",
+    "type": "object",
+    "properties": {
+        "content": {
+            "title": "mojo.core.Map",
+            "description": "The content of the request body.\nThe key is a media type or media type range and the value describes it.\nFor requests that match multiple keys, only the most specific key is applicable.\ne.g. text/plain overrides text/*",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.MediaType"
+            }
+        },
+        "description": {
+            "$ref": "#/components/schemas/mojo.openapi.CachedDocument"
+        },
+        "required": {
+            "title": "mojo.core.Bool",
+            "description": "Determines if the request body is required in the request.",
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "content"
+    ]
+}

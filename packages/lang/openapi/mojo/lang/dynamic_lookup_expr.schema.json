@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.DynamicLookupExpr",
+    "description": "Common base for expressions that involve dynamic lookup, which\ndetermines at runtime whether a particular method, property, or\nsubscript is available.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

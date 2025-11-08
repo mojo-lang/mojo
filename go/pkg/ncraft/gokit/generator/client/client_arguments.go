@@ -14,15 +14,15 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/ncraft/data"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core/strcase"
 	"github.com/pkg/errors"
 )
 
 // Argument A collection of the necessary information for generating basic business
 // logic in the client. This business logic will allow the generated client to:
-//     1. Have command line flags of the correct go types
-//     2. Place correctly named and typed arguments in each request method
-//     3. Create a request struct with the the function arguments as fields
+//  1. Have command line flags of the correct go types
+//  2. Place correctly named and typed arguments in each request method
+//  3. Create a request struct with the the function arguments as fields
 //
 // Since we can only automatically generate handlers for some basic types, if a
 // Argument is for a field that's not a base type (such as if it's an embedded
@@ -80,8 +80,8 @@ type MethodArguments struct {
 // and "B", this would generate the arguments portion of a function declaration
 // like this:
 //
-//     func Sum(ASum int64, BSum int64) (pb.SumRequest, error) {
-//              └────────────────────┘
+//	func Sum(ASum int64, BSum int64) (pb.SumRequest, error) {
+//	         └────────────────────┘
 func (m *MethodArguments) FunctionArgs() string {
 	var tmp []string
 	for _, a := range m.Args {
@@ -93,8 +93,8 @@ func (m *MethodArguments) FunctionArgs() string {
 // CallArgs returns a string for the variables to pass to a function
 // implementing this method. Example:
 //
-//     request, _ := clientHandler.Sum(ASum,  BSum)
-//                                     └──────────┘
+//	request, _ := clientHandler.Sum(ASum,  BSum)
+//	                                └──────────┘
 func (m *MethodArguments) CallArgs() string {
 	var tmp []string
 	for _, a := range m.Args {
@@ -107,8 +107,8 @@ func (m *MethodArguments) CallArgs() string {
 // while calling the code to marshal flag args into the correct go types.
 // Example:
 //
-//     ASum := int32(flagASum)
-//     └─────────────────────┘
+//	ASum := int32(flagASum)
+//	└─────────────────────┘
 func (m *MethodArguments) MarshalFlags() string {
 	var tmp []string
 	for _, a := range m.Args {

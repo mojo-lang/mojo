@@ -1,0 +1,34 @@
+{
+    "title": "mojo.rpc.AttributeContext.Response",
+    "description": "This message defines attributes for a typical network response. It\ngenerally models semantics of an HTTP response.",
+    "type": "object",
+    "properties": {
+        "backendLatency": {
+            "$ref": "#/components/schemas/mojo.core.Duration"
+        },
+        "code": {
+            "title": "mojo.core.Int64",
+            "description": "The HTTP response status code, such as `200` and `404`.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "headers": {
+            "title": "mojo.core.Map",
+            "description": "The HTTP response headers. If multiple headers share the same key, they\nmust be merged according to HTTP spec. All header keys must be\nlowercased, because HTTP header keys are case-insensitive.",
+            "type": "object",
+            "additionalProperties": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "size": {
+            "title": "mojo.core.Int64",
+            "description": "The HTTP response size in bytes. If unknown, it must be -1.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "time": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        }
+    }
+}

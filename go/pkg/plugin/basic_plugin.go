@@ -1,6 +1,6 @@
 package plugin
 
-import "github.com/mojo-lang/core/go/pkg/mojo/core"
+import "github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
 
 type BasicPlugin struct {
 	Name          string

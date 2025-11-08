@@ -1,0 +1,22 @@
+{
+    "title": "mojo.lang.MapLiteralExpr",
+    "description": "\\brief A map literal expression {\"a\" : x, \"b\" : y, \"c\" : z}.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        },
+        {
+            "title": "mojo.lang.MapLiteralExpr",
+            "type": "object",
+            "properties": {
+                "entries": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.MapLiteralExpr.Entry"
+                    }
+                }
+            }
+        }
+    ]
+}

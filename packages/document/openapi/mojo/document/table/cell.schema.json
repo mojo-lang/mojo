@@ -1,0 +1,8 @@
+{
+    "title": "mojo.document.Table.Cell",
+    "description": "Table cells are list of Blocks",
+    "type": "array",
+    "items": {
+        "$ref": "#/components/schemas/mojo.document.Block"
+    }
+}

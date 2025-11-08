@@ -1,0 +1,70 @@
+// Protocol Buffers for Go with Gadgets
+//
+// Copyright (c) 2013, The Mojo Authors. All rights reserved.
+// http://github.com/mojo-lang/protobuf
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto2";
+package mojo;
+
+import "google/protobuf/descriptor.proto";
+
+option go_package = "github.com/mojo-lang/core/go/pkg/mojo;mojo";
+option java_multiple_files = true;
+option java_package = "org.mojolang.mojo";
+option java_outer_classname = "MojoProtos";
+
+extend google.protobuf.EnumOptions {
+	optional bool enum_alias = 72001;
+}
+
+extend google.protobuf.EnumValueOptions {
+	optional string enumvalue_alias = 76001;
+}
+
+extend google.protobuf.FileOptions {
+	optional bool getters_all = 73001;
+}
+
+extend google.protobuf.MessageOptions {
+	optional bool getters = 74001;
+}
+
+extend google.protobuf.FieldOptions {
+	optional string alias = 75001;
+	optional string key = 75002;
+	optional string reference = 75003;
+	optional string back_reference = 75004;
+
+	optional bool db_ignore = 75100;
+	optional bool db_json = 75101;
+	optional bool db_key = 75102;
+
+	optional string db_index = 75105;
+	optional string db_explode = 75106;
+	optional string db_reference = 75107;
+	optional string db_primary_key = 75108;
+	optional string db_foreign_key = 75109;
+}

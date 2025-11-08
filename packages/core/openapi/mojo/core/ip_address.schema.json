@@ -1,0 +1,11 @@
+{
+    "title": "mojo.core.IPAddress",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.core.IPv4"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.core.IPv6"
+        }
+    ]
+}

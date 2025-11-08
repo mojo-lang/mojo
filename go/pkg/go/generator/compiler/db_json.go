@@ -3,10 +3,10 @@ package compiler
 import (
 	"strings"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
-	"github.com/mojo-lang/db/go/pkg/mojo/db"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/packages/db/go/pkg/mojo/db"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
 
 	context2 "github.com/mojo-lang/mojo/go/pkg/context"
 	data2 "github.com/mojo-lang/mojo/go/pkg/go/generator/data"

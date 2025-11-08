@@ -1,0 +1,87 @@
+{
+    "title": "mojo.openapi.Components",
+    "description": "Holds a set of reusable objects for different aspects of the OAS. All objects defined within the components object will have no effect on the API unless they are explicitly referenced from properties outside the components object.",
+    "type": "object",
+    "properties": {
+        "callbacks": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Callback Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.Callback"
+            }
+        },
+        "examples": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Example Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.Example"
+            }
+        },
+        "headers": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Header Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.Header"
+            }
+        },
+        "links": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Link Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.Link"
+            }
+        },
+        "parameters": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Parameter Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.Parameter"
+            }
+        },
+        "pathItems": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Path Item Object.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.PathItem"
+            }
+        },
+        "requestBodies": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Request Body Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.RequestBody"
+            }
+        },
+        "responses": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Response Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.Response"
+            }
+        },
+        "schemas": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Schema Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.Schema"
+            }
+        },
+        "securitySchemes": {
+            "title": "mojo.core.Map",
+            "description": "An object to hold reusable Security Scheme Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.SecurityScheme"
+            }
+        }
+    }
+}

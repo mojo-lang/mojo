@@ -1,7 +1,7 @@
 package syntax
 
 import (
-	"github.com/mojo-lang/db/go/pkg/mojo/db/sql"
+	"github.com/mojo-lang/mojo/packages/db/go/pkg/mojo/db/sql"
 )
 
 type LimitSmtVisitor struct {

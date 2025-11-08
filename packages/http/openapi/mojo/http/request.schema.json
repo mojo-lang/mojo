@@ -1,0 +1,36 @@
+{
+    "title": "mojo.http.Request",
+    "description": "A Request represents an HTTP request received by a server\nor to be sent by a client.",
+    "type": "object",
+    "properties": {
+        "body": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        },
+        "headers": {
+            "$ref": "#/components/schemas/mojo.http.Headers"
+        },
+        "method": {
+            "title": "mojo.http.Method",
+            "description": "method specifies the HTTP method (GET, POST, PUT, etc.).\nFor client requests, an empty string means GET.",
+            "type": "string",
+            "enum": [
+                "UNSEPECIFIED",
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "OPTIONS",
+                "HEAD",
+                "TRACE",
+                "CONNECT"
+            ]
+        },
+        "url": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        },
+        "version": {
+            "$ref": "#/components/schemas/mojo.http.Version"
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "title": "mojo.geom.BinLngLat",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "altitude": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "latitude": {
+            "title": "mojo.core.Int32",
+            "description": "纬度",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "longitude": {
+            "title": "mojo.core.Int32",
+            "description": "经度",
+            "type": "integer",
+            "format": "Int32"
+        }
+    },
+    "required": [
+        "longitude",
+        "latitude"
+    ]
+}

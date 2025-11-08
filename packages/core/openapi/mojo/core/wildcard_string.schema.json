@@ -1,0 +1,14 @@
+{
+    "title": "mojo.core.WildcardString",
+    "description": "*\tRepresents zero or more characters\t                        bl* finds bl, black, blue, and blob\n.   Represents a single character\t                            h.t finds hot, hat, and hit\n[]\tRepresents any single character within the brackets\t        h[oa]t finds hot and hat, but not hit\n^\tRepresents any character not in the brackets\t            h[^oa]t finds hit, but not hot and hat\n-\tRepresents any single character within the specified range\tc[a-b]t finds cat and cbt",
+    "type": "object",
+    "properties": {
+        "wildcards": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.WildcardString.Wildcard"
+            }
+        }
+    }
+}

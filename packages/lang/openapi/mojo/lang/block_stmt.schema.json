@@ -1,0 +1,22 @@
+{
+    "title": "mojo.lang.BlockStmt",
+    "description": "BlockStmt - A brace enclosed sequence of expressions, statements, or declarations, like\n{ var x = 10; print(x) }.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        },
+        {
+            "title": "mojo.lang.BlockStmt",
+            "type": "object",
+            "properties": {
+                "statements": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Statement"
+                    }
+                }
+            }
+        }
+    ]
+}

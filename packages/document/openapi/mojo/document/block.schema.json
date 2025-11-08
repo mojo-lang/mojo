@@ -1,0 +1,38 @@
+{
+    "title": "mojo.document.Block",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.document.Plain"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Paragraph"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.LineBlock"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.CodeBlock"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.QuoteBlock"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.OrderedList"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.BulletList"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.DefinitionList"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Header"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Table"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Division"
+        }
+    ]
+}

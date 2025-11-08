@@ -1,0 +1,32 @@
+{
+    "title": "mojo.lang.IfStmt",
+    "description": "IfStmt - if/then/else statement.  If no 'else' is specified, then the\nElseLoc location is not specified and the Else statement is null. After\ntype-checking, the condition is of type Builtin.Int1.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.BranchStmt"
+        },
+        {
+            "title": "mojo.lang.IfStmt",
+            "type": "object",
+            "properties": {
+                "condition": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                },
+                "elseBranch": {
+                    "title": "mojo.core.Union",
+                    "oneOf": [
+                        {
+                            "$ref": "#/components/schemas/mojo.lang.BlockStmt"
+                        },
+                        {
+                            "$ref": "#/components/schemas/mojo.lang.IfStmt"
+                        }
+                    ]
+                },
+                "thenBranch": {
+                    "$ref": "#/components/schemas/mojo.lang.BlockStmt"
+                }
+            }
+        }
+    ]
+}

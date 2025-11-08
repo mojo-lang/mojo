@@ -1,0 +1,23 @@
+{
+    "title": "mojo.http.FormDataContent",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "disposition": {
+            "$ref": "#/components/schemas/mojo.http.FormDataContent.Disposition"
+        },
+        "headers": {
+            "$ref": "#/components/schemas/mojo.http.Headers"
+        },
+        "transferEncoding": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "type": {
+            "$ref": "#/components/schemas/mojo.core.MediaType"
+        },
+        "value": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        }
+    }
+}

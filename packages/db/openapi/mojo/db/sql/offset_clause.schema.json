@@ -1,0 +1,18 @@
+{
+    "title": "mojo.db.sql.OffsetClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.OffsetClause",
+            "type": "object",
+            "properties": {
+                "value": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "title": "mojo.openapi.Info",
+    "description": "The object provides metadata about the API. The metadata MAY be used by the clients if needed, and MAY be presented in editing or documentation generation tools for convenience.",
+    "type": "object",
+    "properties": {
+        "contact": {
+            "$ref": "#/components/schemas/mojo.openapi.Contact"
+        },
+        "description": {
+            "$ref": "#/components/schemas/mojo.openapi.CachedDocument"
+        },
+        "license": {
+            "$ref": "#/components/schemas/mojo.openapi.License"
+        },
+        "termsOfService": {
+            "title": "mojo.core.String",
+            "description": "A URL to the Terms of Service for the API.",
+            "type": "string"
+        },
+        "title": {
+            "title": "mojo.core.String",
+            "description": "The title of the application.",
+            "type": "string"
+        },
+        "version": {
+            "$ref": "#/components/schemas/mojo.core.Version"
+        }
+    },
+    "required": [
+        "title",
+        "version"
+    ]
+}

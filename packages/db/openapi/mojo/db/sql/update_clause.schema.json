@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.UpdateClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        }
+    ]
+}

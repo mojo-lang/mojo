@@ -1,0 +1,12 @@
+{
+    "title": "mojo.core.Status",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.core.Error"
+        },
+        {
+            "title": "mojo.core.Null",
+            "type": "null"
+        }
+    ]
+}

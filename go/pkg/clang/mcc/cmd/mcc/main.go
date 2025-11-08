@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	jsoniter "github.com/json-iterator/go"
-	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
 
 	"github.com/mojo-lang/mojo/go/pkg/clang/mcc/parser"
 )

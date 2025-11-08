@@ -1,7 +1,7 @@
 package generator
 
 import (
-	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
 	"google.golang.org/protobuf/types/pluginpb"
 
 	"github.com/mojo-lang/mojo/go/pkg/util"

@@ -1,0 +1,13 @@
+{
+    "title": "mojo.lang.UserLineBreak",
+    "description": "user line break before a ValueDecl in struct or enum scope, or statement in function/lamda scope",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        }
+    }
+}

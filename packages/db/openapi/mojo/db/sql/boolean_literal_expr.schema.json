@@ -1,0 +1,24 @@
+{
+    "title": "mojo.db.sql.BooleanLiteralExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        },
+        {
+            "title": "mojo.db.sql.BooleanLiteralExpr",
+            "type": "object",
+            "properties": {
+                "value": {
+                    "title": "mojo.db.sql.Boolean",
+                    "type": "string",
+                    "enum": [
+                        "false",
+                        "true",
+                        "unknown"
+                    ]
+                }
+            }
+        }
+    ]
+}

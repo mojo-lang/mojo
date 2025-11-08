@@ -1,0 +1,1 @@
+{"title":"mojo.lang.FunctionDecl.Parameters","description":"","type":"object","properties":{"endPosition":{"$ref":"#/components/schemas/mojo.lang.Position"},"parameters":{"description":"","type":"array","items":{"$ref":"#/components/schemas/mojo.lang.ValueDecl"}},"startPosition":{"$ref":"#/components/schemas/mojo.lang.Position"}}}

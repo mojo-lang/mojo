@@ -1,0 +1,26 @@
+{
+    "title": "mojo.db.sql.IntoClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.IntoClause",
+            "type": "object",
+            "properties": {
+                "columns": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "title": "mojo.core.String",
+                        "type": "string"
+                    }
+                },
+                "tableName": {
+                    "$ref": "#/components/schemas/mojo.db.sql.TableName"
+                }
+            }
+        }
+    ]
+}

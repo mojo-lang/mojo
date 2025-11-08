@@ -1,0 +1,14 @@
+{
+    "title": "mojo.core.MediaType.Parameter",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "key": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "value": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        }
+    }
+}

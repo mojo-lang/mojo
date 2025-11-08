@@ -1,0 +1,14 @@
+{
+    "title": "mojo.openapi.CachedDocument",
+    "description": "the Generic Cached type\n\n",
+    "type": "object",
+    "properties": {
+        "cache": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "val": {
+            "$ref": "#/components/schemas/mojo.document.Document"
+        }
+    }
+}

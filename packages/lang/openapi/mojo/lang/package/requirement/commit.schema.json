@@ -1,0 +1,14 @@
+{
+    "title": "mojo.lang.Package.Requirement.Commit",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "date": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        },
+        "hash": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

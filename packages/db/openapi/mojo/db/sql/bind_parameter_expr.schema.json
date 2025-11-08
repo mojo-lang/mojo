@@ -1,0 +1,24 @@
+{
+    "title": "mojo.db.sql.BindParameterExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.BindParameterExpr",
+            "type": "object",
+            "properties": {
+                "index": {
+                    "title": "mojo.core.Int32",
+                    "type": "integer",
+                    "format": "Int32"
+                },
+                "name": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

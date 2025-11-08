@@ -1,0 +1,34 @@
+{
+    "title": "mojo.geom.LineString",
+    "description": "Geojson LineString object\n\n# example\n``` json\n{\n    \"type\": \"LineString\",\n    \"coordinates\": [\n        [102.0, 0.0],\n        [103.0, 1.0],\n        [104.0, 0.0],\n        [105.0, 1.0]\n    ]\n }\n```",
+    "type": "object",
+    "properties": {
+        "coordinates": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.Array",
+                "type": "array",
+                "items": {
+                    "title": "mojo.core.Float64",
+                    "type": "number",
+                    "format": "Float64"
+                },
+                "maxItems": 3,
+                "minItems": 2
+            },
+            "minItems": 2
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "type": "string",
+            "enum": [
+                "LineString"
+            ]
+        }
+    },
+    "required": [
+        "type",
+        "coordinates"
+    ]
+}

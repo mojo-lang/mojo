@@ -1,0 +1,40 @@
+{
+    "title": "mojo.core.ErrorCode",
+    "description": "Error\n\nErrorCode is usually static and predefined in a specific domain\n\"system.121\"\n\"system.501:NOT_SUPPORT\"\ncode `[100..599]` is reserved by duplicated with http status code\ncode `0` is also reserved because of it usually has success meaning",
+    "type": "object",
+    "properties": {
+        "code": {
+            "title": "mojo.core.Int32",
+            "description": "",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "description": {
+            "title": "mojo.core.String",
+            "description": "a detail description for the code",
+            "type": "string"
+        },
+        "document": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        },
+        "domain": {
+            "title": "mojo.core.String",
+            "description": "system, runtime, ...",
+            "type": "string"
+        },
+        "httpStatusCode": {
+            "title": "mojo.core.Int32",
+            "description": "the http status code, which is error code mapping to",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "description": "The name of the error code. This is a constant value that identifies the\nerror code. Error code name are unique within a particular\ndomain of errors. This should be at most 63 characters and match\n/[A-Z0-9_]+/.",
+            "type": "string"
+        }
+    },
+    "required": [
+        "code"
+    ]
+}

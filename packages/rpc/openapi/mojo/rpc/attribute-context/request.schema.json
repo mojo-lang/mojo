@@ -1,0 +1,68 @@
+{
+    "title": "mojo.rpc.AttributeContext.Request",
+    "description": "This message defines attributes for an HTTP request. If the actual\nrequest is not an HTTP request, the runtime system should try to map\nthe actual request to an equivalent HTTP request.",
+    "type": "object",
+    "properties": {
+        "auth": {
+            "$ref": "#/components/schemas/mojo.rpc.AttributeContext.Auth"
+        },
+        "headers": {
+            "title": "mojo.core.Map",
+            "description": "The HTTP request headers. If multiple headers share the same key, they\nmust be merged according to the HTTP spec. All header keys must be\nlowercased, because HTTP header keys are case-insensitive.",
+            "type": "object",
+            "additionalProperties": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "host": {
+            "title": "mojo.core.String",
+            "description": "The HTTP request `Host` header value.",
+            "type": "string"
+        },
+        "id": {
+            "title": "mojo.core.String",
+            "description": "The unique ID for a request, which can be propagated to downstream\nsystems. The ID should have low probability of collision\nwithin a single day for a specific service.",
+            "type": "string"
+        },
+        "method": {
+            "title": "mojo.core.String",
+            "description": "The HTTP request method, such as `GET`, `POST`.",
+            "type": "string"
+        },
+        "path": {
+            "title": "mojo.core.String",
+            "description": "The HTTP URL path.",
+            "type": "string"
+        },
+        "protocol": {
+            "title": "mojo.core.String",
+            "description": "The network protocol used with the request, such as \"http/1.1\",\n\"spdy/3\", \"h2\", \"h2c\", \"webrtc\", \"tcp\", \"udp\", \"quic\". See\nhttps://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml#alpn-protocol-ids\nfor details.",
+            "type": "string"
+        },
+        "query": {
+            "title": "mojo.core.String",
+            "description": "The HTTP URL query in the format of `name1=value1\u0026name2=value2`, as it\nappears in the first line of the HTTP request. No decoding is performed.",
+            "type": "string"
+        },
+        "reason": {
+            "title": "mojo.core.String",
+            "description": "A special parameter for request reason. It is used by security systems\nto associate auditing information with a request.",
+            "type": "string"
+        },
+        "scheme": {
+            "title": "mojo.core.String",
+            "description": "The HTTP URL scheme, such as `http` and `https`.",
+            "type": "string"
+        },
+        "size": {
+            "title": "mojo.core.Int64",
+            "description": "The HTTP request size in bytes. If unknown, it must be -1.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "time": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        }
+    }
+}

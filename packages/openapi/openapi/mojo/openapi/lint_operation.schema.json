@@ -1,0 +1,33 @@
+{
+    "title": "mojo.openapi.LintOperation",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "description": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "howToFix": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "line": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "method": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "path": {
+            "title": "mojo.core.String",
+            "description": "url path",
+            "type": "string"
+        },
+        "valid": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.Predicate",
+    "description": "Specify a condition that can be evaluated to give a boolean value.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "title": "mojo.db.sql.PartitionClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.PartitionClause",
+            "type": "object",
+            "properties": {
+                "expressions": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                    }
+                }
+            }
+        }
+    ]
+}

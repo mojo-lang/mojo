@@ -1,0 +1,21 @@
+{
+    "title": "mojo.lang.ForStmt",
+    "description": "ForStmt - foreach statement that iterates over the elements in a\ncontainer.\n\nExample:\n```\nfor i in 0..10 {\n  print(i.to\u003cString\u003e)\n}\n```",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LoopStmt"
+        },
+        {
+            "title": "mojo.lang.ForStmt",
+            "type": "object",
+            "properties": {
+                "iterator": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                },
+                "sequence": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                }
+            }
+        }
+    ]
+}

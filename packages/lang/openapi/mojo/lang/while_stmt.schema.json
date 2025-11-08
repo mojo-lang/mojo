@@ -1,0 +1,23 @@
+{
+    "title": "mojo.lang.WhileStmt",
+    "description": "WhileStmt - while statement. After type-checking, the condition is of\ntype Builtin.Int1.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LoopStmt"
+        },
+        {
+            "title": "mojo.lang.WhileStmt",
+            "type": "object",
+            "properties": {
+                "condition": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                },
+                "executeAtLeastOnce": {
+                    "title": "mojo.core.Bool",
+                    "description": "A statement that is executed at least once and is re-executed each time the condition evaluates to true.\nequals to `repeat { statements } while( condition )`",
+                    "type": "boolean"
+                }
+            }
+        }
+    ]
+}

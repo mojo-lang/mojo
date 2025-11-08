@@ -1,0 +1,32 @@
+{
+    "title": "mojo.db.sql.BeginStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        },
+        {
+            "title": "mojo.db.sql.BeginStmt",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                },
+                "transaction": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "type": {
+                    "title": "mojo.db.sql.BeginStmt.Type",
+                    "type": "string",
+                    "enum": [
+                        "deferred",
+                        "immediate",
+                        "exclusive"
+                    ]
+                }
+            }
+        }
+    ]
+}

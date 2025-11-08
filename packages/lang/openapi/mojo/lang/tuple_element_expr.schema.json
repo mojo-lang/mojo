@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.TupleElementExpr",
+    "description": "TupleElementExpr - Refer to an element of a tuple,\ne.g. \"(1,field:2).field\".",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

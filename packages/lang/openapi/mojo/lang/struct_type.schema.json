@@ -1,0 +1,40 @@
+{
+    "title": "mojo.lang.StructType",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "fields": {
+            "title": "mojo.core.Array",
+            "description": "A Field represents a Field declaration list in a struct type,\na method list in an interface type, or a parameter/result declaration\nin a signature.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.ValueDecl"
+            }
+        },
+        "groups": {
+            "title": "mojo.core.Array",
+            "description": "",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.GroupDecl"
+            }
+        },
+        "inheritPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "inherits": {
+            "title": "mojo.core.Array",
+            "description": "",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.NominalType"
+            }
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        }
+    }
+}

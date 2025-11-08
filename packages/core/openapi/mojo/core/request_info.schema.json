@@ -1,0 +1,17 @@
+{
+    "title": "mojo.core.RequestInfo",
+    "description": "Contains metadata about the request that clients can attach when filing a bug\nor providing other forms of feedback.",
+    "type": "object",
+    "properties": {
+        "requestId": {
+            "title": "mojo.core.String",
+            "description": "An opaque that: String  should only be interpreted by the service generating\nit. For example, it can be used to identify requests in the service's logs.",
+            "type": "string"
+        },
+        "servingData": {
+            "title": "mojo.core.String",
+            "description": "Any data that was used to serve this request. For example, an encrypted\nstack trace that can be sent back to the service provider for debugging.",
+            "type": "string"
+        }
+    }
+}

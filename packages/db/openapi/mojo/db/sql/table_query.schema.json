@@ -1,0 +1,14 @@
+{
+    "title": "mojo.db.sql.TableQuery",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "alias": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "query": {
+            "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+        }
+    }
+}

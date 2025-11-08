@@ -1,0 +1,17 @@
+{
+    "title": "mojo.document.Span",
+    "description": "Generic inline container with attributes",
+    "type": "object",
+    "properties": {
+        "attribute": {
+            "$ref": "#/components/schemas/mojo.document.Attribute"
+        },
+        "inlines": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Inline"
+            }
+        }
+    }
+}

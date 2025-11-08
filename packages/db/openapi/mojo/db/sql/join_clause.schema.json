@@ -1,0 +1,31 @@
+{
+    "title": "mojo.db.sql.JoinClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.JoinClause",
+            "type": "object",
+            "properties": {
+                "constraint": {
+                    "$ref": "#/components/schemas/mojo.db.sql.JoinClause.Constraint"
+                },
+                "left": {
+                    "$ref": "#/components/schemas/mojo.db.sql.JoinClause"
+                },
+                "operator": {
+                    "title": "mojo.db.sql.JoinClause.Operator",
+                    "type": "string"
+                },
+                "right": {
+                    "$ref": "#/components/schemas/mojo.db.sql.JoinClause"
+                },
+                "table": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Table"
+                }
+            }
+        }
+    ]
+}

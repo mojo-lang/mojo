@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.DataManipulationStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        }
+    ]
+}

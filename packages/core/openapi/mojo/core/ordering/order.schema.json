@@ -1,0 +1,19 @@
+{
+    "title": "mojo.core.Ordering.Order",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "field": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "sort": {
+            "title": "mojo.core.Ordering.Sort",
+            "type": "string",
+            "enum": [
+                "asc",
+                "desc"
+            ]
+        }
+    }
+}

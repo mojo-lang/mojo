@@ -1,0 +1,28 @@
+{
+    "title": "mojo.db.sql.LikeExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.LikeExpr",
+            "type": "object",
+            "properties": {
+                "escape": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                },
+                "not": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "pattern": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                },
+                "value": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

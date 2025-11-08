@@ -1,0 +1,12 @@
+{
+    "title": "mojo.db.sql.OverClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Window"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        }
+    ]
+}

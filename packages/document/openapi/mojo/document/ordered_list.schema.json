@@ -1,0 +1,21 @@
+{
+    "title": "mojo.document.OrderedList",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "attribute": {
+            "$ref": "#/components/schemas/mojo.document.ListAttribute"
+        },
+        "items": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.Array",
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/mojo.document.Block"
+                }
+            }
+        }
+    }
+}

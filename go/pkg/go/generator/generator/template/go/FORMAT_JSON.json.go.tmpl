@@ -21,7 +21,7 @@ import (
     "unsafe"
 
     jsoniter "github.com/json-iterator/go"
-    {{if ne "core" .GoPackageName}}"github.com/mojo-lang/core/go/pkg/mojo/core"{{end}}
+    {{if ne "core" .GoPackageName}}"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"{{end}}
 )
 
 {{if not .EncodingAsStruct}}func init() {

@@ -1,0 +1,29 @@
+{
+    "title": "mojo.core.File.Info",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "changeTime": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        },
+        "modifyTime": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "description": "base name of the file",
+            "type": "string"
+        },
+        "size": {
+            "title": "mojo.core.Int64",
+            "description": "length in bytes for regular files; system-dependent for others",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "suffix": {
+            "title": "mojo.core.String",
+            "description": "suffix of the file name",
+            "type": "string"
+        }
+    }
+}

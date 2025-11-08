@@ -1,0 +1,21 @@
+{
+    "title": "mojo.db.sql.UpsertClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.UpsertClause",
+            "type": "object",
+            "properties": {
+                "conflict": {
+                    "$ref": "#/components/schemas/mojo.db.sql.UpsertClause.Conflict"
+                },
+                "updateSet": {
+                    "$ref": "#/components/schemas/mojo.db.sql.UpsertClause.UpdateSet"
+                }
+            }
+        }
+    ]
+}

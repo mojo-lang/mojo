@@ -1,0 +1,29 @@
+{
+    "title": "mojo.openapi.MediaType",
+    "description": "Each Media Type Object provides schema and examples for the media type identified by its key.",
+    "type": "object",
+    "properties": {
+        "encoding": {
+            "title": "mojo.core.Map",
+            "description": "A map between a property name and its encoding information.\nThe key, being the property name, MUST exist in the schema as a property.\nThe encoding object SHALL only apply to requestBody objects when the media type is multipart or application/x-www-form-urlencoded.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.Encoding"
+            }
+        },
+        "example": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        },
+        "examples": {
+            "title": "mojo.core.Map",
+            "description": "Examples of the media type.\nEach example object SHOULD match the media type and specified schema if present.\nThe examples object is mutually exclusive of the example object.\nFurthermore, if referencing a schema which contains an example,\nthe examples value SHALL override the example provided by the schema.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.ReferenceableExample"
+            }
+        },
+        "schema": {
+            "$ref": "#/components/schemas/mojo.openapi.ReferenceableSchema"
+        }
+    }
+}

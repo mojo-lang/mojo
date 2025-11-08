@@ -1,0 +1,34 @@
+{
+    "title": "mojo.db.sql.UnaryExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.UnaryExpr",
+            "type": "object",
+            "properties": {
+                "argument": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                },
+                "operator": {
+                    "title": "mojo.db.sql.UnaryExpr.Operator",
+                    "type": "string",
+                    "enum": [
+                        "minus",
+                        "plus",
+                        "tilde",
+                        "not",
+                        "bit_not",
+                        "extended"
+                    ]
+                },
+                "operatorSymbol": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

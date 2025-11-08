@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
 	"github.com/stretchr/testify/assert"
 )
 

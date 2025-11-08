@@ -1,0 +1,8 @@
+{
+    "title": "mojo.core.Array",
+    "type": "array",
+    "items": {
+        "title": "mojo.core.Int",
+        "type": "integer"
+    }
+}

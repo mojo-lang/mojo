@@ -1,0 +1,9 @@
+{
+    "title": "mojo.core.BoolValues",
+    "description": "Wrapper type for `Array\u003cBool\u003e`\n\nThe JSON representation for `BoolValues` is JSON boolean array.",
+    "type": "array",
+    "items": {
+        "title": "mojo.core.Bool",
+        "type": "boolean"
+    }
+}

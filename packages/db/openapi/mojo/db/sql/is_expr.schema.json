@@ -1,0 +1,25 @@
+{
+    "title": "mojo.db.sql.IsExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.IsExpr",
+            "type": "object",
+            "properties": {
+                "argument": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                },
+                "not": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "target": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

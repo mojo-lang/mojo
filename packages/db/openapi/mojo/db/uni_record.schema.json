@@ -1,0 +1,26 @@
+{
+    "title": "mojo.db.UniRecord",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "createTime": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        },
+        "data": {
+            "$ref": "#/components/schemas/mojo.core.Object"
+        },
+        "deleteTime": {
+            "$ref": "#/components/schemas/mojo.db.DeleteTime"
+        },
+        "id": {
+            "$ref": "#/components/schemas/mojo.core.Id"
+        },
+        "tableName": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "updateTime": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        }
+    }
+}

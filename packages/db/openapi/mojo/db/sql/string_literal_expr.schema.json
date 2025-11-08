@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.StringLiteralExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.StringLiteralExpr"
+        }
+    ]
+}

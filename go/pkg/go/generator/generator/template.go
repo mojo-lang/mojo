@@ -8,7 +8,7 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/util"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core/strcase"
 	"github.com/pkg/errors"
 )
 
@@ -38,6 +38,9 @@ var goEnumJsonFile string
 
 //go:embed template/go/DB_JSON.sql.go.tmpl
 var goDbJSONSqlFile string
+
+//go:embed template/go/DB_JSON.json.go.tmpl
+var goDbJSONJSONFile string
 
 //go:embed template/go/FORMAT_JSON.json.go.tmpl
 var goFormatJSONFile string

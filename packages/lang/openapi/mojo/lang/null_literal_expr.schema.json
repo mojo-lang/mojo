@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.NullLiteralExpr",
+    "description": "The 'none' literal.\n",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+{
+    "title": "mojo.core.Checksum",
+    "description": "The format is: `{algorithm} {value}` and the algorithm should be one of the `MD5`, `SHA1`, `SHA256` and `SHA512`.",
+    "type": "string",
+    "format": "Checksum"
+}

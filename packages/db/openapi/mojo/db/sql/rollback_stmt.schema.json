@@ -1,0 +1,23 @@
+{
+    "title": "mojo.db.sql.RollbackStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        },
+        {
+            "title": "mojo.db.sql.RollbackStmt",
+            "type": "object",
+            "properties": {
+                "savePoint": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                },
+                "transaction": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                }
+            }
+        }
+    ]
+}

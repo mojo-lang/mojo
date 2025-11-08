@@ -1,0 +1,47 @@
+{
+    "title": "mojo.geom.tile.VectorTile.Layer",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "extent": {
+            "title": "mojo.core.UInt32",
+            "type": "integer",
+            "format": "UInt32"
+        },
+        "features": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.geom.tile.VectorTile.Feature"
+            }
+        },
+        "keys": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "values": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.geom.tile.VectorTile.Value"
+            }
+        },
+        "version": {
+            "title": "mojo.core.UInt32",
+            "type": "integer",
+            "format": "UInt32"
+        }
+    },
+    "required": [
+        "version",
+        "name"
+    ]
+}

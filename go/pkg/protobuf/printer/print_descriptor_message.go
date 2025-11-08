@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/mojo-lang/core/go/pkg/mojo"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo"
+	"github.com/mojo-lang/mojo/packages/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"

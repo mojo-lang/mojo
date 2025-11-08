@@ -1,17 +1,17 @@
 package compiler
 
 import (
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
-	data2 "github.com/mojo-lang/mojo/go/pkg/go/generator/data"
+	"github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	"github.com/mojo-lang/mojo/go/pkg/protobuf/decompiler"
 )
 
 type ArrayResponse struct {
-	*data2.Data
+	*data.Data
 }
 
 func (p *ArrayResponse) CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
@@ -35,7 +35,7 @@ func (p *ArrayResponse) CompileMethod(ctx context.Context, method *lang.Function
 	if decl, err := decompiler.CompileMethodResponse(ctx, method); err != nil {
 		return err
 	} else {
-		pr := &data2.ArrayResponse{}
+		pr := &data.ArrayResponse{}
 		pr.PackageName = decl.GetPackageName()
 		pr.GoPackageName = lang.GetGoPackageName(decl.GetPackageName())
 

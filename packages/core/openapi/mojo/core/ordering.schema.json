@@ -1,0 +1,14 @@
+{
+    "title": "mojo.core.Ordering",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "orders": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.Ordering.Order"
+            }
+        }
+    }
+}

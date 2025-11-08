@@ -1,0 +1,15 @@
+{
+    "title": "mojo.core.PreconditionFailure",
+    "description": "For example, if an RPC failed because it required the Terms of Service to be\nacknowledged, it could list the terms of service violation in the\nPreconditionFailure type.",
+    "type": "object",
+    "properties": {
+        "violations": {
+            "title": "mojo.core.Array",
+            "description": "Describes all precondition violations.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.PreconditionFailure.Violation"
+            }
+        }
+    }
+}

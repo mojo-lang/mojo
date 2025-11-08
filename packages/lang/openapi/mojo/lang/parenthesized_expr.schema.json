@@ -1,0 +1,18 @@
+{
+    "title": "mojo.lang.ParenthesizedExpr",
+    "description": "A parenthesized expression like '(x+x)'.  Syntactically,\nthis is just a TupleExpr with exactly one element that has no label.\nSemantically, however, it serves only as grouping parentheses and\ndoes not form an expression of tuple type (unless the sub-expression\nhas tuple type, of course).",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.lang.ParenthesizedExpr",
+            "type": "object",
+            "properties": {
+                "expression": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                }
+            }
+        }
+    ]
+}

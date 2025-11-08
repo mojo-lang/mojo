@@ -2,10 +2,10 @@ package injection
 
 import (
 	"context"
-	"go/ast"
-
+	"fmt"
 	"github.com/fatih/structtag"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
+	"go/ast"
 )
 
 type DbJSONInjector struct {
@@ -51,13 +51,14 @@ func (i *DbJSONInjector) onStructField(ctx context.Context, field *ast.Field, ap
 		newTypeDefine := "type " + newTypeName
 
 		typeName := string(fileContent[field.Type.Pos()-1 : field.Type.End()-1])
-
+		baseTypeName := typeName
 		if starExpr, ok := field.Type.(*ast.StarExpr); ok {
-			if _, ok := starExpr.X.(*ast.SelectorExpr); ok {
+			if selExpr, ok := starExpr.X.(*ast.SelectorExpr); ok {
 				typeName = string(fileContent[starExpr.X.Pos()-1 : starExpr.X.End()-1])
-				newTypeDefine += " struct {" + typeName + "}"
+				baseTypeName = selExpr.Sel.Name
 
-				newTypeName = "*" + newTypeName
+				newTypeDefine += " struct { *" + typeName + "}"
+				newTypeDefine += fmt.Sprintf("\nfunc (x *%s) Init() { x.%s = &%s{} }", newTypeName, baseTypeName, typeName)
 			} else {
 				return
 			}
@@ -69,11 +70,13 @@ func (i *DbJSONInjector) onStructField(ctx context.Context, field *ast.Field, ap
 			return
 		}
 
-		recvStructName := "*" + structName
-		if i.getters[recvStructName] == nil {
-			i.getters[recvStructName] = make(map[string]string)
+		if typeName != baseTypeName {
+			recvStructName := "*" + structName
+			if i.getters[recvStructName] == nil {
+				i.getters[recvStructName] = make(map[string]string)
+			}
+			i.getters[recvStructName]["Get"+fieldName] = fieldName + "." + baseTypeName
 		}
-		i.getters[recvStructName]["Get"+fieldName] = newTypeName
 
 		appender(&TextArea{
 			Start:   field.Type.Pos(),
@@ -107,11 +110,19 @@ func (i *DbJSONInjector) onFunction(ctx context.Context, function *ast.FuncDecl,
 			return
 		}
 
-		if newTypeName := i.getters[recvTypeName][function.Name.Name]; len(newTypeName) > 0 {
+		if newIdent := i.getters[recvTypeName][function.Name.Name]; len(newIdent) > 0 {
+			var target *ast.Ident
+			if ifStmt, ok := function.Body.List[0].(*ast.IfStmt); ok {
+				if returnStmt, ok := ifStmt.Body.List[0].(*ast.ReturnStmt); ok {
+					if selectorExpr, ok := returnStmt.Results[0].(*ast.SelectorExpr); ok {
+						target = selectorExpr.Sel
+					}
+				}
+			}
 			areaAppender(&TextArea{
-				Start:   function.Type.Results.Pos(),
-				End:     function.Type.Results.End(),
-				Content: newTypeName,
+				Start:   target.Pos(),
+				End:     target.End(),
+				Content: newIdent,
 			})
 		}
 	}

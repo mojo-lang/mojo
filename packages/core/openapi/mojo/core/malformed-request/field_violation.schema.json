@@ -1,0 +1,17 @@
+{
+    "title": "mojo.core.MalformedRequest.FieldViolation",
+    "description": "A type type used to describe a single bad request field.",
+    "type": "object",
+    "properties": {
+        "description": {
+            "title": "mojo.core.String",
+            "description": "A description of why the request element is bad.",
+            "type": "string"
+        },
+        "field": {
+            "title": "mojo.core.String",
+            "description": "A path leading to a field in the request body. The value will be a\nsequence of dot-separated identifiers that identify a protocol buffer\nfield. E.g., \"field_violations.field\" would identify this field.",
+            "type": "string"
+        }
+    }
+}

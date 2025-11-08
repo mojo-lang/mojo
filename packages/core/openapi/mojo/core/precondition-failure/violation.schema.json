@@ -1,0 +1,22 @@
+{
+    "title": "mojo.core.PreconditionFailure.Violation",
+    "description": "A type type used to describe a single precondition failure.",
+    "type": "object",
+    "properties": {
+        "description": {
+            "title": "mojo.core.String",
+            "description": "A description of how the precondition failed. Developers can use this\ndescription to understand how to fix the failure.\n\nFor example: \"Terms of service not accepted\".",
+            "type": "string"
+        },
+        "subject": {
+            "title": "mojo.core.String",
+            "description": "The subject, relative to the type, that failed.\nFor example, \"google.com/cloud\" relative to the \"TOS\" type would indicate\nwhich terms of service is being referenced.",
+            "type": "string"
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "description": "The type of PreconditionFailure. We recommend using a service-specific\nenum type to define the supported precondition violation subjects. For\nexample, \"TOS\" for \"Terms of Service violation\".",
+            "type": "string"
+        }
+    }
+}

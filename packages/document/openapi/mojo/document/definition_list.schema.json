@@ -1,0 +1,14 @@
+{
+    "title": "mojo.document.DefinitionList",
+    "description": "Definition list Each list item is a pair consisting of a term (a list of inlines)\nand one or more definitions (each a list of blocks)",
+    "type": "object",
+    "properties": {
+        "items": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.DefinitionList.Item"
+            }
+        }
+    }
+}

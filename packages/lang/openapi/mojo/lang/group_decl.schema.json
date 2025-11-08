@@ -1,0 +1,54 @@
+{
+    "title": "mojo.lang.GroupDecl",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Decl"
+        },
+        {
+            "title": "mojo.lang.GroupDecl",
+            "type": "object",
+            "properties": {
+                "attributes": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Attribute"
+                    }
+                },
+                "declarations": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Declaration"
+                    }
+                },
+                "name": {
+                    "title": "mojo.core.String",
+                    "description": "come from `group_decl_name` attribute, otherwise will be the index from \"0\"",
+                    "type": "string"
+                },
+                "type": {
+                    "title": "mojo.lang.Identifier.Kind",
+                    "description": "may be the `struct`, `enum`, `constant`, `variable`, `attribute` `function`",
+                    "type": "string",
+                    "enum": [
+                        "package",
+                        "enum",
+                        "struct",
+                        "type-alias",
+                        "interface",
+                        "constant",
+                        "variable",
+                        "attribute",
+                        "attribute-alias",
+                        "function",
+                        "generic-parameter"
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,626 @@
+components:
+  schemas:
+    mojo.core.Any:
+      description: |
+        Any Object
+
+        `Any` contains an arbitrary serialized message along with a URL that describes the type of the serialized message.
+      properties:
+        '@type':
+          title: mojo.core.String
+          type: string
+      required:
+      - '@type'
+      title: mojo.core.Any
+      type: object
+    mojo.core.Duration:
+      description: |-
+        A Duration represents a signed, fixed-length span of time represented as a count of seconds and
+        fractions of seconds at nanosecond resolution. It is independent of any calendar and concepts like "day" or "month".
+        It is related to Timestamp in that the difference between two Timestamp values is a Duration and
+        it can be added or subtracted from a Timestamp. Range is approximately +-10,000 years.
+      format: Duration
+      title: mojo.core.Duration
+      type: string
+    mojo.core.Error:
+      description: |
+        @lang('zh-CN')
+      properties:
+        code:
+          description: The error code
+          format: ErrorCode
+          title: mojo.core.ErrorCode
+          type: string
+        details:
+          description: |-
+            A list of messages that carry the error details.  There is a common set of
+            message types for APIs to use.
+          items:
+            $ref: '#/components/schemas/mojo.core.Any'
+          title: mojo.core.Array
+          type: array
+        message:
+          description: |-
+            A developer-facing error message, which should be in English. Any
+            user-facing error message should be localized and sent in the
+            [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+          title: mojo.core.String
+          type: string
+      title: mojo.core.Error
+      type: object
+    mojo.core.Object:
+      description: Object type
+      title: mojo.core.Object
+      type: object
+    mojo.core.Timestamp:
+      description: ""
+      format: Timestamp
+      title: mojo.core.Timestamp
+      type: string
+    mojo.rpc.AttributeContext:
+      description: |-
+        An attribute is a piece of metadata that describes an activity on a network
+        service. For example, the size of an HTTP request, or the status code of
+        an HTTP response.
+
+        Each attribute has a type and a name, which is logically defined as
+        a proto message field in `AttributeContext`. The field type becomes the
+        attribute type, and the field path becomes the attribute name. For example,
+        the attribute `source.ip` maps to field `AttributeContext.source.ip`.
+
+        This message definition is guaranteed not to have any wire breaking change.
+        So you can use it directly for passing attributes across different systems.
+
+        NOTE: Different system may generate different subset of attributes. Please
+        verify the system specification before relying on an attribute generated
+        a system.
+      properties:
+        api:
+          $ref: '#/components/schemas/mojo.rpc.AttributeContext.Api'
+        destination:
+          $ref: '#/components/schemas/mojo.rpc.AttributeContext.Peer'
+        extensions:
+          description: Supports extensions for advanced use cases, such as logs and
+            metrics.
+          items:
+            $ref: '#/components/schemas/mojo.core.Any'
+          title: mojo.core.Array
+          type: array
+        origin:
+          $ref: '#/components/schemas/mojo.rpc.AttributeContext.Peer'
+        request:
+          $ref: '#/components/schemas/mojo.rpc.AttributeContext.Request'
+        resource:
+          $ref: '#/components/schemas/mojo.rpc.AttributeContext.Resource'
+        response:
+          $ref: '#/components/schemas/mojo.rpc.AttributeContext.Response'
+        source:
+          $ref: '#/components/schemas/mojo.rpc.AttributeContext.Peer'
+      title: mojo.rpc.AttributeContext
+      type: object
+    mojo.rpc.AttributeContext.Api:
+      description: |-
+        This message defines attributes associated with API operations, such as
+        a network API request. The terminology is based on the conventions used
+        by Google APIs, Istio, and OpenAPI.
+      properties:
+        operation:
+          description: |-
+            The API operation name. For gRPC requests, it is the fully qualified API
+            method name, such as "google.pubsub.v1.Publisher.Publish". For OpenAPI
+            requests, it is the `operationId`, such as "getPet".
+          title: mojo.core.String
+          type: string
+        protocol:
+          description: |-
+            The API protocol used for sending the request, such as "http", "https",
+            "grpc", or "internal".
+          title: mojo.core.String
+          type: string
+        service:
+          description: |-
+            The API service name. It is a logical identifier for a networked API,
+            such as "pubsub.googleapis.com". The naming syntax depends on the
+            API management system being used for handling the request.
+          title: mojo.core.String
+          type: string
+        version:
+          description: |-
+            The API version associated with the API operation above, such as "v1" or
+            "v1alpha1".
+          title: mojo.core.String
+          type: string
+      title: mojo.rpc.AttributeContext.Api
+      type: object
+    mojo.rpc.AttributeContext.Auth:
+      description: |-
+        This message defines request authentication attributes. Terminology is
+        based on the JSON Web Token (JWT) standard, but the terms also
+        correlate to concepts in other standards.
+      properties:
+        accessLevels:
+          description: |-
+            A list of access level resource names that allow resources to be
+            accessed by authenticated requester. It is part of Secure GCP processing
+            for the incoming request. An access level string has the format:
+            "//{api_service_name}/accessPolicies/{policy_id}/accessLevels/{short_name}"
+
+            Example:
+            "//accesscontextmanager.googleapis.com/accessPolicies/MY_POLICY_ID/accessLevels/MY_LEVEL"
+          items:
+            title: mojo.core.String
+            type: string
+          title: mojo.core.Array
+          type: array
+        audiences:
+          description: |-
+            The intended audience(s) for this authentication information. Reflects
+            the audience (`aud`) claim within a JWT. The audience
+            value(s) depends on the `issuer`, but typically include one or more of
+            the following pieces of information:
+
+            *  The services intended to receive the credential. For example,
+               ["https://pubsub.googleapis.com/", "https://storage.googleapis.com/"].
+            *  A set of service-based scopes. For example,
+               ["https://www.googleapis.com/auth/cloud-platform"].
+            *  The client id of an app, such as the Firebase project id for JWTs
+               from Firebase Auth.
+
+            Consult the documentation for the credential issuer to determine the
+            information provided.
+          items:
+            title: mojo.core.String
+            type: string
+          title: mojo.core.Array
+          type: array
+        claims:
+          $ref: '#/components/schemas/mojo.core.Object'
+        presenter:
+          description: |-
+            The authorized presenter of the credential. Reflects the optional
+            Authorized Presenter (`azp`) claim within a JWT or the
+            OAuth client id. For example, a Google Cloud Platform client id looks
+            as follows: "123456789012.apps.googleusercontent.com".
+          title: mojo.core.String
+          type: string
+        principal:
+          description: |-
+            The authenticated principal. Reflects the issuer (`iss`) and subject
+            (`sub`) claims within a JWT. The issuer and subject should be `/`
+            delimited, with `/` percent-encoded within the subject fragment. For
+            Google accounts, the principal format is:
+            "https://accounts.google.com/{id}"
+          title: mojo.core.String
+          type: string
+      title: mojo.rpc.AttributeContext.Auth
+      type: object
+    mojo.rpc.AttributeContext.Peer:
+      description: |-
+        This type defines attributes for a node that handles a network request.
+        The node can be either a service or an application that sends, forwards,
+        or receives the request. Service peers should fill in
+        `principal` and `labels` as appropriate.
+      properties:
+        ip:
+          description: The IP address of the peer.
+          title: mojo.core.String
+          type: string
+        labels:
+          additionalProperties:
+            title: mojo.core.String
+            type: string
+          description: The labels associated with the peer.
+          title: mojo.core.Map
+          type: object
+        port:
+          description: The network port of the peer.
+          format: Int64
+          title: mojo.core.Int64
+          type: integer
+        principal:
+          description: |-
+            The identity of this peer. Similar to `Request.auth.principal`, but
+            relative to the peer instead of the request. For example, the
+            idenity associated with a load balancer that forwared the request.
+          title: mojo.core.String
+          type: string
+        regionCode:
+          description: |-
+            The CLDR country/region code associated with the above IP address.
+            If the IP address is private, the `region_code` should reflect the
+            physical location where this peer is running.
+          title: mojo.core.String
+          type: string
+      title: mojo.rpc.AttributeContext.Peer
+      type: object
+    mojo.rpc.AttributeContext.Request:
+      description: |-
+        This message defines attributes for an HTTP request. If the actual
+        request is not an HTTP request, the runtime system should try to map
+        the actual request to an equivalent HTTP request.
+      properties:
+        auth:
+          $ref: '#/components/schemas/mojo.rpc.AttributeContext.Auth'
+        headers:
+          additionalProperties:
+            title: mojo.core.String
+            type: string
+          description: |-
+            The HTTP request headers. If multiple headers share the same key, they
+            must be merged according to the HTTP spec. All header keys must be
+            lowercased, because HTTP header keys are case-insensitive.
+          title: mojo.core.Map
+          type: object
+        host:
+          description: The HTTP request `Host` header value.
+          title: mojo.core.String
+          type: string
+        id:
+          description: |-
+            The unique ID for a request, which can be propagated to downstream
+            systems. The ID should have low probability of collision
+            within a single day for a specific service.
+          title: mojo.core.String
+          type: string
+        method:
+          description: The HTTP request method, such as `GET`, `POST`.
+          title: mojo.core.String
+          type: string
+        path:
+          description: The HTTP URL path.
+          title: mojo.core.String
+          type: string
+        protocol:
+          description: |-
+            The network protocol used with the request, such as "http/1.1",
+            "spdy/3", "h2", "h2c", "webrtc", "tcp", "udp", "quic". See
+            https://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml#alpn-protocol-ids
+            for details.
+          title: mojo.core.String
+          type: string
+        query:
+          description: |-
+            The HTTP URL query in the format of `name1=value1&name2=value2`, as it
+            appears in the first line of the HTTP request. No decoding is performed.
+          title: mojo.core.String
+          type: string
+        reason:
+          description: |-
+            A special parameter for request reason. It is used by security systems
+            to associate auditing information with a request.
+          title: mojo.core.String
+          type: string
+        scheme:
+          description: The HTTP URL scheme, such as `http` and `https`.
+          title: mojo.core.String
+          type: string
+        size:
+          description: The HTTP request size in bytes. If unknown, it must be -1.
+          format: Int64
+          title: mojo.core.Int64
+          type: integer
+        time:
+          $ref: '#/components/schemas/mojo.core.Timestamp'
+      title: mojo.rpc.AttributeContext.Request
+      type: object
+    mojo.rpc.AttributeContext.Resource:
+      description: |-
+        This message defines core attributes for a resource. A resource is an
+        addressable (named) entity provided by the destination service. For
+        example, a file stored on a network storage service.
+      properties:
+        annotations:
+          additionalProperties:
+            title: mojo.core.String
+            type: string
+          description: |-
+            Annotations is an unstructured key-value map stored with a resource that
+            may be set by external tools to store and retrieve arbitrary metadata.
+            They are not queryable and should be preserved when modifying objects.
+
+            More info: https://kubernetes.io/docs/user-guide/annotations
+          title: mojo.core.Map
+          type: object
+        createTime:
+          $ref: '#/components/schemas/mojo.core.Timestamp'
+        deleteTime:
+          $ref: '#/components/schemas/mojo.core.Timestamp'
+        displayName:
+          description: Mutable. The display name set by clients. Must be <= 63 characters.
+          title: mojo.core.String
+          type: string
+        etag:
+          description: |-
+            Output only. An opaque value that uniquely identifies a version or
+            generation of a resource. It can be used to confirm that the client
+            and server agree on the ordering of a resource being written.
+          title: mojo.core.String
+          type: string
+        labels:
+          additionalProperties:
+            title: mojo.core.String
+            type: string
+          description: |-
+            The labels or tags on the resource, such as AWS resource tags and
+            Kubernetes resource labels.
+          title: mojo.core.Map
+          type: object
+        location:
+          description: |-
+            Immutable. The location of the resource. The location encoding is
+            specific to the service provider, and new encoding may be introduced
+            as the service evolves.
+
+            For Google Cloud products, the encoding is what is used by Google Cloud
+            APIs, such as `us-east1`, `aws-us-east-1`, and `azure-eastus2`. The
+            semantics of `location` is identical to the
+            `cloud.googleapis.com/location` label used by some Google Cloud APIs.
+          title: mojo.core.String
+          type: string
+        name:
+          description: |-
+            The stable identifier (name) of a resource on the `service`. A resource
+            can be logically identified as "//{resource.service}/{resource.name}".
+            The differences between a resource name and a URI are:
+
+            *   Resource name is a logical identifier, independent of network
+                protocol and API version. For example,
+                `//pubsub.googleapis.com/projects/123/topics/news-feed`.
+            *   URI often includes protocol and version information, so it can
+                be used directly by applications. For example,
+                `https://pubsub.googleapis.com/v1/projects/123/topics/news-feed`.
+
+            See https://cloud.google.com/apis/design/resource_names for details.
+          title: mojo.core.String
+          type: string
+        service:
+          description: |-
+            The name of the service that this resource belongs to, such as
+            `pubsub.googleapis.com`. The service may be different from the DNS
+            hostname that actually serves the request.
+          title: mojo.core.String
+          type: string
+        type:
+          description: |-
+            The type of the resource. The syntax is platform-specific because
+            different platforms define their resources differently.
+
+            For Google APIs, the type format must be "{service}/{kind}".
+          title: mojo.core.String
+          type: string
+        uid:
+          description: |-
+            The unique identifier of the resource. UID is unique in the time
+            and space for this resource within the scope of the service. It is
+            typically generated by the server on successful creation of a resource
+            and must not be changed. UID is used to uniquely identify resources
+            with resource name reuses. This should be a UUID4.
+          title: mojo.core.String
+          type: string
+        updateTime:
+          $ref: '#/components/schemas/mojo.core.Timestamp'
+      title: mojo.rpc.AttributeContext.Resource
+      type: object
+    mojo.rpc.AttributeContext.Response:
+      description: |-
+        This message defines attributes for a typical network response. It
+        generally models semantics of an HTTP response.
+      properties:
+        backendLatency:
+          $ref: '#/components/schemas/mojo.core.Duration'
+        code:
+          description: The HTTP response status code, such as `200` and `404`.
+          format: Int64
+          title: mojo.core.Int64
+          type: integer
+        headers:
+          additionalProperties:
+            title: mojo.core.String
+            type: string
+          description: |-
+            The HTTP response headers. If multiple headers share the same key, they
+            must be merged according to HTTP spec. All header keys must be
+            lowercased, because HTTP header keys are case-insensitive.
+          title: mojo.core.Map
+          type: object
+        size:
+          description: The HTTP response size in bytes. If unknown, it must be -1.
+          format: Int64
+          title: mojo.core.Int64
+          type: integer
+        time:
+          $ref: '#/components/schemas/mojo.core.Timestamp'
+      title: mojo.rpc.AttributeContext.Response
+      type: object
+    mojo.rpc.Message:
+      title: mojo.rpc.Message
+      type: object
+    mojo.rpc.longrunning.Operation:
+      description: |-
+        This resource represents a long-running operation that is the result of a
+        network API call.
+      properties:
+        createTime:
+          $ref: '#/components/schemas/mojo.core.Timestamp'
+        done:
+          description: |-
+            If the value is `false`, it means the operation is still in progress.
+            If `true`, the operation is completed, and either `error` or `response` is
+            available.
+          title: mojo.core.Bool
+          type: boolean
+        error:
+          $ref: '#/components/schemas/mojo.core.Error'
+        metadata:
+          $ref: '#/components/schemas/mojo.core.Any'
+        name:
+          description: |-
+            The server-assigned name, which is only unique within the same service that
+            originally returns it. If you use the default HTTP mapping, the
+            `name` should be a resource name ending with `operations/{unique_id}`.
+          title: mojo.core.String
+          type: string
+        response:
+          $ref: '#/components/schemas/mojo.core.Any'
+        updateTime:
+          $ref: '#/components/schemas/mojo.core.Timestamp'
+      title: mojo.rpc.longrunning.Operation
+      type: object
+info:
+  description: When an API method normally takes long time to complete, it can be
+    designedto return [Operation][google.longrunning.Operation] to the client, and
+    the client can use thisinterface to receive the real response asynchronously by
+    polling theoperation resource, or pass the operation resource to another API (such
+    asGoogle Cloud Pub/Sub API) to receive the response.  Any API service thatreturns
+    long-running operations should implement the `Operations` interfaceso developers
+    can have a consistent client experience.
+  title: Manages long-running operations with an API service.
+  version: 0.1.0
+openapi: 3.0.3
+paths:
+  /operation/v1/{{service}}/operations:
+    get:
+      description: 'NOTE: the `name` binding allows API services to override the bindingto
+        use different resource name schemes, such as `users/*/operations`. Tooverride
+        the binding, API services can add a binding such as`"/v1/{name=users/*}/operations"`
+        to their service configuration.For backwards compatibility, the default name
+        includes the operationscollection id, however overriding users must ensure
+        the name bindingis the parent resource, without the operations collection
+        id.'
+      operationId: list_operations
+      parameters:
+      - description: The name of the operation's parent resource.
+        in: query
+        name: parent
+        schema:
+          title: mojo.core.String
+          type: string
+      - description: The standard list filter.
+        in: query
+        name: filter
+        schema:
+          title: mojo.core.String
+          type: string
+      - in: query
+        name: page_size
+        schema:
+          format: Int32
+          title: mojo.core.Int32
+          type: integer
+      - in: query
+        name: page_token
+        schema:
+          title: mojo.core.String
+          type: string
+      - in: query
+        name: skip
+        schema:
+          format: Int32
+          title: mojo.core.Int32
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/mojo.rpc.longrunning.Operation'
+                title: mojo.core.Array
+                type: array
+          description: OK
+      summary: Lists operations that match the specified filter in the request. If
+        theserver doesn't support this method, it returns `UNIMPLEMENTED`.
+  /operation/v1/{{service}}/operations/{name}:
+    delete:
+      description: ""
+      operationId: delete_operation
+      parameters:
+      - description: The name of the operation resource to be deleted.
+        in: path
+        name: name
+        schema:
+          title: mojo.core.String
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Deletes a long-running operation. This method indicates that the client
+        isno longer interested in the operation result. It does not cancel theoperation.
+        If the server doesn't support this method, it returns`google.rpc.Code.UNIMPLEMENTED`.
+    get:
+      description: ""
+      operationId: get_operation
+      parameters:
+      - description: The name of the operation resource.
+        in: path
+        name: name
+        schema:
+          title: mojo.core.String
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mojo.rpc.longrunning.Operation'
+          description: OK
+      summary: Gets the latest state of a long-running operation.  Clients can use
+        thismethod to poll the operation result at intervals as recommended by the
+        APIservice.
+  /operation/v1/{{service}}/operations/{name}:cancel:
+    post:
+      description: ""
+      operationId: cancel_operation
+      parameters:
+      - description: The name of the operation resource to be cancelled.
+        in: path
+        name: name
+        schema:
+          title: mojo.core.String
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Starts asynchronous cancellation on a long-running operation.  The
+        servermakes a best effort to cancel the operation, but success is notguaranteed.  If
+        the server doesn't support this method, it returns`google.rpc.Code.UNIMPLEMENTED`.  Clients
+        can use[Operations.GetOperation][google.longrunning.Operations.GetOperation]
+        orother methods to check whether the cancellation succeeded or whether theoperation
+        completed despite cancellation. On successful cancellation,the operation is
+        not deleted; instead, it becomes an operation withan [Operation.error][google.longrunning.Operation.error]
+        value with a [google.rpc.Status.code][google.rpc.Status.code] of 1,corresponding
+        to `Code.CANCELLED`.
+  /operation/v1/{{service}}/operations/{name}:wait:
+    post:
+      description: ""
+      operationId: wait_operation
+      parameters:
+      - description: The name of the operation resource to wait on.
+        in: path
+        name: name
+        schema:
+          title: mojo.core.String
+          type: string
+      - description: |-
+          The maximum duration to wait before timing out. If left blank, the wait
+          will be at most the time permitted by the underlying HTTP/RPC protocol.
+          If RPC context deadline is also specified, the shorter one will be used.
+        in: query
+        name: timeout
+        schema:
+          $ref: '#/components/schemas/mojo.core.Duration'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mojo.rpc.longrunning.Operation'
+          description: OK
+      summary: Waits until the specified long-running operation is done or reaches
+        at mosta specified timeout, returning the latest state.  If the operation
+        isalready done, the latest state is immediately returned.  If the timeoutspecified
+        is greater than the default HTTP/RPC timeout, the HTTP/RPCtimeout is used.  If
+        the server does not support this method, it returns`google.rpc.Code.UNIMPLEMENTED`.Note
+        that this method is on a best-effort basis.  It may return the lateststate
+        before the specified timeout (including immediately), meaning even animmediate
+        response is no guarantee that the operation is done.

@@ -1,0 +1,35 @@
+{
+    "title": "mojo.core.File",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "files": {
+            "title": "mojo.core.Array",
+            "description": "sub files in this file if is a directory",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.File"
+            }
+        },
+        "info": {
+            "$ref": "#/components/schemas/mojo.core.File.Info"
+        },
+        "isDir": {
+            "title": "mojo.core.Bool",
+            "description": "whether is the directory or not",
+            "type": "boolean"
+        },
+        "mode": {
+            "title": "mojo.core.File.Mode",
+            "type": "string",
+            "enum": [
+                "dir"
+            ]
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "description": "the name of the file, usually it is the full path of the file",
+            "type": "string"
+        }
+    }
+}

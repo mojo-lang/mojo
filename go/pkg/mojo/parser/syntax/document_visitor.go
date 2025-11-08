@@ -3,8 +3,8 @@ package syntax
 import (
 	"strings"
 
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
 )
 
 type DocumentVisitor struct {

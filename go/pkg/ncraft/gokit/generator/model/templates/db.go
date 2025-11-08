@@ -7,7 +7,7 @@ package model
 import (
 	"sync"
 
-	"github.com/mojo-lang/db/go/pkg/mojo/db"
+	"github.com/mojo-lang/mojo/packages/db/go/pkg/mojo/db"
 	"github.com/ncraft-io/ncraft/go/pkg/ncraft/config"
 	"github.com/ncraft-io/ncraft/go/pkg/ncraft/logs"
 )

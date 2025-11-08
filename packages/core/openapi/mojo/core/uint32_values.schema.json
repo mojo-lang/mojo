@@ -1,0 +1,10 @@
+{
+    "title": "mojo.core.UInt32Values",
+    "description": "Wrapper type for `Array\u003cUInt32\u003e`\n\nThe JSON representation for `UInt32Values` is JSON number array.",
+    "type": "array",
+    "items": {
+        "title": "mojo.core.UInt32",
+        "type": "integer",
+        "format": "UInt32"
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "title": "mojo.core.PhoneNumber",
+    "description": "Definition for representing international telephone numbers.\n\nExamples:\n\nGoogle MTV, +1 650-253-0000, (650) 253-0000\ncountry_code: 1\nnational_number: 6502530000\n\nGoogle Paris, +33 (0)1 42 68 53 00, 01 42 68 53 00\ncountry_code: 33\nnational_number: 142685300\n\nGoogle Beijing, +86-10-62503000, (010) 62503000\ncountry_code: 86\nnational_number: 1062503000\n\nGoogle Italy, +39 02-36618 300, 02-36618 300\ncountry_code: 39\nnational_number: 236618300\nitalian_leading_zero: true",
+    "type": "object",
+    "properties": {
+        "countryCode": {
+            "title": "mojo.core.Int32",
+            "description": "The country calling code for this number, as defined by the International\nTelecommunication Union (ITU). For example, this would be 1 for NANPA\ncountries, and 33 for France.",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "countryCodeSource": {
+            "title": "mojo.core.PhoneNumber.CountryCodeSource",
+            "description": "The source from which the country_code is derived.",
+            "type": "string",
+            "enum": [
+                "from_number_with_plus_sign",
+                "from_number_with_idd",
+                "from_number_without_plus_sign",
+                "from_default_country"
+            ]
+        },
+        "extension": {
+            "title": "mojo.core.String",
+            "description": "Extension is not standardized in ITU recommendations, except for being\ndefined as a series of numbers with a maximum length of 40 digits. It is\ndefined as a string here to accommodate for the possible use of a leading\nzero in the extension (organizations have complete freedom to do so, as\nthere is no standard defined). Other than digits, some other dialling\ncharacters such as \",\" (indicating a wait) may be stored here.",
+            "type": "string"
+        },
+        "italianLeadingZero": {
+            "title": "mojo.core.Bool",
+            "description": "In some countries, the national (significant) number starts with one or\nmore \"0\"s without this being a national prefix or trunk code of some kind.\nFor example, the leading zero in the national (significant) number of an\nItalian phone number indicates the number is a fixed-line number.  There\nhave been plans to migrate fixed-line numbers to start with the digit two\nsince December 2000, but it has not happened yet. See\nhttp://en.wikipedia.org/wiki/%2B39 for more details.\n\nThese fields can be safely ignored (there is no need to set them) for most\ncountries. Some limited number of countries behave like Italy - for these\ncases, if the leading zero(s) of a number would be retained even when\ndialling internationally, set this flag to true, and also set the number of\nleading zeros.\n\nClients who use the parsing functionality of the i18n phone\nnumber libraries will have these fields set if necessary automatically.",
+            "type": "boolean"
+        },
+        "nationalNumber": {
+            "title": "mojo.core.UInt64",
+            "description": "The National (significant) Number, as defined in International\nTelecommunication Union (ITU) Recommendation E.164, without any leading\nzero. The leading-zero is stored separately if required, since this is an\nuint64 and hence cannot store such information. Do not use this field\ndirectly: if you want the national significant number, call the\ngetNationalSignificantNumber method of PhoneNumberUtil.\n\nFor countries which have the concept of an \"area code\" or \"national\ndestination code\", this is included in the National (significant) Number.\nAlthough the ITU says the maximum length should be 15, we have found longer\nnumbers in some countries e.g. Germany.\nNote that the National (significant) Number does not contain the National\n(trunk) prefix. Obviously, as a uint64, it will never contain any\nformatting (hyphens, spaces, parentheses), nor any alphanumeric spellings.",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        "numberOfLeadingZeros": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "preferredDomesticCarrierCode": {
+            "title": "mojo.core.String",
+            "description": "The carrier selection code that is preferred when calling this phone number\ndomestically. This also includes codes that need to be dialed in some\ncountries when calling from landlines to mobiles or vice versa. For\nexample, in Columbia, a \"3\" needs to be dialed before the phone number\nitself when calling from a mobile phone to a domestic landline phone and\nvice versa.\n\nNote this is the \"preferred\" code, which means other codes may work as\nwell.",
+            "type": "string"
+        },
+        "rawInput": {
+            "title": "mojo.core.String",
+            "description": "The next few fields are non-essential fields for a phone number. They\nretain extra information about the form the phone number was in when it was\nprovided to us to parse. They can be safely ignored by most clients. To\npopulate them, call parseAndKeepRawInput on PhoneNumberUtil.\n\nThis field is used to store the raw input string containing phone numbers\nbefore it was canonicalized by the library. For example, it could be used\nto store alphanumerical numbers such as \"1-800-GOOG-411\".",
+            "type": "string"
+        }
+    },
+    "required": [
+        "nationalNumber"
+    ]
+}

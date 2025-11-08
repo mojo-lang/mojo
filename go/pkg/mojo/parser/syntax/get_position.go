@@ -2,7 +2,7 @@ package syntax
 
 import (
 	"github.com/antlr4-go/antlr/v4"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
 )
 
 func GetPosition(token antlr.Token) *lang.Position {

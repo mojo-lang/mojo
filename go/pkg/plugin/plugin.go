@@ -3,7 +3,7 @@ package plugin
 import (
 	"reflect"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
 )
 
 type Plugin interface {

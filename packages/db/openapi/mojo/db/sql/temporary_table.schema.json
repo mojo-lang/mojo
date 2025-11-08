@@ -1,0 +1,22 @@
+{
+    "title": "mojo.db.sql.TemporaryTable",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "columns": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "subquery": {
+            "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+        }
+    }
+}

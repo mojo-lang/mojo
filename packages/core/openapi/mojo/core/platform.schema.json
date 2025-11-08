@@ -1,0 +1,6 @@
+{
+    "title": "mojo.core.Platform",
+    "description": "the platform information\n\nNormalization\n\nBecause not all users are familiar with the way the Go runtime represents\nplatforms, several normalizations have been provided to make this package\neasier to user.\n\nThe following are performed for architectures:\n\n  Value    Normalized\n  aarch64  arm64\n  armhf    arm\n  armel    arm/v6\n  i386     386\n  x86_64   amd64\n  x86-64   amd64\n\nWe also normalize the operating system `macos` to `darwin`.\n\nARM Support\n\nTo qualify ARM architecture, the Variant field is used to qualify the arm\nversion. The most common arm version, v7, is represented without the variant\nunless it is explicitly provided. This is treated as equivalent to armhf. A\nprevious architecture, armel, will be normalized to arm/v6.",
+    "type": "string",
+    "format": "Platform"
+}

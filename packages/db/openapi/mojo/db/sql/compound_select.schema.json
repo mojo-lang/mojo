@@ -1,0 +1,30 @@
+{
+    "title": "mojo.db.sql.CompoundSelect",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+        },
+        {
+            "title": "mojo.db.sql.CompoundSelect",
+            "type": "object",
+            "properties": {
+                "left": {
+                    "$ref": "#/components/schemas/mojo.db.sql.CompoundSelect"
+                },
+                "operator": {
+                    "title": "mojo.db.sql.CompoundSelect.Operator",
+                    "type": "string",
+                    "enum": [
+                        "union",
+                        "intersect",
+                        "except"
+                    ]
+                },
+                "right": {
+                    "$ref": "#/components/schemas/mojo.db.sql.CompoundSelect"
+                }
+            }
+        }
+    ]
+}

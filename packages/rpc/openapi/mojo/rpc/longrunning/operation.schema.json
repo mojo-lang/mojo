@@ -1,0 +1,32 @@
+{
+    "title": "mojo.rpc.longrunning.Operation",
+    "description": "This resource represents a long-running operation that is the result of a\nnetwork API call.",
+    "type": "object",
+    "properties": {
+        "createTime": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        },
+        "done": {
+            "title": "mojo.core.Bool",
+            "description": "If the value is `false`, it means the operation is still in progress.\nIf `true`, the operation is completed, and either `error` or `response` is\navailable.",
+            "type": "boolean"
+        },
+        "error": {
+            "$ref": "#/components/schemas/mojo.core.Error"
+        },
+        "metadata": {
+            "$ref": "#/components/schemas/mojo.core.Any"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "description": "The server-assigned name, which is only unique within the same service that\noriginally returns it. If you use the default HTTP mapping, the\n`name` should be a resource name ending with `operations/{unique_id}`.",
+            "type": "string"
+        },
+        "response": {
+            "$ref": "#/components/schemas/mojo.core.Any"
+        },
+        "updateTime": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        }
+    }
+}

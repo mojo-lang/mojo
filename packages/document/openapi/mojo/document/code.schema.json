@@ -1,0 +1,14 @@
+{
+    "title": "mojo.document.Code",
+    "description": "Inline code (literal)",
+    "type": "object",
+    "properties": {
+        "attribute": {
+            "$ref": "#/components/schemas/mojo.document.Attribute"
+        },
+        "content": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

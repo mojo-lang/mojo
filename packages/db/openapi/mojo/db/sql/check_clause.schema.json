@@ -1,0 +1,18 @@
+{
+    "title": "mojo.db.sql.CheckClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.CheckClause",
+            "type": "object",
+            "properties": {
+                "condition": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

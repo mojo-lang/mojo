@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	path2 "path"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
 
 	"github.com/mojo-lang/mojo/go/pkg/util"
 )

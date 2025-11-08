@@ -1,0 +1,9 @@
+{
+    "title": "mojo.openapi.Header",
+    "description": "The Header Object follows the structure of the Parameter Object with the following changes:\n1. name MUST NOT be specified, it is given in the corresponding headers map.\n1. in MUST NOT be specified, it is implicitly in header.\n1. All traits that are affected by the location MUST be applicable to a location of header (for example, style).\n@example({\n   description: \"The number of allowed requests in the current period\"\n   schema: {\n       type: integer\n   }\n})",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.openapi.Parameter"
+        }
+    ]
+}

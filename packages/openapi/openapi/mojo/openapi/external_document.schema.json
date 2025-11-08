@@ -1,0 +1,13 @@
+{
+    "title": "mojo.openapi.ExternalDocument",
+    "description": "Allows referencing an external resource for extended documentation.",
+    "type": "object",
+    "properties": {
+        "description": {
+            "$ref": "#/components/schemas/mojo.openapi.CachedDocument"
+        },
+        "url": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        }
+    }
+}

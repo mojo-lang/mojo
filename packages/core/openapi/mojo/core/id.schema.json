@@ -1,0 +1,17 @@
+{
+    "title": "mojo.core.Id",
+    "oneOf": [
+        {
+            "title": "mojo.core.UInt64",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.core.Uuid"
+        }
+    ]
+}

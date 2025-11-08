@@ -1,0 +1,45 @@
+{
+    "title": "mojo.lang.StructDecl",
+    "description": "StructDecl - This is the declaration of a struct, for example:\n\n``` mojo\nstruct Complex { r : Double, i : Double }\n```\n\nThe type of the decl itself is a MetaType; use `Complex.type`\nto get the `Complex`'s declared type.\n",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.TypeDecl"
+        },
+        {
+            "title": "mojo.lang.StructDecl",
+            "type": "object",
+            "properties": {
+                "enumDecls": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.EnumDecl"
+                    }
+                },
+                "scope": {
+                    "$ref": "#/components/schemas/mojo.lang.Scope"
+                },
+                "structDecls": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.StructDecl"
+                    }
+                },
+                "type": {
+                    "$ref": "#/components/schemas/mojo.lang.StructType"
+                },
+                "typeAliasDecls": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.TypeAliasDecl"
+                    }
+                }
+            }
+        }
+    ]
+}

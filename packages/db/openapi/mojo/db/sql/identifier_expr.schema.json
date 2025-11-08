@@ -1,0 +1,19 @@
+{
+    "title": "mojo.db.sql.IdentifierExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.IdentifierExpr",
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

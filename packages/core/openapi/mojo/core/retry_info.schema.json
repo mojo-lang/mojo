@@ -1,0 +1,10 @@
+{
+    "title": "mojo.core.RetryInfo",
+    "description": "Describes when the clients can retry a failed request. Clients could ignore\nthe recommendation here or retry when this information is missing from error\nresponses.\n\nIt's always recommended that clients should use exponential backoff when\nretrying.\n\nClients should wait until `retry_delay` amount of time has passed since\nreceiving the error response before retrying.  If retrying requests also\nfail, clients should use an exponential backoff scheme to gradually increase\nthe delay between retries based on `retry_delay`, until either a maximum\nnumber of retries have been reached or a maximum retry delay cap has been\nreached.",
+    "type": "object",
+    "properties": {
+        "retryDelay": {
+            "$ref": "#/components/schemas/mojo.core.Duration"
+        }
+    }
+}

@@ -1,0 +1,154 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API 测试文档",
+    "description": "xxx 项目接口文档",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9999",
+      "description": "Inferred Url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "injection-controller",
+      "description": "Injection Controller"
+    },
+    {
+      "name": "redirect-controller",
+      "description": "Redirect Controller"
+    },
+    {
+      "name": "test-controller",
+      "description": "Test Controller"
+    }
+  ],
+  "paths": {
+    "/test/ssrf": {
+      "get": {
+        "tags": [
+          "injection-controller"
+        ],
+        "summary": "SSRF",
+        "operationId": "ssrfInjectionUsingGET",
+        "parameters": [
+          {
+            "name": "param",
+            "in": "query",
+            "description": "param",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/test/raster": {
+      "get": {
+        "tags": [
+          "test-controller"
+        ],
+        "summary": "Raster Format Exception",
+        "operationId": "rasterUsingGET",
+        "parameters": [
+          {
+            "name": "dataType",
+            "in": "query",
+            "description": "dataType",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "w",
+            "in": "query",
+            "description": "w",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "h",
+            "in": "query",
+            "description": "h",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "numBands",
+            "in": "query",
+            "description": "numBands",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "title": "User",
+        "type": "object",
+        "properties": {
+          "gender": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

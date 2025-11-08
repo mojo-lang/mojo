@@ -1,0 +1,13 @@
+{
+    "title": "mojo.geom.BoundingBox",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "leftBottom": {
+            "$ref": "#/components/schemas/mojo.geom.LngLat"
+        },
+        "rightTop": {
+            "$ref": "#/components/schemas/mojo.geom.LngLat"
+        }
+    }
+}

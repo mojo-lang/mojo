@@ -1,0 +1,15 @@
+{
+    "title": "mojo.http.RequestOptions",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "maxRetries": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "timeout": {
+            "$ref": "#/components/schemas/mojo.core.Duration"
+        }
+    }
+}

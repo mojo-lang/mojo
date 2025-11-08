@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.KeyPathApplicationExpr",
+    "description": "Subscripting expression that applies a keypath to a base.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

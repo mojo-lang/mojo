@@ -1,0 +1,15 @@
+{
+    "title": "mojo.core.QuotaFailure",
+    "description": "Describes how a quota check failed.\n\nFor example if a daily limit was exceeded for the calling project,\na service could respond with a QuotaFailure detail containing the project\nid and the description of the quota limit that was exceeded.  If the\ncalling project hasn't enabled the service in the developer console, then\na service could respond with the project id and set `service_disabled`\nto true.\n\nAlso see RetryInfo and Help types for other details about handling a\nquota failure.",
+    "type": "object",
+    "properties": {
+        "violations": {
+            "title": "mojo.core.Array",
+            "description": "Describes all quota violations.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.QuotaFailure.Violation"
+            }
+        }
+    }
+}

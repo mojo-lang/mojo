@@ -1,0 +1,18 @@
+{
+    "title": "mojo.core.TimeZone",
+    "description": "represent timezone information in the locations where different offsets are used in different days of the year\nor where historical changes have been made to civil time.",
+    "type": "object",
+    "properties": {
+        "name": {
+            "title": "mojo.core.String",
+            "description": "",
+            "type": "string"
+        },
+        "offset": {
+            "title": "mojo.core.Int32",
+            "description": "representing the difference between the local time and UTC.\nIt must be strictly between -24 * 60 * 60 and 24 * 60 * 60",
+            "type": "integer",
+            "format": "Int32"
+        }
+    }
+}

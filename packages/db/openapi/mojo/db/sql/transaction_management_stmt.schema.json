@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.TransactionManagementStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        }
+    ]
+}

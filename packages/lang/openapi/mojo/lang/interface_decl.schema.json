@@ -1,0 +1,29 @@
+{
+    "title": "mojo.lang.InterfaceDecl",
+    "description": "`InterfaceDecl` - A declaration of an interface, for example:\n\n```mojo\n  interface Drawable {\n     draw()\n  }\n```\n",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.TypeDecl"
+        },
+        {
+            "title": "mojo.lang.InterfaceDecl",
+            "type": "object",
+            "properties": {
+                "scope": {
+                    "$ref": "#/components/schemas/mojo.lang.Scope"
+                },
+                "type": {
+                    "$ref": "#/components/schemas/mojo.lang.InterfaceType"
+                },
+                "typeAliasDecls": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.TypeAliasDecl"
+                    }
+                }
+            }
+        }
+    ]
+}

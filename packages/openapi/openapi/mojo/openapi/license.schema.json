@@ -1,0 +1,18 @@
+{
+    "title": "mojo.openapi.License",
+    "description": "License information for the exposed API.\n@example({\n   name: \"Apache 2.0\"\n   url: \"http://www.apache.org/licenses/LICENSE-2.0.html\"\n})",
+    "type": "object",
+    "properties": {
+        "name": {
+            "title": "mojo.core.String",
+            "description": "The license name used for the API.",
+            "type": "string"
+        },
+        "url": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        }
+    },
+    "required": [
+        "name"
+    ]
+}

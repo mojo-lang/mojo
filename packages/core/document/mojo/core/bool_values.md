@@ -1,0 +1,3 @@
+| type | description |
+|---|---|
+| `Array<boolean>` |

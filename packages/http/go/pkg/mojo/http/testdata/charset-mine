@@ -1,0 +1,9 @@
+--AaB03x
+content-disposition: form-data; name="_charset_"
+
+iso-8859-1
+--AaB03x
+content-disposition: form-data; name="field1"
+
+...text encoded in iso-8859-1 ...
+--AaB03x--

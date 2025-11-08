@@ -1,0 +1,11 @@
+{
+    "title": "mojo.db.sql.Column",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.AllColumn"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.DerivedColumn"
+        }
+    ]
+}

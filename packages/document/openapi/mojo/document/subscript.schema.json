@@ -1,0 +1,8 @@
+{
+    "title": "mojo.document.Subscript",
+    "description": "",
+    "type": "array",
+    "items": {
+        "$ref": "#/components/schemas/mojo.document.Inline"
+    }
+}

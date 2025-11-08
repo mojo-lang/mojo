@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.FloatLiteralExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.FloatLiteralExpr"
+        }
+    ]
+}

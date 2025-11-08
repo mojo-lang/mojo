@@ -1,0 +1,29 @@
+{
+    "title": "mojo.db.sql.TableFunctionName",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "alias": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "arguments": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.db.sql.Expression"
+            }
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "schemaName": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    },
+    "required": [
+        "name"
+    ]
+}

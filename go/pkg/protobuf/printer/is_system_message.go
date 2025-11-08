@@ -1,6 +1,6 @@
 package printer
 
-import "github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+import "github.com/mojo-lang/mojo/packages/protobuf/go/pkg/mojo/protobuf/descriptor"
 
 var systemMessages = map[string]bool{
 	"Bool":    true,

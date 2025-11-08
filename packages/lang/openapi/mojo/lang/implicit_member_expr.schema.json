@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.ImplicitMemberExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "title": "mojo.lang.EntityNode",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "keyField": {
+            "$ref": "#/components/schemas/mojo.lang.ValueDecl"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "description": "full name of the type",
+            "type": "string"
+        },
+        "typeDeclaration": {
+            "$ref": "#/components/schemas/mojo.lang.TypeDeclaration"
+        }
+    }
+}

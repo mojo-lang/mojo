@@ -1,10 +1,10 @@
 package generator
 
 import (
-	"github.com/mojo-lang/core/go/pkg/logs"
 	"github.com/mojo-lang/mojo/go/pkg/java/generator/data"
 	"github.com/mojo-lang/mojo/go/pkg/java/generator/generator"
 	"github.com/mojo-lang/mojo/go/pkg/util"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
 	"io/fs"
 	"os"
 	"path"

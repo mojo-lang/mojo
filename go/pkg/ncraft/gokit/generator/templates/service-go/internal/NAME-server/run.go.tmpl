@@ -22,18 +22,18 @@ import (
     "github.com/prometheus/client_golang/prometheus/promhttp"
     "google.golang.org/grpc"
 
-    "github.com/ncraft-io/ncraft-gokit/pkg/utils/network"
+    "github.com/ncraft-io/ncraft/gokit/pkg/utils/network"
     _ "go.uber.org/automaxprocs"
 
-    nclient "github.com/ncraft-io/ncraft-gokit/pkg/client"
+    nclient "github.com/ncraft-io/ncraft/gokit/pkg/client"
     "github.com/ncraft-io/ncraft/go/pkg/ncraft/logs"
     {{if .Interface.HasSubscription}}"github.com/ncraft-io/ncraft/go/pkg/ncraft/messaging"
     _ "github.com/ncraft-io/ncraft/go/pkg/ncraft/messaging/nats"{{end}}
-    "github.com/ncraft-io/ncraft-gokit/pkg/metrics"
-    "github.com/ncraft-io/ncraft-gokit/pkg/kit"
-    "github.com/ncraft-io/ncraft-gokit/pkg/sd"
-    nserver "github.com/ncraft-io/ncraft-gokit/pkg/server"
-    "github.com/ncraft-io/ncraft-gokit/pkg/tracing"
+    "github.com/ncraft-io/ncraft/gokit/pkg/metrics"
+    "github.com/ncraft-io/ncraft/gokit/pkg/kit"
+    "github.com/ncraft-io/ncraft/gokit/pkg/sd"
+    nserver "github.com/ncraft-io/ncraft/gokit/pkg/server"
+    "github.com/ncraft-io/ncraft/gokit/pkg/tracing"
 
     kitprometheus "github.com/go-kit/kit/metrics/prometheus"
     stdprometheus "github.com/prometheus/client_golang/prometheus"

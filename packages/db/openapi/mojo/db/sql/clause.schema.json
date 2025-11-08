@@ -1,0 +1,24 @@
+{
+    "title": "mojo.db.sql.Clause",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "implicit": {
+            "title": "mojo.core.Bool",
+            "description": "Implicit - Whether this statement is implicit.",
+            "type": "boolean"
+        },
+        "kind": {
+            "title": "mojo.core.Int64",
+            "description": "Kind - The subclass of Stmt that this is.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        }
+    }
+}

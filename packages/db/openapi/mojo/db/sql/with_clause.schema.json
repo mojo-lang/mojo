@@ -1,0 +1,26 @@
+{
+    "title": "mojo.db.sql.WithClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.WithClause",
+            "type": "object",
+            "properties": {
+                "recursive": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "tables": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.db.sql.TemporaryTable"
+                    }
+                }
+            }
+        }
+    ]
+}

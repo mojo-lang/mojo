@@ -1,9 +1,9 @@
 package generator
 
 import (
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/protobuf/go/pkg/mojo/protobuf/descriptor"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/protobuf/go/pkg/mojo/protobuf/descriptor"
 	"google.golang.org/protobuf/types/pluginpb"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"

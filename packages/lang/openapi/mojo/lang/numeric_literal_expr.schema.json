@@ -1,0 +1,19 @@
+{
+    "title": "mojo.lang.NumericLiteralExpr",
+    "description": "\\brief Abstract base class for numeric literals, potentially with a sign.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        },
+        {
+            "title": "mojo.lang.NumericLiteralExpr",
+            "type": "object",
+            "properties": {
+                "isNegative": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,95 @@
+{
+    "title": "mojo.lang.Expression",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.NullLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.IntegerLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.FloatLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.BoolLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.StringLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ObjectLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ArrayLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.MapLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.RangeLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.IdentifierExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.NumericSuffixLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.StringPrefixLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.StringSuffixLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.StructLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ClosureExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ParenthesizedExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ImplicitMemberExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.WildcardExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.StructConstructionExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.TupleExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.PrefixUnaryExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.PostfixUnaryExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.FunctionCallExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ExplicitMemberExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.SubscriptExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.BinaryExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ConditionalExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.TypeCastingExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.AssignmentExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ErrorExpr"
+        }
+    ]
+}

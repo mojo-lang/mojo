@@ -1,0 +1,25 @@
+{
+    "title": "mojo.db.sql.FromClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.FromClause",
+            "type": "object",
+            "properties": {
+                "join": {
+                    "$ref": "#/components/schemas/mojo.db.sql.JoinClause"
+                },
+                "tables": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.db.sql.Table"
+                    }
+                }
+            }
+        }
+    ]
+}

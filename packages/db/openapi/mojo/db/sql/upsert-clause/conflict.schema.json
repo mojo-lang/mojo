@@ -1,0 +1,17 @@
+{
+    "title": "mojo.db.sql.UpsertClause.Conflict",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "columns": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.db.sql.IndexedColumn"
+            }
+        },
+        "where": {
+            "$ref": "#/components/schemas/mojo.db.sql.WhereClause"
+        }
+    }
+}

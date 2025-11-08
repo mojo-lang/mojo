@@ -1,0 +1,19 @@
+{
+    "title": "mojo.http.Response",
+    "description": "Response represents the response from an HTTP request.",
+    "type": "object",
+    "properties": {
+        "body": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        },
+        "headers": {
+            "$ref": "#/components/schemas/mojo.http.Headers"
+        },
+        "status": {
+            "$ref": "#/components/schemas/mojo.http.Status"
+        },
+        "version": {
+            "$ref": "#/components/schemas/mojo.http.Version"
+        }
+    }
+}

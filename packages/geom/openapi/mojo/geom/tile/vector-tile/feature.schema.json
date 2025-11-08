@@ -1,0 +1,40 @@
+{
+    "title": "mojo.geom.tile.VectorTile.Feature",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "geometry": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.UInt32",
+                "type": "integer",
+                "format": "UInt32"
+            }
+        },
+        "id": {
+            "title": "mojo.core.UInt64",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        "tags": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.UInt32",
+                "type": "integer",
+                "format": "UInt32"
+            }
+        },
+        "type": {
+            "title": "mojo.geom.tile.VectorTile.GeomType",
+            "type": "string",
+            "enum": [
+                "UNKNOWN",
+                "POINT",
+                "LINESTRING",
+                "POLYGON"
+            ]
+        }
+    }
+}

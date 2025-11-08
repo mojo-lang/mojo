@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.ControlTransferStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        }
+    ]
+}

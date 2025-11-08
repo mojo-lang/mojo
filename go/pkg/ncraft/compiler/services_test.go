@@ -3,7 +3,7 @@ package compiler
 import (
 	"testing"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"

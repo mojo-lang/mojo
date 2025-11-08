@@ -1,0 +1,21 @@
+{
+    "title": "mojo.lang.BinaryExpr",
+    "description": "BinaryExpr - Infix binary expressions like 'x+y'.  The argument is always\nan implicit tuple expression of the type expected by the function.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.ApplyExpr"
+        },
+        {
+            "title": "mojo.lang.BinaryExpr",
+            "type": "object",
+            "properties": {
+                "leftArgument": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                },
+                "rightArgument": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                }
+            }
+        }
+    ]
+}

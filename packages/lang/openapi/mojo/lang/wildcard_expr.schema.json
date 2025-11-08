@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.WildcardExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

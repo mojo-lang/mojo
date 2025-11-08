@@ -1,0 +1,28 @@
+{
+    "title": "mojo.lang.PackageDecl",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Decl"
+        },
+        {
+            "title": "mojo.lang.PackageDecl",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                },
+                "namePosition": {
+                    "$ref": "#/components/schemas/mojo.lang.Position"
+                },
+                "package": {
+                    "$ref": "#/components/schemas/mojo.lang.Package"
+                },
+                "packageLiteralExpr": {
+                    "$ref": "#/components/schemas/mojo.lang.ObjectLiteralExpr"
+                }
+            }
+        }
+    ]
+}

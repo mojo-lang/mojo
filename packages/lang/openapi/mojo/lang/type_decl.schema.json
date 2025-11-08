@@ -1,0 +1,61 @@
+{
+    "title": "mojo.lang.TypeDecl",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Decl"
+        },
+        {
+            "title": "mojo.lang.TypeDecl",
+            "type": "object",
+            "properties": {
+                "attributes": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Attribute"
+                    }
+                },
+                "enclosing": {
+                    "$ref": "#/components/schemas/mojo.lang.NominalType"
+                },
+                "genericParameters": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.GenericParameter"
+                    }
+                },
+                "group": {
+                    "$ref": "#/components/schemas/mojo.lang.GroupDecl"
+                },
+                "name": {
+                    "title": "mojo.core.String",
+                    "description": "",
+                    "type": "string"
+                },
+                "namePosition": {
+                    "$ref": "#/components/schemas/mojo.lang.Position"
+                },
+                "resolvedIdentifiers": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Identifier"
+                    }
+                },
+                "unresolvedIdentifiers": {
+                    "title": "mojo.core.Array",
+                    "description": "unresolved identifiers in this file",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Identifier"
+                    }
+                }
+            }
+        }
+    ]
+}

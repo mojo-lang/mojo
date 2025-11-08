@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.DetachStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        }
+    ]
+}

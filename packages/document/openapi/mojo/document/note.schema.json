@@ -1,0 +1,8 @@
+{
+    "title": "mojo.document.Note",
+    "description": "footnote or endnote",
+    "type": "array",
+    "items": {
+        "$ref": "#/components/schemas/mojo.document.Block"
+    }
+}

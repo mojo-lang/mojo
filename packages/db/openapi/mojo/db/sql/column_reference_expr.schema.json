@@ -1,0 +1,30 @@
+{
+    "title": "mojo.db.sql.ColumnReferenceExpr",
+    "description": "Reference a column.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.ColumnReferenceExpr",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                },
+                "schemaName": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                },
+                "tableName": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ]
+        }
+    ]
+}

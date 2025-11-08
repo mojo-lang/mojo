@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/document/go/pkg/markdown"
-	"github.com/mojo-lang/http/go/pkg/mojo/http"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/document/go/pkg/markdown"
+	"github.com/mojo-lang/mojo/packages/http/go/pkg/mojo/http"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/openapi/go/pkg/mojo/openapi"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 	langcompiler "github.com/mojo-lang/mojo/go/pkg/mojo/compiler"

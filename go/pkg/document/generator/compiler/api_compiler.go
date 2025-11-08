@@ -3,10 +3,10 @@ package compiler
 import (
 	"net/http"
 
-	"github.com/mojo-lang/document/go/pkg/markdown"
-	"github.com/mojo-lang/document/go/pkg/mojo/document"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+	"github.com/mojo-lang/mojo/packages/document/go/pkg/markdown"
+	"github.com/mojo-lang/mojo/packages/document/go/pkg/mojo/document"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/openapi/go/pkg/mojo/openapi"
 
 	"github.com/mojo-lang/mojo/go/pkg/context"
 )
@@ -156,7 +156,6 @@ func (a *ApiCompiler) compilePathItem(ctx context.Context, path string, item *op
 // ## {{.Name}}
 //
 // {{.Description}}
-//
 //
 // ### 请求路径
 //

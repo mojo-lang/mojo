@@ -1,0 +1,13 @@
+{
+    "title": "mojo.openapi.SecurityRequirement",
+    "description": "Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the Security Schemes under the Components Object.\n\nSecurity Requirement Objects that contain multiple schemes require that all schemes MUST be satisfied for a request to be authorized. This enables support for scenarios where multiple query parameters or HTTP headers are required to convey security information.\n\nWhen a list of Security Requirement Objects is defined on the Open API object or Operation Object, only one of Security Requirement Objects in the list needs to be satisfied to authorize the request.\n\nEach name MUST correspond to a security scheme which is declared in the Security Schemes under the Components Object. If the security scheme is of type \"oauth2\" or \"openIdConnect\", then the value is a list of scope names required for the execution. For other security scheme types, the array MUST be empty.",
+    "type": "object",
+    "additionalProperties": {
+        "title": "mojo.core.Array",
+        "type": "array",
+        "items": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

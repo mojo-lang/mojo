@@ -1,0 +1,42 @@
+{
+    "title": "mojo.lang.EntityRelationSet",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "edges": {
+            "title": "mojo.core.Map",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.lang.EntityEdge"
+            }
+        },
+        "nodeEdges": {
+            "title": "mojo.core.Map",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.lang.EntityEdges"
+            }
+        },
+        "nodeRelations": {
+            "title": "mojo.core.Map",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.lang.EntityRelations"
+            }
+        },
+        "nodes": {
+            "title": "mojo.core.Map",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.lang.EntityNode"
+            }
+        },
+        "relations": {
+            "title": "mojo.core.Map",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.lang.EntityRelation"
+            }
+        }
+    }
+}

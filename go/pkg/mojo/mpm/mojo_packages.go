@@ -15,11 +15,11 @@ import (
 
 	"github.com/edwin-luijten/go_mod_parser"
 	"github.com/edwin-luijten/go_mod_parser/module"
-	"github.com/mojo-lang/core/go/pkg/logs"
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
-	"github.com/mojo-lang/geom/go/pkg/mojo/geom"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
-	"github.com/mojo-lang/rpc/go/pkg/mojo/rpc"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/geom/go/pkg/mojo/geom"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/rpc/go/pkg/mojo/rpc"
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
 
@@ -174,7 +174,7 @@ func parseGoMod(projectPath string) map[string]*mojoPackage {
 	}
 
 	parse := func(v *module.Version) *mojoPackage {
-		if !strings.HasPrefix(v.Path, "github.com/mojo-lang") {
+		if !strings.HasPrefix(v.Path, "github.com/mojo-lang/mojo/packages/") {
 			logs.Warnw("not mojo std package", "path", v.Path)
 			return nil
 		}

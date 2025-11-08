@@ -1,0 +1,21 @@
+{
+    "title": "mojo.lang.MatchStmt",
+    "description": "Match statement.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.BranchStmt"
+        },
+        {
+            "title": "mojo.lang.MatchStmt",
+            "type": "object",
+            "properties": {
+                "cases": {
+                    "$ref": "#/components/schemas/mojo.lang.MatchCase"
+                },
+                "subject": {
+                    "$ref": "#/components/schemas/mojo.lang.Expression"
+                }
+            }
+        }
+    ]
+}

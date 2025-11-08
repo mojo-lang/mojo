@@ -1,0 +1,9 @@
+{
+    "title": "mojo.geom.tile.PointTileSet",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.geom.tile.TileSet"
+        }
+    ]
+}

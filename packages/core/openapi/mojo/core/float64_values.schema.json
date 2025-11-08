@@ -1,0 +1,10 @@
+{
+    "title": "mojo.core.Float64Values",
+    "description": "Wrapper type for `Array\u003cFloat64\u003e`\n\nThe JSON representation for `Float64Values` is JSON number array.",
+    "type": "array",
+    "items": {
+        "title": "mojo.core.Float64",
+        "type": "number",
+        "format": "Float64"
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "title": "mojo.db.sql.Table",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.TableName"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.TableFunctionName"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.TableQuery"
+        }
+    ]
+}

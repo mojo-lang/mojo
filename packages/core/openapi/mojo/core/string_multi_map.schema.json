@@ -1,0 +1,13 @@
+{
+    "title": "mojo.core.StringMultiMap",
+    "description": "Wrapper type for `Map\u003cString, [String]\u003e`\n\nThe JSON representation for `StringValues` is JSON object.",
+    "type": "object",
+    "additionalProperties": {
+        "title": "mojo.core.Array",
+        "type": "array",
+        "items": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.ErrorExpr",
+    "description": "ErrorExpr - Represents a semantically erroneous subexpression in the AST,\ntypically this will have an ErrorType.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

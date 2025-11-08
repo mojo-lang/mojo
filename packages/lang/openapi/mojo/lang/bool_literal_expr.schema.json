@@ -1,0 +1,19 @@
+{
+    "title": "mojo.lang.BoolLiteralExpr",
+    "description": "A Boolean literal ('true' or 'false')\n",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        },
+        {
+            "title": "mojo.lang.BoolLiteralExpr",
+            "type": "object",
+            "properties": {
+                "value": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                }
+            }
+        }
+    ]
+}

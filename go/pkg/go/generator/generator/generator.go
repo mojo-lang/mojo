@@ -3,8 +3,8 @@ package generator
 import (
 	path2 "path"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
 
 	data2 "github.com/mojo-lang/mojo/go/pkg/go/generator/data"
 	"github.com/mojo-lang/mojo/go/pkg/util"
@@ -74,6 +74,15 @@ func (g *Generator) Generate(data *data2.Data) error {
 		err := g.generateDecl(decl, "sql", goDbJSONSqlFile)
 		if err != nil {
 			return err
+		}
+	}
+
+	for _, decl := range data.DbJSONs {
+		if len(decl.UnderlyingTypeName) > 0 {
+			err := g.generateDecl(decl, "json", goDbJSONJSONFile)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

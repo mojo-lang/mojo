@@ -1,0 +1,29 @@
+{
+    "title": "mojo.db.sql.RaiseFunctionExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.RaiseFunctionExpr",
+            "type": "object",
+            "properties": {
+                "action": {
+                    "title": "mojo.db.sql.RaiseFunctionExpr.Action",
+                    "type": "string",
+                    "enum": [
+                        "ignore",
+                        "rollback",
+                        "abort",
+                        "fail"
+                    ]
+                },
+                "errorMessage": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

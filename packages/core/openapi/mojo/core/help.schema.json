@@ -1,0 +1,15 @@
+{
+    "title": "mojo.core.Help",
+    "description": "Provides links to documentation or for performing an out of band action.\n\nFor example, if a quota check failed with an error indicating the calling\nproject hasn't enabled the accessed service, this can contain a URL pointing\ndirectly to the right place in the developer console to flip the bit.",
+    "type": "object",
+    "properties": {
+        "links": {
+            "title": "mojo.core.Array",
+            "description": "URL(s) pointing to additional information on handling the current error.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.Help.Link"
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "title": "mojo.core.Help.Link",
+    "description": "Describes a URL link.",
+    "type": "object",
+    "properties": {
+        "description": {
+            "title": "mojo.core.String",
+            "description": "Describes what the link offers.",
+            "type": "string"
+        },
+        "url": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        }
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "title": "mojo.db.sql.Join.Constraint",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "v": {
+            "title": "mojo.core.Int64",
+            "type": "integer",
+            "format": "Int64"
+        }
+    }
+}

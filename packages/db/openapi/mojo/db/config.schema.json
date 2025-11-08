@@ -1,0 +1,74 @@
+{
+    "title": "mojo.db.Config",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "connectionKeepAlive": {
+            "$ref": "#/components/schemas/mojo.core.Duration"
+        },
+        "debug": {
+            "title": "mojo.core.Bool",
+            "description": "debug mode, default is false",
+            "type": "boolean"
+        },
+        "defaultStringSize": {
+            "title": "mojo.core.UInt64",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        "disableAutoMigrate": {
+            "title": "mojo.core.Bool",
+            "description": "disable auto migration for the init the database",
+            "type": "boolean"
+        },
+        "driver": {
+            "title": "mojo.core.String",
+            "description": "the selected sql driver",
+            "type": "string"
+        },
+        "dsn": {
+            "title": "mojo.core.String",
+            "description": "DSN address, mysql://username:password@tcp(127.0.0.1:3306)/mysql?charset=utf8mb4\u0026collation=utf8mb4_general_ci\u0026parseTime=True\u0026loc=Local\u0026timeout=1s\u0026readTimeout=3s\u0026writeTimeout=3s",
+            "type": "string"
+        },
+        "enableDetailSql": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "enableLogAccess": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "enableLogAccessRequest": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "enableLogAccessResponse": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "enableMetric": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "enableTrace": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "maxIdleConnections": {
+            "title": "mojo.core.Int32",
+            "description": "max number of idle connections",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "maxOpenConnections": {
+            "title": "mojo.core.Int32",
+            "description": "max number of open connections",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "slowLogThreshold": {
+            "$ref": "#/components/schemas/mojo.core.Duration"
+        }
+    }
+}

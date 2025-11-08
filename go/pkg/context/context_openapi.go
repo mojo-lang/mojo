@@ -3,7 +3,7 @@ package context
 import (
 	"context"
 
-	"github.com/mojo-lang/openapi/go/pkg/mojo/openapi"
+	"github.com/mojo-lang/mojo/packages/openapi/go/pkg/mojo/openapi"
 )
 
 const OpenAPIKey = "@openapi"

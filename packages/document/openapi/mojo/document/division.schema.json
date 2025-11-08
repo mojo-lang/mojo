@@ -1,0 +1,17 @@
+{
+    "title": "mojo.document.Division",
+    "description": "Generic block container with attributes",
+    "type": "object",
+    "properties": {
+        "attribute": {
+            "$ref": "#/components/schemas/mojo.document.Attribute"
+        },
+        "content": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Block"
+            }
+        }
+    }
+}

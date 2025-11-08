@@ -1,0 +1,11 @@
+{
+    "title": "mojo.openapi.ReferenceableResponse",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.openapi.Reference"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.openapi.Response"
+        }
+    ]
+}

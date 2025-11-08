@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.AccessControlStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        }
+    ]
+}

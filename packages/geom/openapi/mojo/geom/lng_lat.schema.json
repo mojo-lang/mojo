@@ -1,0 +1,29 @@
+{
+    "title": "mojo.geom.LngLat",
+    "description": "经纬度",
+    "type": "object",
+    "properties": {
+        "altitude": {
+            "title": "mojo.core.Float64",
+            "description": "the altitude of the `LngLat` in meters.\n高度",
+            "type": "number",
+            "format": "Float64"
+        },
+        "latitude": {
+            "title": "mojo.core.Float64",
+            "description": "the latitude of the `LngLat`\n纬度",
+            "type": "number",
+            "format": "Float64"
+        },
+        "longitude": {
+            "title": "mojo.core.Float64",
+            "description": "the longitude of the `LngLat`\n经度",
+            "type": "number",
+            "format": "Float64"
+        }
+    },
+    "required": [
+        "longitude",
+        "latitude"
+    ]
+}

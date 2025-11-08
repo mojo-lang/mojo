@@ -3,7 +3,7 @@ package data
 import (
 	"strconv"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core/strcase"
 )
 
 var DigitEnglish = map[rune]string{
@@ -21,10 +21,11 @@ var DigitEnglish = map[rune]string{
 
 // EnglishNumber takes an integer and returns the english words that represents
 // that number, in base ten. Examples:
-//     1  -> "One"
-//     5  -> "Five"
-//     10 -> "OneZero"
-//     48 -> "FourEight"
+//
+//	1  -> "One"
+//	5  -> "Five"
+//	10 -> "OneZero"
+//	48 -> "FourEight"
 func EnglishNumber(i int) string {
 	n := strconv.Itoa(i)
 	rv := ""

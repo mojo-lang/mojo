@@ -1,0 +1,44 @@
+{
+    "title": "mojo.core.CodeModule",
+    "description": "Carries information about code modules that are loaded into a process.\nSee src/google_breakpad/processor/code_module.h",
+    "type": "object",
+    "properties": {
+        "baseAddress": {
+            "title": "mojo.core.Int64",
+            "description": "The base address of this code module as it was loaded by the process.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "codeFile": {
+            "title": "mojo.core.String",
+            "description": "The path or file name that the code module was loaded from.",
+            "type": "string"
+        },
+        "codeIdentifier": {
+            "title": "mojo.core.String",
+            "description": "An identifying string used to discriminate between multiple versions and\nbuilds of the same code module.  This may contain a uuid, timestamp,\nversion number, or any combination of this or other information, in an\nimplementation-defined format.",
+            "type": "string"
+        },
+        "debugFile": {
+            "title": "mojo.core.String",
+            "description": "The filename containing debugging information associated with the code\nmodule.  If debugging information is stored in a file separate from the\ncode module itself (as is the case when .pdb or .dSYM files are used),\nthis will be different from code_file.  If debugging information is\nstored in the code module itself (possibly prior to stripping), this\nwill be the same as code_file.",
+            "type": "string"
+        },
+        "debugIdentifier": {
+            "title": "mojo.core.String",
+            "description": "An identifying string similar to code_identifier, but identifies a\nspecific version and build of the associated debug file.  This may be\nthe same as code_identifier when the debug_file and code_file are\nidentical or when the same identifier is used to identify distinct\ndebug and code files.",
+            "type": "string"
+        },
+        "size": {
+            "title": "mojo.core.Int64",
+            "description": "The size of the code module.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "version": {
+            "title": "mojo.core.String",
+            "description": "A human-readable representation of the code module's version.",
+            "type": "string"
+        }
+    }
+}

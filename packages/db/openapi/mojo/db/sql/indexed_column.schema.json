@@ -1,0 +1,30 @@
+{
+    "title": "mojo.db.sql.IndexedColumn",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "collate": {
+            "$ref": "#/components/schemas/mojo.db.sql.CollateClause"
+        },
+        "name": {
+            "title": "mojo.core.Union",
+            "oneOf": [
+                {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                },
+                {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            ]
+        },
+        "order": {
+            "title": "mojo.db.sql.Order",
+            "type": "string",
+            "enum": [
+                "asc",
+                "desc"
+            ]
+        }
+    }
+}

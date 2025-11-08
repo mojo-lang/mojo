@@ -1,0 +1,17 @@
+{
+    "title": "mojo.core.QuotaFailure.Violation",
+    "description": "A type type used to describe a single quota violation.  For example, a\ndaily quota or a custom quota that was exceeded.",
+    "type": "object",
+    "properties": {
+        "description": {
+            "title": "mojo.core.String",
+            "description": "A description of how the quota check failed. Clients can use this\ndescription to find more about the quota configuration in the service's\npublic documentation, or find the relevant quota limit to adjust through\ndeveloper console.\n\nFor example: \"Service disabled\" or \"Daily Limit for read operations\nexceeded\".",
+            "type": "string"
+        },
+        "subject": {
+            "title": "mojo.core.String",
+            "description": "The subject on which the quota check failed.\nFor example, \"clientip:\u003cip address of client\u003e\" or \"project:\u003cGoogle\ndeveloper project id\u003e\".",
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "title": "mojo.db.sql.Ordering",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "collation": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "expression": {
+            "$ref": "#/components/schemas/mojo.db.sql.Expression"
+        },
+        "nullsFirst": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "nullsLast": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "order": {
+            "title": "mojo.db.sql.Order",
+            "type": "string",
+            "enum": [
+                "asc",
+                "desc"
+            ]
+        }
+    }
+}

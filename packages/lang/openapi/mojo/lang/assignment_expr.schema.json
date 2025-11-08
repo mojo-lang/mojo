@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.AssignmentExpr",
+    "description": "AssignExpr - A value assignment, like \"x = y\".",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.BinaryExpr"
+        }
+    ]
+}

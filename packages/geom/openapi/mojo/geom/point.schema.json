@@ -1,0 +1,29 @@
+{
+    "title": "mojo.geom.Point",
+    "description": "GeoJson Point\n\n",
+    "type": "object",
+    "properties": {
+        "coordinates": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.Float64",
+                "type": "number",
+                "format": "Float64"
+            },
+            "maxItems": 3,
+            "minItems": 2
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "type": "string",
+            "enum": [
+                "Point"
+            ]
+        }
+    },
+    "required": [
+        "type",
+        "coordinates"
+    ]
+}

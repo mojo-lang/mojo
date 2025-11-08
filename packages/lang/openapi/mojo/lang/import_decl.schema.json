@@ -1,0 +1,51 @@
+{
+    "title": "mojo.lang.ImportDecl",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Decl"
+        },
+        {
+            "title": "mojo.lang.ImportDecl",
+            "type": "object",
+            "properties": {
+                "attributes": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Attribute"
+                    }
+                },
+                "filter": {
+                    "title": "mojo.core.String",
+                    "description": "",
+                    "type": "string"
+                },
+                "identifiers": {
+                    "title": "mojo.core.Array",
+                    "description": "imported identifiers",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Identifier"
+                    }
+                },
+                "importFileName": {
+                    "title": "mojo.core.String",
+                    "description": "for some language, just import file not package",
+                    "type": "string"
+                },
+                "importPackageAlias": {
+                    "title": "mojo.core.String",
+                    "description": "alias for the imported package name",
+                    "type": "string"
+                },
+                "importPackageName": {
+                    "title": "mojo.core.String",
+                    "description": "imported package name",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

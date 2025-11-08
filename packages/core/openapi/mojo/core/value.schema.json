@@ -1,0 +1,41 @@
+{
+    "title": "mojo.core.Value",
+    "oneOf": [
+        {
+            "title": "mojo.core.Null",
+            "type": "null"
+        },
+        {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        {
+            "title": "mojo.core.Bytes",
+            "description": "the format is: `b64.{base64 encoded bytes}`",
+            "type": "string",
+            "format": "Bytes"
+        },
+        {
+            "title": "mojo.core.Int64",
+            "type": "integer",
+            "format": "Int64"
+        },
+        {
+            "title": "mojo.core.Float64",
+            "type": "number",
+            "format": "Float64"
+        },
+        {
+            "title": "mojo.core.Object",
+            "type": "object"
+        },
+        {
+            "title": "mojo.core.Values",
+            "type": "array"
+        }
+    ]
+}

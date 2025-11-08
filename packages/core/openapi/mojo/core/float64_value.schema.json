@@ -1,0 +1,6 @@
+{
+    "title": "mojo.core.Float64Value",
+    "description": "Wrapper type for the Generic T type\n\n实例化名称规格， TValue  TValues  TValuesMap",
+    "type": "number",
+    "format": "Float64"
+}

@@ -1,0 +1,53 @@
+{
+    "title": "mojo.http.Cookie",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "domain": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "expires": {
+            "$ref": "#/components/schemas/mojo.core.Timestamp"
+        },
+        "httpOnly": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "maxAge": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "path": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "sameSite": {
+            "title": "mojo.http.SameSite",
+            "type": "string",
+            "enum": [
+                "unsepecified",
+                "lax",
+                "strict",
+                "none"
+            ]
+        },
+        "secure": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "value": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "value"
+    ]
+}

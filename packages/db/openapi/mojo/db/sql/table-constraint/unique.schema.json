@@ -1,0 +1,17 @@
+{
+    "title": "mojo.db.sql.TableConstraint.Unique",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "columns": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.db.sql.IndexedColumn"
+            }
+        },
+        "conflict": {
+            "$ref": "#/components/schemas/mojo.db.sql.ConflictClause"
+        }
+    }
+}

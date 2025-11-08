@@ -1,0 +1,13 @@
+{
+    "title": "mojo.db.sql.CaseExpr.Branch",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "then": {
+            "$ref": "#/components/schemas/mojo.db.sql.Expression"
+        },
+        "when": {
+            "$ref": "#/components/schemas/mojo.db.sql.Expression"
+        }
+    }
+}

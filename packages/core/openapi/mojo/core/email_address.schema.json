@@ -1,0 +1,6 @@
+{
+    "title": "mojo.core.EmailAddress",
+    "description": "An email address identifies an email box to which email messages are delivered.\n\nThe general format of an email address is local-part@domain,\nand a specific example is jsmith@example.com. An address consists of two parts.\nThe part before the @ symbol (local-part) identifies the name of a mailbox.\nThis is often the username of the recipient, e.g., jsmith.\nThe part after the @ symbol (domain) is a domain name that represents the administrative realm for the mail box,\ne.g., a company's domain name, example.com.\n",
+    "type": "string",
+    "format": "EmailAddress"
+}

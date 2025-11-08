@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.LiteralExpr",
+    "description": "LiteralExpr - Common base type between the literals.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

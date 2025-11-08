@@ -1,0 +1,33 @@
+{
+    "title": "mojo.document.ListAttribute",
+    "description": "List attributes.",
+    "type": "object",
+    "properties": {
+        "beginNumber": {
+            "title": "mojo.core.Int64",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "numberDelimiter": {
+            "title": "mojo.document.ListAttribute.NumberDelimiter",
+            "type": "string",
+            "enum": [
+                "period",
+                "one-parent",
+                "two-parents"
+            ]
+        },
+        "numberStyle": {
+            "title": "mojo.document.ListAttribute.NumberStyle",
+            "type": "string",
+            "enum": [
+                "example",
+                "decimal",
+                "lower-roman",
+                "upper-roman",
+                "lower-alpha",
+                "upper-alpha"
+            ]
+        }
+    }
+}

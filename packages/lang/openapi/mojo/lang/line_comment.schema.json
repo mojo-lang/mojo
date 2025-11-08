@@ -1,0 +1,23 @@
+{
+    "title": "mojo.lang.LineComment",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "content": {
+            "title": "mojo.core.String",
+            "description": "the content of the line comment",
+            "type": "string"
+        },
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "following": {
+            "title": "mojo.core.Bool",
+            "description": "following after the decl, but not at the beginning of the line",
+            "type": "boolean"
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        }
+    }
+}

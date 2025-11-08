@@ -1,0 +1,22 @@
+{
+    "title": "mojo.db.sql.TriggerName",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "alias": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "schemaName": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    },
+    "required": [
+        "name"
+    ]
+}

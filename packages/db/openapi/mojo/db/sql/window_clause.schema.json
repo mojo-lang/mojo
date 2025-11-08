@@ -1,0 +1,22 @@
+{
+    "title": "mojo.db.sql.WindowClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.WindowClause",
+            "type": "object",
+            "properties": {
+                "windows": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.db.sql.Window"
+                    }
+                }
+            }
+        }
+    ]
+}

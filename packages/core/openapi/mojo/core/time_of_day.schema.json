@@ -1,0 +1,27 @@
+{
+    "title": "mojo.core.TimeOfDay",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "hours": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "minutes": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "nanos": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "seconds": {
+            "title": "mojo.core.Int32",
+            "type": "integer",
+            "format": "Int32"
+        }
+    }
+}

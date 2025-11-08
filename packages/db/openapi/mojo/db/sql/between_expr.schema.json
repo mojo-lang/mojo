@@ -1,0 +1,28 @@
+{
+    "title": "mojo.db.sql.BetweenExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Predicate"
+        },
+        {
+            "title": "mojo.db.sql.BetweenExpr",
+            "type": "object",
+            "properties": {
+                "from": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                },
+                "not": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "target": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                },
+                "to": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "title": "mojo.core.ResourceInfo",
+    "description": "Describes the resource that is being accessed.",
+    "type": "object",
+    "properties": {
+        "description": {
+            "title": "mojo.core.String",
+            "description": "Describes what error is encountered when accessing this resource.\nFor example, updating a cloud project may require the `writer` permission\non the developer console project.",
+            "type": "string"
+        },
+        "owner": {
+            "title": "mojo.core.String",
+            "description": "The owner of the resource (optional).\nFor example, \"user:\u003cowner email\u003e\" or \"project:\u003cGoogle developer project\nid\u003e\".",
+            "type": "string"
+        },
+        "resourceName": {
+            "title": "mojo.core.String",
+            "description": "The name of the resource being accessed.  For example, a shared calendar\nname: \"example.com_4fghdhgsrgh@group.calendar.google.com\", if the current\nerror is [google.rpc.Code.PERMISSION_DENIED][google.rpc.Code.PERMISSION_DENIED].",
+            "type": "string"
+        },
+        "resourceType": {
+            "title": "mojo.core.String",
+            "description": "A name for the type of resource being accessed, e.g. \"sql table\",\n\"cloud storage bucket\", \"file\", \"Google calendar\"; or the type URL\nof the resource: e.g. \"type.googleapis.com/google.pubsub.v1.Topic\".",
+            "type": "string"
+        }
+    }
+}

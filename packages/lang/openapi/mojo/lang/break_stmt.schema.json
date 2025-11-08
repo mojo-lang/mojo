@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.BreakStmt",
+    "description": "BreakStmt - The \"break\" statement.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.ControlTransferStmt"
+        }
+    ]
+}

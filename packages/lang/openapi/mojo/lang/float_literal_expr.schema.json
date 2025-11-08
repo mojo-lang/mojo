@@ -1,0 +1,38 @@
+{
+    "title": "mojo.lang.FloatLiteralExpr",
+    "description": "FloatLiteralExpr - Floating point literal, like '4.0'.  After semantic\nanalysis assigns types, this is guaranteed to only have a\nBuiltinFloatingPointType.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.NumericLiteralExpr"
+        },
+        {
+            "title": "mojo.lang.FloatLiteralExpr",
+            "type": "object",
+            "properties": {
+                "exponentPart": {
+                    "title": "mojo.core.Int64",
+                    "description": "the exponent part of the floating number",
+                    "type": "integer",
+                    "format": "Int64"
+                },
+                "fractionalPart": {
+                    "title": "mojo.core.Int64",
+                    "description": "the fraction part of the floating number",
+                    "type": "integer",
+                    "format": "Int64"
+                },
+                "integralPart": {
+                    "title": "mojo.core.Int64",
+                    "description": "the integer part of the floating number",
+                    "type": "integer",
+                    "format": "Int64"
+                },
+                "value": {
+                    "title": "mojo.core.Float64",
+                    "type": "number",
+                    "format": "Float64"
+                }
+            }
+        }
+    ]
+}

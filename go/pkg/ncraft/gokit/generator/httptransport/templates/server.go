@@ -115,12 +115,12 @@ import (
 	"github.com/pkg/errors"
 
 	httptransport "github.com/go-kit/kit/transport/http"
-	pagination "github.com/ncraft-io/ncraft-gokit/pkg/pagination"
-	nhttp "github.com/ncraft-io/ncraft-gokit/pkg/transport/http"
+	pagination "github.com/ncraft-io/ncraft/gokit//pkg/pagination"
+	nhttp "github.com/ncraft-io/ncraft/gokit//pkg/transport/http"
 	stdopentracing "github.com/opentracing/opentracing-go"
-    mjhttp "github.com/mojo-lang/http/go/pkg/mojo/http"
+    mjhttp "github.com/mojo-lang/mojo/packages/http/go/pkg/mojo/http"
 
-    {{$corePackage := "github.com/mojo-lang/core/go/pkg/mojo/core"}}
+    {{$corePackage := "github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"}}
     "{{$corePackage}}"
     {{range $i := .Go.ImportedTypePaths}}
 	{{if ne $i $corePackage}}"{{$i}}"{{end}}
@@ -394,6 +394,22 @@ func headersToContext(ctx context.Context, r *http.Request) context.Context {
 	accessKey := r.URL.Query().Get("access_key")
 	if len(accessKey) > 0{
 		ctx = context.WithValue(ctx, "access_key", accessKey)
+	}
+
+	// Authorization header
+	if auth := r.Header.Get("Authorization"); len(auth) > 0 {
+		if strings.HasPrefix(auth, "Bearer") {
+			auth = strings.TrimSpace(strings.TrimPrefix(auth, "Bearer"))
+			ctx = context.WithValue(ctx, "bearer_token", auth)
+		} else if strings.HasPrefix(auth, "Basic") {
+			auth = strings.TrimSpace(strings.TrimPrefix(auth, "Basic"))
+			ctx = context.WithValue(ctx, "basic_token", auth)
+		}
+	}
+
+	// Authorization cookie
+	if cookie, err := r.Cookie("auth_token"); err == nil && cookie != nil {
+		ctx = context.WithValue(ctx, "auth_token", cookie.Value)
 	}
 
 	// Tune specific change.

@@ -1,0 +1,29 @@
+{
+    "title": "mojo.db.sql.CaseExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.ValueExpr"
+        },
+        {
+            "title": "mojo.db.sql.CaseExpr",
+            "type": "object",
+            "properties": {
+                "branches": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.db.sql.CaseExpr.Branch"
+                    },
+                    "minItems": 1
+                },
+                "condition": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                },
+                "else": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

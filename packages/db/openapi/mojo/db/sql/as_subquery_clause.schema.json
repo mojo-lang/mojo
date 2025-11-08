@@ -1,0 +1,18 @@
+{
+    "title": "mojo.db.sql.AsSubqueryClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.AsSubqueryClause",
+            "type": "object",
+            "properties": {
+                "subquery": {
+                    "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+                }
+            }
+        }
+    ]
+}

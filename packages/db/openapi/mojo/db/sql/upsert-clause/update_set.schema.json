@@ -1,0 +1,17 @@
+{
+    "title": "mojo.db.sql.UpsertClause.UpdateSet",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "assignments": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.db.sql.ColumnAssignment"
+            }
+        },
+        "where": {
+            "$ref": "#/components/schemas/mojo.db.sql.WhereClause"
+        }
+    }
+}

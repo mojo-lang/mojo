@@ -1,0 +1,18 @@
+{
+    "title": "mojo.lang.MapLiteralExpr.Entry",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "key": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "numeric": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "value": {
+            "$ref": "#/components/schemas/mojo.lang.Expression"
+        }
+    }
+}

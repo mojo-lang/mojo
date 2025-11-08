@@ -1,0 +1,18 @@
+{
+    "title": "mojo.http.MultipartFormData",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "boundary": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "parts": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.http.FormDataContent"
+            }
+        }
+    }
+}

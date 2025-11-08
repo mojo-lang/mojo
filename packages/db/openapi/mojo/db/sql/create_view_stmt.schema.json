@@ -1,0 +1,36 @@
+{
+    "title": "mojo.db.sql.CreateViewStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CreateStmt"
+        },
+        {
+            "title": "mojo.db.sql.CreateViewStmt",
+            "type": "object",
+            "properties": {
+                "columns": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "title": "mojo.core.String",
+                        "type": "string"
+                    }
+                },
+                "ifNotExists": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "query": {
+                    "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+                },
+                "viewName": {
+                    "$ref": "#/components/schemas/mojo.db.sql.ViewName"
+                }
+            },
+            "required": [
+                "query"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "title": "mojo.core.Domain",
+    "description": "Domain name type\n\nFor example, when naming a mail domain, the user should satisfy both the\nrules of this memo and those in RFC-822.  When creating a new host name,\nthe old rules for HOSTS.TXT should be followed.  This avoids problems\nwhen old software is converted to use domain names.\n\nThe following syntax will result in fewer problems with many\n\napplications that use domain names (e.g., mail, TELNET).\n\n```\n\u003cdomain\u003e ::= \u003csubdomain\u003e | \" \"\n\u003csubdomain\u003e ::= \u003clabel\u003e | \u003csubdomain\u003e \".\" \u003clabel\u003e\n\u003clabel\u003e ::= \u003cletter\u003e [ [ \u003cldh-str\u003e ] \u003clet-dig\u003e ]\n\u003cldh-str\u003e ::= \u003clet-dig-hyp\u003e | \u003clet-dig-hyp\u003e \u003cldh-str\u003e\n\u003clet-dig-hyp\u003e ::= \u003clet-dig\u003e | \"-\"\n\u003clet-dig\u003e ::= \u003cletter\u003e | \u003cdigit\u003e\n\u003cletter\u003e ::= any one of the 52 alphabetic characters A through Z in\nupper case and a through z in lower case\n\u003cdigit\u003e ::= any one of the ten digits 0 through 9\n```",
+    "type": "object",
+    "properties": {
+        "labels": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        }
+    }
+}

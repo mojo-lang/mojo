@@ -1,0 +1,21 @@
+{
+    "title": "mojo.openapi.Reference",
+    "description": "A simple object to allow referencing other components in the specification, internally and externally.\n\nThe Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.\n\nFor this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification.",
+    "type": "object",
+    "properties": {
+        "description": {
+            "$ref": "#/components/schemas/mojo.openapi.CachedDocument"
+        },
+        "ref": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        },
+        "summary": {
+            "title": "mojo.core.String",
+            "description": "A short summary which by default SHOULD override that of the referenced component. If the referenced object-type does not allow a summary field, then this field has no effect.",
+            "type": "string"
+        }
+    },
+    "required": [
+        "ref"
+    ]
+}

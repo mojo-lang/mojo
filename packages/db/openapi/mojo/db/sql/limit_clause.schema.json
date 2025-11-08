@@ -1,0 +1,32 @@
+{
+    "title": "mojo.db.sql.LimitClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.LimitClause",
+            "type": "object",
+            "properties": {
+                "offset": {
+                    "title": "mojo.core.Union",
+                    "oneOf": [
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                        },
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.OffsetClause"
+                        }
+                    ]
+                },
+                "rows": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            },
+            "required": [
+                "rows"
+            ]
+        }
+    ]
+}

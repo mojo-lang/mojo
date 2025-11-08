@@ -1,0 +1,97 @@
+{
+    "title": "mojo.geom.tile.PointTile",
+    "description": "for compressed pured point tile.",
+    "type": "object",
+    "properties": {
+        "id": {
+            "title": "mojo.core.String",
+            "description": "tile quad-key",
+            "type": "string"
+        },
+        "ids": {
+            "title": "mojo.core.Array",
+            "description": "for string ids, using keys or md5(string id)",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.UInt64",
+                "type": "integer",
+                "format": "UInt64"
+            }
+        },
+        "keys": {
+            "title": "mojo.core.Array",
+            "description": "Dictionary encoding for keys",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "properties": {
+            "title": "mojo.core.Map",
+            "description": "the properties for this tile",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.geom.tile.VectorTile.Value"
+            }
+        },
+        "rawValues": {
+            "title": "mojo.core.Array",
+            "description": "attribute index for which value is raw integer",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.Int32",
+                "type": "integer",
+                "format": "Int32"
+            }
+        },
+        "tags": {
+            "title": "mojo.core.Array",
+            "description": "Tags of this feature are encoded as repeated pairs of\nintegers.",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.UInt32",
+                "type": "integer",
+                "format": "UInt32"
+            }
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "description": "the point data type\nthe user defined point data type",
+            "type": "string"
+        },
+        "values": {
+            "title": "mojo.core.Array",
+            "description": "Dictionary encoding for values",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.geom.tile.VectorTile.Value"
+            }
+        },
+        "version": {
+            "title": "mojo.core.Int32",
+            "description": "the version of the point tile specification",
+            "type": "integer",
+            "format": "Int32"
+        },
+        "xs": {
+            "title": "mojo.core.Array",
+            "description": "the coordinates for the point, using E7 of the latitude \u0026 longitude",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.Int32",
+                "type": "integer",
+                "format": "Int32"
+            }
+        },
+        "ys": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.Int32",
+                "type": "integer",
+                "format": "Int32"
+            }
+        }
+    }
+}

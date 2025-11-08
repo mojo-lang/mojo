@@ -1,0 +1,31 @@
+{
+    "title": "mojo.lang.FunctionCallExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.ApplyExpr"
+        },
+        {
+            "title": "mojo.lang.FunctionCallExpr",
+            "type": "object",
+            "properties": {
+                "arguments": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Argument"
+                    }
+                },
+                "genericArguments": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.NominalType"
+                    }
+                }
+            }
+        }
+    ]
+}

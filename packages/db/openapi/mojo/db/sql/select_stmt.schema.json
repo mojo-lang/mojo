@@ -1,0 +1,53 @@
+{
+    "title": "mojo.db.sql.SelectStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.DataManipulationStmt"
+        },
+        {
+            "title": "mojo.db.sql.SelectStmt",
+            "type": "object",
+            "properties": {
+                "from": {
+                    "$ref": "#/components/schemas/mojo.db.sql.FromClause"
+                },
+                "groupBy": {
+                    "$ref": "#/components/schemas/mojo.db.sql.GroupByClause"
+                },
+                "having": {
+                    "$ref": "#/components/schemas/mojo.db.sql.HavingClause"
+                },
+                "limit": {
+                    "$ref": "#/components/schemas/mojo.db.sql.LimitClause"
+                },
+                "orderBy": {
+                    "$ref": "#/components/schemas/mojo.db.sql.OrderByClause"
+                },
+                "select": {
+                    "title": "mojo.core.Union",
+                    "oneOf": [
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.SelectClause"
+                        },
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.CompoundSelect"
+                        }
+                    ]
+                },
+                "values": {
+                    "$ref": "#/components/schemas/mojo.db.sql.ValuesClause"
+                },
+                "where": {
+                    "$ref": "#/components/schemas/mojo.db.sql.WhereClause"
+                },
+                "with": {
+                    "$ref": "#/components/schemas/mojo.db.sql.WithClause"
+                }
+            },
+            "required": [
+                "from"
+            ]
+        }
+    ]
+}

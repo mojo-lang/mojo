@@ -1,0 +1,18 @@
+{
+    "title": "mojo.db.sql.ParenthesizedExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.ParenthesizedExpr",
+            "type": "object",
+            "properties": {
+                "expression": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

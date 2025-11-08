@@ -1,0 +1,30 @@
+{
+    "title": "mojo.openapi.OAuthFlow",
+    "description": "Configuration details for a supported OAuth Flow",
+    "type": "object",
+    "properties": {
+        "authorizationUrl": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        },
+        "refreshUrl": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        },
+        "scopes": {
+            "title": "mojo.core.Map",
+            "description": "The available scopes for the OAuth2 security scheme.\nA map between the scope name and a short description for it.",
+            "type": "object",
+            "additionalProperties": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "tokenUrl": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        }
+    },
+    "required": [
+        "authorizationUrl",
+        "tokenUrl",
+        "scopes"
+    ]
+}

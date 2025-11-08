@@ -1,0 +1,14 @@
+{
+    "title": "mojo.document.Target",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "title": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "url": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "title": "mojo.http.FormDataContent.Disposition",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "fileName": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "value": {
+            "title": "mojo.core.String",
+            "description": "default is form-data",
+            "type": "string"
+        }
+    }
+}

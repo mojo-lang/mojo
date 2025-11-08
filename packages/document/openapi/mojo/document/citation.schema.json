@@ -1,0 +1,44 @@
+{
+    "title": "mojo.document.Citation",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "hash": {
+            "title": "mojo.core.Int64",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "id": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "mode": {
+            "title": "mojo.document.Citation.Mode",
+            "type": "string",
+            "enum": [
+                "normal",
+                "author-in-text",
+                "suppress-author"
+            ]
+        },
+        "noteCount": {
+            "title": "mojo.core.Int64",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "prefix": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Inline"
+            }
+        },
+        "suffix": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Inline"
+            }
+        }
+    }
+}

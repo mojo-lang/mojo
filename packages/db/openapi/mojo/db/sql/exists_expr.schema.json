@@ -1,0 +1,26 @@
+{
+    "title": "mojo.db.sql.ExistsExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.ExistsExpr",
+            "type": "object",
+            "properties": {
+                "exists": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "not": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "subquery": {
+                    "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+                }
+            }
+        }
+    ]
+}

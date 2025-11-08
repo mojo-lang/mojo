@@ -1,0 +1,22 @@
+{
+    "title": "mojo.lang.ArrayLiteralExpr",
+    "description": "An array literal expression [a, b, c].",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.LiteralExpr"
+        },
+        {
+            "title": "mojo.lang.ArrayLiteralExpr",
+            "type": "object",
+            "properties": {
+                "elements": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Expression"
+                    }
+                }
+            }
+        }
+    ]
+}

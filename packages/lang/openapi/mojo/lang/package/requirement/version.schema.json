@@ -1,0 +1,20 @@
+{
+    "title": "mojo.lang.Package.Requirement.Version",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "range": {
+            "$ref": "#/components/schemas/mojo.core.VersionRange"
+        },
+        "type": {
+            "title": "mojo.lang.Package.Requirement.Version.Type",
+            "type": "string",
+            "enum": [
+                "caret",
+                "tilde",
+                "wildcard",
+                "comparison"
+            ]
+        }
+    }
+}

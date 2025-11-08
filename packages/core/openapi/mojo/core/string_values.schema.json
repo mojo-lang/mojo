@@ -1,0 +1,9 @@
+{
+    "title": "mojo.core.StringValues",
+    "description": "Wrapper type for `Array\u003cString\u003e`\n\nThe JSON representation for `StringValues` is JSON string array.",
+    "type": "array",
+    "items": {
+        "title": "mojo.core.String",
+        "type": "string"
+    }
+}

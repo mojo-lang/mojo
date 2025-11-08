@@ -1,0 +1,30 @@
+{
+    "title": "mojo.db.sql.SelectClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.SelectClause",
+            "type": "object",
+            "properties": {
+                "columns": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.db.sql.Column"
+                    }
+                },
+                "quantifier": {
+                    "title": "mojo.db.sql.DataSetQuantifier",
+                    "type": "string",
+                    "enum": [
+                        "distinct",
+                        "all"
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "title": "mojo.core.TemplateString.Segment",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "content": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "templated": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        }
+    }
+}

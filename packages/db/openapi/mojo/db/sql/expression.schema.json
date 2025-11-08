@@ -1,0 +1,86 @@
+{
+    "title": "mojo.db.sql.Expression",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.NullLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.BooleanLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.IntegerLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.FloatLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.StringLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.BinaryStringLiteralExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.IdentifierExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.BindParameterExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.ColumnReferenceExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.UnaryExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.BinaryExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.BetweenExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.InExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CaseExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.CastExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.FunctionCallExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.ExistsExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.IsExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.GlobExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.LikeExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.MatchExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.RegexpExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.NullExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.RaiseFunctionExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.SubqueryExpr"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Expressions"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.ParenthesizedExpr"
+        }
+    ]
+}

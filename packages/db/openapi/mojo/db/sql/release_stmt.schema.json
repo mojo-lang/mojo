@@ -1,0 +1,9 @@
+{
+    "title": "mojo.db.sql.ReleaseStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        }
+    ]
+}

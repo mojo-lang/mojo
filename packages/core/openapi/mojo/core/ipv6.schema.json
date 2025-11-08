@@ -1,0 +1,6 @@
+{
+    "title": "mojo.core.IPv6",
+    "description": "",
+    "type": "integer",
+    "format": "UInt64"
+}

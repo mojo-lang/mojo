@@ -1,0 +1,37 @@
+{
+    "title": "mojo.rpc.AttributeContext.Peer",
+    "description": "This type defines attributes for a node that handles a network request.\nThe node can be either a service or an application that sends, forwards,\nor receives the request. Service peers should fill in\n`principal` and `labels` as appropriate.",
+    "type": "object",
+    "properties": {
+        "ip": {
+            "title": "mojo.core.String",
+            "description": "The IP address of the peer.",
+            "type": "string"
+        },
+        "labels": {
+            "title": "mojo.core.Map",
+            "description": "The labels associated with the peer.",
+            "type": "object",
+            "additionalProperties": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "port": {
+            "title": "mojo.core.Int64",
+            "description": "The network port of the peer.",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "principal": {
+            "title": "mojo.core.String",
+            "description": "The identity of this peer. Similar to `Request.auth.principal`, but\nrelative to the peer instead of the request. For example, the\nidenity associated with a load balancer that forwared the request.",
+            "type": "string"
+        },
+        "regionCode": {
+            "title": "mojo.core.String",
+            "description": "The CLDR country/region code associated with the above IP address.\nIf the IP address is private, the `region_code` should reflect the\nphysical location where this peer is running.",
+            "type": "string"
+        }
+    }
+}

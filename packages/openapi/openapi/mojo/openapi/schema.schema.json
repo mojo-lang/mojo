@@ -1,0 +1,179 @@
+{
+    "title": "mojo.openapi.Schema",
+    "description": "The Schema Object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. This object is an extended subset of the JSON Schema Specification Wright Draft 00.\n\nFor more information about the properties, see JSON Schema Core and JSON Schema Validation. Unless stated otherwise, the property definitions follow the JSON Schema.",
+    "type": "object",
+    "properties": {
+        "additionalProperties": {
+            "$ref": "#/components/schemas/mojo.openapi.ReferenceableSchema"
+        },
+        "allOf": {
+            "title": "mojo.core.Array",
+            "description": "Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.\nvalidates the value against all the sub-schemas",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.openapi.ReferenceableSchema"
+            }
+        },
+        "anyOf": {
+            "title": "mojo.core.Array",
+            "description": "validates the value against any (one or more) of the sub-schemas",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.openapi.ReferenceableSchema"
+            }
+        },
+        "default": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        },
+        "deprecated": {
+            "title": "mojo.core.Bool",
+            "description": "Specifies that a schema is deprecated and SHOULD be transitioned out of usage. Default value is false.",
+            "type": "boolean"
+        },
+        "description": {
+            "$ref": "#/components/schemas/mojo.openapi.CachedDocument"
+        },
+        "discriminator": {
+            "$ref": "#/components/schemas/mojo.openapi.Discriminator"
+        },
+        "enum": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.Value"
+            }
+        },
+        "example": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        },
+        "exclusiveMaximum": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        },
+        "exclusiveMinimum": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        },
+        "externalDocs": {
+            "$ref": "#/components/schemas/mojo.openapi.ExternalDocument"
+        },
+        "format": {
+            "title": "mojo.core.String",
+            "description": "format is an open string-valued property,\nand can have any value. Formats such as \"Email\", \"Uuid\", and so on,\nMAY be used even though undefined by this specification.\nTypes that are not accompanied by a format property follow the type definition in the JSON Schema.\nTools that do not recognize a specific format MAY default back to the type alone, as if the format is not specified.",
+            "type": "string"
+        },
+        "items": {
+            "$ref": "#/components/schemas/mojo.openapi.ReferenceableSchema"
+        },
+        "maxItems": {
+            "title": "mojo.core.UInt64",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        "maxLength": {
+            "title": "mojo.core.UInt64",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        "maxProperties": {
+            "title": "mojo.core.UInt64",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        "maximum": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        },
+        "minItems": {
+            "title": "mojo.core.UInt64",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        "minLength": {
+            "title": "mojo.core.UInt64",
+            "description": "A string instance is valid against this keyword if its length is greater than, or equal to, the value of this keyword.\nThe length of a string instance is defined as the number of its characters as defined by RFC 7159.\nOmitting this keyword has the same behavior as a value of 0.",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        "minProperties": {
+            "title": "mojo.core.UInt64",
+            "type": "integer",
+            "format": "UInt64"
+        },
+        "minimum": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        },
+        "multipleOf": {
+            "title": "mojo.core.Float64",
+            "description": "The value of \"multipleOf\" MUST be a number, strictly greater than 0.\n\nA numeric instance is valid only if division by this keyword's value results in an integer.\n\nThe `multiple_of` will be less than 1, when the numeric has a fixed decimals.\nFor example, `multiple_of` will be `0.01`, when the numeric need to hold two decimals, and any greater precision will be rejected.",
+            "type": "number",
+            "format": "Float64"
+        },
+        "not": {
+            "$ref": "#/components/schemas/mojo.openapi.ReferenceableSchema"
+        },
+        "nullable": {
+            "title": "mojo.core.Bool",
+            "description": "Allows sending a null value for the defined schema. Default value is false.",
+            "type": "boolean"
+        },
+        "oneOf": {
+            "title": "mojo.core.Array",
+            "description": "validates the value against exactly one of the sub-schemas",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.openapi.ReferenceableSchema"
+            }
+        },
+        "pattern": {
+            "$ref": "#/components/schemas/mojo.core.Regex"
+        },
+        "properties": {
+            "title": "mojo.core.Map",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.ReferenceableSchema"
+            }
+        },
+        "readOnly": {
+            "title": "mojo.core.Bool",
+            "description": "Relevant only for Schema \"properties\" definitions. Declares the property as \"read only\". This means that it MAY be sent as part of a response but SHOULD NOT be sent as part of the request. If the property is marked as readOnly being true and is in the required list, the required will take effect on the response only. A property MUST NOT be marked as both readOnly and writeOnly being true. Default value is false.",
+            "type": "boolean"
+        },
+        "required": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "title": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "type": {
+            "title": "mojo.openapi.Schema.Type",
+            "description": "Value MUST be a string. Multiple types via an array are not supported.",
+            "type": "string",
+            "enum": [
+                "null",
+                "boolean",
+                "integer",
+                "number",
+                "string",
+                "array",
+                "object"
+            ]
+        },
+        "uniqueItems": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "writeOnly": {
+            "title": "mojo.core.Bool",
+            "description": "Relevant only for Schema \"properties\" definitions. Declares the property as \"write only\". Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response. If the property is marked as writeOnly being true and is in the required list, the required will take effect on the request only. A property MUST NOT be marked as both readOnly and writeOnly being true. Default value is false.",
+            "type": "boolean"
+        },
+        "xml": {
+            "$ref": "#/components/schemas/mojo.openapi.Xml"
+        }
+    }
+}

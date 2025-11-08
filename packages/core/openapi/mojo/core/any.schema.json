@@ -1,0 +1,14 @@
+{
+    "title": "mojo.core.Any",
+    "description": "Any Object\n\n`Any` contains an arbitrary serialized message along with a URL that describes the type of the serialized message.\n",
+    "type": "object",
+    "properties": {
+        "@type": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    },
+    "required": [
+        "@type"
+    ]
+}

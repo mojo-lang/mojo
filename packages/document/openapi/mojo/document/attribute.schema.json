@@ -1,0 +1,29 @@
+{
+    "title": "mojo.document.Attribute",
+    "description": "Attributes: identifier, classes, key-value pairs\n",
+    "type": "object",
+    "properties": {
+        "classes": {
+            "title": "mojo.core.Array",
+            "description": "",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        },
+        "identifier": {
+            "title": "mojo.core.String",
+            "description": "",
+            "type": "string"
+        },
+        "properties": {
+            "title": "mojo.core.Map",
+            "description": "",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.core.Value"
+            }
+        }
+    }
+}

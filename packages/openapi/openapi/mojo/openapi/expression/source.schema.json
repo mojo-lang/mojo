@@ -1,0 +1,25 @@
+{
+    "title": "mojo.openapi.Expression.Source",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "location": {
+            "title": "mojo.openapi.Expression.Location",
+            "type": "string",
+            "enum": [
+                "path",
+                "query",
+                "header",
+                "body"
+            ]
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "path": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "title": "mojo.db.sql.NullExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.NullExpr",
+            "type": "object",
+            "properties": {
+                "argument": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                },
+                "operator": {
+                    "title": "mojo.db.sql.NullExpr.Operator",
+                    "type": "string",
+                    "enum": [
+                        "is_null",
+                        "not_null"
+                    ]
+                },
+                "operatorSymbol": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

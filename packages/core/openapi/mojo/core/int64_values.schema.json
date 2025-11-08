@@ -1,0 +1,10 @@
+{
+    "title": "mojo.core.Int64Values",
+    "description": "Wrapper type for `Array\u003cInt64\u003e`\n\nThe JSON representation for `Int64s` is JSON number array.",
+    "type": "array",
+    "items": {
+        "title": "mojo.core.Int64",
+        "type": "integer",
+        "format": "Int64"
+    }
+}

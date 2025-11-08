@@ -1,0 +1,28 @@
+{
+    "title": "mojo.db.sql.TableConstraint",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "constraint": {
+            "title": "mojo.core.Union",
+            "oneOf": [
+                {
+                    "$ref": "#/components/schemas/mojo.db.sql.TableConstraint.PrimaryKey"
+                },
+                {
+                    "$ref": "#/components/schemas/mojo.db.sql.TableConstraint.Unique"
+                },
+                {
+                    "$ref": "#/components/schemas/mojo.db.sql.TableConstraint.ForeignKey"
+                },
+                {
+                    "$ref": "#/components/schemas/mojo.db.sql.CheckClause"
+                }
+            ]
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

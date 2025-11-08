@@ -1,0 +1,21 @@
+{
+    "title": "mojo.lang.Argument",
+    "description": "argument like in function call like expressions",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "label": {
+            "title": "mojo.core.String",
+            "description": "",
+            "type": "string"
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "value": {
+            "$ref": "#/components/schemas/mojo.lang.Expression"
+        }
+    }
+}

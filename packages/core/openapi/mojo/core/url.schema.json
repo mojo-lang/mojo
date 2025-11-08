@@ -1,0 +1,6 @@
+{
+    "title": "mojo.core.Url",
+    "description": "URl type\n\nUniform Resource Identifier (URI) is a string of characters used to identify a resource.\n\nA Uniform Resource Name (URN) may be compared to a person's name,\nwhile a Uniform Resource Locator (URL) may be compared to their street address.\nIn other words, a URN identifies an item and a URL provides a method for finding it.\n\nhttps://tools.ietf.org/html/rfc3986\n\n",
+    "type": "string",
+    "format": "Url"
+}

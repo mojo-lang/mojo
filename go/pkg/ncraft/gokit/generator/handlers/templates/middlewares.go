@@ -4,7 +4,7 @@ const Middlewares = `
 package handlers
 
 import (
-	"github.com/ncraft-io/ncraft-gokit/pkg/middleware"
+	"github.com/ncraft-io/ncraft/gokit//pkg/middleware"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/go-kit/kit/tracing/opentracing"
 	stdopentracing "github.com/opentracing/opentracing-go"
@@ -73,6 +73,7 @@ func WrapEndpoints(in svc.Endpoints, options map[string]interface{}) svc.Endpoin
 		if count != nil && latency != nil {
 			in.{{ToCamel $i.Name}}Endpoint = middleware.Instrumenting(latency.With("method", "{{$i.Name}}"), count.With("method", "{{$i.Name}}"))(in.{{ToCamel $i.Name}}Endpoint)
 		}
+		in.{{ToCamel $i.Name}}Endpoint = middleware.NewJWT()(in.{{ToCamel $i.Name}}Endpoint)
 		//if validator != nil {
 		//	in.{{ToCamel $i.Name}}Endpoint = validator.Validate()(in.{{ToCamel $i.Name}}Endpoint)
 		//}

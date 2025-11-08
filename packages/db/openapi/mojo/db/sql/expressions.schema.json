@@ -1,0 +1,7 @@
+{
+    "title": "mojo.core.Array",
+    "type": "array",
+    "items": {
+        "$ref": "#/components/schemas/mojo.db.sql.Expression"
+    }
+}

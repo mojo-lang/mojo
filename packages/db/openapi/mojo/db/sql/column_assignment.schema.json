@@ -1,0 +1,19 @@
+{
+    "title": "mojo.db.sql.ColumnAssignment",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "columns": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.String",
+                "type": "string"
+            },
+            "minItems": 1
+        },
+        "value": {
+            "$ref": "#/components/schemas/mojo.db.sql.Expression"
+        }
+    }
+}

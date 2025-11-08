@@ -1,0 +1,14 @@
+{
+    "title": "mojo.document.Paragraph",
+    "description": "Paragraph",
+    "type": "object",
+    "properties": {
+        "inlines": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Inline"
+            }
+        }
+    }
+}

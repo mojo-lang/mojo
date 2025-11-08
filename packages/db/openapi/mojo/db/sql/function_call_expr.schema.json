@@ -1,0 +1,28 @@
+{
+    "title": "mojo.db.sql.FunctionCallExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.ValueExpr"
+        },
+        {
+            "title": "mojo.db.sql.FunctionCallExpr",
+            "type": "object",
+            "properties": {
+                "arguments": {
+                    "title": "mojo.core.Array",
+                    "description": "the SQL argument",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                    }
+                },
+                "callee": {
+                    "title": "mojo.core.String",
+                    "description": "the function name",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "title": "mojo.lang.Initializer",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "value": {
+            "$ref": "#/components/schemas/mojo.lang.Expression"
+        }
+    }
+}

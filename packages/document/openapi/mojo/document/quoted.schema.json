@@ -1,0 +1,22 @@
+{
+    "title": "mojo.document.Quoted",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "text": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Inline"
+            }
+        },
+        "type": {
+            "title": "mojo.document.Quoted.Type",
+            "type": "string",
+            "enum": [
+                "double",
+                "single"
+            ]
+        }
+    }
+}

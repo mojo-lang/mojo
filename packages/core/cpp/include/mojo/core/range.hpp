@@ -1,0 +1,4 @@
+#ifndef MOJO_CORE_RANGE_HPP
+#define MOJO_CORE_RANGE_HPP
+
+#endif //MOJO_CORE_RANGE_HPP

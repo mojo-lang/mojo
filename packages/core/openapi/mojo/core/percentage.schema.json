@@ -1,0 +1,6 @@
+{
+    "title": "mojo.core.Percentage",
+    "description": "integer percentage\n\n\n@format(\"{}%\")",
+    "type": "integer",
+    "format": "Percentage"
+}

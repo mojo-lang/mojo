@@ -1,0 +1,33 @@
+{
+    "title": "mojo.geom.MultiPoint",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "coordinates": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.Array",
+                "type": "array",
+                "items": {
+                    "title": "mojo.core.Float64",
+                    "type": "number",
+                    "format": "Float64"
+                },
+                "maxItems": 3,
+                "minItems": 2
+            }
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "type": "string",
+            "enum": [
+                "MultiPoint"
+            ]
+        }
+    },
+    "required": [
+        "type",
+        "coordinates"
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.StringSuffixLiteralExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.UnaryExpr"
+        }
+    ]
+}

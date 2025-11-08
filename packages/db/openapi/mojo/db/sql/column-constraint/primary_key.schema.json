@@ -1,0 +1,22 @@
+{
+    "title": "mojo.db.sql.ColumnConstraint.PrimaryKey",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "autoIncrement": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "conflict": {
+            "$ref": "#/components/schemas/mojo.db.sql.ConflictClause"
+        },
+        "order": {
+            "title": "mojo.db.sql.Order",
+            "type": "string",
+            "enum": [
+                "asc",
+                "desc"
+            ]
+        }
+    }
+}

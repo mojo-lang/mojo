@@ -1,0 +1,20 @@
+{
+    "title": "mojo.document.Link",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "attribute": {
+            "$ref": "#/components/schemas/mojo.document.Attribute"
+        },
+        "description": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Inline"
+            }
+        },
+        "target": {
+            "$ref": "#/components/schemas/mojo.document.Target"
+        }
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "title": "mojo.geom.GeometryCollection",
+    "description": "GeoJSON GeometryCollection\n\n",
+    "type": "object",
+    "properties": {
+        "geometries": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.geom.Geometry",
+                "oneOf": [
+                    {
+                        "$ref": "#/components/schemas/mojo.geom.Point"
+                    },
+                    {
+                        "$ref": "#/components/schemas/mojo.geom.MultiPoint"
+                    },
+                    {
+                        "$ref": "#/components/schemas/mojo.geom.LineString"
+                    },
+                    {
+                        "$ref": "#/components/schemas/mojo.geom.MultiLineString"
+                    },
+                    {
+                        "$ref": "#/components/schemas/mojo.geom.Polygon"
+                    },
+                    {
+                        "$ref": "#/components/schemas/mojo.geom.MultiPolygon"
+                    }
+                ]
+            }
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "type": "string",
+            "enum": [
+                "GeometryCollection"
+            ]
+        }
+    },
+    "required": [
+        "type",
+        "geometries"
+    ]
+}

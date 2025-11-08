@@ -1,0 +1,14 @@
+{
+    "title": "mojo.db.sql.DerivedColumn",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "as": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "expr": {
+            "$ref": "#/components/schemas/mojo.db.sql.Expression"
+        }
+    }
+}

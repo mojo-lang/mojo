@@ -1,6 +1,6 @@
 package syntax
 
-import "github.com/mojo-lang/lang/go/pkg/mojo/lang"
+import "github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
 
 func CombineValueDecl(decl *lang.ValueDecl, types ...*lang.NominalType) *lang.ValueDecl {
 	var name string

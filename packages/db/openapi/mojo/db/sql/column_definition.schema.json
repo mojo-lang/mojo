@@ -1,0 +1,21 @@
+{
+    "title": "mojo.db.sql.ColumnDefinition",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "constraints": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.db.sql.ColumnConstraint"
+            }
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "type": {
+            "$ref": "#/components/schemas/mojo.db.sql.DataType"
+        }
+    }
+}

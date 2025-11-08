@@ -1,0 +1,21 @@
+{
+    "title": "mojo.core.DebugInfo",
+    "description": "Describes additional debugging info.",
+    "type": "object",
+    "properties": {
+        "detail": {
+            "title": "mojo.core.String",
+            "description": "Additional debugging information provided by the server.",
+            "type": "string"
+        },
+        "stackEntries": {
+            "title": "mojo.core.Array",
+            "description": "The stack trace entries indicating where the error occurred.",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.String",
+                "type": "string"
+            }
+        }
+    }
+}

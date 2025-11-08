@@ -1,0 +1,32 @@
+{
+    "title": "mojo.geom.GeoJson",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.geom.Point"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.geom.MultiPoint"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.geom.LineString"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.geom.MultiLineString"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.geom.Polygon"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.geom.MultiPolygon"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.geom.GeometryCollection"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.geom.Feature"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.geom.FeatureCollection"
+        }
+    ]
+}

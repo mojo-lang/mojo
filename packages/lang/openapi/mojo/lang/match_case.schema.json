@@ -1,0 +1,29 @@
+{
+    "title": "mojo.lang.MatchCase",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.BranchStmt"
+        },
+        {
+            "title": "mojo.lang.MatchCase",
+            "type": "object",
+            "properties": {
+                "body": {
+                    "title": "mojo.core.Union",
+                    "oneOf": [
+                        {
+                            "$ref": "#/components/schemas/mojo.lang.BlockStmt"
+                        },
+                        {
+                            "$ref": "#/components/schemas/mojo.lang.Expression"
+                        }
+                    ]
+                },
+                "pattern": {
+                    "$ref": "#/components/schemas/mojo.lang.Pattern"
+                }
+            }
+        }
+    ]
+}

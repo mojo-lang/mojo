@@ -1,0 +1,34 @@
+{
+    "title": "mojo.lang.Document",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "following": {
+            "title": "mojo.core.Bool",
+            "description": "all the lines are following after the decl, but not at the beginning of the line",
+            "type": "boolean"
+        },
+        "lines": {
+            "title": "mojo.core.Array",
+            "description": "original line documents",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.Document.Line"
+            }
+        },
+        "private": {
+            "title": "mojo.core.Bool",
+            "description": "private or inner document, which will not to publish to public",
+            "type": "boolean"
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "structured": {
+            "$ref": "#/components/schemas/mojo.document.Document"
+        }
+    }
+}

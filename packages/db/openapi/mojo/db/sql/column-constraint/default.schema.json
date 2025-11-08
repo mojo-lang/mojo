@@ -1,0 +1,10 @@
+{
+    "title": "mojo.db.sql.ColumnConstraint.Default",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "expression": {
+            "$ref": "#/components/schemas/mojo.db.sql.Expression"
+        }
+    }
+}

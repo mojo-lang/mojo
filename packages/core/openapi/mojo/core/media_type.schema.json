@@ -1,0 +1,18 @@
+{
+    "title": "mojo.core.MediaType",
+    "description": "A media type (also known as a Multipurpose Internet Mail Extensions or MIME type) is a standard\nthat indicates the nature and format of a document, file, or assortment of bytes.\nIt is defined and standardized in IETF's [RFC 6838](https://tools.ietf.org/html/rfc6838).\n\nThe simplest MIME type consists of a type and a subtype;\nthese are each strings which, when concatenated with a slash (/) between them, comprise a MIME type. \nNo whitespace is allowed in a MIME type:",
+    "type": "object",
+    "properties": {
+        "parameter": {
+            "$ref": "#/components/schemas/mojo.core.MediaType.Parameter"
+        },
+        "subtype": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

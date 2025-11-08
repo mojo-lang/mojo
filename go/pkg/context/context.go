@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/mojo-lang/core/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/mojo/core"
 )
 
 type Context = context.Context

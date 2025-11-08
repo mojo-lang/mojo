@@ -1,0 +1,20 @@
+{
+    "title": "mojo.lang.Package.Author",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "author": {
+            "title": "mojo.core.String",
+            "description": "the people that are considered the \"author\" of the package.",
+            "type": "string"
+        },
+        "email": {
+            "$ref": "#/components/schemas/mojo.core.EmailAddress"
+        },
+        "organization": {
+            "title": "mojo.core.String",
+            "description": "the organization that are considered the \"author\" of the package.",
+            "type": "string"
+        }
+    }
+}

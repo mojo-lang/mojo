@@ -1,0 +1,11 @@
+{
+    "title": "mojo.core.Regex",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "expression": {
+            "title": "mojo.core.String",
+            "type": "string"
+        }
+    }
+}

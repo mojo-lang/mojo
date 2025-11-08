@@ -1,0 +1,46 @@
+{
+    "title": "mojo.openapi.OpenAPI",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "components": {
+            "$ref": "#/components/schemas/mojo.openapi.Components"
+        },
+        "externalDocs": {
+            "$ref": "#/components/schemas/mojo.openapi.ExternalDocument"
+        },
+        "info": {
+            "$ref": "#/components/schemas/mojo.openapi.Info"
+        },
+        "openapi": {
+            "$ref": "#/components/schemas/mojo.core.Version"
+        },
+        "paths": {
+            "$ref": "#/components/schemas/mojo.openapi.Paths"
+        },
+        "security": {
+            "$ref": "#/components/schemas/mojo.openapi.SecurityRequirement"
+        },
+        "servers": {
+            "title": "mojo.core.Array",
+            "description": "An array of Server Objects, which provide connectivity information to a target server.\nIf the servers property is not provided, or is an empty array,\nthe default value would be a Server Object with a url value of /.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.openapi.Server"
+            }
+        },
+        "tags": {
+            "title": "mojo.core.Array",
+            "description": "A list of tags used by the specification with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the Operation Object must be declared. The tags that are not declared MAY be organized randomly or based on the tools' logic. Each tag name in the list MUST be unique.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.openapi.Tag"
+            }
+        }
+    },
+    "required": [
+        "openapi",
+        "info",
+        "paths"
+    ]
+}

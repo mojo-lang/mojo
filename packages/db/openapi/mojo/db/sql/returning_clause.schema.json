@@ -1,0 +1,22 @@
+{
+    "title": "mojo.db.sql.ReturningClause",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.db.sql.Clause"
+        },
+        {
+            "title": "mojo.db.sql.ReturningClause",
+            "type": "object",
+            "properties": {
+                "columns": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.db.sql.Column"
+                    }
+                }
+            }
+        }
+    ]
+}

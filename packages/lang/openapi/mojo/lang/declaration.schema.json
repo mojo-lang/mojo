@@ -1,0 +1,47 @@
+{
+    "title": "mojo.lang.Declaration",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.PackageDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ImportDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.EnumDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.StructDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.TypeAliasDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.InterfaceDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ConstantDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.VariableDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.AttributeDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.AttributeAliasDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.FunctionDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.ConstructorDecl"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.GenericParameter"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.lang.GroupDecl"
+        }
+    ]
+}

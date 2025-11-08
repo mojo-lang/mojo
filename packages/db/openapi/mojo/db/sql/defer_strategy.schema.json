@@ -1,0 +1,19 @@
+{
+    "title": "mojo.db.sql.DeferStrategy",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "not": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "strategy": {
+            "title": "mojo.db.sql.DeferStrategy.Strategy",
+            "type": "string",
+            "enum": [
+                "initially_deferred",
+                "initially_immediate"
+            ]
+        }
+    }
+}

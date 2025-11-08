@@ -1,0 +1,8 @@
+{
+    "title": "mojo.document.Table.Header",
+    "description": "",
+    "type": "array",
+    "items": {
+        "$ref": "#/components/schemas/mojo.document.Table.Cell"
+    }
+}

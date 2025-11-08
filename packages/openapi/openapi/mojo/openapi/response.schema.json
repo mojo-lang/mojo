@@ -1,0 +1,39 @@
+{
+    "title": "mojo.openapi.Response",
+    "description": "Describes a single response from an API Operation, including design-time, static links to operations based on the response.",
+    "type": "object",
+    "properties": {
+        "content": {
+            "title": "mojo.core.Map",
+            "description": "A map containing descriptions of potential response payloads.\nThe key is a media type or media type range and the value describes it.\nFor responses that match multiple keys, only the most specific key is applicable.\ne.g. text/plain overrides text/*",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.MediaType"
+            }
+        },
+        "description": {
+            "title": "mojo.core.String",
+            "description": "A short description of the response. CommonMark syntax MAY be used for rich text representation.",
+            "type": "string"
+        },
+        "headers": {
+            "title": "mojo.core.Map",
+            "description": "Maps a header name to its definition.\nRFC7230 states header names are case insensitive.\nIf a response header is defined with the name \"Content-Type\", it SHALL be ignored.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.ReferenceableHeader"
+            }
+        },
+        "links": {
+            "title": "mojo.core.Map",
+            "description": "A map of operations links that can be followed from the response.\nThe key of the map is a short name for the link,\nfollowing the naming constraints of the names for Component Objects.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.ReferenceableLink"
+            }
+        }
+    },
+    "required": [
+        "description"
+    ]
+}

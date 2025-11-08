@@ -1,0 +1,53 @@
+{
+    "title": "mojo.document.Inline",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.document.Text"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Emphasized"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Strong"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Strikeout"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Superscript"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Subscript"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.SmallCaps"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Quoted"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Cite"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Code"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Space"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.LineBreak"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Link"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Image"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Note"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Span"
+        }
+    ]
+}

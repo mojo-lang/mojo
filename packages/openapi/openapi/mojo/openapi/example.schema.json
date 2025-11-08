@@ -1,0 +1,23 @@
+{
+    "title": "mojo.openapi.Example",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "description": {
+            "title": "mojo.core.String",
+            "description": "Long description for the example.",
+            "type": "string"
+        },
+        "externalValue": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        },
+        "summary": {
+            "title": "mojo.core.String",
+            "description": "Short description for the example.",
+            "type": "string"
+        },
+        "value": {
+            "$ref": "#/components/schemas/mojo.core.Value"
+        }
+    }
+}

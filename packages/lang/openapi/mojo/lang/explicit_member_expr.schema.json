@@ -1,0 +1,19 @@
+{
+    "title": "mojo.lang.ExplicitMemberExpr",
+    "description": "MemberRefExpr - This represents 'a.b' where we are referring to a member\nof a type, such as a property or variable.\n\nNote that methods found via 'dot' syntax are expressed as DotSyntaxCallExpr\nnodes, because 'a.f' is actually an application of 'a' (the implicit object\nargument) to the function 'f'.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.ApplyExpr"
+        },
+        {
+            "title": "mojo.lang.ExplicitMemberExpr",
+            "type": "object",
+            "properties": {
+                "member": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

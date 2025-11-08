@@ -1,0 +1,18 @@
+{
+    "title": "mojo.document.Document",
+    "description": "data structure for format-neutral representation of documents.\n",
+    "type": "object",
+    "properties": {
+        "blocks": {
+            "title": "mojo.core.Array",
+            "description": "",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Block"
+            }
+        },
+        "metaData": {
+            "$ref": "#/components/schemas/mojo.document.MetaData"
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "title": "mojo.core.Version",
+    "description": "Semantic Versioning\n\n(spec)[http://semver.org/spec/v2.0.0.html]\n",
+    "type": "string",
+    "format": "Version"
+}

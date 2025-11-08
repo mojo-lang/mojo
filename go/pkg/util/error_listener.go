@@ -2,7 +2,7 @@ package util
 
 import (
 	"github.com/antlr4-go/antlr/v4"
-	"github.com/mojo-lang/core/go/pkg/logs"
+	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
 )
 
 type ErrorListener struct {

@@ -1,0 +1,40 @@
+{
+    "title": "mojo.lang.ValueDecl",
+    "description": "VarDecl - 'var' and 'const' declarations.",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Decl"
+        },
+        {
+            "title": "mojo.lang.ValueDecl",
+            "type": "object",
+            "properties": {
+                "attributes": {
+                    "title": "mojo.core.Array",
+                    "description": "",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/mojo.lang.Attribute"
+                    }
+                },
+                "group": {
+                    "$ref": "#/components/schemas/mojo.lang.GroupDecl"
+                },
+                "initializer": {
+                    "$ref": "#/components/schemas/mojo.lang.Initializer"
+                },
+                "name": {
+                    "title": "mojo.core.String",
+                    "description": "",
+                    "type": "string"
+                },
+                "namePosition": {
+                    "$ref": "#/components/schemas/mojo.lang.Position"
+                },
+                "type": {
+                    "$ref": "#/components/schemas/mojo.lang.NominalType"
+                }
+            }
+        }
+    ]
+}

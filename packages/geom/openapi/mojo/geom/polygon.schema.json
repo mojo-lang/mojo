@@ -1,0 +1,40 @@
+{
+    "title": "mojo.geom.Polygon",
+    "description": "GeoJSON Polygon\n\n",
+    "type": "object",
+    "properties": {
+        "coordinates": {
+            "title": "mojo.core.Array",
+            "description": "包含的线段",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.Array",
+                "type": "array",
+                "items": {
+                    "title": "mojo.core.Array",
+                    "type": "array",
+                    "items": {
+                        "title": "mojo.core.Float64",
+                        "type": "number",
+                        "format": "Float64"
+                    },
+                    "maxItems": 3,
+                    "minItems": 2
+                },
+                "minItems": 4
+            }
+        },
+        "type": {
+            "title": "mojo.core.String",
+            "description": "类型字段",
+            "type": "string",
+            "enum": [
+                "Polygon"
+            ]
+        }
+    },
+    "required": [
+        "type",
+        "coordinates"
+    ]
+}

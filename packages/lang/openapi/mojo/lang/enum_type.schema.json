@@ -1,0 +1,27 @@
+{
+    "title": "mojo.lang.EnumType",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "endPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "enumerators": {
+            "title": "mojo.core.Array",
+            "description": "",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.ValueDecl"
+            }
+        },
+        "startPosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        },
+        "underlyingType": {
+            "$ref": "#/components/schemas/mojo.lang.NominalType"
+        },
+        "underlyingTypePosition": {
+            "$ref": "#/components/schemas/mojo.lang.Position"
+        }
+    }
+}

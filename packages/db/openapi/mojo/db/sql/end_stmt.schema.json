@@ -1,0 +1,19 @@
+{
+    "title": "mojo.db.sql.EndStmt",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Stmt"
+        },
+        {
+            "title": "mojo.db.sql.EndStmt",
+            "type": "object",
+            "properties": {
+                "transaction": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                }
+            }
+        }
+    ]
+}

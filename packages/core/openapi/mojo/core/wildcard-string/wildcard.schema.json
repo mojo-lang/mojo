@@ -1,0 +1,21 @@
+{
+    "title": "mojo.core.WildcardString.Wildcard",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "content": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "type": {
+            "title": "mojo.core.WildcardString.Wildcard.Type",
+            "type": "string",
+            "enum": [
+                "single_character",
+                "zero_or_more_characters",
+                "in_characters",
+                "not_in_characters"
+            ]
+        }
+    }
+}

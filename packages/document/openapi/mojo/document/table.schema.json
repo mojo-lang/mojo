@@ -1,0 +1,42 @@
+{
+    "title": "mojo.document.Table",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "alignment": {
+            "title": "mojo.document.Table.Alignment",
+            "description": "column alignments (required)",
+            "type": "string",
+            "enum": [
+                "left",
+                "right",
+                "center"
+            ]
+        },
+        "caption": {
+            "title": "mojo.core.Array",
+            "description": "caption for table",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Inline"
+            }
+        },
+        "header": {
+            "$ref": "#/components/schemas/mojo.document.Table.Header"
+        },
+        "rows": {
+            "title": "mojo.core.Array",
+            "description": "rows, a list of row",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Table.Row"
+            }
+        },
+        "width": {
+            "title": "mojo.core.Float64",
+            "description": "relative column widths",
+            "type": "number",
+            "format": "Float64"
+        }
+    }
+}

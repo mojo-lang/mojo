@@ -1,0 +1,8 @@
+{
+    "title": "mojo.document.MetaData",
+    "description": "Metadata for the document: title, authors, date.\n",
+    "type": "object",
+    "additionalProperties": {
+        "$ref": "#/components/schemas/mojo.document.MetaValue"
+    }
+}

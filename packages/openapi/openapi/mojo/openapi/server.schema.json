@@ -1,0 +1,24 @@
+{
+    "title": "mojo.openapi.Server",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "description": {
+            "$ref": "#/components/schemas/mojo.openapi.CachedDocument"
+        },
+        "url": {
+            "$ref": "#/components/schemas/mojo.core.Url"
+        },
+        "variables": {
+            "title": "mojo.core.Map",
+            "description": "A map between a variable name and its value.\nThe value is used for substitution in the server's URL template.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/components/schemas/mojo.openapi.ServerVariable"
+            }
+        }
+    },
+    "required": [
+        "url"
+    ]
+}

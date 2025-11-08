@@ -1,0 +1,26 @@
+{
+    "title": "mojo.core.Error",
+    "description": "@lang('zh-CN')\n",
+    "type": "object",
+    "properties": {
+        "code": {
+            "title": "mojo.core.ErrorCode",
+            "description": "The error code",
+            "type": "string",
+            "format": "ErrorCode"
+        },
+        "details": {
+            "title": "mojo.core.Array",
+            "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use.",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.core.Any"
+            }
+        },
+        "message": {
+            "title": "mojo.core.String",
+            "description": "A developer-facing error message, which should be in English. Any\nuser-facing error message should be localized and sent in the\n[google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.",
+            "type": "string"
+        }
+    }
+}

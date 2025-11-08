@@ -1,0 +1,43 @@
+{
+    "title": "mojo.lang.EntityRelation",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "edges": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.lang.EntityEdge"
+            },
+            "maxItems": 2
+        },
+        "from": {
+            "$ref": "#/components/schemas/mojo.lang.EntityNode"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "description": "'{from-entity-node-name}-{to-entity-node-name}' in the non-inverse edge",
+            "type": "string"
+        },
+        "to": {
+            "$ref": "#/components/schemas/mojo.lang.EntityNode"
+        },
+        "type": {
+            "title": "mojo.lang.RelationType",
+            "type": "string",
+            "enum": [
+                "o2o",
+                "o2o_two_types",
+                "o2o_same_type",
+                "o2o_bidirectional",
+                "o2m",
+                "o2m_two_types",
+                "o2m_same_type",
+                "m2m",
+                "m2m_two_types",
+                "m2m_same_type",
+                "m2m_bidirectional"
+            ]
+        }
+    }
+}

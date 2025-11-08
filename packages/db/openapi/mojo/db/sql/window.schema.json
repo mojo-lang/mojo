@@ -1,0 +1,20 @@
+{
+    "title": "mojo.db.sql.Window",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "frame": {
+            "$ref": "#/components/schemas/mojo.db.sql.Window.Frame"
+        },
+        "name": {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        "orderBy": {
+            "$ref": "#/components/schemas/mojo.db.sql.OrderByClause"
+        },
+        "partition": {
+            "$ref": "#/components/schemas/mojo.db.sql.PartitionClause"
+        }
+    }
+}

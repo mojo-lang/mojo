@@ -21,29 +21,28 @@ import (
 	"database/sql/driver"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	{{if not .InDbPkg}}"github.com/mojo-lang/db/go/pkg/mojo/db"{{- end}}
+	{{if not .InDbPkg}}"github.com/mojo-lang/mojo/packages/db/go/pkg/mojo/db"{{- end}}
 )
 
-func (x {{if .StructType}}*{{end}}{{.FullName}}) Value() (driver.Value, error) {
-{{- if .UnderlyingTypeName}}
-	return {{if not .InDbPkg}}db.{{end}}JSONValuer{}.Value(x.{{.UnderlyingTypeName}})
-{{else}}
-	return {{if not .InDbPkg}}db.{{end}}JSONValuer{}.Value(x)
-{{- end}}
+func (x {{.FullName}}) Value() (driver.Value, error) {
+    return {{if not .InDbPkg}}db.{{end}}JSONValuer{}.Value(x{{if .UnderlyingTypeName}}.{{.UnderlyingTypeName}}{{end}})
 }
 
 func (x *{{.FullName}}) Scan(value interface{}) error {
 {{- if .UnderlyingTypeName}}
-	return {{if not .InDbPkg}}db.{{end}}JSONScanner{}.Scan(&x.{{.UnderlyingTypeName}}, value)
+    if x.{{.UnderlyingTypeName}} == nil {
+        x.Init()
+    }
+    return {{if not .InDbPkg}}db.{{end}}JSONScanner{}.Scan(x.{{.UnderlyingTypeName}}, value)
 {{else}}
-	return {{if not .InDbPkg}}db.{{end}}JSONScanner{}.Scan(x, value)
+    return {{if not .InDbPkg}}db.{{end}}JSONScanner{}.Scan(x, value)
 {{- end}}
 }
 
-func (x {{if .StructType}}*{{end}}{{.FullName}}) GormDBDataType(gdb *gorm.DB, field *schema.Field) string {
+func (x {{.FullName}}) GormDBDataType(gdb *gorm.DB, field *schema.Field) string {
 	return {{if not .InDbPkg}}db.{{end}}JSONDbDataType{}.GormDBDataType(gdb, field)
 }
 
-func (x {{if .StructType}}*{{end}}{{.FullName}}) GormDataType() string {
+func (x {{.FullName}}) GormDataType() string {
     return "string"
 }

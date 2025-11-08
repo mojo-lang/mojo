@@ -1,0 +1,18 @@
+{
+    "title": "mojo.db.sql.Window.Frame.Bound",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "expression": {
+            "$ref": "#/components/schemas/mojo.db.sql.Expression"
+        },
+        "following": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "preceding": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        }
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "title": "mojo.core.IntRange",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "end": {
+            "title": "mojo.core.Int64",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "endIncluded": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        "start": {
+            "title": "mojo.core.Int64",
+            "type": "integer",
+            "format": "Int64"
+        },
+        "startExcluded": {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        }
+    }
+}

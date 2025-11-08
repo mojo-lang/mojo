@@ -1,0 +1,17 @@
+{
+    "title": "mojo.core.LocalizedMessage",
+    "description": "Provides a localized error type that is safe to return to the user\nwhich can be attached to an RPC error.",
+    "type": "object",
+    "properties": {
+        "locale": {
+            "title": "mojo.core.String",
+            "description": "The locale used following the specification defined at\nhttp://www.rfc-editor.org/rfc/bcp/bcp47.txt.\nExamples are: \"en-US\", \"fr-CH\", \"es-MX\"",
+            "type": "string"
+        },
+        "message": {
+            "title": "mojo.core.String",
+            "description": "The localized error type in the above locale.",
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "title": "mojo.lang.LambdaExpr",
+    "description": "\\brief An explicit unnamed function expression, which can optionally have\nnamed arguments.\n\n```\n    { $0 + $1 }\n    { a, b -\u003e Int in a + b }\n    { (a : Int, b : Int) -\u003e a + b }\n    { a : Int -\u003e a + c.getFoo() }\n```",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        }
+    ]
+}

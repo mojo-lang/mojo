@@ -1,0 +1,28 @@
+{
+    "title": "mojo.document.MetaValue",
+    "oneOf": [
+        {
+            "$ref": "#/components/schemas/mojo.document.MetaValueObject"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.MetaValues"
+        },
+        {
+            "title": "mojo.core.Bool",
+            "type": "boolean"
+        },
+        {
+            "title": "mojo.core.String",
+            "type": "string"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.core.DateTime"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Inlines"
+        },
+        {
+            "$ref": "#/components/schemas/mojo.document.Blocks"
+        }
+    ]
+}

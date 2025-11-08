@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/mojo-lang/lang/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/packages/lang/go/pkg/mojo/lang"
 )
 
 func GetMapLiteral(ctx IMapLiteralContext) *lang.MapLiteralExpr {

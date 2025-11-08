@@ -1,0 +1,25 @@
+{
+    "title": "mojo.document.DefinitionList.Item",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "definitions": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "title": "mojo.core.Array",
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/mojo.document.Block"
+                }
+            }
+        },
+        "term": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.document.Inline"
+            }
+        }
+    }
+}

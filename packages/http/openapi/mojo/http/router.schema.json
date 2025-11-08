@@ -1,0 +1,33 @@
+{
+    "title": "mojo.http.Router",
+    "description": "the router information for the method in the interface",
+    "type": "object",
+    "properties": {
+        "headers": {
+            "title": "mojo.core.Array",
+            "type": "array",
+            "items": {
+                "$ref": "#/components/schemas/mojo.http.TemplateHeader"
+            }
+        },
+        "method": {
+            "title": "mojo.http.Method",
+            "type": "string",
+            "enum": [
+                "UNSEPECIFIED",
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "OPTIONS",
+                "HEAD",
+                "TRACE",
+                "CONNECT"
+            ]
+        },
+        "path": {
+            "$ref": "#/components/schemas/mojo.core.TemplateString"
+        }
+    }
+}

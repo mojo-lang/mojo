@@ -1,0 +1,54 @@
+{
+    "title": "mojo.db.sql.BinaryExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.BinaryExpr",
+            "type": "object",
+            "properties": {
+                "leftArgument": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                },
+                "operator": {
+                    "title": "mojo.db.sql.BinaryExpr.Operator",
+                    "type": "string",
+                    "enum": [
+                        "plus",
+                        "minus",
+                        "mul",
+                        "div",
+                        "mod",
+                        "lt",
+                        "gt",
+                        "lte",
+                        "gte",
+                        "equal",
+                        "not_equal",
+                        "and",
+                        "or",
+                        "bit_and",
+                        "bit_or",
+                        "bit_xor",
+                        "concat",
+                        "extended"
+                    ]
+                },
+                "operatorPrecedence": {
+                    "title": "mojo.core.Int32",
+                    "type": "integer",
+                    "format": "Int32"
+                },
+                "operatorSymbol": {
+                    "title": "mojo.core.String",
+                    "type": "string"
+                },
+                "rightArgument": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

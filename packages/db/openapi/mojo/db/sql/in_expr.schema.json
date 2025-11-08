@@ -1,0 +1,39 @@
+{
+    "title": "mojo.db.sql.InExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.InExpr",
+            "type": "object",
+            "properties": {
+                "in": {
+                    "title": "mojo.core.Union",
+                    "oneOf": [
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+                        },
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.Expressions"
+                        },
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.TableName"
+                        },
+                        {
+                            "$ref": "#/components/schemas/mojo.db.sql.TableFunctionName"
+                        }
+                    ]
+                },
+                "not": {
+                    "title": "mojo.core.Bool",
+                    "type": "boolean"
+                },
+                "target": {
+                    "$ref": "#/components/schemas/mojo.db.sql.Expression"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "title": "mojo.db.sql.SubqueryExpr",
+    "description": "",
+    "allOf": [
+        {
+            "$ref": "#/components/schemas/mojo.lang.Expr"
+        },
+        {
+            "title": "mojo.db.sql.SubqueryExpr",
+            "type": "object",
+            "properties": {
+                "query": {
+                    "$ref": "#/components/schemas/mojo.db.sql.SelectStmt"
+                }
+            }
+        }
+    ]
+}
