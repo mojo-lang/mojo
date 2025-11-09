@@ -34,7 +34,7 @@ public final class VersionRangeProto {
       "\037\n\003end\030\002 \001(\0132\022.mojo.core.Version\022\026\n\016star" +
       "t_excluded\030\t \001(\010\022\024\n\014end_included\030\n \001(\010B^" +
       "\n\026org.mojolang.mojo.coreB\021VersionRangePr" +
-      "otoP\001Z/github.com/mojo-lang/core/go/pkg/" +
+      "otoP\001Z/github.com/mojo-lang/mojo/go/pkg/" +
       "mojo/core;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

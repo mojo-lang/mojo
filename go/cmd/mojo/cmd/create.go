@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/urfave/cli/v2"
 
-	"github.com/mojo-lang/mojo/go/pkg/cmd/commander"
-	"github.com/mojo-lang/mojo/go/pkg/cmd/create/scaffolding"
+	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/commander"
+	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/create/scaffolding"
 )
 
 type CreateCmd struct {

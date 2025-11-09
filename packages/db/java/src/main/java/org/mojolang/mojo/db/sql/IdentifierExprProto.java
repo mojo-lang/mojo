@@ -35,7 +35,7 @@ public final class IdentifierExprProto {
       "ojo.lang.Position\022\014\n\004kind\030\004 \001(\005\022\020\n\010impli" +
       "cit\030\005 \001(\010\022\022\n\nidentifier\030\n \001(\tBa\n\030org.moj" +
       "olang.mojo.db.sqlB\023IdentifierExprProtoP\001" +
-      "Z.github.com/mojo-lang/db/go/pkg/mojo/db" +
+      "Z.github.com/mojo-lang/mojo/go/pkg/mojo/db" +
       "/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

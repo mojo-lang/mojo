@@ -37,7 +37,7 @@ public final class TemplateStringLiteralExprProto {
       " \001(\005\022\020\n\010implicit\030\005 \001(\010\022(\n\005value\030\024 \001(\0132\031." +
       "mojo.core.TemplateStringBk\n\026org.mojolang" +
       ".mojo.langB\036TemplateStringLiteralExprPro" +
-      "toP\001Z/github.com/mojo-lang/lang/go/pkg/m" +
+      "toP\001Z/github.com/mojo-lang/mojo/go/pkg/m" +
       "ojo/lang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

@@ -3,15 +3,14 @@ package main
 import (
 	"errors"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/mojo-lang/mojo/packages/core/go/pkg/logs"
-	"github.com/mojo-lang/mojo/packages/geom/go/pkg/mojo/geom"
-	"github.com/mojo-lang/mojo/packages/geom/go/pkg/mojo/geom/tile"
+	"github.com/mojo-lang/mojo/go/pkg/logs"
+	geom2 "github.com/mojo-lang/mojo/go/pkg/mojo/geom"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/geom/tile"
+	"github.com/urfave/cli/v2"
 	"io/fs"
 	"log"
 	"os"
 	"strings"
-
-	"github.com/urfave/cli/v2"
 )
 
 func main() {
@@ -36,23 +35,23 @@ func main() {
 					from := ctx.String("from")
 					to := ctx.String("to")
 					if len(src) > 0 && len(dst) > 0 && strings.HasSuffix(src, ".geojson") && strings.HasSuffix(dst, ".geojson") {
-						f, err := geom.ParseSpatialReference(from)
+						f, err := geom2.ParseSpatialReference(from)
 						if err != nil {
 							logs.Warnw("invalid from SpatialReference", "from type", from)
 							return err
 						}
 
-						t, err := geom.ParseSpatialReference(to)
+						t, err := geom2.ParseSpatialReference(to)
 						if err != nil {
 							logs.Warnw("invalid from SpatialReference", "to type", from)
 							return err
 						}
 
-						if !geom.CoordTransformSupported(f) {
+						if !geom2.CoordTransformSupported(f) {
 							logs.Warnw("invalid from SpatialReference", "from type", from)
 							return errors.New("not supported SpatialReference")
 						}
-						if !geom.CoordTransformSupported(t) {
+						if !geom2.CoordTransformSupported(t) {
 							logs.Warnw("invalid to SpatialReference", "to type", to)
 							return errors.New("not supported SpatialReference")
 						}
@@ -105,12 +104,12 @@ func main() {
 	}
 }
 
-func coordTransformGeojson(fromFile, toFile string, from, to geom.SpatialReference) error {
+func coordTransformGeojson(fromFile, toFile string, from, to geom2.SpatialReference) error {
 	ff, err := os.ReadFile(fromFile)
 	if err != nil {
 		return err
 	}
-	g, err := geom.NewGeoJsonFrom(ff)
+	g, err := geom2.NewGeoJsonFrom(ff)
 	if err != nil {
 		return err
 	}

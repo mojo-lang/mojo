@@ -39,7 +39,7 @@ public final class CreateTriggerStmtProto {
       "\025\n\rif_not_exists\030\n \001(\010\022.\n\014trigger_name\030\013" +
       " \001(\0132\030.mojo.db.sql.TriggerNameBd\n\030org.mo" +
       "jolang.mojo.db.sqlB\026CreateTriggerStmtPro" +
-      "toP\001Z.github.com/mojo-lang/db/go/pkg/moj" +
+      "toP\001Z.github.com/mojo-lang/mojo/go/pkg/moj" +
       "o/db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

@@ -35,7 +35,7 @@ public final class AssignmentExprProto {
       "end_position\030\002 \001(\0132\023.mojo.lang.Position\022" +
       "\014\n\004kind\030\003 \001(\005\022\020\n\010implicit\030\004 \001(\010B`\n\026org.m" +
       "ojolang.mojo.langB\023AssignmentExprProtoP\001" +
-      "Z/github.com/mojo-lang/lang/go/pkg/mojo/" +
+      "Z/github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "lang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

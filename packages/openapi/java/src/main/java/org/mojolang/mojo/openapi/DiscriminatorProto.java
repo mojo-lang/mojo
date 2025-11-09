@@ -39,7 +39,7 @@ public final class DiscriminatorProto {
       "i.Discriminator.MappingEntry\032.\n\014MappingE" +
       "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001Bk\n\031" +
       "org.mojolang.mojo.openapiB\022Discriminator" +
-      "ProtoP\001Z8github.com/mojo-lang/openapi/go" +
+      "ProtoP\001Z8github.com/mojo-lang/mojo/go" +
       "/pkg/mojo/openapi;openapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

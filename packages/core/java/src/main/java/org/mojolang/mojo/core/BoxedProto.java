@@ -148,7 +148,7 @@ public final class BoxedProto {
       "tiMap.ValsEntry\032D\n\tValsEntry\022\013\n\003key\030\001 \001(" +
       "\t\022&\n\005value\030\002 \001(\0132\027.mojo.core.StringValue" +
       "s:\0028\001BW\n\026org.mojolang.mojo.coreB\nBoxedPr" +
-      "otoP\001Z/github.com/mojo-lang/core/go/pkg/" +
+      "otoP\001Z/github.com/mojo-lang/mojo/go/pkg/" +
       "mojo/core;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

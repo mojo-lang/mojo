@@ -44,7 +44,7 @@ public final class MultiPointProto {
       "\"M\n\nMultiPoint\022\014\n\004type\030\001 \001(\t\0221\n\006points\030\005" +
       " \003(\0132\020.mojo.geom.PointB\017\312\317$\013coordinatesB" +
       "\\\n\026org.mojolang.mojo.geomB\017MultiPointPro" +
-      "toP\001Z/github.com/mojo-lang/geom/go/pkg/m" +
+      "toP\001Z/github.com/mojo-lang/mojo/go/pkg/m" +
       "ojo/geom;geomb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

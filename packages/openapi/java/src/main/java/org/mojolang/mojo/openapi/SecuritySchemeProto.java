@@ -42,7 +42,7 @@ public final class SecuritySchemeProto {
       "\020\n\014TYPE_API_KEY\020\001\022\r\n\tTYPE_HTTP\020\002\022\017\n\013TYPE" +
       "_OAUTH2\020\003\022\030\n\024TYPE_OPEN_ID_CONNECT\020\004Bl\n\031o" +
       "rg.mojolang.mojo.openapiB\023SecurityScheme" +
-      "ProtoP\001Z8github.com/mojo-lang/openapi/go" +
+      "ProtoP\001Z8github.com/mojo-lang/mojo/go" +
       "/pkg/mojo/openapi;openapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

@@ -32,7 +32,7 @@ public final class RangeProto {
       "tRange\022\r\n\005start\030\001 \001(\003\022\013\n\003end\030\002 \001(\003\022\026\n\016st" +
       "art_excluded\030\t \001(\010\022\024\n\014end_included\030\n \001(\010" +
       "BW\n\026org.mojolang.mojo.coreB\nRangeProtoP\001" +
-      "Z/github.com/mojo-lang/core/go/pkg/mojo/" +
+      "Z/github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "core;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

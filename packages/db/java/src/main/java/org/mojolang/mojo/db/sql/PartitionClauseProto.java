@@ -37,7 +37,7 @@ public final class PartitionClauseProto {
       "(\003\022\020\n\010implicit\030\005 \001(\010\022,\n\013expressions\030\n \003(" +
       "\0132\027.mojo.db.sql.ExpressionBb\n\030org.mojola" +
       "ng.mojo.db.sqlB\024PartitionClauseProtoP\001Z." +
-      "github.com/mojo-lang/db/go/pkg/mojo/db/s" +
+      "github.com/mojo-lang/mojo/go/pkg/mojo/db/s" +
       "ql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

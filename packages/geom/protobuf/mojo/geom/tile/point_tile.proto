@@ -6,7 +6,7 @@ package mojo.geom.tile;
 
 import "mojo/geom/tile/vector_tile.proto";
 
-option go_package = "github.com/mojo-lang/geom/go/pkg/mojo/geom/tile;tile";
+option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/geom/tile;tile";
 option java_multiple_files = true;
 option java_outer_classname = "PointTileProto";
 option java_package = "org.mojolang.mojo.geom.tile";

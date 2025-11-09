@@ -36,7 +36,7 @@ public final class StructLiteralExprProto {
       "osition\030\002 \001(\0132\023.mojo.lang.Position\022\014\n\004ki" +
       "nd\030\003 \001(\005\022\020\n\010implicit\030\004 \001(\010Bc\n\026org.mojola" +
       "ng.mojo.langB\026StructLiteralExprProtoP\001Z/" +
-      "github.com/mojo-lang/lang/go/pkg/mojo/la" +
+      "github.com/mojo-lang/mojo/go/pkg/mojo/la" +
       "ng;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

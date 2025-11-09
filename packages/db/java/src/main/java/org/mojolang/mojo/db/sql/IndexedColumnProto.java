@@ -37,7 +37,7 @@ public final class IndexedColumnProto {
       "\032.mojo.db.sql.CollateClause\022!\n\005order\030\006 \001" +
       "(\0162\022.mojo.db.sql.OrderB\006\n\004nameB`\n\030org.mo" +
       "jolang.mojo.db.sqlB\022IndexedColumnProtoP\001" +
-      "Z.github.com/mojo-lang/db/go/pkg/mojo/db" +
+      "Z.github.com/mojo-lang/mojo/go/pkg/mojo/db" +
       "/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

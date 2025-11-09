@@ -34,7 +34,7 @@ public final class CodeModuleProto {
       "dentifier\030\004 \001(\t\022\022\n\ndebug_file\030\005 \001(\t\022\030\n\020d" +
       "ebug_identifier\030\006 \001(\t\022\017\n\007version\030\007 \001(\tB\\" +
       "\n\026org.mojolang.mojo.coreB\017CodeModuleProt" +
-      "oP\001Z/github.com/mojo-lang/core/go/pkg/mo" +
+      "oP\001Z/github.com/mojo-lang/mojo/go/pkg/mo" +
       "jo/core;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

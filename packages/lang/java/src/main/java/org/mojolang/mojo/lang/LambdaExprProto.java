@@ -34,7 +34,7 @@ public final class LambdaExprProto {
       "on\022)\n\014end_position\030\002 \001(\0132\023.mojo.lang.Pos" +
       "ition\022\014\n\004kind\030\004 \001(\005\022\020\n\010implicit\030\005 \001(\010B\\\n" +
       "\026org.mojolang.mojo.langB\017LambdaExprProto" +
-      "P\001Z/github.com/mojo-lang/lang/go/pkg/moj" +
+      "P\001Z/github.com/mojo-lang/mojo/go/pkg/moj" +
       "o/lang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

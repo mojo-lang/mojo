@@ -6,7 +6,7 @@ package mojo.openapi;
 
 import "mojo/openapi/cached_document.proto";
 
-option go_package = "github.com/mojo-lang/openapi/go/pkg/mojo/openapi;openapi";
+option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/openapi;openapi";
 option java_multiple_files = true;
 option java_outer_classname = "ServerVariableProto";
 option java_package = "org.mojolang.mojo.openapi";

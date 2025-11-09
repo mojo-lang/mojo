@@ -77,7 +77,7 @@ public final class StatementProto {
       "b.sql.UpdateStmtH\000\022.\n\013vacuum_stmt\030\033 \001(\0132" +
       "\027.mojo.db.sql.VacuumStmtH\000B\013\n\tstatementB" +
       "\\\n\030org.mojolang.mojo.db.sqlB\016StatementPr" +
-      "otoP\001Z.github.com/mojo-lang/db/go/pkg/mo" +
+      "otoP\001Z.github.com/mojo-lang/mojo/go/pkg/mo" +
       "jo/db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

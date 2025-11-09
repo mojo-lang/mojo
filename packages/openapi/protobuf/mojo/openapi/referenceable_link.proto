@@ -7,7 +7,7 @@ package mojo.openapi;
 import "mojo/openapi/link.proto";
 import "mojo/openapi/reference.proto";
 
-option go_package = "github.com/mojo-lang/openapi/go/pkg/mojo/openapi;openapi";
+option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/openapi;openapi";
 option java_multiple_files = true;
 option java_outer_classname = "ReferenceableLinkProto";
 option java_package = "org.mojolang.mojo.openapi";

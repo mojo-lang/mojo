@@ -34,7 +34,7 @@ public final class DetachStmtProto {
       "sition\022)\n\014end_position\030\002 \001(\0132\023.mojo.lang" +
       ".Position\022\014\n\004kind\030\004 \001(\003\022\020\n\010implicit\030\005 \001(" +
       "\010B]\n\030org.mojolang.mojo.db.sqlB\017DetachStm" +
-      "tProtoP\001Z.github.com/mojo-lang/db/go/pkg" +
+      "tProtoP\001Z.github.com/mojo-lang/mojo/go/pkg" +
       "/mojo/db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

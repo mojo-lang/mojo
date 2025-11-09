@@ -44,7 +44,7 @@ public final class FormDataContentProto {
       ".mojo.core.Value\032=\n\013Disposition\022\r\n\005value" +
       "\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\021\n\tfile_name\030\003 \001(\tB" +
       "a\n\026org.mojolang.mojo.httpB\024FormDataConte" +
-      "ntProtoP\001Z/github.com/mojo-lang/http/go/" +
+      "ntProtoP\001Z/github.com/mojo-lang/mojo/go/" +
       "pkg/mojo/http;httpb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

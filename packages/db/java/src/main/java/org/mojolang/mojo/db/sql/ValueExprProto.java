@@ -34,7 +34,7 @@ public final class ValueExprProto {
       "tion\022)\n\014end_position\030\002 \001(\0132\023.mojo.lang.P" +
       "osition\022\014\n\004kind\030\004 \001(\005\022\020\n\010implicit\030\005 \001(\010B" +
       "\\\n\030org.mojolang.mojo.db.sqlB\016ValueExprPr" +
-      "otoP\001Z.github.com/mojo-lang/db/go/pkg/mo" +
+      "otoP\001Z.github.com/mojo-lang/mojo/go/pkg/mo" +
       "jo/db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

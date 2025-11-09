@@ -50,7 +50,7 @@ public final class UpdateStmtProto {
       "\024TYPE_UPDATE_OR_ABORT\020\007\022\027\n\023TYPE_UPDATE_O" +
       "R_FAIL\020\010\022\031\n\025TYPE_UPDATE_OR_IGNORE\020\tB]\n\030o" +
       "rg.mojolang.mojo.db.sqlB\017UpdateStmtProto" +
-      "P\001Z.github.com/mojo-lang/db/go/pkg/mojo/" +
+      "P\001Z.github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

@@ -35,7 +35,7 @@ public final class TagProto {
       "o.openapi.CachedDocument\0225\n\rexternal_doc" +
       "s\030\004 \001(\0132\036.mojo.openapi.ExternalDocumentB" +
       "a\n\031org.mojolang.mojo.openapiB\010TagProtoP\001" +
-      "Z8github.com/mojo-lang/openapi/go/pkg/mo" +
+      "Z8github.com/mojo-lang/mojo/go/pkg/mo" +
       "jo/openapi;openapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

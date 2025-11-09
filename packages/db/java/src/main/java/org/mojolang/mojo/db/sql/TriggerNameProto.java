@@ -32,7 +32,7 @@ public final class TriggerNameProto {
       "b.sql\"?\n\013TriggerName\022\023\n\013schema_name\030\n \001(" +
       "\t\022\014\n\004name\030\r \001(\t\022\r\n\005alias\030\017 \001(\tB^\n\030org.mo" +
       "jolang.mojo.db.sqlB\020TriggerNameProtoP\001Z." +
-      "github.com/mojo-lang/db/go/pkg/mojo/db/s" +
+      "github.com/mojo-lang/mojo/go/pkg/mojo/db/s" +
       "ql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

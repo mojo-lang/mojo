@@ -43,7 +43,7 @@ public final class TileProto {
       "ile\"L\n\004Tile\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\r\n\005lev" +
       "el\030\003 \001(\005\022\016\n\006format\030\n \001(\t\022\017\n\007content\030\017 \001(" +
       "\014B`\n\033org.mojolang.mojo.geom.tileB\tTilePr" +
-      "otoP\001Z4github.com/mojo-lang/geom/go/pkg/" +
+      "otoP\001Z4github.com/mojo-lang/mojo/go/pkg/" +
       "mojo/geom/tile;tileb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

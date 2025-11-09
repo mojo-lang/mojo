@@ -63,7 +63,7 @@ public final class TableConstraintProto {
       "\007columns\030\001 \003(\t\022-\n\006clause\030\002 \001(\0132\035.mojo.db" +
       ".sql.ForeignKeyClauseB\014\n\nconstraintBb\n\030o" +
       "rg.mojolang.mojo.db.sqlB\024TableConstraint" +
-      "ProtoP\001Z.github.com/mojo-lang/db/go/pkg/" +
+      "ProtoP\001Z.github.com/mojo-lang/mojo/go/pkg/" +
       "mojo/db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

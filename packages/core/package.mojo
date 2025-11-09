@@ -8,5 +8,5 @@ package mojo.core {
     }]
 
     license: 'Apache'
-    repository: 'https://github.com/mojo-lang/mojo/packages/core'
+    repository: 'github.com/mojo-lang/mojo/packages/core'
 }

@@ -37,7 +37,7 @@ public final class ImplicitMemberExprProto {
       "ding_comments\030\003 \003(\0132\022.mojo.lang.Comment\022" +
       "\014\n\004kind\030\004 \001(\005\022\020\n\010implicit\030\005 \001(\010Bd\n\026org.m" +
       "ojolang.mojo.langB\027ImplicitMemberExprPro" +
-      "toP\001Z/github.com/mojo-lang/lang/go/pkg/m" +
+      "toP\001Z/github.com/mojo-lang/mojo/go/pkg/m" +
       "ojo/lang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

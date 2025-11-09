@@ -81,7 +81,7 @@ public final class OperationServiceProto {
       "pc.longrunning.WaitOperationRequest\032\037.mo" +
       "jo.rpc.longrunning.OperationB\177\n\"org.mojo" +
       "-lang.mojo.rpc.longrunningB\025OperationSer" +
-      "viceProtoP\001Z@github.com/mojo-lang/rpc/go" +
+      "viceProtoP\001Z@github.com/mojo-lang/mojo/go" +
       "/pkg/mojo/rpc/longrunning;longrunningb\006p" +
       "roto3"
     };

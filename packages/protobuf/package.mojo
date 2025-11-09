@@ -11,6 +11,6 @@ package mojo.protobuf {
     dependencies: {
         'mojo.core': {repository: 'github.com/mojo-lang/mojo/packages/core', version: '^0.1'}
     }
-    repository: 'https://github.com/mojo-lang/mojo/packages/openapi'
+    repository: 'https://github.com/mojo-lang/mojo/packages/protobuf'
 }
 

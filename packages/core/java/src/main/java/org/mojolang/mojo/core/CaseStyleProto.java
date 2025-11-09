@@ -30,7 +30,7 @@ public final class CaseStyleProto {
       "\032CASE_STYLE_SCREAMING_KEBAB\020\004\022\024\n\020CASE_ST" +
       "YLE_CAMEL\020\005\022\032\n\026CASE_STYLE_LOWER_CAMEL\020\006B" +
       "[\n\026org.mojolang.mojo.coreB\016CaseStyleProt" +
-      "oP\001Z/github.com/mojo-lang/core/go/pkg/mo" +
+      "oP\001Z/github.com/mojo-lang/mojo/go/pkg/mo" +
       "jo/core;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

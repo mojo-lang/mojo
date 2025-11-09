@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/commander"
 	"github.com/urfave/cli/v2"
-
-	"github.com/mojo-lang/mojo/go/pkg/cmd/commander"
 )
 
 type FormatCmd struct {

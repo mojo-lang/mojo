@@ -6,7 +6,7 @@ package mojo.core;
 
 import "mojo/core/boxed.proto";
 
-option go_package = "github.com/mojo-lang/core/go/pkg/mojo/core;core";
+option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/core;core";
 option java_multiple_files = true;
 option java_outer_classname = "ColorProto";
 option java_package = "org.mojolang.mojo.core";

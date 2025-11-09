@@ -44,7 +44,7 @@ public final class LineStringProto {
       "nt.proto\"B\n\nLineString\022\014\n\004type\030\001 \001(\t\022&\n\013" +
       "coordinates\030\005 \003(\0132\021.mojo.geom.LngLatB\\\n\026" +
       "org.mojolang.mojo.geomB\017LineStringProtoP" +
-      "\001Z/github.com/mojo-lang/geom/go/pkg/mojo" +
+      "\001Z/github.com/mojo-lang/mojo/go/pkg/mojo" +
       "/geom;geomb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

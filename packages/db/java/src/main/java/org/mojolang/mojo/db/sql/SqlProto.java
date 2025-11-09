@@ -527,7 +527,7 @@ public final class SqlProto {
       "\022\020\n\010implicit\030\005 \001(\010\022+\n\006tables\030\n \003(\0132\033.moj" +
       "o.db.sql.TemporaryTable\022\021\n\trecursive\030\017 \001" +
       "(\010BV\n\030org.mojolang.mojo.db.sqlB\010SqlProto" +
-      "P\001Z.github.com/mojo-lang/db/go/pkg/mojo/" +
+      "P\001Z.github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

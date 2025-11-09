@@ -44,7 +44,7 @@ public final class BoundingBoxProto {
       "x\022&\n\013left_bottom\030\001 \001(\0132\021.mojo.geom.LngLa" +
       "t\022$\n\tright_top\030\002 \001(\0132\021.mojo.geom.LngLatB" +
       "]\n\026org.mojolang.mojo.geomB\020BoundingBoxPr" +
-      "otoP\001Z/github.com/mojo-lang/geom/go/pkg/" +
+      "otoP\001Z/github.com/mojo-lang/mojo/go/pkg/" +
       "mojo/geom;geomb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

@@ -39,7 +39,7 @@ public final class ConflictClauseProto {
       "\n\014ACTION_ABORT\020\001\022\017\n\013ACTION_FAIL\020\002\022\021\n\rACT" +
       "ION_IGNORE\020\003\022\022\n\016ACTION_REPLACE\020\004Ba\n\030org." +
       "mojolang.mojo.db.sqlB\023ConflictClauseProt" +
-      "oP\001Z.github.com/mojo-lang/db/go/pkg/mojo" +
+      "oP\001Z.github.com/mojo-lang/mojo/go/pkg/mojo" +
       "/db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

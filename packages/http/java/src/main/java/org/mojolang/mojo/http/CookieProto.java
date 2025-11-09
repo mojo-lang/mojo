@@ -38,7 +38,7 @@ public final class CookieProto {
       "ITE_UNSEPECIFIED\020\000\022\021\n\rSAME_SITE_LAX\020\001\022\024\n" +
       "\020SAME_SITE_STRICT\020\002\022\022\n\016SAME_SITE_NONE\020\003B" +
       "X\n\026org.mojolang.mojo.httpB\013CookieProtoP\001" +
-      "Z/github.com/mojo-lang/http/go/pkg/mojo/" +
+      "Z/github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "http;httpb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

@@ -39,7 +39,7 @@ public final class FunctionCallExprProto {
       " \003(\0132\026.mojo.lang.NominalType\022&\n\targument" +
       "s\030\014 \003(\0132\023.mojo.lang.ArgumentBb\n\026org.mojo" +
       "lang.mojo.langB\025FunctionCallExprProtoP\001Z" +
-      "/github.com/mojo-lang/lang/go/pkg/mojo/l" +
+      "/github.com/mojo-lang/mojo/go/pkg/mojo/l" +
       "ang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

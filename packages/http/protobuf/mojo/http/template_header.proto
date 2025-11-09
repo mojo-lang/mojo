@@ -6,7 +6,7 @@ package mojo.http;
 
 import "mojo/core/template_string.proto";
 
-option go_package = "github.com/mojo-lang/http/go/pkg/mojo/http;http";
+option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/http;http";
 option java_multiple_files = true;
 option java_outer_classname = "TemplateHeaderProto";
 option java_package = "org.mojolang.mojo.http";

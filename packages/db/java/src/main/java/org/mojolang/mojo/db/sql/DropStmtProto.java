@@ -34,7 +34,7 @@ public final class DropStmtProto {
       "on\022)\n\014end_position\030\002 \001(\0132\023.mojo.lang.Pos" +
       "ition\022\014\n\004kind\030\004 \001(\003\022\020\n\010implicit\030\005 \001(\010B[\n" +
       "\030org.mojolang.mojo.db.sqlB\rDropStmtProto" +
-      "P\001Z.github.com/mojo-lang/db/go/pkg/mojo/" +
+      "P\001Z.github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

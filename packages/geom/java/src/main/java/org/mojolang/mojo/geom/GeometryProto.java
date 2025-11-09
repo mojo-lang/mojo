@@ -50,7 +50,7 @@ public final class GeometryProto {
       "\010geometry\"K\n\022GeometryCollection\022\014\n\004type\030" +
       "\001 \001(\t\022\'\n\ngeometries\030\005 \003(\0132\023.mojo.geom.Ge" +
       "ometryBZ\n\026org.mojolang.mojo.geomB\rGeomet" +
-      "ryProtoP\001Z/github.com/mojo-lang/geom/go/" +
+      "ryProtoP\001Z/github.com/mojo-lang/mojo/go/" +
       "pkg/mojo/geom;geomb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

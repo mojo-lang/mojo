@@ -43,7 +43,7 @@ public final class ServerProto {
       "y\032N\n\016VariablesEntry\022\013\n\003key\030\001 \001(\t\022+\n\005valu" +
       "e\030\002 \001(\0132\034.mojo.openapi.ServerVariable:\0028" +
       "\001Bd\n\031org.mojolang.mojo.openapiB\013ServerPr" +
-      "otoP\001Z8github.com/mojo-lang/openapi/go/p" +
+      "otoP\001Z8github.com/mojo-lang/mojo/go/p" +
       "kg/mojo/openapi;openapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

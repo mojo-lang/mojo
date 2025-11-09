@@ -35,7 +35,7 @@ public final class DeferStrategyProto {
       "SPECIFIED\020\000\022\037\n\033STRATEGY_INITIALLY_DEFERR" +
       "ED\020\001\022 \n\034STRATEGY_INITIALLY_IMMEDIATE\020\002B`" +
       "\n\030org.mojolang.mojo.db.sqlB\022DeferStrateg" +
-      "yProtoP\001Z.github.com/mojo-lang/db/go/pkg" +
+      "yProtoP\001Z.github.com/mojo-lang/mojo/go/pkg" +
       "/mojo/db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

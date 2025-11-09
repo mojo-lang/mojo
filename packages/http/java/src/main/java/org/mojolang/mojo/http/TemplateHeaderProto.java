@@ -33,7 +33,7 @@ public final class TemplateHeaderProto {
       "\016TemplateHeader\022\014\n\004name\030\001 \001(\t\022(\n\005value\030\002" +
       " \001(\0132\031.mojo.core.TemplateStringB`\n\026org.m" +
       "ojolang.mojo.httpB\023TemplateHeaderProtoP\001" +
-      "Z/github.com/mojo-lang/http/go/pkg/mojo/" +
+      "Z/github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "http;httpb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

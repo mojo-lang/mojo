@@ -23,7 +23,7 @@ import "mojo/db/sql/string_literal_expr.proto";
 import "mojo/db/sql/value_expr.proto";
 import "mojo/lang/lang.proto";
 
-option go_package = "github.com/mojo-lang/db/go/pkg/mojo/db/sql;sql";
+option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/db/sql;sql";
 option java_multiple_files = true;
 option java_outer_classname = "SqlProto";
 option java_package = "org.mojolang.mojo.db.sql";

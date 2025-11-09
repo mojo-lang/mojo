@@ -55,7 +55,7 @@ public final class UpsertClauseProto {
       "\0132\035.mojo.db.sql.ColumnAssignment\022\'\n\005wher" +
       "e\030\002 \001(\0132\030.mojo.db.sql.WhereClauseB_\n\030org" +
       ".mojolang.mojo.db.sqlB\021UpsertClauseProto" +
-      "P\001Z.github.com/mojo-lang/db/go/pkg/mojo/" +
+      "P\001Z.github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

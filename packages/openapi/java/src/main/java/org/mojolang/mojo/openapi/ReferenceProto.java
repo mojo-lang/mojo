@@ -35,7 +35,7 @@ public final class ReferenceProto {
       "B\010\312\317$\004$ref\022\017\n\007summary\030\002 \001(\t\0221\n\013descripti" +
       "on\030\003 \001(\0132\034.mojo.openapi.CachedDocumentBg" +
       "\n\031org.mojolang.mojo.openapiB\016ReferencePr" +
-      "otoP\001Z8github.com/mojo-lang/openapi/go/p" +
+      "otoP\001Z8github.com/mojo-lang/mojo/go/p" +
       "kg/mojo/openapi;openapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

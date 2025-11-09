@@ -34,7 +34,7 @@ public final class EmptyStmtProto {
       "\022)\n\014end_position\030\002 \001(\0132\023.mojo.lang.Posit" +
       "ion\022\014\n\004kind\030\004 \001(\003\022\020\n\010implicit\030\005 \001(\010B[\n\026o" +
       "rg.mojolang.mojo.langB\016EmptyStmtProtoP\001Z" +
-      "/github.com/mojo-lang/lang/go/pkg/mojo/l" +
+      "/github.com/mojo-lang/mojo/go/pkg/mojo/l" +
       "ang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

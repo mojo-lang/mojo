@@ -30,7 +30,7 @@ public final class NullProto {
     java.lang.String[] descriptorData = {
       "\n\024mojo/core/null.proto\022\tmojo.core\"\006\n\004Nul" +
       "lBV\n\026org.mojolang.mojo.coreB\tNullProtoP\001" +
-      "Z/github.com/mojo-lang/core/go/pkg/mojo/" +
+      "Z/github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "core;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

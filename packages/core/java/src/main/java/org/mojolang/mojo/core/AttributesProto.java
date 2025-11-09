@@ -25,7 +25,7 @@ public final class AttributesProto {
     java.lang.String[] descriptorData = {
       "\n\032mojo/core/attributes.proto\022\tmojo.coreB" +
       "\\\n\026org.mojolang.mojo.coreB\017AttributesPro" +
-      "toP\001Z/github.com/mojo-lang/core/go/pkg/m" +
+      "toP\001Z/github.com/mojo-lang/mojo/go/pkg/m" +
       "ojo/core;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

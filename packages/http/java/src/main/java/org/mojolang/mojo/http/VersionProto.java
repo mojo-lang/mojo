@@ -31,7 +31,7 @@ public final class VersionProto {
       "\n\027mojo/http/version.proto\022\tmojo.http\"\'\n\007" +
       "Version\022\r\n\005major\030\001 \001(\005\022\r\n\005minor\030\002 \001(\005BY\n" +
       "\026org.mojolang.mojo.httpB\014VersionProtoP\001Z" +
-      "/github.com/mojo-lang/http/go/pkg/mojo/h" +
+      "/github.com/mojo-lang/mojo/go/pkg/mojo/h" +
       "ttp;httpb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

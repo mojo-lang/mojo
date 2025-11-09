@@ -61,7 +61,7 @@ public final class CommentProto {
       ")\n\014end_position\030\002 \001(\0132\023.mojo.lang.Positi" +
       "on\022\021\n\tfollowing\030\003 \001(\010\022\017\n\007content\030\n \001(\tBY" +
       "\n\026org.mojolang.mojo.langB\014CommentProtoP\001" +
-      "Z/github.com/mojo-lang/lang/go/pkg/mojo/" +
+      "Z/github.com/mojo-lang/mojo/go/pkg/mojo/" +
       "lang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

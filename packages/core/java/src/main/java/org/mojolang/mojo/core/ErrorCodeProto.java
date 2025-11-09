@@ -34,7 +34,7 @@ public final class ErrorCodeProto {
       "\n\013description\030\005 \001(\t\022 \n\010document\030\004 \001(\0132\016." +
       "mojo.core.Url\022\030\n\020http_status_code\030\n \001(\005B" +
       "[\n\026org.mojolang.mojo.coreB\016ErrorCodeProt" +
-      "oP\001Z/github.com/mojo-lang/core/go/pkg/mo" +
+      "oP\001Z/github.com/mojo-lang/mojo/go/pkg/mo" +
       "jo/core;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

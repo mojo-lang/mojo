@@ -35,7 +35,7 @@ public final class AnalyzeStmtProto {
       "g.Position\022\014\n\004kind\030\004 \001(\003\022\020\n\010implicit\030\005 \001" +
       "(\010\022\023\n\013schema_name\030\n \001(\t\022\014\n\004name\030\013 \001(\tB^\n" +
       "\030org.mojolang.mojo.db.sqlB\020AnalyzeStmtPr" +
-      "otoP\001Z.github.com/mojo-lang/db/go/pkg/mo" +
+      "otoP\001Z.github.com/mojo-lang/mojo/go/pkg/mo" +
       "jo/db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

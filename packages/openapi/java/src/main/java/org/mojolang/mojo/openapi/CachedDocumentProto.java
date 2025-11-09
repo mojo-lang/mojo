@@ -33,7 +33,7 @@ public final class CachedDocumentProto {
       "\"E\n\016CachedDocument\022\r\n\005cache\030\001 \001(\t\022$\n\003val" +
       "\030\002 \001(\0132\027.mojo.document.DocumentBl\n\031org.m" +
       "ojolang.mojo.openapiB\023CachedDocumentProt" +
-      "oP\001Z8github.com/mojo-lang/openapi/go/pkg" +
+      "oP\001Z8github.com/mojo-lang/mojo/go/pkg" +
       "/mojo/openapi;openapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

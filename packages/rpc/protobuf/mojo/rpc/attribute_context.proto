@@ -8,7 +8,7 @@ import "mojo/core/any.proto";
 import "mojo/core/time.proto";
 import "mojo/core/value.proto";
 
-option go_package = "github.com/mojo-lang/rpc/go/pkg/mojo/rpc;rpc";
+option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/rpc;rpc";
 option java_multiple_files = true;
 option java_outer_classname = "AttributeContextProto";
 option java_package = "org.mojo-lang.mojo.rpc";

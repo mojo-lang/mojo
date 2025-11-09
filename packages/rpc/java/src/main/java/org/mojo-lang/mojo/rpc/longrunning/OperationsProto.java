@@ -81,7 +81,7 @@ public final class OperationsProto {
       "jo.rpc.longrunning.WaitOperationRequest\032" +
       "\037.mojo.rpc.longrunning.OperationBy\n\"org." +
       "mojo-lang.mojo.rpc.longrunningB\017Operatio" +
-      "nsProtoP\001Z@github.com/mojo-lang/rpc/go/p" +
+      "nsProtoP\001Z@github.com/mojo-lang/mojo/go/p" +
       "kg/mojo/rpc/longrunning;longrunningb\006pro" +
       "to3"
     };

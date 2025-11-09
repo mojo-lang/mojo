@@ -31,7 +31,7 @@ public final class ExplicitMemberExprProto {
       "\n$mojo/lang/explicit_member_expr.proto\022\t" +
       "mojo.lang\"\024\n\022ExplicitMemberExprBd\n\026org.m" +
       "ojolang.mojo.langB\027ExplicitMemberExprPro" +
-      "toP\001Z/github.com/mojo-lang/lang/go/pkg/m" +
+      "toP\001Z/github.com/mojo-lang/mojo/go/pkg/m" +
       "ojo/lang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

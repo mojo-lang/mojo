@@ -45,7 +45,7 @@ public final class DocumentProto {
       "\022)\n\014end_position\030\002 \001(\0132\023.mojo.lang.Posit" +
       "ion\022\021\n\tfollowing\030\003 \001(\010\022\014\n\004line\030\n \001(\tBZ\n\026" +
       "org.mojolang.mojo.langB\rDocumentProtoP\001Z" +
-      "/github.com/mojo-lang/lang/go/pkg/mojo/l" +
+      "/github.com/mojo-lang/mojo/go/pkg/mojo/l" +
       "ang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

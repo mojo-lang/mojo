@@ -35,7 +35,7 @@ public final class DataManipulationStmtProto {
       "ion\030\002 \001(\0132\023.mojo.lang.Position\022\014\n\004kind\030\004" +
       " \001(\003\022\020\n\010implicit\030\005 \001(\010Bg\n\030org.mojolang.m" +
       "ojo.db.sqlB\031DataManipulationStmtProtoP\001Z" +
-      ".github.com/mojo-lang/db/go/pkg/mojo/db/" +
+      ".github.com/mojo-lang/mojo/go/pkg/mojo/db/" +
       "sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

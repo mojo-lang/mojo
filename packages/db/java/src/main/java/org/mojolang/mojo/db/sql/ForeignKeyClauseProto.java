@@ -57,7 +57,7 @@ public final class ForeignKeyClauseProto {
       "D\020\000\022\025\n\021MATCH_TYPE_SIMPLE\020\001\022\026\n\022MATCH_TYPE" +
       "_PARTIAL\020\002\022\023\n\017MATCH_TYPE_FULL\020\003Bc\n\030org.m" +
       "ojolang.mojo.db.sqlB\025ForeignKeyClausePro" +
-      "toP\001Z.github.com/mojo-lang/db/go/pkg/moj" +
+      "toP\001Z.github.com/mojo-lang/mojo/go/pkg/moj" +
       "o/db/sql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

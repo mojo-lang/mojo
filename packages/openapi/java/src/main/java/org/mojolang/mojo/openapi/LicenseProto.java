@@ -32,7 +32,7 @@ public final class LicenseProto {
       "pi\032\023mojo/core/url.proto\"4\n\007License\022\014\n\004na" +
       "me\030\001 \001(\t\022\033\n\003url\030\005 \001(\0132\016.mojo.core.UrlBe\n" +
       "\031org.mojolang.mojo.openapiB\014LicenseProto" +
-      "P\001Z8github.com/mojo-lang/openapi/go/pkg/" +
+      "P\001Z8github.com/mojo-lang/mojo/go/pkg/" +
       "mojo/openapi;openapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

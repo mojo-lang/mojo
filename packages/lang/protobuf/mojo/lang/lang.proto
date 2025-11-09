@@ -16,7 +16,7 @@ import "mojo/lang/cached_document.proto";
 import "mojo/lang/pattern.proto";
 import "mojo/mojo.proto";
 
-option go_package = "github.com/mojo-lang/lang/go/pkg/mojo/lang;lang";
+option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/lang;lang";
 option java_multiple_files = true;
 option java_outer_classname = "LangProto";
 option java_package = "org.mojolang.mojo.lang";

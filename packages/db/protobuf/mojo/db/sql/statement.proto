@@ -27,7 +27,7 @@ import "mojo/db/sql/sql.proto";
 import "mojo/db/sql/update_stmt.proto";
 import "mojo/db/sql/vacuum_stmt.proto";
 
-option go_package = "github.com/mojo-lang/db/go/pkg/mojo/db/sql;sql";
+option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/db/sql;sql";
 option java_multiple_files = true;
 option java_outer_classname = "StatementProto";
 option java_package = "org.mojolang.mojo.db.sql";

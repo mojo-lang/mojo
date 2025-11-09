@@ -36,7 +36,7 @@ public final class LoopStmtProto {
       "o.lang.Position\022\014\n\004kind\030\003 \001(\003\022\020\n\010implici" +
       "t\030\004 \001(\010\022\"\n\004body\030\025 \001(\0132\024.mojo.lang.BlockS" +
       "tmtBZ\n\026org.mojolang.mojo.langB\rLoopStmtP" +
-      "rotoP\001Z/github.com/mojo-lang/lang/go/pkg" +
+      "rotoP\001Z/github.com/mojo-lang/mojo/go/pkg" +
       "/mojo/lang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

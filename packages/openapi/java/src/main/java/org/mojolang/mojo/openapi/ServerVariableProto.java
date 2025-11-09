@@ -34,7 +34,7 @@ public final class ServerVariableProto {
       "\n\007default\030\002 \001(\t\0221\n\013description\030\004 \001(\0132\034.m" +
       "ojo.openapi.CachedDocumentBl\n\031org.mojola" +
       "ng.mojo.openapiB\023ServerVariableProtoP\001Z8" +
-      "github.com/mojo-lang/openapi/go/pkg/mojo" +
+      "github.com/mojo-lang/mojo/go/pkg/mojo" +
       "/openapi;openapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

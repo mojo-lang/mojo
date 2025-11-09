@@ -35,7 +35,7 @@ public final class ChecksumProto {
       "ORITHM_MD5\020\001\022\022\n\016ALGORITHM_SHA1\020\002\022\024\n\020ALGO" +
       "RITHM_SHA256\020\003\022\024\n\020ALGORITHM_SHA512\020\004BZ\n\026" +
       "org.mojolang.mojo.coreB\rChecksumProtoP\001Z" +
-      "/github.com/mojo-lang/core/go/pkg/mojo/c" +
+      "/github.com/mojo-lang/mojo/go/pkg/mojo/c" +
       "ore;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

@@ -30,7 +30,7 @@ public final class MessageProto {
     java.lang.String[] descriptorData = {
       "\n\026mojo/rpc/message.proto\022\010mojo.rpc\"\t\n\007Me" +
       "ssageBV\n\026org.mojo-lang.mojo.rpcB\014Message" +
-      "ProtoP\001Z,github.com/mojo-lang/rpc/go/pkg" +
+      "ProtoP\001Z,github.com/mojo-lang/mojo/go/pkg" +
       "/mojo/rpc;rpcb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

@@ -37,7 +37,7 @@ public final class IntoClauseProto {
       "icit\030\005 \001(\010\022*\n\ntable_name\030\n \001(\0132\026.mojo.db" +
       ".sql.TableName\022\017\n\007columns\030\013 \003(\tB]\n\030org.m" +
       "ojolang.mojo.db.sqlB\017IntoClauseProtoP\001Z." +
-      "github.com/mojo-lang/db/go/pkg/mojo/db/s" +
+      "github.com/mojo-lang/mojo/go/pkg/mojo/db/s" +
       "ql;sqlb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

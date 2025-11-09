@@ -127,7 +127,7 @@ public final class ErrorDetailsProto {
       "(\0132\016.mojo.core.Url\"3\n\020LocalizedMessage\022\016" +
       "\n\006locale\030\001 \001(\t\022\017\n\007message\030\002 \001(\tB^\n\026org.m" +
       "ojolang.mojo.coreB\021ErrorDetailsProtoP\001Z/" +
-      "github.com/mojo-lang/core/go/pkg/mojo/co" +
+      "github.com/mojo-lang/mojo/go/pkg/mojo/co" +
       "re;coreb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

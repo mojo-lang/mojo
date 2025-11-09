@@ -38,7 +38,7 @@ public final class StringLiteralExprProto {
       "s\030\003 \003(\0132\022.mojo.lang.Comment\022\014\n\004kind\030\004 \001(" +
       "\005\022\020\n\010implicit\030\005 \001(\010\022\r\n\005value\030\024 \001(\tBc\n\026or" +
       "g.mojolang.mojo.langB\026StringLiteralExprP" +
-      "rotoP\001Z/github.com/mojo-lang/lang/go/pkg" +
+      "rotoP\001Z/github.com/mojo-lang/mojo/go/pkg" +
       "/mojo/lang;langb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor

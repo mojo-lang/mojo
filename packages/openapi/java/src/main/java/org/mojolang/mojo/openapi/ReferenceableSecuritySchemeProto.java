@@ -37,7 +37,7 @@ public final class ReferenceableSecuritySchemeProto {
       ".openapi.SecuritySchemeH\000B\037\n\035referenceab" +
       "le_security_schemeBy\n\031org.mojolang.mojo." +
       "openapiB ReferenceableSecuritySchemeProt" +
-      "oP\001Z8github.com/mojo-lang/openapi/go/pkg" +
+      "oP\001Z8github.com/mojo-lang/mojo/go/pkg" +
       "/mojo/openapi;openapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
