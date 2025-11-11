@@ -21,6 +21,14 @@ func logContent(content []byte) string {
 }
 
 func Post(url string, req interface{}, resp interface{}) error {
+	return Do(Method_METHOD_POST, url, nil, req, resp)
+}
+
+func Put(url string, req interface{}, resp interface{}) error {
+	return Do(Method_METHOD_PUT, url, nil, req, resp)
+}
+
+func Do(method Method, url string, headers *Headers, req interface{}, resp interface{}) error {
 	var content []byte
 	var err error
 
@@ -31,7 +39,19 @@ func Post(url string, req interface{}, resp interface{}) error {
 		}
 	}
 
-	r, err := http.Post(url, core.ApplicationJson, bytes.NewReader(content))
+	hr, err := http.NewRequest(method.Format(), url, bytes.NewReader(content))
+	if err != nil {
+		return err
+	}
+	for headers != nil {
+		hr.Header = make(http.Header)
+		headers.SyncTo(hr.Header)
+	}
+	if req != nil && len(hr.Header.Get("Content-Type")) == 0 {
+		hr.Header.Set("Content-Type", core.ApplicationJson)
+	}
+
+	r, err := http.DefaultClient.Do(hr)
 	if err != nil {
 		return err
 	}
@@ -44,15 +64,33 @@ func Post(url string, req interface{}, resp interface{}) error {
 	}
 
 	if resp != nil {
-		content, err = io.ReadAll(r.Body)
+		var reader io.ReadCloser
+		switch r.Header.Get("Content-Encoding") {
+		case "gzip":
+			reader, err = gzip.NewReader(r.Body)
+			defer func() {
+				_ = reader.Close()
+			}()
+			if err != nil {
+				return errors.New("failed to read the gzip content")
+			}
+		default:
+			reader = r.Body
+		}
+
+		content, err = io.ReadAll(reader)
 		if err != nil {
 			return err
 		}
 
-		if len(content) > 0 {
-			if err = jsoniter.Unmarshal(content, resp); err != nil {
-				logs.Warnf("the response is: %s", logContent(content))
-				return err
+		if len(content) > 0 && resp != nil {
+			if _, ok := resp.(*[]byte); ok {
+				resp = content
+			} else {
+				if err = jsoniter.Unmarshal(content, resp); err != nil {
+					logs.Warnf("the response is: %s", logContent(content))
+					return err
+				}
 			}
 		}
 	}
@@ -61,61 +99,18 @@ func Post(url string, req interface{}, resp interface{}) error {
 }
 
 func Get(url string, resp interface{}) error {
-	content, err := GetContent(url)
-	if err != nil {
-		return err
-	}
-
-	if resp != nil && len(content) > 0 {
-		if err = jsoniter.Unmarshal(content, resp); err != nil {
-			logs.Warnf("the response is: %s", logContent(content))
-			return err
-		}
-	}
-
-	return nil
+	return Do(Method_METHOD_GET, url, nil, nil, resp)
 }
 
 func GetContent(url string) ([]byte, error) {
-	r, err := http.Get(url)
+	var bs []byte
+	err := Do(Method_METHOD_GET, url, nil, nil, &bs)
 	if err != nil {
 		return nil, err
 	}
-
-	defer func() {
-		_ = r.Body.Close()
-	}()
-
-	if r.StatusCode >= 400 {
-		return nil, errors.New("http return error " + r.Status)
-	}
-
-	var reader io.ReadCloser
-	switch r.Header.Get("Content-Encoding") {
-	case "gzip":
-		reader, err = gzip.NewReader(r.Body)
-		defer func() {
-			_ = reader.Close()
-		}()
-		if err != nil {
-			return nil, errors.New("failed to read the gzip content")
-		}
-	default:
-		reader = r.Body
-	}
-
-	content, err := io.ReadAll(reader)
-	if err != nil {
-		return nil, err
-	}
-	return content, nil
+	return bs, nil
 }
 
 func Delete(url string) error {
-	req, err := http.NewRequest("DELETE", url, nil)
-	if err != nil {
-		return err
-	}
-	_, err = http.DefaultClient.Do(req)
-	return err
+	return Do(Method_METHOD_DELETE, url, nil, nil, nil)
 }
