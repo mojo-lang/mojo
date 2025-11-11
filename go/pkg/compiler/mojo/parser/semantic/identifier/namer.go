@@ -42,7 +42,7 @@ func NewNamer(options core.Options) *Namer {
 
 func (p *Namer) ParsePackage(ctx context.Context, pkg *lang.Package) error {
 	if util.IsPackageProcessed(pkg, namerName) {
-		logs.Infow("already processed, skip the plugin", "plugin", p.Name, "method", "ParsePackage", "pkg", pkg.FullName)
+		logs.Debugw("already processed, skip the plugin", "plugin", p.Name, "method", "ParsePackage", "pkg", pkg.FullName)
 		return nil
 	} else {
 		logs.Infow("enter the plugin", "plugin", p.Name, "method", "ParsePackage", "pkg", pkg.FullName)

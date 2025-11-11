@@ -41,7 +41,7 @@ func NewResolver(options core.Options) *Resolver {
 
 func (r *Resolver) ParsePackage(ctx context.Context, pkg *lang.Package) error {
 	if !r.Force && util.IsPackageProcessed(pkg, pluginName) {
-		logs.Infow("already processed, skip the plugin", "plugin", r.Name, "method", "ParsePackage", "pkg", pkg.FullName)
+		logs.Debugw("already processed, skip the plugin", "plugin", r.Name, "method", "ParsePackage", "pkg", pkg.FullName)
 		return nil
 	} else {
 		logs.Infow("enter the plugin", "plugin", r.Name, "method", "ParsePackage", "pkg", pkg.FullName)
