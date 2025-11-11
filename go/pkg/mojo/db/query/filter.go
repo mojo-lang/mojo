@@ -27,6 +27,10 @@ func ApplyFilter(d *gorm.DB, filter *lang.Expression, fields Fields) (*gorm.DB, 
 // GenerateExpressionQuery
 // dialector: "postgres", "mysql", "sqlite"
 func GenerateExpressionQuery(dialector string, filter *lang.Expression, fields Fields) (string, []interface{}, error) {
+	if filter == nil && filter.Expression == nil {
+		return "", nil, nil
+	}
+
 	if len(dialector) == 0 {
 		dialector = "postgres"
 	}
