@@ -3,6 +3,7 @@ package http
 import (
 	"net/http"
 	"net/textproto"
+	"strings"
 
 	"github.com/mojo-lang/mojo/go/pkg/mojo/core"
 )
@@ -16,6 +17,7 @@ const (
 	AcceptEncodingHeaderName          = "Accept-Encoding"
 	AcceptLanguageHeaderName          = "Accept-Language"
 	AcceptRangesHeaderName            = "Accept-Ranges"
+	AuthorizationHeaderName           = "Authorization"
 	CacheControlHeaderName            = "Cache-Control"
 	CcHeaderName                      = "Cc"
 	ConnectionHeaderName              = "Connection"
@@ -140,10 +142,30 @@ func (x *Headers) Del(key string) *Headers {
 	return x
 }
 
+const bearerPrefix = "Bearer "
+
+func (x *Headers) GetBearToken() string {
+	if x != nil {
+		if val := x.Get(AuthorizationHeaderName); len(val) > 0 {
+			val = strings.TrimPrefix(val, bearerPrefix)
+			return strings.TrimSpace(val)
+		}
+	}
+	return ""
+}
+
+func (x *Headers) SetBearToken(token string) *Headers {
+	if x != nil && len(token) > 0 {
+		bearer := bearerPrefix + token
+		x.Set(AuthorizationHeaderName, bearer)
+	}
+	return x
+}
+
 func (x *Headers) AddCookies(cookies ...*Cookie) *Headers {
 	if x != nil {
 		for _, c := range cookies {
-			x.Add("Cookie", c.ToString())
+			x.Add(CookieHeaderName, c.ToString())
 		}
 	}
 	return x

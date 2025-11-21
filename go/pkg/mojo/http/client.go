@@ -43,7 +43,7 @@ func Do(method Method, url string, headers *Headers, req interface{}, resp inter
 	if err != nil {
 		return err
 	}
-	for headers != nil {
+	if headers != nil {
 		hr.Header = make(http.Header)
 		headers.SyncTo(hr.Header)
 	}
