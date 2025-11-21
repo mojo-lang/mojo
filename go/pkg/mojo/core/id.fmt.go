@@ -12,16 +12,17 @@ func ParseId(id string) (*Id, error) {
 }
 
 func (x *Id) Format() string {
-	switch x := x.Id.(type) {
-	case *Id_Uint64Val:
-		return strconv.FormatUint(x.Uint64Val, 10)
-	case *Id_StringVal:
-		return x.StringVal
-	case *Id_UuidVal:
-		return x.UuidVal.Format()
-	default:
-		return ""
+	if x != nil && x.Id != nil {
+		switch x := x.Id.(type) {
+		case *Id_Uint64Val:
+			return strconv.FormatUint(x.Uint64Val, 10)
+		case *Id_StringVal:
+			return x.StringVal
+		case *Id_UuidVal:
+			return x.UuidVal.Format()
+		}
 	}
+	return ""
 }
 
 func (x *Id) Parse(value string) error {

@@ -1,5 +1,7 @@
 package core
 
+import "strconv"
+
 const IdTypeName = "Id"
 const IdTypeFullName = "mojo.core.Id"
 
@@ -37,6 +39,19 @@ func (x *Id) SetInt(id uint64) {
 
 func (x *Id) SetString(id string) {
 	x.Id = &Id_StringVal{StringVal: id}
+}
+
+func (x *Id) GetString() string {
+	if x != nil {
+		str := x.GetStringVal()
+		if len(str) == 0 {
+			if v := x.GetUint64Val(); v > 0 {
+				return strconv.Itoa(int(v))
+			}
+		}
+		return str
+	}
+	return ""
 }
 
 func (x *Id) SetUuid(id *Uuid) {
