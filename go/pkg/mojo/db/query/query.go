@@ -118,7 +118,7 @@ func (q *Query) TotalCount(d *gorm.DB, meta Fields) *gorm.DB {
 	}
 
 	projections := q.Projections
-	ps, pt := q.PageSize, q.PageToken
+	ps, pt, order := q.PageSize, q.PageToken, q.Order
 
 	if len(q.Uniques) > 0 {
 		q.Projections = []*FieldProjection{{Uniques: q.Uniques, Functions: []string{"COUNT"}, Alias: []string{"count"}}}
@@ -127,10 +127,12 @@ func (q *Query) TotalCount(d *gorm.DB, meta Fields) *gorm.DB {
 	}
 	q.PageSize = 0
 	q.PageToken = ""
+	q.Order = nil
 	tx := q.Apply(d, meta)
 
 	q.PageSize = ps
 	q.PageToken = pt
+	q.Order = order
 	q.Projections = projections
 	return tx
 }
@@ -192,7 +194,7 @@ func (q *Query) applyProjections(d *gorm.DB, meta Fields) (tx *gorm.DB, err erro
 	for _, group := range q.Groups {
 		found := false
 		for _, prj := range q.Projections {
-			if prj.Name == group {
+			if prj.Name == group && len(prj.Functions) == 0 && len(prj.Alias) == 0 {
 				found = true
 				break
 			}

@@ -158,7 +158,7 @@ func GenerateExpressionQuery(dialector string, filter *lang.Expression, fields F
 					return "", nil, err
 				}
 				if s := binary.RightArgument.GetStringLiteralExpr(); isGeometry(s.Value) {
-					return "ST_Intersects(" + lq + ", ST_GeomFromText('" + s.Value + "', 4326))", lbs, nil
+					return "ST_Intersects(" + lq + ", ST_GeomFromText('" + s.Value + "', 0))", lbs, nil
 				}
 			default:
 				return "", nil, errors.New(fmt.Sprintf("not supported operator %s in SQL", op.Symbol))
