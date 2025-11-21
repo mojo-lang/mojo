@@ -116,6 +116,7 @@ func (x *Polygon) Area() float64 {
 			area -= loop.Area()
 		}
 	}
+
 	return area
 }
 
@@ -193,6 +194,21 @@ func (x *Polygon) BoundingBox() *BoundingBox {
 		return x.LineStrings[0].BoundingBox()
 	}
 	return nil
+}
+
+func (x *Polygon) Equal(polygon *Polygon) bool {
+	if x != nil && polygon != nil {
+		if len(x.LineStrings) != len(polygon.LineStrings) {
+			return false
+		}
+		for i, line := range x.LineStrings {
+			if !line.Equal(polygon.LineStrings[i]) {
+				return false
+			}
+		}
+		return true
+	}
+	return x == nil && polygon == nil
 }
 
 func (x *Polygon) CoordTransform(from, to SpatialReference) *Polygon {

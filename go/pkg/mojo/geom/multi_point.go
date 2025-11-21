@@ -33,6 +33,21 @@ func (x *MultiPoint) ToGeometry() *Geometry {
 	return nil
 }
 
+func (x *MultiPoint) Equal(multipoint *MultiPoint) bool {
+	if x != nil && multipoint != nil {
+		if len(x.Points) != len(multipoint.Points) {
+			return false
+		}
+		for i, point := range x.Points {
+			if !point.Equal(multipoint.Points[i]) {
+				return false
+			}
+		}
+		return true
+	}
+	return x == nil && multipoint == nil
+}
+
 func (x *MultiPoint) BoundingBox() *BoundingBox {
 	if x != nil && len(x.Points) > 0 {
 		box := &BoundingBox{}

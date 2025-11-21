@@ -36,6 +36,21 @@ func (x *GeometryCollection) BoundingBox() *BoundingBox {
 	return nil
 }
 
+func (x *GeometryCollection) Equal(collection *GeometryCollection) bool {
+	if x != nil && collection != nil {
+		if len(x.Geometries) != len(collection.Geometries) {
+			return false
+		}
+		for i, g := range x.Geometries {
+			if !g.Equal(collection.Geometries[i]) {
+				return false
+			}
+		}
+		return true
+	}
+	return x == nil && collection == nil
+}
+
 func (x *GeometryCollection) CoordTransform(from, to SpatialReference) *GeometryCollection {
 	if x != nil && len(x.Geometries) > 0 {
 		c := NewGeometryCollection()

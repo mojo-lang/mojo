@@ -41,6 +41,21 @@ func (x *MultiLineString) BoundingBox() *BoundingBox {
 	return nil
 }
 
+func (x *MultiLineString) Equal(multiline *MultiLineString) bool {
+	if x != nil && multiline != nil {
+		if len(x.LineStrings) != len(multiline.LineStrings) {
+			return false
+		}
+		for i, line := range x.LineStrings {
+			if !line.Equal(multiline.LineStrings[i]) {
+				return false
+			}
+		}
+		return true
+	}
+	return x == nil && multiline == nil
+}
+
 func (x *MultiLineString) CoordTransform(from, to SpatialReference) *MultiLineString {
 	if x != nil && len(x.LineStrings) > 0 {
 		ml := &MultiLineString{}

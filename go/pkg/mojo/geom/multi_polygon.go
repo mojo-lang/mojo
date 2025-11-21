@@ -41,6 +41,21 @@ func (x *MultiPolygon) ToGeometry() *Geometry {
 	return nil
 }
 
+func (x *MultiPolygon) Equal(multipolygon *MultiPolygon) bool {
+	if x != nil && multipolygon != nil {
+		if len(x.Polygons) != len(multipolygon.Polygons) {
+			return false
+		}
+		for i, polygon := range x.Polygons {
+			if !polygon.Equal(multipolygon.Polygons[i]) {
+				return false
+			}
+		}
+		return true
+	}
+	return x == nil && multipolygon == nil
+}
+
 func (x *MultiPolygon) BoundingBox() *BoundingBox {
 	if x != nil && len(x.Polygons) > 0 {
 		var box *BoundingBox

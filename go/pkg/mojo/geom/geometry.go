@@ -261,6 +261,43 @@ func (x *Geometry) Contains(point *LngLat) bool {
 	return false
 }
 
+func (x *Geometry) Equal(geometry *Geometry) bool {
+	if x != nil && geometry != nil {
+		switch g := x.Geometry.(type) {
+		case *Geometry_Point:
+			if p, ok := geometry.Geometry.(*Geometry_Point); ok {
+				return g.Point.Equal(p.Point)
+			}
+		case *Geometry_MultiPoint:
+			if p, ok := geometry.Geometry.(*Geometry_MultiPoint); ok {
+				return g.MultiPoint.Equal(p.MultiPoint)
+			}
+		case *Geometry_LineString:
+			if p, ok := geometry.Geometry.(*Geometry_LineString); ok {
+				return g.LineString.Equal(p.LineString)
+			}
+		case *Geometry_MultiLineString:
+			if p, ok := geometry.Geometry.(*Geometry_MultiLineString); ok {
+				return g.MultiLineString.Equal(p.MultiLineString)
+			}
+		case *Geometry_Polygon:
+			if p, ok := geometry.Geometry.(*Geometry_Polygon); ok {
+				return g.Polygon.Equal(p.Polygon)
+			}
+		case *Geometry_MultiPolygon:
+			if p, ok := geometry.Geometry.(*Geometry_MultiPolygon); ok {
+				return g.MultiPolygon.Equal(p.MultiPolygon)
+			}
+		case *Geometry_GeometryCollection:
+			if p, ok := geometry.Geometry.(*Geometry_GeometryCollection); ok {
+				return g.GeometryCollection.Equal(p.GeometryCollection)
+			}
+		}
+		return false
+	}
+	return x == nil && geometry == nil
+}
+
 func (x *Geometry) CoordTransform(from, to SpatialReference) *Geometry {
 	if x == nil {
 		return x

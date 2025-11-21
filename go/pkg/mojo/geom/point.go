@@ -39,6 +39,13 @@ func (x *Point) ToGeometry() *Geometry {
 	return nil
 }
 
+func (x *Point) Equal(point *Point) bool {
+	if x != nil && point != nil {
+		return x.Coordinate.Equal(point.Coordinate)
+	}
+	return x == nil && point == nil
+}
+
 func (x *Point) CoordTransform(from, to SpatialReference) *Point {
 	if x != nil {
 		return &Point{

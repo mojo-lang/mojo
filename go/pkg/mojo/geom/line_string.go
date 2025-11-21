@@ -96,3 +96,18 @@ func (x *LineString) CoordTransform(from, to SpatialReference) *LineString {
 	}
 	return x
 }
+
+func (x *LineString) Equal(line *LineString) bool {
+	if x != nil && line != nil {
+		if len(x.Coordinates) != len(line.Coordinates) {
+			return false
+		}
+		for i, c := range x.Coordinates {
+			if !c.Equal(line.Coordinates[i]) {
+				return false
+			}
+		}
+		return true
+	}
+	return x == nil && line == nil
+}
