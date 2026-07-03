@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 )
 
 func (x *Color) Format() string {
@@ -55,6 +56,36 @@ func (x *Color) Parse(value string) error {
 				} else {
 					x.SetAlphaValue(float32(RoundNaive(float64(alpha)/255, 0.01)))
 				}
+			}
+		} else if value[0] == '(' && len(value) >= 7 && value[len(value)-1] == ')' { // (1,2,3)
+			segments := strings.Split(value[1:len(value)-1], ",")
+			if len(segments) >= 3 {
+				if red, err := strconv.ParseInt(segments[0], 10, 32); err != nil {
+					return fmt.Errorf("failed to parse the color string: %s, error: %w", value, err)
+				} else {
+					x.Red = uint32(red)
+				}
+
+				if green, err := strconv.ParseInt(segments[1], 10, 32); err != nil {
+					return fmt.Errorf("failed to parse the color string: %s, error: %w", value, err)
+				} else {
+					x.Green = uint32(green)
+				}
+
+				if blue, err := strconv.ParseInt(segments[2], 10, 32); err != nil {
+					return fmt.Errorf("failed to parse the color string: %s, error: %w", value, err)
+				} else {
+					x.Blue = uint32(blue)
+				}
+				if len(segments) == 4 {
+					if alpha, err := strconv.ParseInt(segments[3], 10, 32); err != nil {
+						return fmt.Errorf("failed to parse the color string: %s, error: %w", value, err)
+					} else {
+						x.SetAlphaValue(float32(RoundNaive(float64(alpha)/255, 0.01)))
+					}
+				}
+			} else {
+				return fmt.Errorf("failed to parse the color string: %s", value)
 			}
 		} else {
 			return fmt.Errorf("failed to parse the color string: %s", value)
