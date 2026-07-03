@@ -1,6 +1,7 @@
 package core
 
 import (
+	"sort"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -36,5 +37,19 @@ func (codec *ObjectCodec) IsEmpty(ptr unsafe.Pointer) bool {
 
 func (codec *ObjectCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
 	object := (*Object)(ptr)
-	stream.WriteVal(object.Vals)
+	var keys []string
+	for key := range object.Vals {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	stream.WriteObjectStart()
+	for i, key := range keys {
+		if i > 0 {
+			stream.WriteMore()
+		}
+		stream.WriteObjectField(key)
+		stream.WriteVal(object.Vals[key])
+	}
+	stream.WriteObjectEnd()
 }

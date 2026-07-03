@@ -100,9 +100,9 @@ func (codec *ValueCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
 	case *Value_BytesVal:
 		stream.WriteString(Base64Prefix + base64.StdEncoding.EncodeToString(val.BytesVal))
 	case *Value_ValuesVal:
-		stream.WriteVal(val.ValuesVal.Vals)
+		stream.WriteVal(val.ValuesVal)
 	case *Value_ObjectVal:
-		stream.WriteVal(val.ObjectVal.Vals)
+		stream.WriteVal(val.ObjectVal)
 	default:
 		stream.WriteNil()
 	}

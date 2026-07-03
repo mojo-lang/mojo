@@ -236,6 +236,10 @@ func (x *Object) GetFloat64(key string) float64 {
 	return x.GetValue(key).GetFloat64()
 }
 
+func (x *Object) GetObject(key string) *Object {
+	return x.GetValue(key).GetObject()
+}
+
 func (x *Object) GetBoolArray(key string) []bool {
 	return x.GetValue(key).GetBoolArray()
 }
