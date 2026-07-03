@@ -593,10 +593,12 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
 		return err
 	}
 
+	marked := make(map[string]*data.Field)
+
 	param := &data.HTTPParameter{
 		Name: decl.Name,
 
-		Field: s.compileBindingField(ctx, schema, context.OpenAPIComponents(c.Context).GetSchemas()),
+		Field: s.compileBindingField(ctx, schema, context.OpenAPIComponents(c.Context).GetSchemas(), marked),
 
 		Go:         &data.GoHTTPParameter{},
 		Extensions: make(map[string]interface{}),
@@ -683,14 +685,23 @@ func (s *Services) compileBindingParameter(ctx context.Context, decl *lang.Value
 	return nil
 }
 
-func (s *Services) compileAllOfBindingFields(ctx context.Context, schema *openapi.Schema, index map[string]*openapi.Schema) []*data.Field {
+func (s *Services) compileAllOfBindingFields(ctx context.Context, schema *openapi.Schema, index map[string]*openapi.Schema, marked map[string]*data.Field) []*data.Field {
 	if schema == nil || schema.Type != openapi.Schema_TYPE_OBJECT {
 		return nil
 	}
 
 	var fields []*data.Field
 	for name, item := range schema.Properties {
-		f := s.compileBindingField(ctx, item.GetSchemaOf(index), index)
+		sch := item.GetSchemaOf(index)
+		var f *data.Field
+		if df, ok := marked[sch.Title]; ok {
+			f = df
+		} else {
+			if f = s.compileBindingField(ctx, sch, index, marked); f != nil {
+				marked[sch.Title] = f
+			}
+		}
+
 		if f == nil {
 			logs.Errorw("failed to compile the schema", "schema", schema.Title)
 		} else {
@@ -701,7 +712,7 @@ func (s *Services) compileAllOfBindingFields(ctx context.Context, schema *openap
 
 	for _, c := range schema.AllOf {
 		sch := c.GetSchemaOf(index)
-		fs := s.compileAllOfBindingFields(ctx, sch, index)
+		fs := s.compileAllOfBindingFields(ctx, sch, index, marked)
 		if len(fs) > 0 {
 			fields = append(fields, fs...)
 		}
@@ -710,7 +721,7 @@ func (s *Services) compileAllOfBindingFields(ctx context.Context, schema *openap
 	return fields
 }
 
-func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Schema, index map[string]*openapi.Schema) *data.Field {
+func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Schema, index map[string]*openapi.Schema, marked map[string]*data.Field) *data.Field {
 	if schema == nil {
 		// error
 		return nil
@@ -805,7 +816,15 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
 			}
 		} else {
 			sch := schema.Items.GetSchemaOf(index)
-			f := s.compileBindingField(ctx, sch, index)
+			var f *data.Field
+			if df, ok := marked[sch.Title]; ok {
+				f = df
+			} else {
+				if f = s.compileBindingField(ctx, sch, index, marked); f != nil {
+					marked[sch.Title] = f
+				}
+			}
+
 			if f != nil {
 				field.Type = &data.FieldType{
 					Name:    "Array<" + f.Type.Name + ">",
@@ -839,7 +858,17 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
 		}
 	case openapi.Schema_TYPE_OBJECT:
 		if schema.AdditionalProperties != nil { // map
-			typ := s.compileBindingField(ctx, schema.GetAdditionalProperties().GetSchemaOf(index), index).GetType()
+			sch := schema.GetAdditionalProperties().GetSchemaOf(index)
+			var f *data.Field
+			if df, ok := marked[sch.Title]; ok {
+				f = df
+			} else {
+				if f = s.compileBindingField(ctx, sch, index, marked); f != nil {
+					marked[sch.Title] = f
+				}
+			}
+
+			typ := f.GetType()
 			field.Type = &data.FieldType{
 				Name:  "Map<String," + typ.Name + ">",
 				IsMap: true,
@@ -888,7 +917,8 @@ func (s *Services) compileBindingField(ctx context.Context, schema *openapi.Sche
 				Extensions: make(map[string]interface{}),
 			}
 
-			fs := s.compileAllOfBindingFields(ctx, schema, index)
+			marked[schema.Title] = field
+			fs := s.compileAllOfBindingFields(ctx, schema, index, marked)
 			if len(fs) > 0 {
 				field.Type.Message.Fields = append(field.Type.Message.Fields, fs...)
 			}
