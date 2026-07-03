@@ -1,19 +1,23 @@
 package xlsx
 
 import (
+	"errors"
 	"fmt"
 	"github.com/mojo-lang/mojo/go/pkg/logs"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/core"
-	geom2 "github.com/mojo-lang/mojo/go/pkg/mojo/geom"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/geom"
 	"github.com/xuri/excelize/v2"
+	"os"
+	"path"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 type File core.Options
 
-func (x File) ReadAll(filename string) ([]*geom2.Feature, error) {
+func (x File) ReadAll(filename string) ([]*geom.Feature, error) {
 	f, err := excelize.OpenFile(filename)
 	if err != nil {
 		return nil, err
@@ -63,7 +67,7 @@ func (x File) ReadAll(filename string) ([]*geom2.Feature, error) {
 		return nil, err
 	}
 
-	var features []*geom2.Feature
+	var features []*geom.Feature
 	var title []string
 	idIndex := -1
 	geomIndex := -1
@@ -102,8 +106,8 @@ func (x File) ReadAll(filename string) ([]*geom2.Feature, error) {
 			}
 		}
 
-		feature := geom2.NewFeature(nil)
-		lnglat := &geom2.LngLat{}
+		feature := geom.NewFeature(nil)
+		lnglat := &geom.LngLat{}
 		for j, cell := range row {
 			key := title[j]
 			cell = strings.TrimSpace(cell)
@@ -120,7 +124,7 @@ func (x File) ReadAll(filename string) ([]*geom2.Feature, error) {
 					feature.Id = core.NewStringId(cell)
 				}
 			case geomIndex:
-				feature.Geometry, err = geom2.NewGeometryFromWKT(cell)
+				feature.Geometry, err = geom.NewGeometryFromWKT(cell)
 			case lngIndex:
 				if fv, err := strconv.ParseFloat(cell, 64); err == nil {
 					lnglat.Longitude = fv
@@ -142,7 +146,7 @@ func (x File) ReadAll(filename string) ([]*geom2.Feature, error) {
 
 		if feature.Geometry == nil {
 			if !lnglat.IsEmpty() {
-				feature.Geometry = geom2.NewPointGeometry(lnglat)
+				feature.Geometry = geom.NewPointGeometry(lnglat)
 			} else {
 				return nil, fmt.Errorf("should set the geometry fild name for the excel file %s is empty", filename)
 			}
@@ -154,7 +158,14 @@ func (x File) ReadAll(filename string) ([]*geom2.Feature, error) {
 	return features, nil
 }
 
-func (x File) WriteAll(feats []*geom2.Feature, filename string) error {
+func (x File) WriteAll(feats []*geom.Feature, filename string) error {
+	if len(feats) == 0 {
+		return errors.New("feats is empty")
+	}
+	if len(filename) == 0 {
+		return errors.New("no filename")
+	}
+
 	f := excelize.NewFile()
 	defer func() {
 		if err := f.Close(); err != nil {
@@ -173,26 +184,53 @@ func (x File) WriteAll(feats []*geom2.Feature, filename string) error {
 	if len(sheetName) == 0 {
 		sheetName = "Sheet1"
 	}
+	if len(idField) == 0 {
+		idField = "id"
+	}
+	if len(geomField) == 0 {
+		geomField = "geometry"
+	}
 
 	var titles []string
-	for i, feat := range feats {
-		for j, title := range titles {
-			cell, err := excelize.CoordinatesToCellName(i+2, j+1)
-			if err != nil {
-				return err
-			}
-			var row []interface{}
+	for k, _ := range feats[0].Properties {
+		titles = append(titles, k)
+	}
+	sort.Strings(titles)
 
+	ts := []string{idField}
+	for _, t := range titles {
+		if t != idField {
+			ts = append(ts, t)
+		}
+	}
+	titles = append(ts, geomField)
+	_ = SetRow(f, sheetName, 1, 1, &titles)
+
+	for i, feat := range feats {
+		var row []interface{}
+		for _, title := range titles {
 			switch title {
 			case idField:
+				row = append(row, feat.Id.Format())
 			case geomField:
 				row = append(row, feat.GetGeometry().ToWKT())
 			default:
+				val := ""
+				if v, _ := feat.GetProperty(title); v != nil {
+					switch v.GetKind() {
+					case core.ValueKind_VALUE_KIND_STRING:
+						val = v.GetString()
+					case core.ValueKind_VALUE_KIND_INTEGER:
+						val = strconv.Itoa(int(v.GetInt64()))
+					case core.ValueKind_VALUE_KIND_NUMBER:
+						val = strconv.FormatFloat(v.GetFloat64(), 'f', -1, 64)
+					}
+				}
+				row = append(row, val)
 			}
-
-			if err = f.SetSheetRow(sheetName, cell, &row); err != nil {
-				return err
-			}
+		}
+		if err := SetRow(f, sheetName, i+2, 1, &row); err != nil {
+			return err
 		}
 	}
 
@@ -201,4 +239,39 @@ func (x File) WriteAll(feats []*geom2.Feature, filename string) error {
 		return err
 	}
 	return nil
+}
+
+func SetValue(file *excelize.File, sheet string, row int, col int, value interface{}) error {
+	cell, err := excelize.CoordinatesToCellName(row, col)
+	if err != nil {
+		return err
+	}
+	return file.SetCellValue(sheet, cell, value)
+}
+
+func SetRow(file *excelize.File, sheet string, row int, col int, data interface{}) error {
+	cell, err := excelize.CoordinatesToCellName(col, row)
+	if err != nil {
+		return err
+	}
+	return file.SetSheetRow(sheet, cell, data)
+}
+
+func (x File) WriteAllToBytes(feats []*geom.Feature, filename string) ([]byte, error) {
+	dir, err := os.MkdirTemp("", "mojo-geom-xlsx")
+	if err != nil {
+		return nil, err
+	}
+	fn := path.Join(dir, filename)
+	err = core.CreateDir(path.Dir(fn))
+	if err != nil {
+		return nil, err
+	}
+
+	err = x.WriteAll(feats, fn)
+	if err != nil {
+		return nil, err
+	}
+
+	return os.ReadFile(fn)
 }
