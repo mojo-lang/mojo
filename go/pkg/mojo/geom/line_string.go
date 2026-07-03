@@ -66,6 +66,17 @@ func (x *LineString) Clockwise() int {
 	return 0
 }
 
+// Invert all LineStrings in the Polygon.
+func (x *LineString) Invert() {
+	// For non-special loops, reverse the slice of vertices.
+	if x != nil {
+		for i := len(x.Coordinates)/2 - 1; i >= 0; i-- {
+			opp := len(x.Coordinates) - 1 - i
+			x.Coordinates[i], x.Coordinates[opp] = x.Coordinates[opp], x.Coordinates[i]
+		}
+	}
+}
+
 func (x *LineString) ToGeometry() *Geometry {
 	if x != nil {
 		return &Geometry{

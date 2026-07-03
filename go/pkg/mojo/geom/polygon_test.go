@@ -13,11 +13,41 @@ const (
 	emptyPolygon    = `{"type":"Polygon","coordinates":[]}`
 	polygonStr      = `{"type":"Polygon","coordinates":[[[113.167297,23.522705],[113.166503,23.515686],[113.166503,23.515686]],[[113.167297,23.522705],[113.167297,23.522705],[113.166503,23.515686],[113.166503,23.515686]]]}`
 	polygonWithHole = `{"type":"Polygon","coordinates":[[[121.768212,31.029051],[121.767461,31.023057],[121.775722,31.022487],[121.777288,31.027544]],[[121.769006,31.028206],[121.768383,31.023958],[121.772289,31.023774],[121.772718,31.027801]]]}`
+	polygon2        = `{"coordinates": [[[
+        121.53826756469988,
+        31.241933663047362
+      ],
+      [
+        121.55250926699097,
+        31.23210382936398
+      ],
+      [
+        121.53749063699945,
+        31.216691932075108
+      ],
+      [
+        121.51742594891186,
+        31.225281668189055
+      ],
+      [
+        121.52300403123729,
+        31.237237185116484
+      ],
+      [
+        121.53826756469988,
+        31.241933663047362
+      ]
+    ]
+  ],
+  "type": "Polygon"
+}`
 )
 
 var (
 	pointInPolygonWithHole = &LngLat{Longitude: 121.773898, Latitude: 31.02701}
 	pointInHole            = &LngLat{Longitude: 121.769435, Latitude: 31.025834}
+	pointInPolygon         = &LngLat{Longitude: 121.53329274386743, Latitude: 31.230634466848457}
+	pointNotInPolygon      = &LngLat{Longitude: 121.55457276426586, Latitude: 31.240905045611626}
 )
 
 func TestNewPolygon(t *testing.T) {
@@ -52,6 +82,10 @@ func TestPointInPolygon(t *testing.T) {
 	//if !brunei.Contains(&point) {
 	//	t.Error("Expected the capital of Brunei to be in Brunei, but it wasn't.")
 	//}
+	p := &Polygon{}
+	err := jsoniter.UnmarshalFromString(polygon2, p)
+	assert.NoError(t, err)
+	assert.True(t, p.Contains(pointInPolygon))
 }
 
 // Ensures that the polygon logic can correctly identify if a polygon does not contain a point.
@@ -74,6 +108,10 @@ func TestPointNotInPolygon(t *testing.T) {
 	//if brunei.Contains(precision) {
 	//	t.Error("A point just outside of Brunei should not be contained in the Polygon")
 	//}
+	p := &Polygon{}
+	err := jsoniter.UnmarshalFromString(polygon2, p)
+	assert.NoError(t, err)
+	assert.False(t, p.Contains(pointNotInPolygon))
 }
 
 // Ensures that a point can be contained in a complex polygon (e.g. a donut)

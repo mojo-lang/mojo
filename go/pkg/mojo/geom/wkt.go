@@ -43,6 +43,10 @@ func (w *WKT) Decode(wkt string) (*Geometry, error) {
 }
 
 func (w *WKT) Encode(geometry *Geometry) string {
+	if geometry == nil || geometry.Geometry == nil {
+		return ""
+	}
+
 	buffer := bytes.NewBuffer(nil)
 	return w.encode(buffer, geometry).string(buffer)
 }

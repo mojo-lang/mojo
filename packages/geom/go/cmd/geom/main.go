@@ -4,7 +4,7 @@ import (
 	"errors"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/mojo-lang/mojo/go/pkg/logs"
-	geom2 "github.com/mojo-lang/mojo/go/pkg/mojo/geom"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/geom"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/geom/tile"
 	"github.com/urfave/cli/v2"
 	"io/fs"
@@ -35,23 +35,23 @@ func main() {
 					from := ctx.String("from")
 					to := ctx.String("to")
 					if len(src) > 0 && len(dst) > 0 && strings.HasSuffix(src, ".geojson") && strings.HasSuffix(dst, ".geojson") {
-						f, err := geom2.ParseSpatialReference(from)
+						f, err := geom.ParseSpatialReference(from)
 						if err != nil {
 							logs.Warnw("invalid from SpatialReference", "from type", from)
 							return err
 						}
 
-						t, err := geom2.ParseSpatialReference(to)
+						t, err := geom.ParseSpatialReference(to)
 						if err != nil {
 							logs.Warnw("invalid from SpatialReference", "to type", from)
 							return err
 						}
 
-						if !geom2.CoordTransformSupported(f) {
+						if !geom.CoordTransformSupported(f) {
 							logs.Warnw("invalid from SpatialReference", "from type", from)
 							return errors.New("not supported SpatialReference")
 						}
-						if !geom2.CoordTransformSupported(t) {
+						if !geom.CoordTransformSupported(t) {
 							logs.Warnw("invalid to SpatialReference", "to type", to)
 							return errors.New("not supported SpatialReference")
 						}
@@ -104,12 +104,12 @@ func main() {
 	}
 }
 
-func coordTransformGeojson(fromFile, toFile string, from, to geom2.SpatialReference) error {
+func coordTransformGeojson(fromFile, toFile string, from, to geom.SpatialReference) error {
 	ff, err := os.ReadFile(fromFile)
 	if err != nil {
 		return err
 	}
-	g, err := geom2.NewGeoJsonFrom(ff)
+	g, err := geom.NewGeoJsonFrom(ff)
 	if err != nil {
 		return err
 	}

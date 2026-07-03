@@ -1,10 +1,10 @@
 package tile
 
 import (
-	geom2 "github.com/mojo-lang/mojo/go/pkg/mojo/geom"
 	"math"
 
 	"github.com/golang/geo/s2"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/geom"
 )
 
 const (
@@ -52,7 +52,7 @@ func NewTileIdFromQuadKey(s string) *TileId {
 	return id
 }
 
-func (x *TileId) Vertex(index int32) *geom2.LngLat {
+func (x *TileId) Vertex(index int32) *geom.LngLat {
 	switch index {
 	case 0:
 		return TopLeftPoint(x)
@@ -67,15 +67,15 @@ func (x *TileId) Vertex(index int32) *geom2.LngLat {
 	}
 }
 
-func (x *TileId) Polygon() *geom2.Polygon {
-	polygon := &geom2.Polygon{}
-	line := &geom2.LineString{}
+func (x *TileId) Polygon() *geom.Polygon {
+	polygon := &geom.Polygon{}
+	line := &geom.LineString{}
 	line.Coordinates = append(line.Coordinates, x.Vertex(0))
 	line.Coordinates = append(line.Coordinates, x.Vertex(1))
 	line.Coordinates = append(line.Coordinates, x.Vertex(2))
 	line.Coordinates = append(line.Coordinates, x.Vertex(3))
 	line.Coordinates = append(line.Coordinates, line.Coordinates[0])
-	polygon.LineStrings = []*geom2.LineString{line}
+	polygon.LineStrings = []*geom.LineString{line}
 	return polygon
 }
 
@@ -140,11 +140,11 @@ func (x *TileId) ResetQuadKey(key string) {
 	x.Y = id.Y
 }
 
-func (x *TileId) LngLat2XY(lnglat *geom2.LngLat) (int32, int32) {
+func (x *TileId) LngLat2XY(lnglat *geom.LngLat) (int32, int32) {
 	return LngLat2TileXY(lnglat, x)
 }
 
-func (x *TileId) XY2LonLat(tx float64, ty float64) *geom2.LngLat {
+func (x *TileId) XY2LonLat(tx float64, ty float64) *geom.LngLat {
 	return TileXY2LonLat(x, tx, ty)
 }
 
@@ -167,12 +167,12 @@ func GetTileId(longitude, latitude float64, level int32) *TileId {
 	return &TileId{X: tileX, Y: tileY, Level: level}
 }
 
-func TopLeftPoint(id *TileId) *geom2.LngLat {
+func TopLeftPoint(id *TileId) *geom.LngLat {
 	if id != nil {
 		n := math.Pi - 2.0*math.Pi*float64(id.Y)/math.Pow(2.0, float64(id.Level))
 		longitude := float64(id.X)/math.Pow(2.0, float64(id.Level))*DegreeMax - LongitudeMax
 		latitude := Rad2Deg * math.Atan(0.5*(math.Exp(n)-math.Exp(-n)))
-		return &geom2.LngLat{Longitude: longitude, Latitude: latitude}
+		return &geom.LngLat{Longitude: longitude, Latitude: latitude}
 	}
 	return nil
 }
