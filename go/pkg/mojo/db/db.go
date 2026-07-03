@@ -4,7 +4,8 @@ import (
 	dm "github.com/smilextay/gorm-dm"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlite"
+	//"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -35,7 +36,7 @@ func New(cfg *Config) *DB {
 	}
 
 	if db.Config.Driver == PostgresDriverName {
-		if d, err := gorm.Open(postgres.Open(db.Config.Dsn), &gorm.Config{}); err != nil {
+		if d, err := gorm.Open(postgres.Open(db.Config.Dsn), &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}); err != nil {
 			return nil
 		} else {
 			db.DB = d
