@@ -19,31 +19,33 @@ func (codec *MultiPolygonCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterat
 	if a.ValueType() == jsoniter.ObjectValue {
 		c := a.Get("coordinates")
 		if c.ValueType() == jsoniter.ArrayValue {
-			var coordinates [][][][]float64
-			c.ToVal(&coordinates)
-
-			multiPolygon := (*MultiPolygon)(ptr)
-			for _, polygon := range coordinates {
-				p := Polygon{}
-				for _, line := range polygon {
-					l := LineString{}
-					for _, point := range line {
-						if len(point) > 1 {
-							lngLat := &LngLat{}
-							lngLat.Longitude = point[0]
-							lngLat.Latitude = point[1]
-
-							if len(point) > 2 {
-								lngLat.Altitude = point[2]
-							}
-							l.Coordinates = append(l.Coordinates, lngLat)
-						}
-					}
-					p.LineStrings = append(p.LineStrings, &l)
-				}
-				multiPolygon.Polygons = append(multiPolygon.Polygons, &p)
-			}
+			convertMultiPolygon(c, (*MultiPolygon)(ptr))
 		}
+	} else if a.ValueType() == jsoniter.ArrayValue {
+		dim := arrayDim(0, a)
+		if dim == 3 {
+			polygon := &Polygon{}
+			convertPolygon(a, polygon)
+			mp := (*MultiPolygon)(ptr)
+			mp.Polygons = append(mp.Polygons, polygon)
+		} else if dim == 4 {
+			convertMultiPolygon(a, (*MultiPolygon)(ptr))
+		}
+	}
+}
+
+func convertMultiPolygon(array jsoniter.Any, multipolygon *MultiPolygon) {
+	var coordinates [][][][]float64
+	array.ToVal(&coordinates)
+
+	for _, p := range coordinates {
+		polygon := &Polygon{}
+		for _, line := range p {
+			lineString := parseLine(line)
+			polygon.LineStrings = append(polygon.LineStrings, lineString)
+		}
+
+		multipolygon.Polygons = append(multipolygon.Polygons, polygon)
 	}
 }
 

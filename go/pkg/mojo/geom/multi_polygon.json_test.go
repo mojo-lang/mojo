@@ -31,3 +31,26 @@ func TestMultiPolygonCodec_EncodeEmpty(t *testing.T) {
 	str, _ := jsoniter.ConfigFastest.MarshalToString(mp)
 	assert.Equal(t, emptyMultiPolygon, str)
 }
+
+func TestMultiPolygonCodec_Decode_Raw_Array(t *testing.T) {
+	pstr := `[[[]]]`
+
+	p := &MultiPolygon{}
+	err := jsoniter.UnmarshalFromString(pstr, p)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(p.Polygons))
+	assert.Equal(t, 1, len(p.Polygons[0].LineStrings))
+	assert.Equal(t, 0, len(p.Polygons[0].LineStrings[0].Coordinates))
+
+	pstr = `[[[132,22],[133,21],[134,20],[132,22]]]`
+	p.Polygons = nil
+	err = jsoniter.UnmarshalFromString(pstr, p)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(p.Polygons))
+
+	pstr = `[[[[132,22],[133,21],[134,20],[132,22]]],[[[132,22],[133,21],[134,20],[132,22]]]]`
+	p.Polygons = nil
+	err = jsoniter.UnmarshalFromString(pstr, p)
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(p.Polygons))
+}
