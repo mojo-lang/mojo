@@ -179,17 +179,26 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 			fieldName := injection.ToMojoFieldName(field.Names[0].Name)
 			valDecl := injection.GetStructField(pkg, structName, fieldName)
 
+			ignoreEmpty := true
+			if ie, err := valDecl.GetBoolAttribute(core.IgnoreEmptyAttributeFullName); err == nil && !ie {
+				ignoreEmpty = ie
+			}
+			var options []string
+			if ignoreEmpty {
+				options = append(options, "omitempty")
+			}
+
 			if alias, _ := valDecl.GetStringAttribute(core.AliasAttributeName); len(alias) > 0 {
 				_ = tags.Set(&structtag.Tag{
 					Key:     "json",
 					Name:    strcase.ToLowerCamel(alias),
-					Options: []string{"omitempty"},
+					Options: options,
 				})
 			} else {
 				_ = tags.Set(&structtag.Tag{
 					Key:     "json",
 					Name:    strcase.ToLowerCamel(fieldName),
-					Options: []string{"omitempty"},
+					Options: options,
 				})
 			}
 
