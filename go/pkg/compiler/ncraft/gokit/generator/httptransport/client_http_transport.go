@@ -11,10 +11,12 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
 )
 
+const ClientHttpTransportPath = "NAME-client/http_client.go.tmpl"
+
 type ClientHttpTransport struct {
 }
 
-func NewClientHttpTransport(ds data.Service) (*ClientHttpTransport, error) {
+func NewClientHttpTransport(ds *data.Service) (*ClientHttpTransport, error) {
 	for _, method := range ds.Interface.Methods {
 		for _, binding := range method.Bindings {
 			if encoder, err := createClientEncode(binding, ds.FuncMap); err != nil {

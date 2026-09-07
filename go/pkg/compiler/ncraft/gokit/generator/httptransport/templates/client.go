@@ -10,18 +10,15 @@ var ClientEncodeTemplate = `
 	func EncodeHTTP{{$binding.Label}}Request(_ context.Context, r *http.Request, request interface{}) error {
 		strval := ""
 		_ = strval
-		req := request.(*{{GoPackageName $binding.Parent.RequestType}}.{{GoName $binding.Parent.RequestType}})
+		req := request.(*{{GoPackageName $binding.Parent.Request.Name}}.{{GoName $binding.Parent.Request.Name}})
 		_ = req
 
 		r.Header.Set("transport", "HTTPJSON")
 		r.Header.Set("request-url", r.URL.Path)
 
 		// Set the path parameters
-		path := strings.Join([]string{
-		{{- range $section := $binding.PathSections}}
-			{{$section}},
-		{{- end}}
-		}, "/")
+		path := {{$binding.Path}}
+
 		u, err := url.Parse(path)
 		if err != nil {
 			return errors.Wrapf(err, "couldn't unmarshal path %q", path)
@@ -33,18 +30,11 @@ var ClientEncodeTemplate = `
 		values := r.URL.Query()
 		var tmp []byte
 		_ = tmp
-		{{- range $field := $binding.Fields }}
+		{{- range $field := $binding.Parameters }}
 			{{- if eq $field.Location "query"}}
-				{{if or (not $field.IsBaseType) $field.Repeated}}
-					tmp, err = json.Marshal(req.{{$field.CamelName}})
-					if err != nil {
-						return errors.Wrap(err, "failed to marshal req.{{$field.CamelName}}")
-					}
-					strval = string(tmp)
-					values.Add("{{$field.ParamName}}", strval)
-				{{else}}
-					values.Add("{{$field.ParamName}}", fmt.Sprint(req.{{$field.CamelName}}))
-				{{- end }}
+
+					values.Add("{{$field.Name}}", fmt.Sprint(req.{{$field.Name}}))
+
 			{{- end }}
 		{{- end}}
 
@@ -52,12 +42,12 @@ var ClientEncodeTemplate = `
 
 		// Set the body parameters
 		var buf bytes.Buffer
-		toRet := request.(*{{GoPackageName $binding.Parent.RequestType}}.{{GoName $binding.Parent.RequestType}})
-		{{- range $field := $binding.Fields -}}
+		toRet := request.(*{{GoPackageName $binding.Parent.Request.Name}}.{{GoName $binding.Parent.Request.Name}})
+		{{- range $field := $binding.Parameters -}}
 			{{if eq $field.Location "body"}}
 				{{/* Only set the fields which should be in the body, so all
 				others will be omitted due to emptiness */}}
-				toRet.{{$field.CamelName}} = req.{{$field.CamelName}}
+				toRet.{{$field.Name}} = req.{{$field.Name}}
 			{{end}}
 		{{- end }}
 		encoder := json.NewEncoder(&buf)
@@ -94,13 +84,13 @@ import (
 	"github.com/go-kit/kit/transport/http"
 	"github.com/pkg/errors"
 
-	{{range $i := .ExternalMessageImports}}
-	"{{$i}}"
+	{{$corePackage := "github.com/mojo-lang/mojo/go/pkg/mojo/core"}}
+    "{{$corePackage}}"
+    {{range $i := .Go.ImportedTypePaths}}
+	{{if ne $i $corePackage}}"{{$i}}"{{end}}
 	{{- end}}
 
-	// This Interface
-	"{{.RepositoryPath -}}/pkg/{{ToKebab .Interface.Name}}-service/svc"
-	pb "{{.ApiImportPath -}}"
+	pb "{{.Go.ApiImportPath -}}"
 )
 
 var (
@@ -123,7 +113,7 @@ func NewHttpClient(instance string, options ...ClientOption) (pb.{{.Interface.Se
 			return nil, errors.Wrap(err, "cannot apply option") }
 	}
 
-	{{ if .HTTPHelper.Methods }}
+	{{ if .Interface.Methods }}
 		clientOptions := []http.ClientOption{
 			http.ClientBefore(
 				contextValuesToHttpHeaders(cc.headers)),
@@ -139,11 +129,11 @@ func NewHttpClient(instance string, options ...ClientOption) (pb.{{.Interface.Se
 	}
 	_ = u
 
-	{{if not .HTTPHelper.Methods -}}
+	{{if not .Interface.Methods -}}
 		panic("No HTTP Endpoints, this client will not work, define bindings in your proto definition")
 	{{- end}}
 
-	{{range $method := .HTTPHelper.Methods}}
+	{{range $method := .Interface.Methods}}
 		{{ if $method.Bindings -}}
 			{{ with $binding := index $method.Bindings 0 -}}
 				var {{$binding.Label}}Endpoint endpoint.Endpoint
@@ -161,7 +151,7 @@ func NewHttpClient(instance string, options ...ClientOption) (pb.{{.Interface.Se
 	{{- end}}
 
 	return svc.Endpoints{
-	{{range $method := .HTTPHelper.Methods -}}
+	{{range $method := .Interface.Methods -}}
 		{{ if $method.Bindings -}}
 			{{ with $binding := index $method.Bindings 0 -}}
 				{{ToCamel $method.Name}}Endpoint:    {{$binding.Label}}Endpoint,
@@ -208,9 +198,9 @@ func contextValuesToHttpHeaders(keys []string) http.RequestFunc {
 }
 
 // HTTP Client Decode
-{{range $method := .HTTPHelper.Methods}}
+{{range $method := .Interface.Methods}}
 	// DecodeHTTP{{$method.Name}}Response is a transport/http.DecodeResponseFunc that decodes
-	// a JSON-encoded {{GoName $method.Response}} response from the HTTP response body.
+	// a JSON-encoded {{ToCamel $method.Name}} response from the HTTP response body.
 	// If the response has a non-200 status code, we will interpret that as an
 	// error and attempt to decode the specific error message from the response
 	// body. Primarily useful in a client.
@@ -228,7 +218,7 @@ func contextValuesToHttpHeaders(keys []string) http.RequestFunc {
 			return nil, errors.Wrapf(errorDecoder(buf), "status code: '%d'", r.StatusCode)
 		}
 
-		var resp {{GoPackageName $method.Response}}.{{GoName $method.Response}}
+		var resp {{GoPackageName $method.Name}}.{{GoName $method.Name}}
 		if err = json.Unmarshal(buf, &resp); err != nil {
 			return nil, errorDecoder(buf)
 		}
@@ -238,9 +228,8 @@ func contextValuesToHttpHeaders(keys []string) http.RequestFunc {
 {{end}}
 
 // HTTP Client Encode
-{{range $method := .HTTPHelper.Methods}}
+{{range $method := .Interface.Methods}}
 	{{range $binding := $method.Bindings}}
-		{{$binding.GenClientEncode}}
 	{{end}}
 {{end}}
 

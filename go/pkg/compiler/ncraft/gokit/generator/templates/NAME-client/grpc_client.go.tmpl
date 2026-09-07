@@ -11,8 +11,7 @@ import (
     "time"
     "sync"
 
-    "github.com/ncraft-io/ncraft/go/pkg/gokit/logs"
-    "github.com/ncraft-io/ncraft/go/pkg/gokit/config"
+    "github.com/ncraft-io/ncraft/go/pkg/ncraft/logs"
 
     "github.com/go-kit/kit/endpoint"
     "github.com/go-kit/kit/log"
@@ -23,8 +22,8 @@ import (
     "github.com/ncraft-io/ncraft/go/pkg/gokit/sd/lb"
     nclient "github.com/ncraft-io/ncraft/go/pkg/gokit/client"
 
-	// This Interface
-	pb "{{.ApiImportPath -}}"
+	// this service api
+    pb "{{.Go.ApiImportPath -}}"
 )
 
 func init() {

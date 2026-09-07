@@ -14,12 +14,20 @@ import (
 	"context"
 	"github.com/go-kit/kit/endpoint"
 
-	{{range $i := .ExternalMessageImports}}
-	"{{$i}}"
-	{{- end}}
+	{{range $i := .Go.ImportedTypePaths}}
+        "{{$i}}"
+    {{- end}}
 
-	pb "{{.ApiImportPath -}}"
+    // this service api
+    pb "{{.Go.ApiImportPath -}}"
 )
+
+{{if .HasImported}}
+var ({{range $msg := .ImportedMessages}}
+	_ = {{$msg.Go.PackageName}}.{{$msg.Name}}{}
+{{- end}}{{range $enum := .ImportedEnums}}
+	_ = {{$enum.Go.PackageName}}.{{$enum.Name}}(0)
+{{- end}}){{end}}
 
 // Endpoints collects all of the endpoints that compose an add service. It's
 // meant to be used as a helper struct, to collect all of the endpoints into a
