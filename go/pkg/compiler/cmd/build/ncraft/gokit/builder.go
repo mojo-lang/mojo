@@ -99,8 +99,9 @@ func (b Builder) Build() error {
 		return err
 	}
 
+	const ServiceRepository = "service-go"
 	services := cmp.Services
-	setDefaultRepository("service-go")
+	setDefaultRepository(ServiceRepository)
 	b.Output = path2.Join(b.Output, path2.Base(b.Repository))
 	conf := gokit.Options{
 		Repository:    b.Repository,
@@ -141,6 +142,18 @@ func (b Builder) Build() error {
 			return err
 		}
 	}
+	err = _go.GoModTidy(b.Output)
 
-	return _go.GoModTidy(b.Output)
+	//{
+	//	b.Output = strings.TrimSuffix(b.Output, ServiceRepository)
+	//	b.Repository = strings.TrimSuffix(b.Repository, ServiceRepository)
+	//	b.Type = "client"
+	//	cb := &ClientBuilder{
+	//		Builder:    b.Builder,
+	//		Output:     path2.Join(b.Output, "go/pkg"),
+	//		Repository: b.Repository + "go",
+	//	}
+	//	return cb.Build()
+	//}
+	return err
 }

@@ -20,12 +20,12 @@ import (
 
     "github.com/go-kit/kit/log"
 
-    {{range $i := .ExternalMessageImports}}
-    "{{$i}}"
+    {{range $i := .Go.ImportedTypePaths}}
+            	"{{$i}}"
     {{- end}}
 
-	// This Interface
-	pb "{{.ApiImportPath -}}"
+    // this service api
+    pb "{{.Go.ApiImportPath -}}"
 )
 
 // New returns an service backed by a gRPC client connection. It is the

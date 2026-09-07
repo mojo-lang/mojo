@@ -66,3 +66,11 @@ func TestAnyCodec_Encode3(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, checksumStr, out)
 }
+
+func TestAnyCodec_Encode4(t *testing.T) {
+	any := NewAny(&map[string]string{"k": "v"})
+	out, err := jsoniter.ConfigFastest.MarshalToString(any)
+
+	assert.NoError(t, err)
+	assert.Equal(t, `{"@type":"Map<String,String>","value":{"k":"v"}}`, out)
+}

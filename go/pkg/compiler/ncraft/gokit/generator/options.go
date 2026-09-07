@@ -138,6 +138,14 @@ func generateTemplateFile(tmplPath string, actualPath string, ds *data.Service, 
 		if genCode, err = transport.Render(tmplPath, ds); err != nil {
 			return nil, errors.Wrapf(err, "cannot render templates: %s", tmplPath)
 		}
+	case httptransport.ClientHttpTransportPath:
+		transport, err := httptransport.NewClientHttpTransport(ds)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to create the server http transport")
+		}
+		if genCode, err = transport.Render(tmplPath, ds); err != nil {
+			return nil, errors.Wrapf(err, "cannot render templates: %s", tmplPath)
+		}
 	default:
 		if genCode, err = applyTemplateFromPath(tmplPath, ds, getter); err != nil {
 			return nil, errors.Wrapf(err, "cannot render templates: %s", tmplPath)
