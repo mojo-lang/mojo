@@ -42,14 +42,18 @@ func (x *Polygon) Add(point *LngLat) *Polygon {
 }
 
 // Invert all LineStrings in the Polygon.
-func (x *Polygon) Invert() {
-	// For non-special loops, reverse the slice of vertices.
-	for _, line := range x.LineStrings {
-		for i := len(line.Coordinates)/2 - 1; i >= 0; i-- {
-			opp := len(line.Coordinates) - 1 - i
-			line.Coordinates[i], line.Coordinates[opp] = line.Coordinates[opp], line.Coordinates[i]
+func (x *Polygon) Invert() *Polygon {
+	if x != nil {
+		// For non-special loops, reverse the slice of vertices.
+		for _, line := range x.LineStrings {
+			for i := len(line.Coordinates)/2 - 1; i >= 0; i-- {
+				opp := len(line.Coordinates) - 1 - i
+				line.Coordinates[i], line.Coordinates[opp] = line.Coordinates[opp], line.Coordinates[i]
+			}
 		}
 	}
+
+	return x
 }
 
 // IsClosed returns whether or not the polygon is closed.
@@ -58,13 +62,18 @@ func (x *Polygon) Invert() {
 //	this should be sufficient for detecting if points
 //	are contained using the raycast algorithm.
 func (x *Polygon) IsClosed() bool {
-	for _, line := range x.LineStrings {
-		if len(line.Coordinates) < 3 {
-			return false
+	if x != nil && len(x.LineStrings) > 0 {
+		for _, line := range x.LineStrings {
+			if len(line.Coordinates) < 3 {
+				return false
+			}
+			if len(line.Coordinates) == 3 && line.Coordinates[0].Equal(line.Coordinates[2]) {
+				return false
+			}
 		}
+		return true
 	}
-
-	return true
+	return false
 }
 
 // Contains returns whether the current Polygon contains the passed in Point.
