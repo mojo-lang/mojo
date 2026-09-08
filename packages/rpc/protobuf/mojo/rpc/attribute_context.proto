@@ -11,7 +11,7 @@ import "mojo/core/value.proto";
 option go_package = "github.com/mojo-lang/mojo/go/pkg/mojo/rpc;rpc";
 option java_multiple_files = true;
 option java_outer_classname = "AttributeContextProto";
-option java_package = "org.mojo-lang.mojo.rpc";
+option java_package = "org.mojolang.mojo.rpc";
 
 message AttributeContext {
     message Peer {

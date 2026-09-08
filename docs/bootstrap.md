@@ -54,8 +54,9 @@ go run ./cmd/mojo build -t go ../packages/core
 ```
 
 `go`（或 `golang`）目标仅生成 Protobuf 和 Go；`protobuf` 目标仅生成
-Protobuf；`api` 目标继续包含 OpenAPI、文档、Protobuf 和 Go。
-命令不会生成 C++ 或 Java。服务生成仅支持 gokit。
+Protobuf；`java` 目标生成 Protobuf、Java 消息类和 gRPC stub；
+`api` 目标继续包含 OpenAPI、文档、Protobuf 和 Go。
+C++ 不受支持，NCraft 服务生成仅支持 gokit。
 
 核心组件构建时优先读取本仓库中的依赖源码；显式声明的依赖 path
 优先于自动定位。普通仓库外的项目继续使用 CLI 内嵌的核心组件快照。
@@ -63,3 +64,25 @@ Protobuf；`api` 目标继续包含 OpenAPI、文档、Protobuf 和 Go。
 
 `build -t go -o /path/to/output ...` 可指定 Go 输出目录。
 Protobuf 中间文件仍写入组件的 `protobuf` 目录，保证 protoc 读取本次生成的文件。
+
+## Java 核心组件
+
+Java 主源码统一位于 `java/src/main/java`，测试位于 `java/src/test`。
+原 `packages/<组件>/java` 中的手写辅助类及测试已迁入该目录。
+
+```sh
+# 在 go 目录执行
+go run ./cmd/mojo bootstrap -t java
+go run ./cmd/mojo build -t java ../packages/core
+# 同时更新 Go 和 Java
+go run ./cmd/mojo bootstrap -t go,java
+```
+
+`build -t java -o <目录>` 将 Java 源码写入该目录下的 `src/main/java`。
+每个 Mojo 包在 `java/.mojo-generated` 中记录自己的生成文件，单包重生成
+仅删除该包已不再使用的生成文件，并保留其他包及手写文件。
+
+ANTLR Java 语法代码也生成到 `java/src/main/java`；可以从任意工作目录执行
+`antlr/mojo/generate-java.sh`。脚本在临时副本中转换语言专用谓词，失败时
+也不会改写原始 `.g4` 文件。旧 `java/mojo` 解析器原型保留在原目录，
+不属于新的 Maven 类库构建。详见 `java/README.md`。

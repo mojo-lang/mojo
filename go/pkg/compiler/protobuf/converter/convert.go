@@ -260,6 +260,9 @@ func (c *Convert) compileInterface(ctx context.Context, decl *lang.InterfaceDecl
 }
 
 func getOrganizationPrefix(pkg *lang.Package) string {
+	if pkg.GoModName() == lang.MojoGoModule {
+		return "org.mojolang"
+	}
 	organization := pkg.GetOrganization()
 	if len(organization) == 0 {
 		if strings.HasPrefix(pkg.FullName, "mojo.") {

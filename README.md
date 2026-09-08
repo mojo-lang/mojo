@@ -1,8 +1,10 @@
 # Mojo
 
-## Regenerating the Go core libraries
+## Regenerating the core libraries
 
 From `go/`, run `go run ./cmd/mojo bootstrap`, then rebuild the CLI.
+Use `go run ./cmd/mojo bootstrap -t java` to update the shared Java library,
+or `-t go,java` to regenerate both languages. See [the Java build guide](java/README.md).
 See [the bootstrap guide](docs/bootstrap.md) for the source layout, outputs, and single-package builds.
 
 

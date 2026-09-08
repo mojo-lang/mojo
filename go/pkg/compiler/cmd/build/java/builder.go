@@ -1,20 +1,22 @@
 package java
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/compiler/context"
-	"github.com/mojo-lang/mojo/go/pkg/compiler/java/generator"
-	"github.com/mojo-lang/mojo/go/pkg/logs"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/core"
-	"github.com/mojo-lang/mojo/go/pkg/mojo/protobuf/descriptor"
-	"github.com/otiai10/copy"
-	"github.com/pkg/errors"
+	"encoding/json"
+	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
-	"path"
+	"path/filepath"
+	"sort"
+	"strings"
 
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/builder"
 	gogen "github.com/mojo-lang/mojo/go/pkg/compiler/go/generator/generator"
+	"github.com/mojo-lang/mojo/go/pkg/compiler/java/generator"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/core"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/lang"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/protobuf/descriptor"
 )
 
 type Builder struct {
@@ -23,140 +25,182 @@ type Builder struct {
 	Files  []*descriptor.File
 }
 
-func (b Builder) protocJava() error {
-	if b.Package == nil {
-		return errors.New("")
+func (b Builder) outputDirectory() string {
+	if b.Output != "" {
+		return util.GetAbsolutePath(b.PWD, b.Output)
 	}
-
-	var tempPbDirs []string
-	cmd := exec.Command("protoc", "-I.")
-	for _, dep := range b.Package.ResolvedDependencies {
-		wd := dep.GetExtraString("workingDir")
-		p := dep.GetExtraString("path")
-		if len(wd) == 0 && len(p) == 0 {
-			pbDir, err := gogen.GenerateMojoPackageProtobuf(dep)
-			if err != nil {
-				logs.Errorw("failed to generate mojo package's protobuf files", "package", dep.FullName, "error", err)
-				return err
-			}
-			if len(pbDir) > 0 {
-				tempPbDirs = append(tempPbDirs, pbDir)
-				cmd.Args = append(cmd.Args, "--proto_path="+pbDir)
-			}
-		} else {
-			cmd.Args = append(cmd.Args, "--proto_path="+path.Join(wd, p, "protobuf"))
+	if b.Package.GoModName() == lang.MojoGoModule {
+		if root := util.MojoRepositoryRoot(b.GetAbsolutePath()); root != "" {
+			return filepath.Join(root, "java")
 		}
 	}
-
-	cmd.Dir = path.Join(b.GetAbsolutePath(), "protobuf")
-
-	//$ protoc --plugin=protoc-gen-grpc-java \
-	//--grpc-java_out="$OUTPUT_FILE" --proto_path="$DIR_OF_PROTO_FILE" "$PROTO_FILE"
-
-	// cmd.Args = append(cmd.Args, "--go_out=.")
-	cmd.Args = append(cmd.Args, "--java_out=.")
-	cmd.Args = append(cmd.Args, "--grpc-java_out=.")
-	for _, file := range b.Files {
-		if file.IsEmpty() {
-			continue
-		}
-
-		fileCmd := &exec.Cmd{
-			Path: cmd.Path,
-			Args: cmd.Args,
-			Dir:  cmd.Dir,
-		}
-		fileCmd.Args = append(fileCmd.Args, file.GetName())
-		out, err := fileCmd.CombinedOutput()
-		if err != nil {
-			logs.Errorw("failed to run protoc cmd", "error", string(out), "cmd", cmd.String())
-			return err
-		}
-	}
-	defer func() {
-		for _, d := range tempPbDirs {
-			if err := os.RemoveAll(d); err != nil {
-				logs.Warnw("failed to remove all the template protobuf files", "error", err)
-			}
-		}
-	}()
-
-	// move the generated files to destinations
-	destDir := path.Join(b.GetAbsolutePath(), "java/src/main/java")
-	if !core.IsExist(destDir) {
-		if err := core.CreateDir(destDir); err != nil {
-			return err
-		}
-	}
-
-	if err := util.DeepClearGeneratedFiles(destDir, ".java"); err != nil {
-		return err
-	}
-
-	for _, domain := range []string{"ai", "biz", "cn", "com", "edu", "gov", "net", "org", "info", "io", "tech"} {
-		srcDir := path.Join(b.GetAbsolutePath(), "protobuf", domain)
-		_, err := os.ReadDir(srcDir)
-		if err == nil {
-			if err = copy.Copy(srcDir, path.Join(destDir, domain)); err != nil {
-				return err
-			}
-			if err = os.RemoveAll(srcDir); err != nil {
-				return err
-			}
-			break
-		}
-	}
-
-	return nil
+	return filepath.Join(b.GetAbsolutePath(), "java")
 }
 
-func (b Builder) build() error {
-	logs.Infow("java begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
-
-	cmp := generator.NewCompiler()
-	options := make(core.Options)
-
-	err := cmp.CompilePackage(context.WithOptions(context.Empty(), options), b.Package)
+func (b Builder) protocJava(output string) error {
+	if b.Package == nil {
+		return fmt.Errorf("cannot generate Java without a Mojo package")
+	}
+	var inputs []string
+	hasServices := false
+	for _, file := range b.Files {
+		if !file.IsEmpty() {
+			inputs = append(inputs, file.GetName())
+			hasServices = hasServices || file.HasService()
+		}
+	}
+	// Custom options are a handwritten proto, so they are not in the AST's
+	// generated descriptors. Their Java class must be emitted as well.
+	if b.Package.FullName == "mojo.core" && core.IsExist(filepath.Join(b.GetAbsolutePath(), "protobuf/mojo/mojo.proto")) {
+		inputs = append(inputs, "mojo/mojo.proto")
+	}
+	sort.Strings(inputs)
+	tempDir, err := os.MkdirTemp("", "mojo-java-")
 	if err != nil {
-		logs.Errorw("failed to compile java", "package", b.Package.FullName, "error", err.Error())
 		return err
 	}
-
-	services := cmp.Services
-	err = generator.GenerateService(services, b.Output)
-	if err != nil {
-		logs.Errorw("generate java failed", "pwd", b.PWD, "path", b.Path, "package", b.Package.FullName, "error", err.Error())
+	defer os.RemoveAll(tempDir)
+	if len(inputs) > 0 {
+		cmd := exec.Command("protoc", "-I.", "--java_out="+tempDir)
+		cmd.Dir = filepath.Join(b.GetAbsolutePath(), "protobuf")
+		if hasServices {
+			cmd.Args = append(cmd.Args, "--grpc-java_out="+tempDir)
+		}
+		var tempPbDirs []string
+		defer func() {
+			for _, dir := range tempPbDirs {
+				_ = os.RemoveAll(dir)
+			}
+		}()
+		seen := map[string]bool{b.Package.FullName: true}
+		var includeDependencies func(*lang.Package) error
+		includeDependencies = func(pkg *lang.Package) error {
+			var names []string
+			for name := range pkg.ResolvedDependencies {
+				names = append(names, name)
+			}
+			sort.Strings(names)
+			for _, name := range names {
+				dep := pkg.ResolvedDependencies[name]
+				if dep == nil || seen[dep.FullName] {
+					continue
+				}
+				seen[dep.FullName] = true
+				wd, p := dep.GetExtraString("workingDir"), dep.GetExtraString("path")
+				pbDir := filepath.Join(wd, p, "protobuf")
+				if wd == "" && p == "" {
+					var err error
+					pbDir, err = gogen.GenerateMojoPackageProtobuf(dep)
+					if err != nil {
+						return err
+					}
+					if pbDir != "" {
+						tempPbDirs = append(tempPbDirs, pbDir)
+					}
+				}
+				if pbDir != "" {
+					cmd.Args = append(cmd.Args, "--proto_path="+pbDir)
+				}
+				if err := includeDependencies(dep); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+		if err := includeDependencies(b.Package); err != nil {
+			return err
+		}
+		cmd.Args = append(cmd.Args, inputs...)
+		if out, err := cmd.CombinedOutput(); err != nil {
+			return fmt.Errorf("generate Java for %s: %w\n%s", b.Package.FullName, err, out)
+		}
+	}
+	if err := generator.UpdateProtoJavaFiles(tempDir); err != nil {
 		return err
 	}
+	var files util.GeneratedFiles
+	err = filepath.WalkDir(tempDir, func(name string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if entry.IsDir() || !strings.HasSuffix(name, ".java") {
+			return nil
+		}
+		rel, err := filepath.Rel(tempDir, name)
+		if err != nil {
+			return err
+		}
+		content, err := os.ReadFile(name)
+		if err != nil {
+			return err
+		}
+		files = append(files, &util.GeneratedFile{
+			Name:                filepath.ToSlash(filepath.Join("src/main/java", rel)),
+			Content:             "// Code generated by mojo. DO NOT EDIT.\n\n" + string(content),
+			SkipIfUserCodeMixed: true,
+		})
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return writeJavaFiles(output, b.Package.FullName, files)
+}
 
-	return nil
+// Each package owns only the files in its manifest. Regenerating core must not
+// clear the Java files emitted by document, lang, or an unrelated package.
+func writeJavaFiles(output, packageName string, files util.GeneratedFiles) error {
+	manifest := filepath.Join(output, ".mojo-generated", packageName+".json")
+	var previous []string
+	if contents, err := os.ReadFile(manifest); err == nil {
+		if err := json.Unmarshal(contents, &previous); err != nil {
+			return err
+		}
+	} else if !os.IsNotExist(err) {
+		return err
+	}
+	guard := &util.PathGuard{DisableClear: true}
+	current := make(map[string]bool)
+	var names []string
+	for _, file := range files {
+		if err := file.WriteTo(output, guard); err != nil {
+			return err
+		}
+		current[file.Name] = true
+		names = append(names, file.Name)
+	}
+	for _, name := range previous {
+		clean := filepath.ToSlash(filepath.Clean(name))
+		if clean != name || !strings.HasPrefix(name, "src/main/java/") || !strings.HasSuffix(name, ".java") {
+			return fmt.Errorf("invalid generated Java path %q in %s", name, manifest)
+		}
+		if !current[name] {
+			target := filepath.Join(output, filepath.FromSlash(name))
+			if util.IsAllGeneratedFile(target) {
+				if err := os.Remove(target); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	sort.Strings(names)
+	contents, err := json.MarshalIndent(names, "", "  ")
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(manifest), 0755); err != nil {
+		return err
+	}
+	return os.WriteFile(manifest, append(contents, '\n'), 0644)
 }
 
 func (b Builder) Build() error {
 	if !b.APIEnabled {
-		logs.Infow("disable generation, skip to build java.")
 		return nil
 	}
-	logs.Infow("begin to build file.", "pwd", b.PWD, "path", b.Path)
-
-	if len(b.Output) == 0 {
-		b.Output = util.GetAbsolutePath(b.PWD, b.Path)
+	if b.Package == nil {
+		return fmt.Errorf("cannot generate Java without a Mojo package")
 	}
-	b.Output = path.Join(b.Output, "java")
-
-	// protoc the protobuf files to java files
-	if err := b.protocJava(); err != nil {
-		return err
-	}
-
-	// other java files builder
-	if err := b.build(); err != nil {
-		return err
-	}
-
-	if err := generator.UpdateProtoJavaFiles(b.Output); err != nil {
-		return err
-	}
-
-	return nil
+	output := b.outputDirectory()
+	return b.protocJava(output)
 }

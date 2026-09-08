@@ -77,7 +77,7 @@ func TestBootstrapLocalSources(t *testing.T) {
 }
 
 func TestUnsupportedBuildTargets(t *testing.T) {
-	for _, target := range []string{"java", "cpp", "invalid"} {
+	for _, target := range []string{"cpp", "invalid"} {
 		b := Builder{Targets: target}
 		require.ErrorContains(t, b.Execute(), "unsupported build target")
 	}

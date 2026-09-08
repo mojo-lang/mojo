@@ -15,6 +15,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/builder"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/document"
 	_go "github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/go"
+	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/java"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/mojo"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/ncraft/gokit"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/openapi"
@@ -38,6 +39,7 @@ type Builder struct {
 
 	APIEnabled      bool
 	GoEnabled       bool
+	JavaEnabled     bool
 	ProtobufEnabled bool
 
 	NcraftAllEnabled     bool
@@ -68,6 +70,9 @@ func (b *Builder) Execute() error {
 			b.APIEnabled = true
 		case "go", "golang":
 			b.GoEnabled = true
+			b.ProtobufEnabled = true
+		case "java":
+			b.JavaEnabled = true
 			b.ProtobufEnabled = true
 		case "protobuf":
 			b.ProtobufEnabled = true
@@ -110,6 +115,9 @@ func (b *Builder) Execute() error {
 	if err := b.buildGo(); err != nil {
 		return err
 	}
+	if err := b.buildJava(); err != nil {
+		return err
+	}
 
 	// compile the resource to sql orm file (including sql script, create table)
 	if b.NcraftAllEnabled || b.NcraftServiceEnabled {
@@ -144,7 +152,7 @@ func (b *Builder) buildMojo() (err error) {
 
 func (b *Builder) buildProtobuf() (err error) {
 	output := ""
-	if !b.APIEnabled && !b.GoEnabled && b.Output != "" {
+	if !b.APIEnabled && !b.GoEnabled && !b.JavaEnabled && b.Output != "" {
 		output = util.GetAbsolutePath(b.Pwd, b.Output)
 	}
 	b.Files, err = protobuf.Builder{
@@ -159,6 +167,14 @@ func (b *Builder) buildProtobuf() (err error) {
 		Output: output,
 	}.Build()
 	return err
+}
+
+func (b *Builder) buildJava() error {
+	return java.Builder{
+		Builder: builder.Builder{PWD: b.Pwd, Path: b.Path, Package: b.Package, APIEnabled: b.JavaEnabled},
+		Output:  b.Output,
+		Files:   b.Files,
+	}.Build()
 }
 
 func (b *Builder) buildGo() error {
