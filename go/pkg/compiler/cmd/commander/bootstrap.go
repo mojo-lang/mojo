@@ -3,6 +3,7 @@ package commander
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -17,9 +18,12 @@ func Bootstrap(start string, targets ...string) error {
 	if len(targets) > 0 {
 		target = strings.Join(targets, ",")
 	}
+	generateGo := false
 	for _, name := range strings.Split(target, ",") {
 		switch strings.TrimSpace(name) {
-		case "go", "golang", "java":
+		case "go", "golang":
+			generateGo = true
+		case "java":
 		default:
 			return fmt.Errorf("unsupported bootstrap target %q; use go or java", name)
 		}
@@ -43,5 +47,44 @@ func Bootstrap(start string, targets ...string) error {
 		}
 	}
 
+	if generateGo {
+		if err := generateMojoOptionsGo(root); err != nil {
+			return err
+		}
+	}
 	return mpm.GenerateMojoPackages(root)
+}
+
+// The handwritten custom options proto has no Mojo AST descriptor, so it needs
+// a separate protoc invocation after the standard library has been generated.
+func generateMojoOptionsGo(root string) error {
+	protoDir := filepath.Join(root, "protobuf")
+	if _, err := os.Stat(filepath.Join(root, "package.mojo")); os.IsNotExist(err) {
+		protoDir = filepath.Join(util.MojoPackagePath(root, "core"), "protobuf")
+	}
+	if _, err := os.Stat(filepath.Join(protoDir, "mojo", "mojo.proto")); err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+	tempDir, err := os.MkdirTemp("", "mojo-options-go-")
+	if err != nil {
+		return err
+	}
+	defer os.RemoveAll(tempDir)
+	cmd := exec.Command("protoc", "-I.", "--go_out="+tempDir, "--go_opt=paths=source_relative", "mojo/mojo.proto")
+	cmd.Dir = protoDir
+	if out, err := cmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("bootstrap Go custom options mojo/mojo.proto: %w\n%s", err, out)
+	}
+	contents, err := os.ReadFile(filepath.Join(tempDir, "mojo", "mojo.pb.go"))
+	if err != nil {
+		return err
+	}
+	output := filepath.Join(root, "go", "pkg", "mojo", "mojo.pb.go")
+	if err := os.MkdirAll(filepath.Dir(output), 0755); err != nil {
+		return err
+	}
+	return os.WriteFile(output, contents, 0644)
 }

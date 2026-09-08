@@ -36,6 +36,7 @@ type DependencyParser struct {
 }
 
 func NewDependencyParser(options core.Options) *DependencyParser {
+	_ = options
 	return &DependencyParser{
 		BasicPlugin: plugin.BasicPlugin{
 			Name:          pluginName,
@@ -56,6 +57,7 @@ func NewDependencyParser(options core.Options) *DependencyParser {
 // TODO implement the imports
 func (p *DependencyParser) ParseFile(ctx context.Context, fileName string) (*lang.SourceFile, error) {
 	_ = ctx
+	_ = fileName
 	return nil, nil
 }
 

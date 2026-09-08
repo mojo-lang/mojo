@@ -55,6 +55,8 @@ protoc 生成 Go、Go 扩展代码生成。最后刷新
 
 - Protobuf：`protobuf/mojo/<组件>`
 - Go：`go/pkg/mojo/<组件>`
+- Go 自定义 Protobuf options：`protobuf/mojo/mojo.proto` → `go/pkg/mojo/mojo.pb.go`
+  （默认、`go`、`golang` 或 `go,java` 自举时更新）
 - 内嵌快照：`go/pkg/compiler/mojo/mpm/mojo`
 
 自举不会创建 `packages/<组件>/go`，也不会改写共享的 `go.mod` 或执行
