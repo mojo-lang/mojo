@@ -206,5 +206,6 @@ hs_err_pid*
 
 java/target/
 java/mojo/target/
+java/.mojo-generated/
 
 # End of https://www.gitignore.io/api/go,c++,java,cmake,intellij+all,visualstudiocode

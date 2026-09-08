@@ -11,7 +11,7 @@ From the repository's `go` directory:
 
 ```sh
 go run ./cmd/mojo bootstrap -t java
-go run ./cmd/mojo build -t java ../packages/core
+go run ./cmd/mojo build -t java ../mojo/core
 ```
 
 Use `bootstrap -t go,java` to update both language libraries. The default
@@ -78,7 +78,7 @@ JDK 25; see the [Lombok changelog](https://projectlombok.org/changelog).
 Regenerate the test fixtures from their protos with:
 
 ```sh
-make -C packages/core/protobuf java-tests
+make -C protobuf java-tests
 ```
 
 Generator regressions and script checks:

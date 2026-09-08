@@ -1,4 +1,0 @@
-#ifndef MOJO_CORE_TUPLE_HPP
-#define MOJO_CORE_TUPLE_HPP
-
-#endif //MOJO_CORE_TUPLE_HPP

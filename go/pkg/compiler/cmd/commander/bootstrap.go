@@ -2,6 +2,7 @@ package commander
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -27,11 +28,20 @@ func Bootstrap(start string, targets ...string) error {
 	if root == "" {
 		return fmt.Errorf("cannot find Mojo source repository from %q", start)
 	}
-	for _, name := range mpm.MojoPackageNames {
-		b := Builder{Pwd: root, Path: filepath.Join(root, "packages", name), Targets: target}
+
+	if _, err := os.Stat(filepath.Join(root, "package.mojo")); err == nil {
+		b := Builder{Pwd: root, Path: root, Targets: target}
 		if err := b.Execute(); err != nil {
-			return fmt.Errorf("bootstrap mojo.%s: %w", name, err)
+			return fmt.Errorf("bootstrap: %w", err)
+		}
+	} else {
+		for _, name := range mpm.MojoPackageNames {
+			b := Builder{Pwd: root, Path: util.MojoPackagePath(root, name), Targets: target}
+			if err := b.Execute(); err != nil {
+				return fmt.Errorf("bootstrap mojo.%s: %w", name, err)
+			}
 		}
 	}
+
 	return mpm.GenerateMojoPackages(root)
 }

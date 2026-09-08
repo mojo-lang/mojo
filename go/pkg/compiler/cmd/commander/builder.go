@@ -3,6 +3,7 @@ package commander
 import (
 	"fmt"
 	"path"
+	"sort"
 	"strings"
 
 	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
@@ -97,6 +98,53 @@ func (b *Builder) Execute() error {
 		return err
 	}
 
+	if b.Package.GetExtraBool("package-set") {
+		members := make(map[string]*lang.Package)
+		for _, pkg := range b.Package.Children {
+			members[pkg.FullName] = pkg
+		}
+		built := make(map[string]bool)
+		var build func(*lang.Package) error
+		build = func(pkg *lang.Package) error {
+			if built[pkg.FullName] {
+				return nil
+			}
+			built[pkg.FullName] = true
+			var names []string
+			for name := range pkg.ResolvedDependencies {
+				names = append(names, name)
+			}
+			sort.Strings(names)
+			for _, name := range names {
+				if dep := members[name]; dep != nil && dep == pkg.ResolvedDependencies[name] {
+					if err := build(dep); err != nil {
+						return err
+					}
+				}
+			}
+			child := *b
+			// Generators mutate the AST (for example protobuf lowers generic types).
+			// Give each package its own compilation pipeline and dependency ASTs.
+			child.Package = nil
+			child.PackageName = pkg.FullName
+			if err := child.Execute(); err != nil {
+				return fmt.Errorf("build %s: %w", pkg.FullName, err)
+			}
+			return nil
+		}
+		for _, pkg := range b.Package.Children {
+			if err := build(pkg); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
+	return b.buildOutputs()
+}
+
+func (b *Builder) buildOutputs() error {
+
 	if b.APIEnabled || b.NcraftAllEnabled || b.NcraftServiceEnabled || b.NcraftClientEnabled || b.NcraftSidecarEnabled {
 		if err := b.buildOpenapi(); err != nil {
 			return err
@@ -142,6 +190,7 @@ func (b *Builder) Execute() error {
 
 func (b *Builder) buildMojo() (err error) {
 	b.Package, err = mojo.Builder{
+		PackageName: b.PackageName,
 		Builder: builder.Builder{
 			PWD:  b.Pwd,
 			Path: b.Path,

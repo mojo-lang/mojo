@@ -1,5 +1,13 @@
 # Mojo
 
+## Project layout
+
+Package declarations are consolidated in `package.mojo`. Sources live in `mojo/`;
+Go, Java, Markdown, OpenAPI, and Protobuf outputs share the root `go/`, `java/`,
+`document/`, `openapi/`, and `protobuf/` directories. From `go/`, use
+`go run ./cmd/mojo build -t api ..` for all declared packages, or
+`go run ./cmd/mojo build -t go ../mojo/core` for one package.
+
 ## Regenerating the core libraries
 
 From `go/`, run `go run ./cmd/mojo bootstrap`, then rebuild the CLI.

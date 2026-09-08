@@ -14,6 +14,7 @@ import (
 
 type Builder struct {
 	builder.Builder
+	PackageName string
 }
 
 func (b Builder) Build() (*lang.Package, error) {
@@ -21,7 +22,7 @@ func (b Builder) Build() (*lang.Package, error) {
 
 	plugins := plugin.NewPlugins("mpm", "syntax", "semantic", "compiler")
 
-	pkg, err := plugins.ParsePath(context.Empty(), b.GetAbsolutePath())
+	pkg, err := plugins.ParsePath(plugin.WithPackageName(context.Empty(), b.PackageName), b.GetAbsolutePath())
 	if err != nil {
 		return nil, err
 	}

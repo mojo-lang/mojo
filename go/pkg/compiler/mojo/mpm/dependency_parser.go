@@ -3,8 +3,10 @@ package mpm
 import (
 	"errors"
 	"fmt"
+	"os"
 	"path"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/mojo-lang/mojo/go/pkg/logs"
@@ -18,6 +20,8 @@ import (
 
 const pluginName = "mpm.dependency-parser"
 
+var errNotPackageDeclaration = errors.New("expected a package declaration")
+
 func init() {
 	plugin.RegisterPlugin(NewDependencyParser(nil))
 }
@@ -27,6 +31,8 @@ type DependencyParser struct {
 
 	parsedPackages map[string]*lang.Package
 	localMojoRoot  string
+	manifests      map[string][]*lang.Package
+	resolving      map[string]bool
 }
 
 func NewDependencyParser(options core.Options) *DependencyParser {
@@ -41,6 +47,8 @@ func NewDependencyParser(options core.Options) *DependencyParser {
 			},
 		},
 		parsedPackages: make(map[string]*lang.Package),
+		manifests:      make(map[string][]*lang.Package),
+		resolving:      make(map[string]bool),
 	}
 }
 
@@ -62,7 +70,7 @@ func (p *DependencyParser) ParsePackage(ctx context.Context, pkg *lang.Package) 
 			logs.Infow("begin to parse mojo dependency", "dependency", dep.FullName)
 
 			cloned := plugins.Copy()
-			if err := cloned.ParsePackage(plugin.WithPlugins(ctx, cloned), dep); err != nil && !core.IsSkipError(err) {
+			if err := cloned.ParsePackage(plugin.WithPackageName(plugin.WithPlugins(ctx, cloned), dep.FullName), dep); err != nil && !core.IsSkipError(err) {
 				return err
 			}
 		}
@@ -85,32 +93,149 @@ func (p *DependencyParser) ParsePath(ctx context.Context, pkgPath string) (*lang
 	if err != nil {
 		return nil, err
 	}
-	if pkg, ok := p.parsedPackages[fullPath]; ok {
-		logs.Infow("skip when already parsed the package", "plugin", p.Name, "method", "ParsePackagePath", "fullPath", fullPath)
-		return pkg, nil
-	}
+	return p.loadPath(ctx, fullPath, plugin.ContextPackageName(ctx))
+}
 
-	// parse the mojo package
-	pkg, err := p.parsePackageFile(ctx, fullPath)
+// ReadPackageDeclarations reads every declaration, preserving its metadata and order.
+func ReadPackageDeclarations(ctx context.Context, dir string) ([]*lang.Package, error) {
+	file, err := plugin.NewPlugins("syntax").ParseFile(ctx, path.Join(dir, "package.mojo"))
 	if err != nil {
 		return nil, err
 	}
+	var packages []*lang.Package
+	seen := make(map[string]bool)
+	for _, statement := range file.Statements {
+		decl := statement.GetDeclaration().GetPackageDecl()
+		if decl == nil || decl.Package == nil {
+			return nil, fmt.Errorf("%s: %w", file.FullName, errNotPackageDeclaration)
+		}
+		pkg := decl.Package
+		if seen[pkg.FullName] {
+			return nil, fmt.Errorf("%s: duplicate package %s", file.FullName, pkg.FullName)
+		}
+		seen[pkg.FullName] = true
+		pkg.SetExtraString("path", dir)
+		pkg.ResolvedDependencies = make(map[string]*lang.Package)
+		packages = append(packages, pkg)
+	}
+	if len(packages) == 0 {
+		return nil, fmt.Errorf("%s: no package declarations", file.FullName)
+	}
+	return packages, nil
+}
 
-	pkg.SetExtraString("path", fullPath)
-	pkg.SetExtraString("workingDir", "")
+func (p *DependencyParser) loadPath(ctx context.Context, requested, name string) (*lang.Package, error) {
+
+	dir := requested
+	var packages []*lang.Package
+	var sourceFileError error
+	for {
+		if cached, ok := p.manifests[dir]; ok {
+			packages = cached
+			break
+		}
+		if info, err := os.Stat(filepath.Join(dir, "package.mojo")); err == nil && !info.IsDir() {
+			packages, err = ReadPackageDeclarations(ctx, dir)
+			if err == nil {
+				p.manifests[dir] = packages
+				break
+			}
+			// An ordinary source file can also be named package.mojo (mojo.lang.Package).
+			// It must not hide the project manifest in an ancestor directory.
+			if !errors.Is(err, errNotPackageDeclaration) {
+				return nil, err
+			}
+			sourceFileError = err
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			if sourceFileError != nil {
+				return nil, sourceFileError
+			}
+			return nil, fmt.Errorf("no package.mojo found for %s", requested)
+		}
+		dir = parent
+	}
+
+	if name == "" && requested != dir {
+		rel, _ := filepath.Rel(dir, requested)
+		name = strings.ReplaceAll(filepath.ToSlash(rel), "/", ".")
+		for _, pkg := range packages {
+			if "mojo."+pkg.FullName == name {
+				name = pkg.FullName
+				break
+			}
+		}
+	}
+	if name != "" {
+		for _, pkg := range packages {
+			if pkg.FullName == name {
+				return p.resolvePackage(ctx, dir, pkg)
+			}
+		}
+		return nil, fmt.Errorf("package %s is not declared in %s", name, filepath.Join(dir, "package.mojo"))
+	}
+	if len(packages) == 1 {
+		return p.resolvePackage(ctx, dir, packages[0])
+	}
+	set := &lang.Package{Children: packages, Implicit: true}
+	set.SetExtraBool("package-set", true)
+	set.SetExtraString("path", dir)
+	for _, pkg := range packages {
+		if _, err := p.resolvePackage(ctx, dir, pkg); err != nil {
+			return nil, err
+		}
+	}
+	return set, nil
+}
+
+func (p *DependencyParser) resolvePackage(ctx context.Context, fullPath string, pkg *lang.Package) (*lang.Package, error) {
+	key := fullPath + "#" + pkg.FullName
+	if cached := p.parsedPackages[key]; cached != nil {
+		return cached, nil
+	}
+	if p.resolving[key] {
+		return nil, fmt.Errorf("cyclic package dependency involving %s", pkg.FullName)
+	}
+	p.resolving[key] = true
+	defer delete(p.resolving, key)
 	if p.localMojoRoot == "" && pkg.GoModName() == lang.MojoGoModule {
 		p.localMojoRoot = util.MojoRepositoryRoot(fullPath)
 	}
+	var err error
 
 	// parse the dependency
 	includedMojoPkg := false
-	for name, d := range pkg.Dependencies {
+	names := make([]string, 0, len(pkg.Dependencies))
+	for name := range pkg.Dependencies {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		d := pkg.Dependencies[name]
 		if strings.HasPrefix(name, "mojo.") {
 			includedMojoPkg = true
 		}
+		if d.Path == "" {
+			var sibling *lang.Package
+			for _, candidate := range p.manifests[fullPath] {
+				if candidate.FullName == name {
+					sibling = candidate
+					break
+				}
+			}
+			if sibling != nil {
+				dep, err := p.resolvePackage(ctx, fullPath, sibling)
+				if err != nil {
+					return nil, err
+				}
+				pkg.ResolvedDependencies[name] = dep
+				continue
+			}
+		}
 		depPath := d.Path
 		if depPath == "" && p.localMojoRoot != "" && strings.HasPrefix(name, "mojo.") {
-			depPath = filepath.Join(p.localMojoRoot, "packages", strings.TrimPrefix(name, "mojo."))
+			depPath = util.MojoPackagePath(p.localMojoRoot, strings.TrimPrefix(name, "mojo."))
 		}
 		if depPath == "" && strings.HasPrefix(name, "mojo.") {
 			depPkg := GetMojoPackage(name)
@@ -129,7 +254,7 @@ func (p *DependencyParser) ParsePath(ctx context.Context, pkgPath string) (*lang
 		}
 
 		depPath = util.GetAbsolutePath(fullPath, depPath)
-		depPkg, err := p.ParsePath(ctx, depPath)
+		depPkg, err := p.loadPath(ctx, depPath, name)
 		if err != nil {
 			return nil, err
 		}
@@ -156,40 +281,6 @@ func (p *DependencyParser) ParsePath(ctx context.Context, pkgPath string) (*lang
 		}
 	}
 
-	p.parsedPackages[fullPath] = pkg
+	p.parsedPackages[key] = pkg
 	return pkg, nil
-}
-
-func (p *DependencyParser) parsePackageFile(ctx context.Context, pkgPath string) (*lang.Package, error) {
-	plugins := plugin.NewPlugins("syntax")
-	packageFile := path.Join(pkgPath, "package.mojo")
-	file, err := plugins.ParseFile(ctx, packageFile)
-	if err != nil {
-		logs.Errorw("failed to parse package file", "file", packageFile, "error", err.Error())
-		return nil, err
-	}
-
-	if len(file.Statements) == 0 {
-		logs.Errorw("not a valid package.mojo file, has no statement include", "file", file.FullName)
-		return nil, errors.New("there is no package declaration in mojo file")
-	}
-
-	decl := file.Statements[0].GetDeclaration()
-	if decl == nil {
-		logs.Errorw("not a valid package.mojo file, has no declaration statement include", "file", file.FullName)
-		return nil, errors.New("there is no package declaration in mojo file")
-	}
-
-	pkgDecl := decl.GetPackageDecl()
-	if pkgDecl == nil {
-		logs.Errorw("not a valid package.mojo file, has no declaration statement include", "file", file.FullName)
-		return nil, errors.New("there is no package declaration in mojo file")
-	}
-
-	pkg := pkgDecl.Package
-	if len(pkg.Dependencies) > 0 {
-		pkg.ResolvedDependencies = make(map[string]*lang.Package)
-	}
-
-	return pkgDecl.Package, nil
 }

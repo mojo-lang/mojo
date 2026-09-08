@@ -81,6 +81,13 @@ func prepareEnv() error {
 }
 
 func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.GeneratedFiles, error) {
+	hasInput := false
+	for _, file := range files {
+		hasInput = hasInput || !file.IsEmpty()
+	}
+	if !hasInput {
+		return nil, nil
+	}
 	if err := prepareEnv(); err != nil {
 		return nil, err
 	}

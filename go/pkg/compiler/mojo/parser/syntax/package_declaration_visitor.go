@@ -28,7 +28,7 @@ func parsePackage(decl *lang.PackageDecl) *lang.PackageDecl {
 	decl.Package.Name = lang.GetPackageName(decl.Name)
 
 	literalExpr := decl.PackageLiteralExpr
-	for _, field := range literalExpr.Fields {
+	for _, field := range literalExpr.GetFields() {
 		switch field.Name {
 		case "authors":
 			if array := field.Value.GetArrayLiteralExpr(); array != nil {

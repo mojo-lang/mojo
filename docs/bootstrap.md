@@ -1,6 +1,6 @@
 # 更新 Mojo 核心组件的 Go 代码
 
-Mojo 的 IDL 位于 `packages/<组件>/mojo/...`，语法由
+Mojo 的 IDL 位于 `mojo/<组件>/...`，语法由
 `antlr/mojo/MojoLexer.g4` 和 `MojoParser.g4` 定义。命令行入口是
 `go/cmd/mojo`，编译器位于 `go/pkg/compiler`，生成代码与手工编写的
 运行时共同位于 `go/pkg/mojo`。
@@ -8,6 +8,23 @@ Mojo 的 IDL 位于 `packages/<组件>/mojo/...`，语法由
 所有内置组件共享 `go/go.mod` 中的模块
 `github.com/mojo-lang/mojo/go`。`package.mojo` 的 repository 仍表示
 IDL 的位置，不再对应一个独立的 Go 模块。
+
+## 统一目录与包声明
+
+根目录的 `package.mojo` 可包含多条 `package` 声明，各自保留版本、作者、
+仓库和依赖。同一清单中的依赖优先从本地解析，显式 `path` 优先，重复声明
+与循环依赖会报错。单包项目仍支持原有清单格式。
+
+- `mojo/`：核心组件 IDL，按包名组织。
+- `go/`、`java/`：生成代码与手写实现。
+- `document/`：各 struct 的 Markdown 说明。
+- `openapi/`：struct schema 与 Interface 服务 API 说明。
+- `protobuf/`：生成与手写 Protobuf。
+
+在 `go/` 中运行 `go run ./cmd/mojo build -t api ..` 构建清单中的全部包；
+`go run ./cmd/mojo build -t go ../mojo/core` 只构建 core，
+也可使用 `go run ./cmd/mojo build -t go -p mojo.core ..` 按包名选择。
+原有 `mojo.net` 和 `mojo/tinyapi` 实验源码保留；tinyapi 尚无包声明，不参与默认构建。
 
 ## 完整自举
 
@@ -28,7 +45,7 @@ go build ./cmd/mojo ./pkg/mojo/...
 mojo bootstrap /path/to/mojo
 ```
 
-命令依次更新 core、document、lang、db、geom、http、openapi、rpc。
+命令按依赖顺序更新根清单声明的所有组件（包括预留的 protobuf、yaml、net 包）。
 每个组件都经过本地 Mojo 源码解析、语义处理、AST 到 Protobuf 转换、
 protoc 生成 Go、Go 扩展代码生成。最后刷新
 `go/pkg/compiler/mojo/mpm/mojo` 中内嵌的 AST 和 Protobuf 快照。
@@ -36,7 +53,7 @@ protoc 生成 Go、Go 扩展代码生成。最后刷新
 
 生成位置为：
 
-- Protobuf：`packages/<组件>/protobuf`
+- Protobuf：`protobuf/mojo/<组件>`
 - Go：`go/pkg/mojo/<组件>`
 - 内嵌快照：`go/pkg/compiler/mojo/mpm/mojo`
 
@@ -50,7 +67,7 @@ protoc 生成 Go、Go 扩展代码生成。最后刷新
 在仓库的 `go` 目录运行：
 
 ```sh
-go run ./cmd/mojo build -t go ../packages/core
+go run ./cmd/mojo build -t go ../mojo/core
 ```
 
 `go`（或 `golang`）目标仅生成 Protobuf 和 Go；`protobuf` 目标仅生成
@@ -63,7 +80,7 @@ C++ 不受支持，NCraft 服务生成仅支持 gokit。
 依赖组件也有变动时，运行完整 `bootstrap`，以同步依赖的 Go 代码和快照。
 
 `build -t go -o /path/to/output ...` 可指定 Go 输出目录。
-Protobuf 中间文件仍写入组件的 `protobuf` 目录，保证 protoc 读取本次生成的文件。
+Protobuf 中间文件仍写入仓库根目录的 `protobuf` 目录，保证 protoc 读取本次生成的文件。
 
 ## Java 核心组件
 
@@ -73,7 +90,7 @@ Java 主源码统一位于 `java/src/main/java`，测试位于 `java/src/test`�
 ```sh
 # 在 go 目录执行
 go run ./cmd/mojo bootstrap -t java
-go run ./cmd/mojo build -t java ../packages/core
+go run ./cmd/mojo build -t java ../mojo/core
 # 同时更新 Go 和 Java
 go run ./cmd/mojo bootstrap -t go,java
 ```

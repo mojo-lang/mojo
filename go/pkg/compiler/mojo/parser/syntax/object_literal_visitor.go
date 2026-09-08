@@ -1,8 +1,6 @@
 package syntax
 
 import (
-	"fmt"
-
 	"github.com/mojo-lang/mojo/go/pkg/mojo/lang"
 )
 
@@ -11,8 +9,6 @@ func GetObjectLiteral(ctx IObjectLiteralContext) *lang.ObjectLiteralExpr {
 		visitor := NewObjectLiteralVisitor()
 		if expr, ok := ctx.Accept(visitor).(*lang.Expression); ok {
 			return expr.GetObjectLiteralExpr()
-		} else {
-			fmt.Print("===> error")
 		}
 	}
 	return nil
@@ -36,6 +32,7 @@ func (e *ObjectLiteralVisitor) VisitObjectLiteral(ctx *ObjectLiteralContext) int
 				return lang.NewObjectLiteralExpression(expr)
 			}
 		}
+		return lang.NewObjectLiteralExpression(&lang.ObjectLiteralExpr{StartPosition: GetPosition(ctx.GetStart()), EndPosition: GetPosition(ctx.GetStop())})
 	}
 	return nil
 }

@@ -145,12 +145,39 @@ func GenerateMojoPackages(projectPath string) error {
 	if root == "" {
 		return fmt.Errorf("cannot find Mojo source repository from %q", projectPath)
 	}
-	for _, name := range MojoPackageNames {
-		if err := generatePackage(filepath.Join(root, "packages", name), filepath.Join(root, "go")); err != nil {
+
+	paths, err := MojoPackagePaths(root)
+	if err != nil {
+		return err
+	}
+	for _, pkgPath := range paths {
+		if err := generatePackage(pkgPath, filepath.Join(root, "go")); err != nil {
 			return err
 		}
 	}
+
 	return nil
+}
+
+// MojoPackagePaths follows the unified manifest, retaining legacy checkout support.
+func MojoPackagePaths(root string) ([]string, error) {
+	var paths []string
+	if _, err := os.Stat(filepath.Join(root, "package.mojo")); err == nil {
+		packages, err := ReadPackageDeclarations(context.Empty(), root)
+		if err != nil {
+			return nil, err
+		}
+		for _, pkg := range packages {
+			paths = append(paths, filepath.Join(root, lang.PackageNameToPath(pkg.FullName)))
+		}
+	} else if !os.IsNotExist(err) {
+		return nil, err
+	} else {
+		for _, name := range MojoPackageNames {
+			paths = append(paths, util.MojoPackagePath(root, name))
+		}
+	}
+	return paths, nil
 }
 
 // MojoPackageNames is ordered so that dependencies are generated first.
@@ -253,10 +280,10 @@ func compileMojoPackage(dir string) (*lang.Package, *BinaryFile, error) {
 	}
 
 	var pbFile *BinaryFile
-	pbDir := path.Join(dir, "protobuf")
+	pbDir := path.Join(p.GetExtraString("path"), "protobuf")
 	if core.IsExist(pbDir) {
 		pbFile = &BinaryFile{Parts: make(map[string][]byte)}
-		err = filepath.WalkDir(path.Join(dir, "protobuf"), func(path string, d fs.DirEntry, err error) error {
+		err = filepath.WalkDir(pbDir, func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}
@@ -276,7 +303,10 @@ func compileMojoPackage(dir string) (*lang.Package, *BinaryFile, error) {
 			if err != nil {
 				return err
 			}
-			pbFile.Parts[name] = content
+			if strings.HasPrefix(filepath.ToSlash(name), lang.PackageNameToPath(p.FullName)+"/") ||
+				(p.FullName == "mojo.core" && (name == "mojo/mojo.proto" || strings.HasPrefix(name, "google/"))) {
+				pbFile.Parts[name] = content
+			}
 			return nil
 		})
 		if err != nil {

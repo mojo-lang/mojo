@@ -82,6 +82,23 @@ func (p *Plugins) ParsePath(ctx context.Context, pkgPath string) (pkg *lang.Pack
 		return nil, errors.New(fmt.Sprintf("failed to parse the pckage %s", pkgPath))
 	}
 
+	if pkg.GetExtraBool("package-set") {
+		for _, child := range pkg.Children {
+			cloned := p.Copy()
+			childCtx := WithPackageName(WithPlugins(ctx, cloned), child.FullName)
+			if err := cloned.ParsePackage(childCtx, child); err != nil {
+				return nil, err
+			}
+			for _, descendant := range child.GetAllPackages() {
+				if descendant != child {
+					descendant.ResolvedDependencies = child.ResolvedDependencies
+				}
+			}
+		}
+		return pkg, nil
+	}
+	thisCtx = WithPackageName(thisCtx, pkg.FullName)
+
 	if err = p.ParsePackage(thisCtx, pkg); err != nil {
 		return nil, err
 	}
