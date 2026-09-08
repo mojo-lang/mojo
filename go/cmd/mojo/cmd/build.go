@@ -70,13 +70,13 @@ func (b *BuildCmd) Build() {
 		&cli.StringFlag{
 			Name:        "targets",
 			Aliases:     []string{"t"},
-			Usage:       "the target to generate",
+			Usage:       "targets: api, go (or golang), protobuf, service, client, sidecar",
 			Destination: &b.Targets,
 		},
 		&cli.StringFlag{
 			Name:        "output",
 			Aliases:     []string{"o"},
-			Usage:       "the Output to generate",
+			Usage:       "the Go output directory (defaults to the shared go directory for Mojo's standard library)",
 			Destination: &b.Output,
 		},
 		&cli.StringFlag{

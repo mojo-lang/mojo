@@ -8,6 +8,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
 
 	"github.com/mojo-lang/mojo/go/pkg/logs"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/lang"
 	desc "github.com/mojo-lang/mojo/go/pkg/mojo/protobuf/descriptor"
 
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/builder"
@@ -35,8 +36,18 @@ func (b Builder) Build() error {
 	}
 
 	output := path2.Join(b.GetAbsolutePath(), "go")
+	sharedModule := false
+	if b.Package.GoModName() == lang.MojoGoModule {
+		if root := util.MojoRepositoryRoot(b.GetAbsolutePath()); root != "" {
+			output = path2.Join(root, "go")
+			sharedModule = true
+		}
+	}
 	if len(b.Output) > 0 {
 		output = util.GetAbsolutePath(b.PWD, b.Output)
+	}
+	if sharedModule {
+		compiler.Data.GoMod = nil
 	}
 	gen := generator.NewGenerator(files, compiler.Data)
 	err = gen.Generate(output)
@@ -45,6 +56,9 @@ func (b Builder) Build() error {
 		return err
 	}
 
+	if sharedModule {
+		return nil
+	}
 	return GoModTidy(output)
 }
 

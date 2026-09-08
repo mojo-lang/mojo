@@ -1,9 +1,11 @@
 package commander
 
 import (
-	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/ncraft/boot"
+	"fmt"
 	"path"
 	"strings"
+
+	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
 
 	"github.com/mojo-lang/mojo/go/pkg/mojo/core"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/lang"
@@ -13,7 +15,6 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/builder"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/document"
 	_go "github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/go"
-	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/java"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/mojo"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/ncraft/gokit"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/openapi"
@@ -35,7 +36,9 @@ type Builder struct {
 	Pwd  string
 	Path string
 
-	APIEnabled bool
+	APIEnabled      bool
+	GoEnabled       bool
+	ProtobufEnabled bool
 
 	NcraftAllEnabled     bool
 	NcraftServiceEnabled bool
@@ -53,16 +56,21 @@ func (b *Builder) Execute() error {
 	if len(b.Targets) == 0 {
 		b.Targets = "api"
 
-		if core.IsExist(path.Join(b.Path, "service-go")) || core.IsExist(path.Join(b.Path, "service-java")) {
+		if core.IsExist(path.Join(util.GetAbsolutePath(b.Pwd, b.Path), "service-go")) {
 			b.Targets = "api,service"
 		}
 	}
 
 	targets := strings.Split(b.Targets, ",")
 	for _, target := range targets {
-		switch target {
+		switch strings.TrimSpace(target) {
 		case "api":
 			b.APIEnabled = true
+		case "go", "golang":
+			b.GoEnabled = true
+			b.ProtobufEnabled = true
+		case "protobuf":
+			b.ProtobufEnabled = true
 		case "ncraft":
 			b.NcraftAllEnabled = true
 		case "ncraft.service", "service":
@@ -71,7 +79,12 @@ func (b *Builder) Execute() error {
 			b.NcraftClientEnabled = true
 		case "ncraft.sidecar", "sidecar":
 			b.NcraftSidecarEnabled = true
+		default:
+			return fmt.Errorf("unsupported build target %q", target)
 		}
+	}
+	if b.Engine != "" && b.Engine != "gokit" {
+		return fmt.Errorf("unsupported engine %q; only gokit is supported", b.Engine)
 	}
 
 	// build the mojo package
@@ -79,14 +92,13 @@ func (b *Builder) Execute() error {
 		return err
 	}
 
-	// compile the target package to openapi
-	if err := b.buildOpenapi(); err != nil {
-		return err
-	}
-
-	// compile the target package to document
-	if err := b.buildDocument(); err != nil {
-		return err
+	if b.APIEnabled || b.NcraftAllEnabled || b.NcraftServiceEnabled || b.NcraftClientEnabled || b.NcraftSidecarEnabled {
+		if err := b.buildOpenapi(); err != nil {
+			return err
+		}
+		if err := b.buildDocument(); err != nil {
+			return err
+		}
 	}
 
 	// compile the target package to protobuf & generate the protobuf files
@@ -110,20 +122,11 @@ func (b *Builder) Execute() error {
 			if err := b.buildGokit("service"); err != nil {
 				return err
 			}
-		case "boot":
-			if err := b.buildBoot("service"); err != nil {
-				return err
-			}
 		}
 	}
 	if b.NcraftAllEnabled || b.NcraftClientEnabled {
 	}
 	if b.NcraftAllEnabled || b.NcraftSidecarEnabled {
-	}
-
-	// generate the target package to java
-	if err := b.buildJava(); err != nil {
-		return err
 	}
 
 	return nil
@@ -140,14 +143,20 @@ func (b *Builder) buildMojo() (err error) {
 }
 
 func (b *Builder) buildProtobuf() (err error) {
+	output := ""
+	if !b.APIEnabled && !b.GoEnabled && b.Output != "" {
+		output = util.GetAbsolutePath(b.Pwd, b.Output)
+	}
 	b.Files, err = protobuf.Builder{
 		Builder: builder.Builder{
 			PWD:        b.Pwd,
 			Path:       b.Path,
 			Package:    b.Package,
-			APIEnabled: b.APIEnabled,
+			APIEnabled: b.APIEnabled || b.ProtobufEnabled,
 		},
-		Output: b.Output,
+		// Protoc reads the package's protobuf directory. --output selects the
+		// final Go destination when building Go code.
+		Output: output,
 	}.Build()
 	return err
 }
@@ -158,20 +167,7 @@ func (b *Builder) buildGo() error {
 			PWD:        b.Pwd,
 			Path:       b.Path,
 			Package:    b.Package,
-			APIEnabled: b.APIEnabled,
-		},
-		Output: b.Output,
-		Files:  b.Files,
-	}.Build()
-}
-
-func (b *Builder) buildJava() error {
-	return java.Builder{
-		Builder: builder.Builder{
-			PWD:        b.Pwd,
-			Path:       b.Path,
-			Package:    b.Package,
-			APIEnabled: b.APIEnabled,
+			APIEnabled: b.APIEnabled || b.GoEnabled,
 		},
 		Output: b.Output,
 		Files:  b.Files,
@@ -206,20 +202,6 @@ func (b *Builder) buildDocument() error {
 
 func (b *Builder) buildGokit(ncraftType string) error {
 	return gokit.Builder{
-		Builder: builder.Builder{
-			PWD:        b.Pwd,
-			Path:       b.Path,
-			Package:    b.Package,
-			APIEnabled: b.APIEnabled,
-		},
-		Type:       ncraftType,
-		Output:     b.Output,
-		Repository: b.Repository,
-	}.Build()
-}
-
-func (b *Builder) buildBoot(ncraftType string) error {
-	return boot.Builder{
 		Builder: builder.Builder{
 			PWD:        b.Pwd,
 			Path:       b.Path,

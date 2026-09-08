@@ -1,5 +1,9 @@
 # Mojo
 
+## Regenerating the Go core libraries
+
+From `go/`, run `go run ./cmd/mojo bootstrap`, then rebuild the CLI.
+See [the bootstrap guide](docs/bootstrap.md) for the source layout, outputs, and single-package builds.
 
 
 ## What can do

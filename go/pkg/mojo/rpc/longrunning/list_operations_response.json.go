@@ -49,5 +49,7 @@ func (codec *ListOperationsResponseCodec) Encode(ptr unsafe.Pointer, stream *jso
 	listOperationsResponse := (*ListOperationsResponse)(ptr)
 	if len(listOperationsResponse.Operations) > 0 {
 		stream.WriteVal(listOperationsResponse.Operations)
+	} else {
+		stream.WriteRaw("[]")
 	}
 }

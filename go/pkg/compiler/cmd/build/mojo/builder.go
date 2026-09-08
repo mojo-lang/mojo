@@ -1,9 +1,6 @@
 package mojo
 
 import (
-	"path"
-	"strings"
-
 	"github.com/mojo-lang/mojo/go/pkg/logs"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/lang"
 
@@ -24,10 +21,7 @@ func (b Builder) Build() (*lang.Package, error) {
 
 	plugins := plugin.NewPlugins("mpm", "syntax", "semantic", "compiler")
 
-	if strings.HasPrefix(b.Path, b.PWD) {
-		b.Path = strings.TrimPrefix(b.Path, b.PWD)
-	}
-	pkg, err := plugins.ParsePath(context.Empty(), path.Join(b.PWD, b.Path))
+	pkg, err := plugins.ParsePath(context.Empty(), b.GetAbsolutePath())
 	if err != nil {
 		return nil, err
 	}

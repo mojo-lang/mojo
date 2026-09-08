@@ -26,6 +26,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/context"
 	_ "github.com/mojo-lang/mojo/go/pkg/compiler/mojo/parser"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/plugin"
+	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
 )
 
 // force including the rpc, geom package in go.mod for generating all the mojo packages
@@ -137,29 +138,23 @@ func GetMojoPbFile(name string) *BinaryFile {
 	return target
 }
 
-// GenerateMojoPackages
-// 1. parse the mojo go.mod
-// 2. clone or update the git repo for all mojo packages
-// 3. parse the core package using ony syntax parser
-// 4. then other package one by one
+// GenerateMojoPackages refreshes the embedded syntax ASTs and protobuf files
+// from a local checkout. Generate protobuf first so the two snapshots agree.
 func GenerateMojoPackages(projectPath string) error {
-	//pkgs := parseGoMod(projectPath)
-	for _, dir := range []string{
-		"../packages/core",
-		"../packages/db",
-		"../packages/document",
-		"../packages/geom",
-		"../packages/http",
-		"../packages/lang",
-		"../packages/openapi",
-		"../packages/rpc",
-	} {
-		if err := generatePackage(dir, projectPath); err != nil {
+	root := util.MojoRepositoryRoot(projectPath)
+	if root == "" {
+		return fmt.Errorf("cannot find Mojo source repository from %q", projectPath)
+	}
+	for _, name := range MojoPackageNames {
+		if err := generatePackage(filepath.Join(root, "packages", name), filepath.Join(root, "go")); err != nil {
 			return err
 		}
 	}
 	return nil
 }
+
+// MojoPackageNames is ordered so that dependencies are generated first.
+var MojoPackageNames = []string{"core", "document", "lang", "db", "geom", "http", "openapi", "rpc"}
 
 type mojoPackage struct {
 	Name       string
@@ -305,11 +300,14 @@ func savePackage(projectPath string, pkg *lang.Package, pb *BinaryFile) error {
 	if pkg != nil {
 		shrinkPackage(pkg)
 
-		bytes, err := proto.Marshal(pkg)
+		bytes, err := (proto.MarshalOptions{Deterministic: true}).Marshal(pkg)
 		if err != nil {
 			return err
 		}
 		fileName := path.Join(projectPath, "pkg/compiler/mojo/mpm/mojo", pkg.Name+".binary")
+		if err := os.MkdirAll(filepath.Dir(fileName), 0755); err != nil {
+			return err
+		}
 
 		err = os.WriteFile(fileName, bytes, fs.ModePerm)
 		if err != nil {
@@ -331,7 +329,7 @@ func savePackage(projectPath string, pkg *lang.Package, pb *BinaryFile) error {
 }
 
 func generatePackage(dir string, projectPath string) error {
-	dir = path.Join(projectPath, dir)
+	dir = util.GetAbsolutePath(projectPath, dir)
 	pkg, pb, err := compileMojoPackage(dir)
 	if err != nil {
 		return err

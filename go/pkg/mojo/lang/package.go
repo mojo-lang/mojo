@@ -218,9 +218,17 @@ func (x *Package) HasChild(name string) bool {
 	return false
 }
 
+const MojoGoModule = "github.com/mojo-lang/mojo/go"
+
 func (x *Package) GoModName() string {
-	if x.Repository != nil {
-		return fmt.Sprintf("%s%s/go", x.Repository.GetAuthority().GetHost(), x.Repository.GetPath())
+	if x != nil && x.Repository != nil {
+		repository := x.Repository.GetAuthority().GetHost() + strings.TrimSuffix(x.Repository.GetPath(), "/")
+		// The Mojo IDL packages share one Go module, independently of their
+		// source locations under packages/.
+		if strings.HasPrefix(repository, "github.com/mojo-lang/mojo/packages/") {
+			return MojoGoModule
+		}
+		return repository + "/go"
 	}
 	return ""
 }
@@ -383,13 +391,8 @@ func (x *Package) DeleteEntityEdge(name string) *Package {
 }
 
 func (x *Package) GetGoPackageImport() string {
-	if x != nil {
-		repository := x.Repository
-		if repository != nil {
-			goPackageFullName := PackageNameToPath(x.FullName)
-			return fmt.Sprintf("%s%s/go/pkg/%s", repository.Authority.Host, repository.Path, goPackageFullName)
-		}
-		return ""
+	if x != nil && x.Repository != nil {
+		return x.GoFullPackageName()
 	}
 	return ""
 }

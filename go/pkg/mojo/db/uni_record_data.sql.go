@@ -23,20 +23,22 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-func (x *UniRecordData) Value() (driver.Value, error) {
+func (x UniRecordData) Value() (driver.Value, error) {
 	return JSONValuer{}.Value(x.Object)
-
 }
 
 func (x *UniRecordData) Scan(value interface{}) error {
-	return JSONScanner{}.Scan(&x.Object, value)
+	if x.Object == nil {
+		x.Init()
+	}
+	return JSONScanner{}.Scan(x.Object, value)
 
 }
 
-func (x *UniRecordData) GormDBDataType(gdb *gorm.DB, field *schema.Field) string {
+func (x UniRecordData) GormDBDataType(gdb *gorm.DB, field *schema.Field) string {
 	return JSONDbDataType{}.GormDBDataType(gdb, field)
 }
 
-func (x *UniRecordData) GormDataType() string {
+func (x UniRecordData) GormDataType() string {
 	return "string"
 }

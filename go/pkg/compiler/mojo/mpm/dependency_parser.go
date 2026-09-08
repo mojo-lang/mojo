@@ -26,6 +26,7 @@ type DependencyParser struct {
 	plugin.BasicPlugin
 
 	parsedPackages map[string]*lang.Package
+	localMojoRoot  string
 }
 
 func NewDependencyParser(options core.Options) *DependencyParser {
@@ -80,11 +81,10 @@ func (p *DependencyParser) ParsePath(ctx context.Context, pkgPath string) (*lang
 	workingDir := plugin.ContextWorkingDir(ctx)
 	logs.Infow("enter the plugin", "plugin", p.Name, "method", "ParsePackagePath", "workingDir", workingDir, "path", pkgPath)
 
-	if strings.HasPrefix(pkgPath, workingDir) {
-		pkgPath = strings.TrimPrefix(pkgPath, workingDir)
+	fullPath, err := filepath.Abs(util.GetAbsolutePath(workingDir, pkgPath))
+	if err != nil {
+		return nil, err
 	}
-
-	fullPath := filepath.Join(workingDir, pkgPath)
 	if pkg, ok := p.parsedPackages[fullPath]; ok {
 		logs.Infow("skip when already parsed the package", "plugin", p.Name, "method", "ParsePackagePath", "fullPath", fullPath)
 		return pkg, nil
@@ -96,23 +96,31 @@ func (p *DependencyParser) ParsePath(ctx context.Context, pkgPath string) (*lang
 		return nil, err
 	}
 
-	pkg.SetExtraString("path", pkgPath)
-	pkg.SetExtraString("workingDir", workingDir)
+	pkg.SetExtraString("path", fullPath)
+	pkg.SetExtraString("workingDir", "")
+	if p.localMojoRoot == "" && pkg.GoModName() == lang.MojoGoModule {
+		p.localMojoRoot = util.MojoRepositoryRoot(fullPath)
+	}
 
 	// parse the dependency
 	includedMojoPkg := false
 	for name, d := range pkg.Dependencies {
 		if strings.HasPrefix(name, "mojo.") {
+			includedMojoPkg = true
+		}
+		depPath := d.Path
+		if depPath == "" && p.localMojoRoot != "" && strings.HasPrefix(name, "mojo.") {
+			depPath = filepath.Join(p.localMojoRoot, "packages", strings.TrimPrefix(name, "mojo."))
+		}
+		if depPath == "" && strings.HasPrefix(name, "mojo.") {
 			depPkg := GetMojoPackage(name)
 			if depPkg == nil {
 				return nil, fmt.Errorf("failed to found the required package %s", name)
 			}
-			includedMojoPkg = true
 			pkg.ResolvedDependencies[depPkg.FullName] = depPkg
 			continue
 		}
 
-		depPath := d.Path
 		if len(depPath) == 0 {
 			depPath, err = GetPackageCenter().Get(name, d)
 			if err != nil {
@@ -120,7 +128,7 @@ func (p *DependencyParser) ParsePath(ctx context.Context, pkgPath string) (*lang
 			}
 		}
 
-		depPath = util.GetAbsolutePath(filepath.Join(workingDir, pkgPath), depPath)
+		depPath = util.GetAbsolutePath(fullPath, depPath)
 		depPkg, err := p.ParsePath(ctx, depPath)
 		if err != nil {
 			return nil, err
