@@ -45,7 +45,7 @@ func TestBootstrapLocalSources(t *testing.T) {
 		write("packages/"+name+"/package.mojo", fmt.Sprintf("package mojo.%s {\nrepository: 'github.com/mojo-lang/mojo/packages/%s'\n%s\n}", name, name, dependencies))
 		write("packages/"+name+"/mojo/"+name+"/bootstrap.mojo", source)
 	}
-	require.NoError(t, Bootstrap(filepath.Join(root, "go")))
+	require.NoError(t, Bootstrap(filepath.Join(root, "go"), "go"))
 	require.Contains(t, read("go/pkg/mojo/document/bootstrap.pb.go"), lang.MojoGoModule+"/pkg/mojo/core")
 	require.Contains(t, read("packages/core/protobuf/mojo/core/bootstrap.proto"), lang.MojoGoModule+"/pkg/mojo/core;core")
 	require.NoFileExists(t, filepath.Join(root, "packages/core/go/go.mod"))
@@ -55,7 +55,7 @@ func TestBootstrapLocalSources(t *testing.T) {
 	// A second pass must read the updated source, and update both the generated
 	// Go file and the snapshots that the next CLI binary embeds.
 	write("packages/core/mojo/core/bootstrap.mojo", "type String\ntype BootstrapProbe { value: String @1\n revision: String @2 }")
-	require.NoError(t, Bootstrap(root))
+	require.NoError(t, Bootstrap(root, "go"))
 	require.Contains(t, read("go/pkg/mojo/core/bootstrap.pb.go"), "GetRevision()")
 	binary, err := mpm.DecodeBinaryFile([]byte(read("go/pkg/compiler/mojo/mpm/mojo/core.pb.binary")))
 	require.NoError(t, err)
@@ -121,7 +121,7 @@ func TestBootstrapLocalSourcesUnified(t *testing.T) {
 	write("package.mojo", manifest)
 	all := Builder{Pwd: root, Path: root, Targets: "go"}
 	require.NoError(t, all.Execute())
-	require.NoError(t, Bootstrap(filepath.Join(root, "go")))
+	require.NoError(t, Bootstrap(filepath.Join(root, "go"), "go"))
 	require.Contains(t, read("go/pkg/mojo/document/bootstrap.pb.go"), lang.MojoGoModule+"/pkg/mojo/core")
 	require.Contains(t, read("protobuf/mojo/core/bootstrap.proto"), lang.MojoGoModule+"/pkg/mojo/core;core")
 	require.NoFileExists(t, filepath.Join(root, "mojo/core/go/go.mod"))
@@ -131,7 +131,7 @@ func TestBootstrapLocalSourcesUnified(t *testing.T) {
 	// A second pass must read the updated source, and update both the generated
 	// Go file and the snapshots that the next CLI binary embeds.
 	write("mojo/core/bootstrap.mojo", "type String\ntype BootstrapProbe { value: String @1\n revision: String @2 }")
-	require.NoError(t, Bootstrap(root))
+	require.NoError(t, Bootstrap(root, "go"))
 	require.Contains(t, read("go/pkg/mojo/core/bootstrap.pb.go"), "GetRevision()")
 	binary, err := mpm.DecodeBinaryFile([]byte(read("go/pkg/compiler/mojo/mpm/mojo/core.pb.binary")))
 	require.NoError(t, err)

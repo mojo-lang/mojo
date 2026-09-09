@@ -2,6 +2,7 @@ package commander
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -11,21 +12,27 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
 )
 
-// Bootstrap regenerates the selected standard library languages into the
-// checkout's shared go/ and java/ directories, then refreshes embedded snapshots.
+// DefaultBootstrapTargets regenerates all standard library outputs. The api
+// target includes Go, Protobuf, Markdown documentation, and OpenAPI definitions.
+const DefaultBootstrapTargets = "api,java"
+
+// Bootstrap regenerates the selected standard library outputs, then refreshes
+// embedded snapshots. With no targets, it regenerates every supported output.
 func Bootstrap(start string, targets ...string) error {
-	target := "go"
+	target := DefaultBootstrapTargets
 	if len(targets) > 0 {
 		target = strings.Join(targets, ",")
 	}
 	generateGo := false
+	generateAPI := false
 	for _, name := range strings.Split(target, ",") {
 		switch strings.TrimSpace(name) {
-		case "go", "golang":
+		case "api", "go", "golang":
 			generateGo = true
+			generateAPI = generateAPI || strings.TrimSpace(name) == "api"
 		case "java":
 		default:
-			return fmt.Errorf("unsupported bootstrap target %q; use go or java", name)
+			return fmt.Errorf("unsupported bootstrap target %q; use api, go, or java", name)
 		}
 	}
 	root := util.MojoRepositoryRoot(start)
@@ -33,8 +40,18 @@ func Bootstrap(start string, targets ...string) error {
 		return fmt.Errorf("cannot find Mojo source repository from %q", start)
 	}
 
+	var staging string
 	if _, err := os.Stat(filepath.Join(root, "package.mojo")); err == nil {
 		b := Builder{Pwd: root, Path: root, Targets: target}
+		if generateAPI {
+			staging, err = os.MkdirTemp("", "mojo-bootstrap-docs-")
+			if err != nil {
+				return err
+			}
+			defer os.RemoveAll(staging)
+			b.documentOutput = filepath.Join(staging, "document")
+			b.openapiOutput = filepath.Join(staging, "openapi")
+		}
 		if err := b.Execute(); err != nil {
 			return fmt.Errorf("bootstrap: %w", err)
 		}
@@ -52,7 +69,78 @@ func Bootstrap(start string, targets ...string) error {
 			return err
 		}
 	}
+	if staging != "" {
+		if err := publishBootstrapOutput(filepath.Join(staging, "document"), filepath.Join(root, "document"), ".md"); err != nil {
+			return err
+		}
+		if err := publishBootstrapOutput(filepath.Join(staging, "openapi"), filepath.Join(root, "openapi"), ".schema.json", ".yaml"); err != nil {
+			return err
+		}
+	}
 	return mpm.GenerateMojoPackages(root)
+}
+
+// Publish only after every package has built successfully. Comparing complete
+// trees also removes obsolete types in directories no generator visits anymore.
+func publishBootstrapOutput(staging, output string, suffixes ...string) error {
+	current := make(map[string]bool)
+	if _, err := os.Stat(staging); err == nil {
+		err = filepath.WalkDir(staging, func(name string, entry fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if entry.IsDir() {
+				return nil
+			}
+			rel, err := filepath.Rel(staging, name)
+			if err != nil {
+				return err
+			}
+			content, err := os.ReadFile(name)
+			if err != nil {
+				return err
+			}
+			target := filepath.Join(output, rel)
+			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+				return err
+			}
+			if err := os.WriteFile(target, content, 0644); err != nil {
+				return err
+			}
+			current[rel] = true
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	} else if !os.IsNotExist(err) {
+		return err
+	}
+	if _, err := os.Stat(output); os.IsNotExist(err) {
+		return nil
+	} else if err != nil {
+		return err
+	}
+	return filepath.WalkDir(output, func(name string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if entry.IsDir() {
+			return nil
+		}
+		rel, err := filepath.Rel(output, name)
+		if err != nil {
+			return err
+		}
+		if !current[rel] {
+			for _, suffix := range suffixes {
+				if strings.HasSuffix(name, suffix) {
+					return os.Remove(name)
+				}
+			}
+		}
+		return nil
+	})
 }
 
 // The handwritten custom options proto has no Mojo AST descriptor, so it needs

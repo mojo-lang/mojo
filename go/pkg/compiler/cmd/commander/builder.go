@@ -35,6 +35,10 @@ type Builder struct {
 
 	Output string
 
+	// Bootstrap stages complete documentation trees before publishing them.
+	documentOutput string
+	openapiOutput  string
+
 	Pwd  string
 	Path string
 
@@ -235,6 +239,10 @@ func (b *Builder) buildGo() error {
 }
 
 func (b *Builder) buildOpenapi() (err error) {
+	output := b.Output
+	if b.openapiOutput != "" {
+		output = b.openapiOutput
+	}
 	b.OpenAPIs, err = openapi.Builder{
 		Builder: builder.Builder{
 			PWD:        b.Pwd,
@@ -242,12 +250,16 @@ func (b *Builder) buildOpenapi() (err error) {
 			Package:    b.Package,
 			APIEnabled: b.APIEnabled,
 		},
-		Output: b.Output,
+		Output: output,
 	}.Build()
 	return err
 }
 
 func (b *Builder) buildDocument() error {
+	output := b.Output
+	if b.documentOutput != "" {
+		output = b.documentOutput
+	}
 	return document.Builder{
 		Builder: builder.Builder{
 			PWD:        b.Pwd,
@@ -255,7 +267,7 @@ func (b *Builder) buildDocument() error {
 			Package:    b.Package,
 			APIEnabled: b.APIEnabled,
 		},
-		Output:   b.Output,
+		Output:   output,
 		OpenAPIs: b.OpenAPIs,
 	}.Build()
 }

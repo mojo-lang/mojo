@@ -16,7 +16,7 @@ func TestBootstrapMojoOptionsGo(t *testing.T) {
 			t.Skipf("integration test requires %s", command)
 		}
 	}
-	for _, target := range []string{"", "golang", "go,java", "java"} {
+	for _, target := range []string{"", "api", "golang", "go,java", "java"} {
 		t.Run(target, func(t *testing.T) {
 			root := t.TempDir()
 			write := func(name, contents string) {

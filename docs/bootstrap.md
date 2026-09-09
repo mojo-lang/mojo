@@ -1,4 +1,4 @@
-# 更新 Mojo 核心组件的 Go 代码
+# 更新 Mojo 核心组件代码与文档
 
 Mojo 的 IDL 位于 `mojo/<组件>/...`，语法由
 `antlr/mojo/MojoLexer.g4` 和 `MojoParser.g4` 定义。命令行入口是
@@ -29,7 +29,7 @@ IDL 的位置，不再对应一个独立的 Go 模块。
 ## 完整自举
 
 需要 Go（版本满足 `go/go.mod`）、`protoc`、`protoc-gen-go` 和
-`protoc-gen-go-grpc`，并将这些命令放入 PATH。
+`protoc-gen-go-grpc`、`protoc-gen-grpc-java`，并将这些命令放入 PATH。
 
 在仓库的 `go` 目录运行：
 
@@ -47,7 +47,7 @@ mojo bootstrap /path/to/mojo
 
 命令按依赖顺序更新根清单声明的所有组件（包括预留的 protobuf、yaml、net 包）。
 每个组件都经过本地 Mojo 源码解析、语义处理、AST 到 Protobuf 转换、
-protoc 生成 Go、Go 扩展代码生成。最后刷新
+OpenAPI 和 Markdown 文档生成、protoc 生成 Go 与 Java、Go 扩展代码生成。最后刷新
 `go/pkg/compiler/mojo/mpm/mojo` 中内嵌的 AST 和 Protobuf 快照。
 重新构建或安装 CLI 后，新快照才会进入新的可执行文件。
 
@@ -55,9 +55,19 @@ protoc 生成 Go、Go 扩展代码生成。最后刷新
 
 - Protobuf：`protobuf/mojo/<组件>`
 - Go：`go/pkg/mojo/<组件>`
+- Java：`java/src/main/java/org/mojolang/mojo`（消息类及 gRPC stub）
+- Markdown 文档：`document/`
+- OpenAPI schema 和服务 API：`openapi/`
 - Go 自定义 Protobuf options：`protobuf/mojo/mojo.proto` → `go/pkg/mojo/mojo.pb.go`
-  （默认、`go`、`golang` 或 `go,java` 自举时更新）
+  （默认或目标包含 `api`、`go`、`golang` 时更新）
 - 内嵌快照：`go/pkg/compiler/mojo/mpm/mojo`
+
+默认目标为 `api,java`，覆盖以上全部输出。可用 `-t go`、`-t java` 或
+`-t go,java` 仅更新指定语言及 Protobuf；`-t api` 更新 Go、Protobuf、
+Markdown 和 OpenAPI。文档和 OpenAPI 输出直接重新生成，无需生成文件头；
+Java 仅替换带生成标记的已有文件，并保留手写实现。
+统一目录下的文档和 OpenAPI 会先生成到临时目录，全部组件构建成功后再发布，
+同时清理已删除类型或服务遗留的 `.md`、`.schema.json` 和 `.yaml` 文件。
 
 自举不会创建 `packages/<组件>/go`，也不会改写共享的 `go.mod` 或执行
 该模块的 `go mod tidy`。现有的手写 Go 文件沿用生成器的保护规则：
