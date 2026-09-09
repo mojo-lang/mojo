@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.GroupDecl",
     "description": "",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.Decl"

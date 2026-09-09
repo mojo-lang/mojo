@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.NumericLiteralExpr",
     "description": "\\brief Abstract base class for numeric literals, potentially with a sign.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.LiteralExpr"

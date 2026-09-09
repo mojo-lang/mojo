@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.FloatLiteralExpr",
     "description": "FloatLiteralExpr - Floating point literal, like '4.0'.  After semantic\nanalysis assigns types, this is guaranteed to only have a\nBuiltinFloatingPointType.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.NumericLiteralExpr"

@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.TupleExpr",
     "description": "TupleExpr - Parenthesized expressions like `(a: x+x)` and '(x, y, 4)'.  Also\nused to represent the operands to a binary operator.  Note that\nexpressions like '(4)' are represented with a ParenExpr.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.Expr"

@@ -1,6 +1,7 @@
 {
     "title": "mojo.db.sql.ValuesClause",
     "description": "",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.db.sql.Clause"

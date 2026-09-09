@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.MatchCase",
     "description": "",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.BranchStmt"

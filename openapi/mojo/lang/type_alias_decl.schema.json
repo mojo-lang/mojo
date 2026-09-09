@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.TypeAliasDecl",
     "description": "TypeAliasDecl - This is a declaration of a type alias, for example:\n\n```\n   type Foo = Int\n```",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.TypeDecl"

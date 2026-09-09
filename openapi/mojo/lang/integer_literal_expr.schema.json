@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.IntegerLiteralExpr",
     "description": "\\brief Integer literal with a '+' or '-' sign, like '+4' or '- 2'.\n\nAfter semantic analysis assigns types, this is guaranteed to only have\na BuiltinIntegerType.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.NumericLiteralExpr"

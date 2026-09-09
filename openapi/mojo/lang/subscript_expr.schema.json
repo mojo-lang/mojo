@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.SubscriptExpr",
     "description": "Subscripting expressions like a[i] that refer to an element within a\ncontainer.\n\nThere is no built-in subscripting in the language. Rather, a fully\ntype-checked and well-formed subscript expression refers to a subscript\ndeclaration, which provides a getter and (optionally) a setter that will\nbe used to perform reads/writes.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.ApplyExpr"

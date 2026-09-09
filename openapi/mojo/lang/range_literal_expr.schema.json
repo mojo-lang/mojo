@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.RangeLiteralExpr",
     "description": "RangeLiteralExpr - Range literal, like '1..4'.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.LiteralExpr"

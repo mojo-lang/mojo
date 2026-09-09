@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.IfStmt",
     "description": "IfStmt - if/then/else statement.  If no 'else' is specified, then the\nElseLoc location is not specified and the Else statement is null. After\ntype-checking, the condition is of type Builtin.Int1.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.BranchStmt"

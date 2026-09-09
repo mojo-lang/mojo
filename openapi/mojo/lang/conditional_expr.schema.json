@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.ConditionalExpr",
     "description": "The conditional expression 'x ? y : z'.\n\nBesides false, possible falsy expressions are: null, NaN, 0, the empty string (\"\"), and undefined.\nIf condition is any of these, the result of the conditional expression will be the result of executing\nthe expression expr_if_false.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.Expr"

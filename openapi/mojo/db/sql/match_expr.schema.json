@@ -1,6 +1,7 @@
 {
     "title": "mojo.db.sql.MatchExpr",
     "description": "",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.Expr"

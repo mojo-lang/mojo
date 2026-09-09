@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.ValueDecl",
     "description": "VarDecl - 'var' and 'const' declarations.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.Decl"

@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.WhileStmt",
     "description": "WhileStmt - while statement. After type-checking, the condition is of\ntype Builtin.Int1.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.LoopStmt"

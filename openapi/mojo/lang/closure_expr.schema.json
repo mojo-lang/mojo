@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.ClosureExpr",
     "description": "",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.FunctionDecl"

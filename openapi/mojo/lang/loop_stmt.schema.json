@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.LoopStmt",
     "description": "",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.Stmt"

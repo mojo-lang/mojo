@@ -1,6 +1,7 @@
 {
     "title": "mojo.db.sql.BeginStmt",
     "description": "",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.Stmt"

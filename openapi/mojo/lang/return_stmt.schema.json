@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.ReturnStmt",
     "description": "ReturnStmt - A return statement.  The result is optional; \"return\" without\nan expression is semantically equivalent to \"return ()\".\n   return 42",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.ControlTransferStmt"

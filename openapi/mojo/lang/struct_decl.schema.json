@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.StructDecl",
     "description": "StructDecl - This is the declaration of a struct, for example:\n\n``` mojo\nstruct Complex { r : Double, i : Double }\n```\n\nThe type of the decl itself is a MetaType; use `Complex.type`\nto get the `Complex`'s declared type.\n",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.TypeDecl"

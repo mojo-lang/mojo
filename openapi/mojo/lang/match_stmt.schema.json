@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.MatchStmt",
     "description": "Match statement.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.BranchStmt"

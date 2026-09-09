@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.StringLiteralExpr",
     "description": "StringLiteralExpr - String literal, like '\"foo\"'.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.LiteralExpr"

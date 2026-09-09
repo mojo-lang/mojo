@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.ApplyExpr",
     "description": "ApplyExpr - Superclass of various function calls, which apply an argument to\na function to get a result.",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.Expr"

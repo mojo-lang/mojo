@@ -1,6 +1,7 @@
 {
     "title": "mojo.lang.InterfaceDecl",
     "description": "`InterfaceDecl` - A declaration of an interface, for example:\n\n```mojo\n  interface Drawable {\n     draw()\n  }\n```\n",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.lang.TypeDecl"

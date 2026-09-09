@@ -1,6 +1,7 @@
 {
     "title": "mojo.db.sql.OverClause",
     "description": "",
+    "type": "object",
     "allOf": [
         {
             "$ref": "#/components/schemas/mojo.db.sql.Window"
