@@ -5,4 +5,4 @@
 | `line` | `integer` | `Int64` | N |  | line number, starting at 1 |
 | `column` | `integer` | `Int64` | N |  | column number, starting at 1 (byte count) |
 | `leadingComments` | `Array<mojo.lang.Comment>` |  | N |  | the comment before the AST node |
-| `tailingComments` | `Array<mojo.lang.Comment>` |  | N |  | usually exist in the end position of the AST nodeand only one of the following situations:<br>`a = 5 // following line comment`|
+| `tailingComments` | `Array<mojo.lang.Comment>` |  | N |  | usually exist in the end position of the AST nodeand only one of the following situations:<br>`    a = 5 // following line comment  ` |

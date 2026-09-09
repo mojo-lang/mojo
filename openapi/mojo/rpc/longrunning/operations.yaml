@@ -48,9 +48,17 @@ components:
           type: string
       title: mojo.core.Error
       type: object
+    mojo.core.FieldMask:
+      description: ""
+      format: FieldMask
+      title: mojo.core.FieldMask
+      type: string
     mojo.core.Object:
       description: Object type
       title: mojo.core.Object
+      type: object
+    mojo.core.Ordering:
+      title: mojo.core.Ordering
       type: object
     mojo.core.Timestamp:
       description: ""
@@ -501,23 +509,50 @@ paths:
         schema:
           title: mojo.core.String
           type: string
-      - in: query
+      - description: the page size for pagination request
+        in: query
         name: page_size
         schema:
           format: Int32
           title: mojo.core.Int32
           type: integer
-      - in: query
+      - description: the page token for pagination request, usually like "1", "2"
+          ...
+        in: query
         name: page_token
         schema:
           title: mojo.core.String
           type: string
-      - in: query
+      - description: skip the first items count for the request
+        in: query
         name: skip
         schema:
           format: Int32
           title: mojo.core.Int32
           type: integer
+      - description: the mojo expression for DB query
+        in: query
+        name: filter
+        schema:
+          title: mojo.core.String
+          type: string
+      - description: setting the order field for result, like "name desc"
+        in: query
+        name: order
+        schema:
+          $ref: '#/components/schemas/mojo.core.Ordering'
+      - description: control the fields which need to be retrieved
+        in: query
+        name: field_mask
+        schema:
+          $ref: '#/components/schemas/mojo.core.FieldMask'
+      - description: make the fields which returns are unique, equals to "SELECT DISTINCT"
+          in sql
+        in: query
+        name: unique
+        schema:
+          title: mojo.core.Bool
+          type: boolean
       responses:
         "200":
           content:

@@ -1,6 +1,6 @@
 | field | type | format | required | default | description |
 |---|---|---|---|---|---|
-| `name` | `string` |  | Y |  | The name of the parameter. Parameter names are case sensitive.<br>-	If in is "path", the name field MUST correspond to the associated path segment from the path field in the Paths Object. See Path Templating for further information.-	If in is "header" and the name field is "Accept", "Content-Type" or "Authorization", the parameter definition SHALL be ignored.-	For all other cases, the name corresponds to the parameter name used by the in property. |
+| `name` | `string` |  | Y |  | The name of the parameter. Parameter names are case sensitive.<br>-	If in is "path", the name field MUST correspond to the associated path segment from the path field in the Paths Object. See Path Templating for further information.<br>-	If in is "header" and the name field is "Accept", "Content-Type" or "Authorization", the parameter definition SHALL be ignored.<br>-	For all other cases, the name corresponds to the parameter name used by the in property. |
 | `in` | `string` |  | Y |  | The location of the parameter. |
 | `description` | `string` |  | N |  | A brief description of the parameter.This could contain examples of use. GFM syntax can be used for rich text representation. |
 | `required` | `boolean` |  | N |  | Determines whether this parameter is mandatory.If the parameter is in "path", this property is required and its value MUST be true.Otherwise, the property MAY be included and its default value is false. |

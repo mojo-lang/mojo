@@ -5,6 +5,7 @@ import (
 	"github.com/yuin/goldmark/ast"
 	extension "github.com/yuin/goldmark/extension/ast"
 	"github.com/yuin/goldmark/text"
+	"strings"
 
 	"github.com/mojo-lang/mojo/go/pkg/mojo/document"
 )
@@ -140,9 +141,9 @@ func (a *AstParser) parseQuoteBlock(ctx *AstContext, node ast.Node, entering boo
 }
 
 func (a *AstParser) parseCodeBlock(ctx *AstContext, node ast.Node, entering bool) (ast.WalkStatus, error) {
-	_ = node.(*ast.CodeBlock)
+	n := node.(*ast.CodeBlock)
 	if entering {
-		codeBlock := &document.CodeBlock{}
+		codeBlock := &document.CodeBlock{Lines: getLines(ctx, n.Lines())}
 		block := document.NewCodeBlockBlock(codeBlock)
 		switch v := ctx.Stack.Current().(type) {
 		case *document.Document:
@@ -581,7 +582,7 @@ func getLines(ctx *AstContext, lines *text.Segments) []*document.Line {
 	var ls []*document.Line
 	for i := 0; i < lines.Len(); i++ {
 		segment := lines.At(i)
-		content := string(segment.Value(ctx.Source))
+		content := strings.TrimSuffix(strings.TrimSuffix(string(segment.Value(ctx.Source)), "\n"), "\r")
 		line := &document.Line{
 			Vals: []*document.Inline{document.NewTextInline(content)},
 		}

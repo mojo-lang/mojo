@@ -46,9 +46,13 @@ GET /operation/v1/{{service}}/operations
 |---|---|---|---|---|---|
 | `parent` | `string` |  | 否 |  | The name of the operation's parent resource. |
 | `filter` | `string` |  | 否 |  | The standard list filter. |
-| `page_size` | `integer` | `Int32` | 否 |  |  |
-| `page_token` | `string` |  | 否 |  |  |
-| `skip` | `integer` | `Int32` | 否 |  |  |
+| `page_size` | `integer` | `Int32` | 否 |  | the page size for pagination request |
+| `page_token` | `string` |  | 否 |  | the page token for pagination request, usually like "1", "2" ... |
+| `skip` | `integer` | `Int32` | 否 |  | skip the first items count for the request |
+| `filter` | `string` |  | 否 |  | the mojo expression for DB query |
+| `order` | `mojo.core.Ordering` |  | 否 |  | setting the order field for result, like "name desc" |
+| `field_mask` | `string` | `FieldMask` | 否 |  | control the fields which need to be retrieved |
+| `unique` | `boolean` |  | 否 |  | make the fields which returns are unique, equals to "SELECT DISTINCT" in sql |
 
 
 ### 返回值
@@ -190,9 +194,7 @@ POST /operation/v1/{{service}}/operations/{name}:wait
 #### Query 参数
 | 参数名 | 参数类型 | 格式类型 | 是否必须 | 默认值 | 说明 |
 |---|---|---|---|---|---|
-| `timeout` | `string` | `Duration` | 否 |  | The maximum duration to wait before timing out. If left blank, the wait
-will be at most the time permitted by the underlying HTTP/RPC protocol.
-If RPC context deadline is also specified, the shorter one will be used. |
+| `timeout` | `string` | `Duration` | 否 |  | The maximum duration to wait before timing out. If left blank, the wait<br>will be at most the time permitted by the underlying HTTP/RPC protocol.<br>If RPC context deadline is also specified, the shorter one will be used. |
 
 
 ### 返回值

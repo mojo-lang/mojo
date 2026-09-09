@@ -14,8 +14,9 @@ go run ./cmd/mojo bootstrap -t java
 go run ./cmd/mojo build -t java ../mojo/core
 ```
 
-Use `bootstrap -t go,java` to update both language libraries. The default
-bootstrap target remains Go. Java generation uses the Mojo compiler, then
+The default `bootstrap` updates both language libraries, Protobuf, Markdown
+documentation, and OpenAPI definitions. Use `bootstrap -t go,java` to update
+both languages and Protobuf only. Java generation uses the Mojo compiler, then
 Protobuf, then protoc; it emits protobuf messages and gRPC stubs. NCraft's
 Spring/Feign service templates are separate from this IDL library build.
 
