@@ -77,7 +77,7 @@ func TestBootstrapLocalSources(t *testing.T) {
 }
 
 func TestUnsupportedBuildTargets(t *testing.T) {
-	for _, target := range []string{"cpp", "invalid"} {
+	for _, target := range []string{"cpp", "invalid", "sidecar", "ncraft.sidecar", "api,sidecar", "ncraft,ncraft.sidecar"} {
 		b := Builder{Targets: target}
 		require.ErrorContains(t, b.Execute(), "unsupported build target")
 	}

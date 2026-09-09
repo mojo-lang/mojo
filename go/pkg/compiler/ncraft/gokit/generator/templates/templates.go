@@ -14,9 +14,6 @@ var services embed.FS
 //go:embed NAME-client/*
 var clients embed.FS
 
-//go:embed sidecar/*
-var sidecars embed.FS
-
 type FileGetter = func(path string) ([]byte, error)
 
 func Service(path string) ([]byte, error) {
@@ -27,20 +24,12 @@ func Client(path string) ([]byte, error) {
 	return FileContent(clients, path, "")
 }
 
-func Sidecar(path string) ([]byte, error) {
-	return FileContent(clients, path, "")
-}
-
 func ServiceNames() []string {
 	return FileNames(services, "service-go/")
 }
 
 func ClientNames() []string {
 	return FileNames(clients, "")
-}
-
-func SidecarNames() []string {
-	return FileNames(sidecars, "")
 }
 
 func FileContent(fs embed.FS, path string, prefix string) ([]byte, error) {

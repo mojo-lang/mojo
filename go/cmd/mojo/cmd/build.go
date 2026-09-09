@@ -70,7 +70,7 @@ func (b *BuildCmd) Build() {
 		&cli.StringFlag{
 			Name:        "targets",
 			Aliases:     []string{"t"},
-			Usage:       "targets: api, go (or golang), java, protobuf, service, client, sidecar",
+			Usage:       "targets: api, go (or golang), java, protobuf, service, client",
 			Destination: &b.Targets,
 		},
 		&cli.StringFlag{

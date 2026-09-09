@@ -44,6 +44,12 @@ func getPackageImport(pkg *lang.Package) string {
 }
 
 func (b Builder) Build() error {
+	switch b.Type {
+	case "", "service", "client":
+	default:
+		return fmt.Errorf("unsupported ncraft build type %q; use service or client", b.Type)
+	}
+
 	logs.Infow("gokit begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
 
 	if len(b.Output) == 0 {
@@ -73,15 +79,6 @@ func (b Builder) Build() error {
 			Repository: b.Repository,
 		}
 		return cb.Build()
-	} else if b.Type == "sidecar" {
-		setDefaultRepository("sidecar")
-		b.Output = path2.Join(b.Output, path2.Base(b.Repository))
-		sb := &SidecarBuilder{
-			Builder:    b.Builder,
-			Output:     b.Output,
-			Repository: b.Repository,
-		}
-		return sb.Build()
 	}
 
 	cmp := gokit.NewCompiler()

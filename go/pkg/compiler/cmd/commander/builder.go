@@ -46,7 +46,6 @@ type Builder struct {
 	NcraftAllEnabled     bool
 	NcraftServiceEnabled bool
 	NcraftClientEnabled  bool
-	NcraftSidecarEnabled bool
 
 	// the git repository for the generated code
 	Repository string
@@ -83,8 +82,6 @@ func (b *Builder) Execute() error {
 			b.NcraftServiceEnabled = true
 		case "ncraft.client", "client":
 			b.NcraftClientEnabled = true
-		case "ncraft.sidecar", "sidecar":
-			b.NcraftSidecarEnabled = true
 		default:
 			return fmt.Errorf("unsupported build target %q", target)
 		}
@@ -145,7 +142,7 @@ func (b *Builder) Execute() error {
 
 func (b *Builder) buildOutputs() error {
 
-	if b.APIEnabled || b.NcraftAllEnabled || b.NcraftServiceEnabled || b.NcraftClientEnabled || b.NcraftSidecarEnabled {
+	if b.APIEnabled || b.NcraftAllEnabled || b.NcraftServiceEnabled || b.NcraftClientEnabled {
 		if err := b.buildOpenapi(); err != nil {
 			return err
 		}
@@ -181,8 +178,6 @@ func (b *Builder) buildOutputs() error {
 		}
 	}
 	if b.NcraftAllEnabled || b.NcraftClientEnabled {
-	}
-	if b.NcraftAllEnabled || b.NcraftSidecarEnabled {
 	}
 
 	return nil
