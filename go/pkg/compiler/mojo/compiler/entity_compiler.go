@@ -113,6 +113,9 @@ func (c *EntityCompiler) compilePackage(ctx context.Context, pkg *lang.Package, 
 }
 
 func (c *EntityCompiler) compileEntityNode(ctx context.Context, decl *lang.StructDecl) error {
+	if decl == nil || decl.Type == nil {
+		return nil
+	}
 	pkg := context.Package(ctx)
 
 	makeEntity := func(field *lang.ValueDecl) {
@@ -121,7 +124,9 @@ func (c *EntityCompiler) compileEntityNode(ctx context.Context, decl *lang.Struc
 			TypeDeclaration: lang.NewStructTypeDeclaration(decl),
 			KeyField:        field,
 		})
-		decl.SetImplicitBoolAttribute(core.EntityAttributeName, true)
+		if !decl.HasAttribute(core.EntityAttributeName) {
+			decl.SetImplicitBoolAttribute(core.EntityAttributeName, true)
+		}
 	}
 
 	if field := decl.GetField("id"); field != nil {
@@ -129,13 +134,39 @@ func (c *EntityCompiler) compileEntityNode(ctx context.Context, decl *lang.Struc
 		return nil
 	}
 
-	_ = decl.EachField(func(decl *lang.ValueDecl) error {
-		if decl.HasAttribute(core.KeyAttributeName) || decl.HasAttribute(db.PrimaryKeyAttributeName) {
-			makeEntity(decl)
+	var key *lang.ValueDecl
+	_ = decl.EachField(func(field *lang.ValueDecl) error {
+		if field.HasAttribute(core.KeyAttributeName) || field.HasAttribute(db.KeyAttributeFullName) || field.HasAttribute(db.PrimaryKeyAttributeFullName) {
+			key = field
 			return core.NewBreakError()
 		}
 		return nil
 	})
+	if key != nil {
+		makeEntity(key)
+	} else if decl.HasAttribute(core.EntityAttributeName) {
+		// Use a stable high field number so adding ordinary source fields does
+		// not renumber the implicit id in generated Protobuf messages.
+		used := make(map[int64]bool)
+		_ = decl.EachField(func(field *lang.ValueDecl) error {
+			number, _ := field.GetIntegerAttribute(core.NumberAttributeName)
+			used[number] = true
+			return nil
+		})
+		number := int64(536870911)
+		for used[number] {
+			number--
+		}
+		typ := pkg.GetIdentifier(core.StringTypeFullName).ToNominalType()
+		if typ == nil {
+			return fmt.Errorf("entity %s: cannot resolve String for implicit id", decl.GetFullName())
+		}
+		key = &lang.ValueDecl{Name: "id", Type: typ, Implicit: true}
+		key.SetImplicitIntegerAttribute(core.NumberAttributeName, number)
+		key.SetImplicitBoolAttribute(core.KeyAttributeName, true)
+		decl.Type.Fields = append(decl.Type.Fields, key)
+		makeEntity(key)
+	}
 
 	return nil
 }

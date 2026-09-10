@@ -8,6 +8,7 @@ type Message struct {
 	PackageName string // full package name
 	Name        string
 	Entity      bool
+	KeyField    *lang.ValueDecl
 	IsNull      bool
 
 	Fields []*Field

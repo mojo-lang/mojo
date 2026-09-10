@@ -23,7 +23,22 @@ func GenerateService(ds *data.Service, options Options) error {
 		return err
 	}
 
-	return generateFiles(files, options.Output)
+	return generateServiceFiles(files, options.Output)
+}
+
+func GenerateModelPackage(ds *data.Service, options Options) error {
+	files, err := options.GenerateModelPackage(ds)
+	if err != nil {
+		return err
+	}
+	return generateServiceFiles(files, options.Output)
+}
+
+func generateServiceFiles(files []*util.GeneratedFile, output string) error {
+	if err := generateFiles(files, output); err != nil {
+		return err
+	}
+	return nil
 }
 
 func generateFiles(files []*util.GeneratedFile, output string) error {

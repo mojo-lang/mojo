@@ -13,6 +13,7 @@ import (
 	_go "github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/go"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit/generator/handlers"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit/generator/httptransport"
+	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit/generator/model"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit/generator/templates"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
 )
@@ -50,7 +51,29 @@ func (o *Options) GenerateClient(ds *data.Service) ([]*util.GeneratedFile, error
 
 func (o *Options) GenerateService(ds *data.Service) ([]*util.GeneratedFile, error) {
 	o.SyncTo(ds)
-	return o.generateTemplatedFiles(ds, templates.ServiceNames(), templates.Service)
+	files, err := o.generateTemplatedFiles(ds, templates.ServiceNames(), templates.Service)
+	if err != nil {
+		return nil, err
+	}
+	models, err := (model.Model{}).GenerateEntities(ds.Entities)
+	if err != nil {
+		return nil, err
+	}
+	return append(files, models...), nil
+}
+
+// GenerateModelPackage supports backend packages containing only entities.
+func (o *Options) GenerateModelPackage(ds *data.Service) ([]*util.GeneratedFile, error) {
+	o.SyncTo(ds)
+	files, err := (model.Model{}).GenerateEntities(ds.Entities)
+	if err != nil || len(files) == 0 {
+		return files, err
+	}
+	module, err := applyTemplateFromPath("go.mod.tmpl", ds, templates.Service)
+	if err != nil {
+		return nil, err
+	}
+	return append(files, &util.GeneratedFile{Name: "go.mod", Reader: module, SkipIfExist: true}), nil
 }
 
 // GenerateTemplatedFiles generate the service or client files
@@ -73,18 +96,12 @@ func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, g
 	svcName := strcase.ToKebab(ds.Interface.BaredName)
 
 	for _, tmplPath := range tmplPaths {
-		//if tmplPath == model.TemplatePath {
-		//	m := model.Model{}
-		//	if files, err := m.Generate(tmplPath, ds); err != nil {
-		//		logs.Errorw("failed to generate model templates files", "err", err.Error())
-		//	} else {
-		//		if len(files) == 0 {
-		//			continue
-		//		}
-		//		codeGenFiles = append(codeGenFiles, files...)
-		//	}
-		//}
-
+		// Entity models are rendered separately into pkg/model. Do not emit
+		// the legacy placeholder templates alongside the generated models.
+		switch tmplPath {
+		case "pkg/model/ENTITY_model.go.tmpl":
+			continue
+		}
 		// Re-derive the actual path for this file based on the service output
 		// path provided by the ncraft main.go
 		actualPath := templatePathToActual(tmplPath, ds.Go.PackageName, svcName)

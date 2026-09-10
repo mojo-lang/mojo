@@ -30,6 +30,15 @@ type Services struct {
 }
 
 func CompilePackage(ctx context.Context, pkg *lang.Package) ([]*data.Service, error) {
+	services, err := Compile(ctx, pkg)
+	if err != nil {
+		return nil, err
+	}
+	return services.Data, nil
+}
+
+// Compile retains entities even for packages that declare no service interface.
+func Compile(ctx context.Context, pkg *lang.Package) (*Services, error) {
 	services := &Services{}
 	if err := plugin.CompilePackage(services, ctx, pkg); err != nil {
 		return nil, err
@@ -37,9 +46,10 @@ func CompilePackage(ctx context.Context, pkg *lang.Package) ([]*data.Service, er
 
 	for _, s := range services.Data {
 		s.AllInterfaces = services.Interfaces
+		s.Entities = services.Entities
 	}
 
-	return services.Data, nil
+	return services, nil
 }
 
 func (s *Services) CompileInterface(ctx context.Context, decl *lang.InterfaceDecl) error {
@@ -119,9 +129,9 @@ func (s *Services) CompileInterface(ctx context.Context, decl *lang.InterfaceDec
 }
 
 func (s *Services) CompileStruct(ctx context.Context, decl *lang.StructDecl) error {
-	if decl != nil && decl.HasAttribute("entity") {
+	if decl != nil && len(decl.GenericParameters) == 0 && decl.HasAttribute(core.EntityAttributeName) {
 		if msg, err := s.CompileMessage(ctx, decl); err != nil {
-			logs.Warnw("")
+			return err
 		} else {
 			s.Entities = append(s.Entities, msg)
 		}
@@ -436,8 +446,16 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 		PackageName: decl.PackageName,
 		Name:        decl.Name,
 		IsNull:      decl.Name == "Null",
-		Go:          &data.GoMessage{},
+		Entity:      decl.HasAttribute(core.EntityAttributeName),
+		Go:          &data.GoMessage{PackageName: lang.GetGoPackageName(decl.PackageName)},
 		Extensions:  make(map[string]interface{}),
+	}
+	msg.Go.ImportPath, _ = GoPackageImport(ctx, decl.PackageName).(string)
+	if msg.Go.ImportPath == "" {
+		msg.Go.ImportPath = context.Package(ctx).GetGoPackageImport()
+	}
+	if msg.Entity {
+		msg.KeyField = context.Package(ctx).GetEntityNode(decl.GetFullName()).GetKeyField()
 	}
 
 	err := decl.EachField(func(f *lang.ValueDecl) error {
@@ -495,6 +513,7 @@ func (s *Services) CompileMessage(ctx context.Context, decl *lang.StructDecl) (*
 		}
 
 		msg.Fields = append(msg.Fields, &data.Field{
+			Decl: f,
 			Name: f.Name,
 			Type: fieldType,
 		})

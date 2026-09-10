@@ -16,6 +16,10 @@ Use `go run ./cmd/mojo bootstrap -t java` to update the shared Java library,
 or `-t go,java` to regenerate both languages. See [the Java build guide](java/README.md).
 See [the bootstrap guide](docs/bootstrap.md) for the source layout, outputs, and single-package builds.
 
+Use `mojo build -t api,service .` to generate backend services and entity CRUD
+models under `service-go/pkg/model`. See [the entity model guide](docs/entity-models.md)
+for primary keys, database initialization, and generated operations.
+
 
 ## What can do
 

@@ -10,6 +10,7 @@ import (
 
 type Compiler struct {
 	Services []*data.Service
+	Entities []*data.Message
 }
 
 func NewCompiler() *Compiler {
@@ -17,13 +18,14 @@ func NewCompiler() *Compiler {
 }
 
 func (c *Compiler) CompilePackage(ctx context.Context, pkg *lang.Package) error {
-	services, err := compiler.CompilePackage(ctx, pkg)
+	compiled, err := compiler.Compile(ctx, pkg)
 	if err != nil {
 		return err
 	}
 
 	// add gokit compiler here
 
-	c.Services = append(c.Services, services...)
+	c.Services = append(c.Services, compiled.Data...)
+	c.Entities = append(c.Entities, compiled.Entities...)
 	return nil
 }

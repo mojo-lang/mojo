@@ -19,6 +19,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/builder"
 	_go "github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/go"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/compiler"
+	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/data"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit"
 )
 
@@ -31,16 +32,7 @@ type Builder struct {
 }
 
 func getPackageImport(pkg *lang.Package) string {
-	repository := pkg.Repository
-	if repository != nil {
-		goPackageFullName := lang.PackageNameToPath(pkg.FullName)
-		path := repository.Path
-		if strings.HasPrefix(path, "/mojo-lang/mojo/packages/") {
-			path = "/mojo-lang/mojo"
-		}
-		return fmt.Sprintf("%s%s/go/pkg/%s", repository.Authority.Host, path, goPackageFullName)
-	}
-	return ""
+	return pkg.GetGoPackageImport()
 }
 
 func (b Builder) Build() error {
@@ -53,16 +45,17 @@ func (b Builder) Build() error {
 	logs.Infow("gokit begin to compile mojo package.", "pwd", b.PWD, "path", b.Path)
 
 	if len(b.Output) == 0 {
-		if b.APIEnabled {
-			b.Output = util.GetAbsolutePath(b.PWD, b.Path)
-		} else {
+		b.Output = b.GetAbsolutePath()
+		if b.Type == "client" && !b.APIEnabled {
 			b.Output = util.GetAbsolutePath(b.PWD, path2.Join(b.Path, "../"))
 		}
+	} else {
+		b.Output = util.GetAbsolutePath(b.PWD, b.Output)
 	}
 
 	setDefaultRepository := func(ncraftType string) {
 		if len(b.Repository) == 0 {
-			if b.APIEnabled {
+			if b.APIEnabled || ncraftType == "service-go" {
 				b.Repository = path2.Join(b.Package.Repository.FormatWithoutSchema(), ncraftType)
 			} else {
 				b.Repository = b.Package.Repository.FormatWithoutSchema() + "-" + ncraftType
@@ -104,8 +97,11 @@ func (b Builder) Build() error {
 		Repository:    b.Repository,
 		ApiRepository: path2.Join(b.Package.Repository.FormatWithoutSchema(), "go"),
 		Output:        b.Output,
-		MixedInAPI:    b.APIEnabled,
+		MixedInAPI:    b.APIEnabled || core.IsExist(path2.Join(b.GetAbsolutePath(), "go/go.mod")),
 		PreviousFiles: make(map[string]io.Reader),
+	}
+	if len(services) == 0 && len(cmp.Entities) == 0 {
+		return nil
 	}
 
 	prefixPath := b.Output
@@ -136,6 +132,13 @@ func (b Builder) Build() error {
 		err = gokit.GenerateService(s, conf)
 		if err != nil {
 			logs.Errorw("generate ncraft gokit failed", "pwd", b.PWD, "path", b.Path, "package", b.Package.FullName, "error", err.Error())
+			return err
+		}
+	}
+	if len(services) == 0 {
+		if err := gokit.GenerateModelPackage(&data.Service{
+			PackageName: b.Package.Name, Entities: cmp.Entities, Go: &data.GoService{},
+		}, conf); err != nil {
 			return err
 		}
 	}

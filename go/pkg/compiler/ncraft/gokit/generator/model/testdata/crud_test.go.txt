@@ -1,0 +1,61 @@
+package model
+
+import (
+ "context"
+ "errors"
+ "path/filepath"
+ "testing"
+
+ "example.com/acme/store/go/pkg/sample"
+ "github.com/mojo-lang/mojo/go/pkg/mojo/db"
+ "github.com/mojo-lang/mojo/go/pkg/mojo/db/query"
+ "gorm.io/gorm"
+)
+
+func TestCRUD(t *testing.T){
+ database:=db.New(&db.Config{Driver:db.SqliteDriverName,Dsn:filepath.Join(t.TempDir(),"models.db")})
+ if database==nil{t.Fatal("open sqlite")}
+ sqlDB,err:=database.DB.DB();if err!=nil{t.Fatal(err)};defer sqlDB.Close()
+ m,err:=NewRecord(database);if err!=nil{t.Fatal(err)}
+ ctx:=context.Background()
+ check:=func(count int64,err error){t.Helper();if err!=nil||count!=1{t.Fatalf("rows=%d error=%v",count,err)}}
+ check(m.Create(ctx,&sample.Record{Id:"a",Name:"alpha",Count:5,Active:true}))
+ got,err:=m.Get(ctx,"a");if err!=nil||got.Name!="alpha"{t.Fatalf("get %v %v",got,err)}
+ check(m.Update(ctx,&sample.Record{Id:"a"}))
+ got,err=m.Get(ctx,"a");if err!=nil||got.Name!=""||got.Count!=0||got.Active{t.Fatalf("zero update %v %v",got,err)}
+ check(m.BatchCreate(ctx,&sample.Record{Id:"b",Name:"beta"}))
+ values,err:=m.BatchGet(ctx,"a","b");if err!=nil||len(values)!=2{t.Fatalf("batch get %v %v",values,err)}
+ values,err=m.List(ctx,&query.Query{PageSize:1});if err!=nil||len(values)!=1{t.Fatalf("list %v %v",values,err)}
+ count,err:=m.BatchUpdate(ctx,[]*sample.Record{{Id:"a",Name:"changed"},{Id:"b",Name:"changed"}})
+ if err!=nil||count!=2{t.Fatalf("batch update %d %v",count,err)}
+ count,err=m.BatchUpdate(ctx,[]*sample.Record{{Id:"a",Name:"rollback"},nil})
+ if err==nil||count!=0{t.Fatal("expected batch rollback")}
+ got,err=m.Get(ctx,"a");if err!=nil||got.Name!="changed"{t.Fatalf("rollback %v %v",got,err)}
+ empty,err:=m.BatchGet(ctx);if err!=nil||len(empty)!=0{t.Fatal("empty batch get")}
+ count,err=m.BatchDelete(ctx);if err!=nil||count!=0{t.Fatal("empty delete must not delete all")}
+ count,err=m.BatchCreate(ctx);if err!=nil||count!=0{t.Fatal("empty create")}
+ cancelCtx,cancel:=context.WithCancel(ctx);cancel()
+ if _,err:=m.Create(cancelCtx,&sample.Record{Id:"cancelled"});!errors.Is(err,context.Canceled){t.Fatalf("context %v",err)}
+ check(m.Delete(ctx,"a"))
+ if _,err:=m.Get(ctx,"a");!errors.Is(err,gorm.ErrRecordNotFound){t.Fatalf("missing %v",err)}
+ check(m.BatchDelete(ctx,"b"))
+ keyed,err:=NewKeyed(database);if err!=nil{t.Fatal(err)}
+ check(keyed.Create(ctx,&sample.Keyed{Code:"custom",Score:7}))
+ item,err:=keyed.Get(ctx,"custom");if err!=nil||item.Score!=7{t.Fatalf("custom key %v %v",item,err)}
+ check(keyed.Update(ctx,&sample.Keyed{Code:"custom",Score:0}))
+ item,err=keyed.Get(ctx,"custom");if err!=nil||item.Score!=0{t.Fatal("custom key update")}
+ check(keyed.Delete(ctx,"custom"))
+ numeric,err:=NewNumbered(database);if err!=nil{t.Fatal(err)}
+ check(numeric.Create(ctx,&sample.Numbered{Id:42,Name:"numeric"}))
+ numbered,err:=numeric.Get(ctx,42);if err!=nil||numbered.Name!="numeric"{t.Fatalf("numeric key %v %v",numbered,err)}
+ check(numeric.BatchDelete(ctx,42))
+ manual,err:=NewManual(database);if err!=nil{t.Fatal(err)}
+ check(manual.Create(ctx,&sample.Manual{Id:"implicit",Name:"manual"}))
+ value,err:=manual.Get(ctx,"implicit");if err!=nil||value.Name!="manual"{t.Fatalf("implicit id %v %v",value,err)}
+ if _,err:=NewRecord(nil);err==nil{t.Fatal("nil database must return error")}
+ disabled:=db.New(&db.Config{Driver:db.SqliteDriverName,Dsn:filepath.Join(t.TempDir(),"disabled.db"),DisableAutoMigrate:true})
+ if disabled==nil{t.Fatal("open sqlite")}
+ other,_:=disabled.DB.DB();defer other.Close()
+ if _,err:=NewRecord(disabled);err!=nil{t.Fatal(err)}
+ if disabled.Migrator().HasTable(&sample.Record{}){t.Fatal("auto migration disabled")}
+}
