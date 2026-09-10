@@ -35,6 +35,7 @@ type EntityCompiler struct {
 }
 
 func NewEntityCompiler(options core.Options) *EntityCompiler {
+	_ = options
 	return &EntityCompiler{
 		BasicPlugin: plugin.BasicPlugin{
 			Name:          entityName,
