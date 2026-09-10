@@ -38,6 +38,7 @@ type GoService struct {
 	RepositoryPath string
 
 	ApiRepositoryPath string
+	ApiLocalPath      string
 
 	// import path for .pb.go files containing service structs
 	ApiImportPath string

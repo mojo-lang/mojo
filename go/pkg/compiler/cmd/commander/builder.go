@@ -182,6 +182,9 @@ func (b *Builder) buildOutputs() error {
 		}
 	}
 	if b.NcraftAllEnabled || b.NcraftClientEnabled {
+		if err := b.buildGokit("client"); err != nil {
+			return err
+		}
 	}
 
 	return nil

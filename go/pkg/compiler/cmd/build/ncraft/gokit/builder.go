@@ -46,16 +46,13 @@ func (b Builder) Build() error {
 
 	if len(b.Output) == 0 {
 		b.Output = b.GetAbsolutePath()
-		if b.Type == "client" && !b.APIEnabled {
-			b.Output = util.GetAbsolutePath(b.PWD, path2.Join(b.Path, "../"))
-		}
 	} else {
 		b.Output = util.GetAbsolutePath(b.PWD, b.Output)
 	}
 
 	setDefaultRepository := func(ncraftType string) {
 		if len(b.Repository) == 0 {
-			if b.APIEnabled || ncraftType == "service-go" {
+			if b.APIEnabled || ncraftType == "service-go" || ncraftType == "client-go" {
 				b.Repository = path2.Join(b.Package.Repository.FormatWithoutSchema(), ncraftType)
 			} else {
 				b.Repository = b.Package.Repository.FormatWithoutSchema() + "-" + ncraftType
@@ -64,8 +61,8 @@ func (b Builder) Build() error {
 	}
 
 	if b.Type == "client" {
-		setDefaultRepository("client")
-		b.Output = path2.Join(b.Output, path2.Base(b.Repository))
+		setDefaultRepository("client-go")
+		b.Output = path2.Join(b.Output, "client-go")
 		cb := &ClientBuilder{
 			Builder:    b.Builder,
 			Output:     b.Output,

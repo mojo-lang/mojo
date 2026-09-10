@@ -11,7 +11,7 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
 )
 
-const ClientHttpTransportPath = "NAME-client/http_client.go.tmpl"
+const ClientHttpTransportPath = "pkg/NAME-client/http_client.go.tmpl"
 
 type ClientHttpTransport struct {
 }

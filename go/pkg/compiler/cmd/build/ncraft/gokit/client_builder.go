@@ -1,10 +1,13 @@
 package gokit
 
 import (
+	"path/filepath"
+
 	"github.com/mojo-lang/mojo/go/pkg/logs"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/core"
 
 	"github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/builder"
+	_go "github.com/mojo-lang/mojo/go/pkg/compiler/cmd/build/go"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/context"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/compiler"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit"
@@ -24,7 +27,7 @@ func (b ClientBuilder) Build() error {
 	for _, pkg := range b.Package.GetAllPackages() {
 		options[pkg.FullName] = getPackageImport(pkg)
 	}
-	for _, pkg := range b.Package.ResolvedDependencies {
+	for _, pkg := range b.Package.GetAllDependentPackages() {
 		options[pkg.FullName] = getPackageImport(pkg)
 	}
 
@@ -37,9 +40,20 @@ func (b ClientBuilder) Build() error {
 	}
 
 	services := cmp.Services
+	if len(services) == 0 {
+		return nil
+	}
+	apiDir := filepath.Join(b.GetAbsolutePath(), "go")
+	localAPI, err := filepath.Rel(b.Output, apiDir)
+	if err != nil {
+		return err
+	}
 	conf := gokit.Options{
-		Repository: b.Repository,
-		Output:     b.Output,
+		Repository:    b.Repository,
+		Output:        b.Output,
+		ApiRepository: b.Package.GoModName(),
+		MixedInAPI:    b.APIEnabled || core.IsExist(filepath.Join(apiDir, "go.mod")),
+		ApiLocalPath:  filepath.ToSlash(localAPI),
 	}
 
 	for _, s := range services {
@@ -50,5 +64,5 @@ func (b ClientBuilder) Build() error {
 		}
 	}
 
-	return nil
+	return _go.GoModTidy(b.Output)
 }

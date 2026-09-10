@@ -11,6 +11,7 @@ import (
 
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/data"
 	_go "github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/go"
+	clientgen "github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit/generator/client"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit/generator/handlers"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit/generator/httptransport"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit/generator/model"
@@ -28,6 +29,7 @@ type Options struct {
 	Repository    string // the repository for the generated gokit service
 	MixedInAPI    bool
 	ApiRepository string
+	ApiLocalPath  string
 	Version       string
 	VersionDate   string
 	Output        string
@@ -42,9 +44,16 @@ func (o *Options) SyncTo(ds *data.Service) {
 	ds.CombinedAPI = o.MixedInAPI
 	ds.Go.RepositoryPath = o.Repository
 	ds.Go.ApiRepositoryPath = o.ApiRepository
+	ds.Go.ApiLocalPath = o.ApiLocalPath
+	if ds.Go.ApiLocalPath == "" {
+		ds.Go.ApiLocalPath = "../go"
+	}
 }
 
 func (o *Options) GenerateClient(ds *data.Service) ([]*util.GeneratedFile, error) {
+	if err := clientgen.PrepareService(ds); err != nil {
+		return nil, err
+	}
 	o.SyncTo(ds)
 	return o.generateTemplatedFiles(ds, templates.ClientNames(), templates.Client)
 }

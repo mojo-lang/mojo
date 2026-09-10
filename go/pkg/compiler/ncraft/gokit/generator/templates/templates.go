@@ -11,7 +11,7 @@ import (
 //go:embed service-go/*
 var services embed.FS
 
-//go:embed NAME-client/*
+//go:embed client-go/*
 var clients embed.FS
 
 type FileGetter = func(path string) ([]byte, error)
@@ -21,7 +21,7 @@ func Service(path string) ([]byte, error) {
 }
 
 func Client(path string) ([]byte, error) {
-	return FileContent(clients, path, "")
+	return FileContent(clients, path, "client-go/")
 }
 
 func ServiceNames() []string {
@@ -29,7 +29,7 @@ func ServiceNames() []string {
 }
 
 func ClientNames() []string {
-	return FileNames(clients, "")
+	return FileNames(clients, "client-go/")
 }
 
 func FileContent(fs embed.FS, path string, prefix string) ([]byte, error) {

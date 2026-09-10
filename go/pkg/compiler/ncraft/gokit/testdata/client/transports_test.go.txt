@@ -1,0 +1,99 @@
+package book_client
+
+import (
+ "context"
+ "encoding/json"
+ "errors"
+ "io"
+ "net"
+ "net/http"
+ "net/http/httptest"
+ "net/url"
+ "reflect"
+ "strings"
+ "testing"
+
+ pb "example.com/acme/library/go/pkg/sample/v1"
+ "github.com/mojo-lang/mojo/go/pkg/mojo/core"
+ "github.com/go-kit/kit/endpoint"
+ "google.golang.org/grpc"
+ "google.golang.org/grpc/codes"
+ "google.golang.org/grpc/metadata"
+ "google.golang.org/grpc/status"
+ "google.golang.org/grpc/test/bufconn"
+)
+
+func TestHTTP(t *testing.T){
+ isbn:="part/a ?b&c"
+ server:=httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter,r *http.Request){
+  if r.Header.Get("Authorization")!="token"{t.Error("missing context header")}
+  if r.URL.Query().Get("default")!="yes"{t.Error("missing base query")}
+  switch {
+  case r.Method=="DELETE":w.WriteHeader(204);return
+  case r.URL.Path=="/prefix/fail":w.WriteHeader(409);io.WriteString(w,`{"message":"conflict"}`);return
+  case r.URL.Path=="/prefix/raw":
+   body,_:=io.ReadAll(r.Body);if string(body)!="plain text"{t.Errorf("raw body: %s",body)}
+  case r.URL.Path=="/prefix/books" && r.Method=="POST":
+   body,_:=io.ReadAll(r.Body);var book pb.Book
+   if err:=json.Unmarshal(body,&book);err!=nil||book.Name!="created"{t.Errorf("selected body: %s",body)}
+   if r.URL.Query().Has("book"){t.Error("body duplicated in query")}
+  case strings.HasPrefix(r.URL.Path,"/prefix/lookup/"):
+   if r.URL.EscapedPath()!="/prefix/lookup/"+url.PathEscape(isbn){t.Errorf("nested path %s",r.URL.EscapedPath())}
+  default:
+   if r.URL.EscapedPath()!="/prefix/books/"+url.PathEscape(isbn){t.Errorf("escaped path %s",r.URL.EscapedPath())}
+   if r.URL.Query().Get("count")!="7" || !reflect.DeepEqual(r.URL.Query()["labels"],[]string{"one","two words"}){t.Errorf("query %s",r.URL.RawQuery)}
+   body,_:=io.ReadAll(r.Body);if len(body)!=0{t.Error("GET must not send a body")}
+  }
+  w.Header().Set("Content-Type","application/json")
+  if r.Header.Get("Envelope")=="yes"{io.WriteString(w,`{"code":200,"data":{"name":"ok"}}`);return}
+  w.WriteHeader(201);io.WriteString(w,`{"name":"ok"}`)
+ }))
+ defer server.Close()
+ calls:=0
+ middleware:=func(next endpoint.Endpoint)endpoint.Endpoint{return func(ctx context.Context,req interface{})(interface{},error){calls++;return next(ctx,req)}}
+ c,err:=NewHttpClient(server.URL+"/prefix?default=yes",CtxValuesToSend("Authorization"),WithMiddleware(middleware));if err!=nil{t.Fatal(err)}
+ ctx:=context.WithValue(context.Background(),"Authorization","token")
+ book,err:=c.GetBook(ctx,&pb.GetBookRequest{Isbn:isbn,Count:7,Labels:[]string{"one","two words"}})
+ if err!=nil||book.Name!="ok"{t.Fatalf("get: %v %v",book,err)}
+ if calls!=1{t.Fatal("middleware not called")}
+ if _,err:=c.CreateBook(ctx,&pb.CreateBookRequest{Book:&pb.Book{Name:"created"}});err!=nil{t.Fatal(err)}
+ if _,err:=c.DeleteBook(ctx,&pb.DeleteBookRequest{Isbn:"deleted"});err!=nil{t.Fatal(err)}
+ if _,err:=c.RawBody(ctx,&pb.RawBodyRequest{Body:"plain text"});err!=nil{t.Fatal(err)}
+ if _,err:=c.Lookup(ctx,&pb.LookupRequest{Book:&pb.Book{Name:isbn}});err!=nil{t.Fatal(err)}
+ _,err=c.Fail(ctx,&pb.FailRequest{})
+ var httpError *HTTPError;if !errors.As(err,&httpError)||httpError.StatusCode!=409{t.Fatalf("error status %v",err)}
+ if _,err:=c.RpcOnly(ctx,&pb.RpcOnlyRequest{});err==nil{t.Fatal("missing binding must fail")}
+ if _,err:=c.GetBook(ctx,nil);err==nil{t.Fatal("nil request must fail")}
+ cancelled,cancel:=context.WithCancel(ctx);cancel()
+ if _,err:=c.GetBook(cancelled,&pb.GetBookRequest{});!errors.Is(err,context.Canceled){t.Fatalf("context: %v",err)}
+ envelope,err:=NewHttpClient(server.URL+"/prefix?default=yes",CtxValuesToSend("Authorization","Envelope"),WithEnvelope());if err!=nil{t.Fatal(err)}
+ result,err:=envelope.GetBook(context.WithValue(ctx,"Envelope","yes"),&pb.GetBookRequest{Isbn:isbn,Count:7,Labels:[]string{"one","two words"}})
+ if err!=nil||result.Name!="ok"{t.Fatalf("envelope %v %v",result,err)}
+ if _,err:=NewHttpClient("ftp://example.com");err==nil{t.Fatal("invalid URL")}
+}
+
+type server struct{pb.UnimplementedBookServiceServer}
+func(server) GetBook(ctx context.Context,req *pb.GetBookRequest)(*pb.Book,error){
+ md,_:=metadata.FromIncomingContext(ctx)
+ if len(md.Get("authorization"))==0||md.Get("authorization")[0]!="token"{return nil,status.Error(codes.Unauthenticated,"missing metadata")}
+ return &pb.Book{Name:req.Isbn},nil
+}
+func(server) DeleteBook(context.Context,*pb.DeleteBookRequest)(*core.Null,error){return &core.Null{},nil}
+func(server) Fail(context.Context,*pb.FailRequest)(*pb.Book,error){return nil,status.Error(codes.NotFound,"missing")}
+
+func TestGRPC(t *testing.T){
+ listener:=bufconn.Listen(1024*1024)
+ s:=grpc.NewServer();pb.RegisterBookServiceServer(s,server{})
+ go s.Serve(listener);defer s.Stop()
+ dialer:=func(context.Context,string)(net.Conn,error){return listener.Dial()}
+ c,err:=NewGrpcClient(context.Background(),"bufconn",[]ClientOption{CtxValuesToSend("Authorization")},grpc.WithContextDialer(dialer),grpc.WithInsecure())
+ if err!=nil{t.Fatal(err)};defer c.Close()
+ ctx:=context.WithValue(context.Background(),"Authorization","token")
+ book,err:=c.GetBook(ctx,&pb.GetBookRequest{Isbn:"grpc"});if err!=nil||book.Name!="grpc"{t.Fatalf("grpc: %v %v",book,err)}
+ if FullServiceName!="sample.v1.BookService"{t.Fatalf("full name %s",FullServiceName)}
+ if _,err:=c.DeleteBook(ctx,&pb.DeleteBookRequest{});err!=nil{t.Fatal(err)}
+ if _,err:=c.Fail(ctx,&pb.FailRequest{});status.Code(err)!=codes.NotFound{t.Fatalf("status %v",err)}
+ cancelled,cancel:=context.WithCancel(ctx);cancel()
+ if _,err:=c.GetBook(cancelled,&pb.GetBookRequest{});status.Code(err)!=codes.Canceled{t.Fatalf("context %v",err)}
+ if _,err:=NewGrpc(nil);err==nil{t.Fatal("nil connection")}
+}

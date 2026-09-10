@@ -1,0 +1,15 @@
+# Go clients
+
+Generated HTTP and gRPC clients live in `pkg/<name>-client` and share the Go API
+module `{{.Go.ApiRepositoryPath}}`. They do not import the service implementation.
+
+Use `NewHttpClient(baseURL, options...)` for HTTP, `NewGrpc(connection, options...)`
+for a caller-owned gRPC connection, or `NewGrpcClient(ctx, target, options, dialOptions...)`
+to create an owned connection. Close an owned gRPC client when finished.
+
+Common options include `CtxValuesToSend`, `WithHTTPClient`, `WithGRPCOptions`,
+`WithMiddleware`, and `WithEnvelope`. HTTP uses the first binding of each method;
+methods without HTTP bindings return an error when invoked through HTTP.
+
+Regenerate from the Mojo project root with `mojo build -t client .`, or use
+`mojo build -t api,client .` to regenerate the Go API alongside the clients.
