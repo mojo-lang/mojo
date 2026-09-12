@@ -27,28 +27,35 @@ import (
 )
 
 func GenerateMojoPackageProtobuf(pkg *lang.Package) (string, error) {
-	dir, err := os.MkdirTemp("", "protobuf-mojo-"+pkg.Name)
-	if err != nil {
-		return "", err
-	}
-
 	files := mpm.GetMojoPbFile(pkg.Name)
 	if files == nil {
 		return "", nil
 	}
 
-	for name, file := range files.Parts {
-		fileName := path.Join(dir, name)
-		err = core.CreateDir(path.Dir(fileName))
-		if err != nil {
-			return "", err
-		}
+	dir, err := os.MkdirTemp("", "protobuf-mojo-"+pkg.Name)
+	if err != nil {
+		return "", err
+	}
 
-		if err = os.WriteFile(fileName, file, fs.ModePerm); err != nil {
-			return "", err
-		}
+	if err := writeMojoProtobufFiles(dir, files); err != nil {
+		_ = os.RemoveAll(dir)
+		return "", err
 	}
 	return dir, nil
+}
+
+func writeMojoProtobufFiles(dir string, files *mpm.BinaryFile) error {
+	for name, file := range files.Parts {
+		fileName := path.Join(dir, name)
+		if err := core.CreateDir(path.Dir(fileName)); err != nil {
+			return err
+		}
+
+		if err := os.WriteFile(fileName, file, fs.ModePerm); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func isGoCommandExist(command string) bool {
@@ -88,38 +95,60 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 	if !hasInput {
 		return nil, nil
 	}
+	dir, err := filepath.Abs(dir)
+	if err != nil {
+		return nil, err
+	}
 	if err := prepareEnv(); err != nil {
 		return nil, err
 	}
 
-	var tempPbDirs []string
+	var mojoPbDir string
 	cmd := exec.Command("protoc", "-I.")
-	for _, dep := range pkg.ResolvedDependencies {
-		wd := dep.GetExtraString("workingDir")
-		p := dep.GetExtraString("path")
-		if len(wd) == 0 && len(p) == 0 {
-			pbDir, err := GenerateMojoPackageProtobuf(dep)
-			if err != nil {
-				logs.Errorw("failed to generate mojo package's protobuf files", "package", dep.FullName, "error", err)
-				return nil, err
-			}
-			if len(pbDir) > 0 {
-				tempPbDirs = append(tempPbDirs, pbDir)
-				cmd.Args = append(cmd.Args, "--proto_path="+pbDir)
-			}
-		} else {
-			cmd.Args = append(cmd.Args, "--proto_path="+path.Join(wd, p, "protobuf"))
-		}
-	}
+	cmd.Dir = filepath.Join(dir, "protobuf")
+	// Unified Mojo packages share one protobuf directory, already covered by
+	// -I. when building in that directory. Include each other root only once.
+	protoDirs := map[string]bool{cmd.Dir: true}
 	defer func() {
-		for _, d := range tempPbDirs {
-			if err := os.RemoveAll(d); err != nil {
-				logs.Warnw("failed to remove all the files", "dir", d, "error", err)
+		if mojoPbDir != "" {
+			if err := os.RemoveAll(mojoPbDir); err != nil {
+				logs.Warnw("failed to remove all the files", "dir", mojoPbDir, "error", err)
 			}
 		}
 	}()
-
-	cmd.Dir = path.Join(dir, "protobuf")
+	for _, dep := range pkg.ResolvedDependencies {
+		wd := dep.GetExtraString("workingDir")
+		p := dep.GetExtraString("path")
+		var pbDir string
+		if len(wd) == 0 && len(p) == 0 {
+			pbFiles := mpm.GetMojoPbFile(dep.Name)
+			if pbFiles == nil {
+				continue
+			}
+			// Embedded modules retain separate snapshots, but protoc needs only
+			// one include root containing all of their original import paths.
+			if mojoPbDir == "" {
+				mojoPbDir, err = os.MkdirTemp("", "protobuf-mojo-")
+				if err != nil {
+					return nil, err
+				}
+			}
+			if err := writeMojoProtobufFiles(mojoPbDir, pbFiles); err != nil {
+				logs.Errorw("failed to generate mojo package's protobuf files", "package", dep.FullName, "error", err)
+				return nil, err
+			}
+			pbDir = mojoPbDir
+		} else {
+			pbDir, err = filepath.Abs(filepath.Join(wd, p, "protobuf"))
+			if err != nil {
+				return nil, err
+			}
+		}
+		if pbDir != "" && !protoDirs[pbDir] {
+			protoDirs[pbDir] = true
+			cmd.Args = append(cmd.Args, "--proto_path="+pbDir)
+		}
+	}
 
 	outDir := filepath.Join(dir, "go.out")
 	if core.IsExist(outDir) {
@@ -149,7 +178,7 @@ func ProtocGenGo(dir string, pkg *lang.Package, files []*descriptor.File) (util.
 
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
-	_, err := cmd.Output()
+	_, err = cmd.Output()
 	if err != nil {
 		logs.Errorw(fmt.Sprintf("failed to run protoc cmd %s", stderr.String()), "cmd", cmd.String())
 		return nil, err
