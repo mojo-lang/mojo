@@ -79,7 +79,7 @@ func TestGeneratedHTTPAndGRPCClients(t *testing.T) {
 	require.FileExists(t, filepath.Join(output, "tidy-directory.txt"))
 	options := gokit.Options{Output: output, Repository: "example.com/acme/library/client-go", ApiRepository: "example.com/acme/library/go", MixedInAPI: true}
 	for _, name := range []string{"book", "health"} {
-		for _, file := range []string{"endpoints.go", "grpc.go", "grpc_client.go", "http_client.go", "options.go"} {
+		for _, file := range []string{"endpoints.go", "grpc.go", "grpc_client.go", "http_client.go", "options.go", "sd_client.go", "sd_config.go"} {
 			require.FileExists(t, filepath.Join(output, "pkg", name+"-client", file))
 		}
 		require.NoDirExists(t, filepath.Join(output, name+"-client"))
@@ -121,13 +121,25 @@ func TestGeneratedHTTPAndGRPCClients(t *testing.T) {
 	module, err := os.ReadFile(filepath.Join(output, "go.mod"))
 	require.NoError(t, err)
 	require.Contains(t, string(module), "example.com/acme/library/go => ../go")
-	write("client-go/go.mod", string(module)+"\nreplace github.com/mojo-lang/mojo/go => "+filepath.ToSlash(goRoot)+"\n")
+	moduleText := string(module) + "\nreplace github.com/mojo-lang/mojo/go => " + filepath.ToSlash(goRoot) + "\n"
+	// Allow integration against an unpublished NCraft runtime checkout without
+	// putting a machine-specific replacement in generated projects.
+	if ncraftRoot := os.Getenv("NCRAFT_GO_ROOT"); ncraftRoot != "" {
+		ncraftRoot, err = filepath.Abs(ncraftRoot)
+		require.NoError(t, err)
+		require.FileExists(t, filepath.Join(ncraftRoot, "go.mod"))
+		moduleText += fmt.Sprintf("replace github.com/ncraft-io/ncraft/go => %q\n", filepath.ToSlash(ncraftRoot))
+	}
+	write("client-go/go.mod", moduleText)
 	sum, err := os.ReadFile(filepath.Join(goRoot, "go.sum"))
 	require.NoError(t, err)
 	write("client-go/go.sum", string(sum))
 	tests, err := os.ReadFile("testdata/client/transports_test.go.txt")
 	require.NoError(t, err)
 	write("client-go/pkg/book-client/transports_test.go", string(tests))
+	sdTests, err := os.ReadFile("testdata/client/sd_test.go.txt")
+	require.NoError(t, err)
+	write("client-go/pkg/book-client/sd_test.go", string(sdTests))
 	cmd := exec.Command("go", "test", "-mod=mod", "./...")
 	cmd.Dir = output
 	cmd.Env = append(os.Environ(), "GOWORK=off")

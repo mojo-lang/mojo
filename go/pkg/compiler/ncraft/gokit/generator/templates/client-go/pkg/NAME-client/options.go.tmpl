@@ -7,21 +7,48 @@ import (
  "fmt"
  "net/http"
  "strings"
+ "time"
 
  "github.com/go-kit/kit/endpoint"
+ "github.com/go-kit/kit/log"
  "google.golang.org/grpc"
  "google.golang.org/grpc/metadata"
 )
 
 type clientConfig struct {
  headers []string
+ httpHeadersToSend []string
  httpClient *http.Client
  grpcOptions []grpc.CallOption
  middleware []endpoint.Middleware
  enveloped bool
+ serviceName string
+ logger log.Logger
+ dialOptions []grpc.DialOption
+ dialTimeout time.Duration
 }
 
 type ClientOption func(*clientConfig) error
+
+// WithServiceName overrides the registry key, which defaults to FullServiceName.
+func WithServiceName(name string) ClientOption {
+ return func(c *clientConfig)error{
+  if strings.TrimSpace(name)==""{return fmt.Errorf("service name is empty")}
+  c.serviceName=name;return nil
+ }
+}
+
+func WithLogger(logger log.Logger) ClientOption {
+ return func(c *clientConfig)error{
+  if logger==nil{return fmt.Errorf("logger is nil")}
+  c.logger=logger;return nil
+ }
+}
+
+// WithGRPCDialOptions configures discovery connections, including credentials.
+func WithGRPCDialOptions(options ...grpc.DialOption) ClientOption {
+ return func(c *clientConfig)error{c.dialOptions=append(c.dialOptions,options...);return nil}
+}
 
 func CtxValuesToSend(keys ...string) ClientOption {
  return func(c *clientConfig)error{c.headers=append(c.headers,keys...);return nil}
@@ -52,7 +79,7 @@ func WithEnvelope() ClientOption {
 }
 
 func newClientConfig(options []ClientOption)(clientConfig,error){
- config:=clientConfig{httpClient:http.DefaultClient}
+ config:=clientConfig{httpClient:http.DefaultClient,serviceName:FullServiceName,logger:log.NewNopLogger()}
  for _,option:=range options{
   if option==nil{return config,fmt.Errorf("nil client option")}
   if err:=option(&config);err!=nil{return config,err}
@@ -74,6 +101,20 @@ func(c clientConfig) grpcContext(ctx context.Context)context.Context{
 }
 
 func(c clientConfig) httpHeaders(ctx context.Context,r *http.Request)context.Context{
- for _,key:=range c.headers{if value,ok:=ctx.Value(key).(string);ok{r.Header.Set(key,value)}}
+ for _,keys:=range [][]string{c.httpHeadersToSend,c.headers}{
+  for _,key:=range keys{if value,ok:=ctx.Value(key).(string);ok{r.Header.Set(key,value)}}
+ }
  return ctx
+}
+
+func(c clientConfig) dialGRPC(ctx context.Context,target string)(*grpc.ClientConn,error){
+ options:=c.dialOptions
+ if c.dialTimeout>0{
+  var cancel context.CancelFunc
+  ctx,cancel=context.WithTimeout(ctx,c.dialTimeout)
+  defer cancel()
+  // Wait for connection setup so the configured deadline bounds the dial.
+  options=append([]grpc.DialOption{grpc.WithBlock()},options...)
+ }
+ return grpc.DialContext(ctx,target,options...)
 }

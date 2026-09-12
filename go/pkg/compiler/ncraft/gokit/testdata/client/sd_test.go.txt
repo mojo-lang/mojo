@@ -1,0 +1,434 @@
+package book_client
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"io"
+	"net"
+	"net/http"
+	"net/http/httptest"
+	"sync"
+	"sync/atomic"
+	"testing"
+	"time"
+
+	pb "example.com/acme/library/go/pkg/sample/v1"
+	"github.com/go-kit/kit/endpoint"
+	kitsd "github.com/go-kit/kit/sd"
+	nclient "github.com/ncraft-io/ncraft/go/pkg/gokit/client"
+	"github.com/ncraft-io/ncraft/go/pkg/gokit/retry"
+	"github.com/ncraft-io/ncraft/go/pkg/gokit/sd"
+	"github.com/ncraft-io/ncraft/go/pkg/gokit/sd/direct"
+	nconfig "github.com/ncraft-io/ncraft/go/pkg/ncraft/config"
+	"github.com/ncraft-io/ncraft/go/pkg/ncraft/config/source/memory"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/connectivity"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
+	"google.golang.org/grpc/test/bufconn"
+)
+
+func directSettings(transport string, urls ...string) *sd.Config {
+	return &sd.Config{Mode: "direct", Transport: transport, Direct: map[string]*direct.Config{
+		FullServiceName: {Urls: urls},
+	}}
+}
+
+func awaitInstances(t *testing.T, c *DiscoveryClient, count int) {
+	t.Helper()
+	deadline := time.Now().Add(3 * time.Second)
+	for time.Now().Before(deadline) {
+		endpoints, err := c.endpointer.Endpoints()
+		if err == nil && len(endpoints) == count {
+			return
+		}
+		time.Sleep(time.Millisecond)
+	}
+	t.Fatalf("discovery did not reach %d endpoints", count)
+}
+
+func TestSDHTTP(t *testing.T) {
+	newServer := func(name string) *httptest.Server {
+		return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.Header.Get("Authorization") != "token" {
+				t.Error("missing discovery context header")
+			}
+			if r.URL.Path != "/api/books/book" {
+				t.Errorf("path: %s", r.URL.Path)
+			}
+			fmt.Fprintf(w, `{"data":{"name":%q}}`, name)
+		}))
+	}
+	a, b := newServer("a"), newServer("b")
+	defer a.Close()
+	defer b.Close()
+	calls := 0
+	middleware := func(next endpoint.Endpoint) endpoint.Endpoint {
+		return func(ctx context.Context, req interface{}) (interface{}, error) { calls++; return next(ctx, req) }
+	}
+	c, err := NewClient(context.Background(), directSettings("http", a.URL+"/api", b.URL+"/api"), CtxValuesToSend("Authorization"), WithEnvelope(), WithMiddleware(middleware))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	seen := map[string]int{}
+	ctx := context.WithValue(context.Background(), "Authorization", "token")
+	for i := 0; i < 4; i++ {
+		book, err := c.GetBook(ctx, &pb.GetBookRequest{Isbn: "book"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		seen[book.Name]++
+	}
+	if seen["a"] != 2 || seen["b"] != 2 || calls != 4 {
+		t.Fatalf("balance %v middleware %d", seen, calls)
+	}
+	if err := c.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := c.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := c.GetBook(ctx, &pb.GetBookRequest{}); err == nil {
+		t.Fatal("closed client accepted a call")
+	}
+}
+
+func TestSDRetry(t *testing.T) {
+	var attempts atomic.Int32
+	calls := 0
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if attempts.Add(1) < 3 {
+			w.WriteHeader(503)
+			return
+		}
+		io.WriteString(w, `{"name":"retried"}`)
+	}))
+	defer s.Close()
+	cfg := directSettings("http", s.URL)
+	cfg.Retry = &retry.Config{Enable: true, Max: 3, Timeout: 1000}
+	middleware := func(next endpoint.Endpoint) endpoint.Endpoint {
+		return func(ctx context.Context, req interface{}) (interface{}, error) { calls++; return next(ctx, req) }
+	}
+	c, err := NewClient(context.Background(), cfg, WithMiddleware(middleware))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	awaitInstances(t, c, 1)
+	book, err := c.GetBook(context.Background(), &pb.GetBookRequest{})
+	if err != nil || book.Name != "retried" || attempts.Load() != 3 || calls != 1 {
+		t.Fatalf("retry: %v %v attempts=%d middleware=%d", book, err, attempts.Load(), calls)
+	}
+}
+
+func TestSDGRPC(t *testing.T) {
+	listener := bufconn.Listen(1024 * 1024)
+	s := grpc.NewServer()
+	pb.RegisterBookServiceServer(s, server{})
+	go s.Serve(listener)
+	defer s.Stop()
+	dialer := func(context.Context, string) (net.Conn, error) { return listener.Dial() }
+	// Empty transport follows the NCraft server default, gRPC.
+	cfg := directSettings("", "bufconn")
+	c, err := NewClient(context.Background(), cfg, CtxValuesToSend("Authorization"), WithGRPCDialOptions(grpc.WithContextDialer(dialer), grpc.WithInsecure()))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	awaitInstances(t, c, 1)
+	ctx := context.WithValue(context.Background(), "Authorization", "token")
+	book, err := c.GetBook(ctx, &pb.GetBookRequest{Isbn: "discovered"})
+	if err != nil || book.Name != "discovered" {
+		t.Fatalf("grpc SD: %v %v", book, err)
+	}
+	if _, err := c.DeleteBook(ctx, &pb.DeleteBookRequest{}); err != nil {
+		t.Fatal(err)
+	}
+	c.mu.Lock()
+	var conn *grpc.ClientConn
+	for connection := range c.connections {
+		conn = connection
+	}
+	count := len(c.connections)
+	c.mu.Unlock()
+	if count != 1 {
+		t.Fatalf("expected one shared connection, got %d", count)
+	}
+	if err := c.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if conn.GetState() != connectivity.Shutdown {
+		t.Fatal("connection was not closed")
+	}
+}
+
+type changingInstancer struct {
+	mu        sync.Mutex
+	channels  map[chan<- kitsd.Event]bool
+	instances []string
+	stopped   bool
+}
+
+func (s *changingInstancer) Register(ch chan<- kitsd.Event) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.channels[ch] = true
+	ch <- kitsd.Event{Instances: s.instances}
+}
+func (s *changingInstancer) Deregister(ch chan<- kitsd.Event) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.channels, ch)
+}
+func (s *changingInstancer) Stop() { s.mu.Lock(); defer s.mu.Unlock(); s.stopped = true }
+func (s *changingInstancer) update(instances ...string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.instances = instances
+	for ch := range s.channels {
+		ch <- kitsd.Event{Instances: instances}
+	}
+}
+
+func TestSDUpdatesAndClose(t *testing.T) {
+	listener := bufconn.Listen(1024 * 1024)
+	s := grpc.NewServer()
+	pb.RegisterBookServiceServer(s, server{})
+	go s.Serve(listener)
+	defer s.Stop()
+	config, err := newClientConfig([]ClientOption{WithGRPCDialOptions(grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) { return listener.Dial() }), grpc.WithInsecure())})
+	if err != nil {
+		t.Fatal(err)
+	}
+	instancer := &changingInstancer{channels: map[chan<- kitsd.Event]bool{}, instances: []string{"first"}}
+	c, err := newDiscoveryClient(context.Background(), instancer, "grpc", config, false, 3, time.Second)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	awaitInstances(t, c, 1)
+	c.mu.Lock()
+	var old *grpc.ClientConn
+	for conn := range c.connections {
+		old = conn
+	}
+	c.mu.Unlock()
+	instancer.update()
+	awaitInstances(t, c, 0)
+	if old.GetState() != connectivity.Shutdown {
+		t.Fatal("removed instance connection remained open")
+	}
+	if _, err := c.DeleteBook(context.Background(), &pb.DeleteBookRequest{}); err == nil {
+		t.Fatal("empty discovery succeeded")
+	}
+	instancer.update("second", "third")
+	awaitInstances(t, c, 2)
+	if _, err := c.DeleteBook(context.Background(), &pb.DeleteBookRequest{}); err != nil {
+		t.Fatal(err)
+	}
+	if err := c.Close(); err != nil {
+		t.Fatal(err)
+	}
+	instancer.mu.Lock()
+	defer instancer.mu.Unlock()
+	if !instancer.stopped || len(instancer.channels) != 0 {
+		t.Fatal("discovery subscription leaked")
+	}
+}
+
+func useClientConfig(t *testing.T, body string) {
+	t.Helper()
+	loaded, err := nconfig.NewConfig(nconfig.WithSource(memory.NewSource(memory.WithJSON([]byte(body)))))
+	if err != nil {
+		t.Fatal(err)
+	}
+	previous := nconfig.DefaultConfig
+	nconfig.DefaultConfig = loaded
+	t.Cleanup(func() { nconfig.DefaultConfig = previous; loaded.Close() })
+}
+
+func TestSDConfiguration(t *testing.T) {
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Authorization") != "token" {
+			t.Error("configured header missing")
+		}
+		if r.Header.Get("Ignored") != "" {
+			t.Error("common headers were not replaced")
+		}
+		io.WriteString(w, `{"data":{"name":"configured"}}`)
+	}))
+	defer s.Close()
+	useClientConfig(t, fmt.Sprintf(`{
+ "sd":{"mode":"direct","transport":"grpc","retry":{"max":3}},
+ "client":{
+   "http":{"headers":["Ignored"],"timeout":5000,"enveloped":false},
+   "sd":{"retry":{"timeout":1000}},
+   "sample.v1.BookService":{
+     "serviceName":"books",
+     "http":{"headers":["Authorization"],"enveloped":true},
+     "sd":{"transport":"http","direct":{"books":{"urls":[%q]}},"retry":{"max":5}}
+   },
+   "alias":{"serviceName":"books","sd":{"transport":"http","direct":{"books":{"urls":[%q]}}}}
+ }} `, s.URL, s.URL))
+	settings, err := LoadSDConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if settings.Mode != "direct" || settings.Transport != "http" || settings.Retry.Timeout != 1000 || settings.Retry.Max != 5 {
+		t.Fatalf("merged SD: %+v", settings)
+	}
+	c, err := NewClientFromConfig(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	ctx := context.WithValue(context.Background(), "Authorization", "token")
+	ctx = context.WithValue(ctx, "Ignored", "must not be sent")
+	book, err := c.GetBook(ctx, &pb.GetBookRequest{})
+	if err != nil || book.Name != "configured" {
+		t.Fatalf("configured call: %v %v", book, err)
+	}
+	alias, err := NewClientFromServiceConfig(context.Background(), "alias", CtxValuesToSend("Authorization"), WithEnvelope(), WithHTTPClient(s.Client()))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer alias.Close()
+	if _, err := alias.GetBook(context.WithValue(context.Background(), "Authorization", "token"), &pb.GetBookRequest{}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestClientSettingOptions(t *testing.T) {
+	originalTimeout := http.DefaultClient.Timeout
+	settings := &nclient.Config{ServiceName: "configured", HTTP: &nclient.HTTPConfig{Timeout: 20, Headers: []string{"OnlyHTTP"}, Enveloped: true}, GRPC: &nclient.GRPCConfig{DialTimeout: 30, WaitForReady: true, MaxRecvMsgSize: 100, MaxSendMsgSize: 200}}
+	config, err := newClientConfig([]ClientOption{withClientSettings(settings)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if config.httpClient == http.DefaultClient || config.httpClient.Timeout != 20*time.Millisecond || http.DefaultClient.Timeout != originalTimeout {
+		t.Fatal("HTTP timeout mutated defaults or was not applied")
+	}
+	if config.dialTimeout != 30*time.Millisecond || len(config.grpcOptions) != 3 {
+		t.Fatal("gRPC settings were not applied")
+	}
+	md, _ := metadata.FromOutgoingContext(config.grpcContext(context.WithValue(context.Background(), "OnlyHTTP", "secret")))
+	if len(md.Get("onlyhttp")) != 0 {
+		t.Fatal("HTTP-only headers leaked to gRPC")
+	}
+	explicit := &http.Client{Timeout: time.Second}
+	config, err = newClientConfig([]ClientOption{withClientSettings(settings), WithServiceName("explicit"), WithHTTPClient(explicit), WithGRPCOptions(grpc.MaxCallRecvMsgSize(300))})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if config.serviceName != "explicit" || config.httpClient != explicit || len(config.grpcOptions) != 4 {
+		t.Fatal("explicit options must be applied last")
+	}
+	for _, invalid := range []*nclient.Config{
+		{HTTP: &nclient.HTTPConfig{Timeout: -1}},
+		{GRPC: &nclient.GRPCConfig{DialTimeout: -1}},
+		{GRPC: &nclient.GRPCConfig{MaxRecvMsgSize: -1}},
+	} {
+		if _, err := newClientConfig([]ClientOption{withClientSettings(invalid)}); err == nil {
+			t.Fatal("invalid client settings were accepted")
+		}
+	}
+}
+
+func TestConfiguredGRPC(t *testing.T) {
+	listener := bufconn.Listen(1024 * 1024)
+	s := grpc.NewServer()
+	pb.RegisterBookServiceServer(s, server{})
+	go s.Serve(listener)
+	defer s.Stop()
+	useClientConfig(t, `{"client":{"grpc":{"dialTimeout":1000,"maxRecvMsgSize":1},"sample.v1.BookService":{"sd":{"mode":"direct","direct":{"sample.v1.BookService":{"urls":["bufconn"]}}}}}}`)
+	dialOptions := WithGRPCDialOptions(grpc.WithInsecure(), grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) { return listener.Dial() }))
+	ctx := context.WithValue(context.Background(), "Authorization", "token")
+	limited, err := NewClientFromConfig(context.Background(), dialOptions, CtxValuesToSend("Authorization"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer limited.Close()
+	if _, err := limited.GetBook(ctx, &pb.GetBookRequest{Isbn: "oversize"}); status.Code(err) != codes.ResourceExhausted {
+		t.Fatalf("configured receive limit: %v", err)
+	}
+	overridden, err := NewClientFromConfig(context.Background(), dialOptions, CtxValuesToSend("Authorization"), WithGRPCOptions(grpc.MaxCallRecvMsgSize(1024)))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer overridden.Close()
+	if _, err := overridden.GetBook(ctx, &pb.GetBookRequest{Isbn: "oversize"}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestConfiguredDialTimeout(t *testing.T) {
+	useClientConfig(t, `{"client":{"grpc":{"dialTimeout":20},"sd":{"mode":"direct","direct":{"sample.v1.BookService":{"urls":["blocked"]}}}}}`)
+	started := time.Now()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	c, err := NewClientFromConfig(ctx, WithGRPCDialOptions(grpc.WithInsecure(), grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) { <-ctx.Done(); return nil, ctx.Err() })))
+	if c != nil {
+		c.Close()
+		t.Fatal("blocked dial succeeded")
+	}
+	if !errors.Is(err, context.DeadlineExceeded) || time.Since(started) > 500*time.Millisecond {
+		t.Fatalf("configured dial timeout: %v", err)
+	}
+}
+
+func TestInvalidClientConfiguration(t *testing.T) {
+	useClientConfig(t, `{"client":{"sample.v1.BookService":{"http":{"timeout":"bad"}}}}`)
+	if _, err := NewClientFromConfig(context.Background()); err == nil {
+		t.Fatal("invalid client config accepted")
+	}
+	if _, err := LoadSDConfig(); err == nil {
+		t.Fatal("NCraft config error was ignored")
+	}
+	// Explicit SD creation is independent of the configuration manager.
+	c, err := NewClient(context.Background(), directSettings("http", "localhost:8080"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	c.Close()
+}
+
+func TestMissingClientConfiguration(t *testing.T) {
+	useClientConfig(t, `{}`)
+	settings, err := LoadSDConfig()
+	if err != nil || settings == nil {
+		t.Fatalf("NCraft empty config semantics: %v", err)
+	}
+	if _, err := NewClientFromConfig(context.Background()); err == nil {
+		t.Fatal("unconfigured discovery client succeeded")
+	}
+}
+
+func TestSDValidation(t *testing.T) {
+	for _, cfg := range []*sd.Config{nil, {}, {Mode: "unknown", Transport: "http"}, {Mode: "direct", Transport: "http"}, directSettings("ftp", "localhost:8080"), directSettings("http", ""), directSettings("http", "ftp://localhost:8080"), directSettings("grpc", "localhost:8080"), {Mode: "direct", Transport: "http", Direct: map[string]*direct.Config{FullServiceName: nil}}} {
+		if c, err := NewClient(context.Background(), cfg); err == nil {
+			c.Close()
+			t.Fatalf("invalid config accepted: %+v", cfg)
+		}
+	}
+	cfg := directSettings("http", "localhost:8080")
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if _, err := NewClient(ctx, cfg); !errors.Is(err, context.Canceled) {
+		t.Fatalf("cancelled context: %v", err)
+	}
+	if _, err := NewClient(context.Background(), cfg, nil); err == nil {
+		t.Fatal("nil option")
+	}
+	if _, err := NewClient(context.Background(), cfg, WithServiceName("missing")); err == nil {
+		t.Fatal("missing service")
+	}
+	renamed := &sd.Config{Mode: "direct", Transport: "http", Direct: map[string]*direct.Config{"custom": {Urls: []string{"localhost:8080"}}}}
+	c, err := NewClient(context.Background(), renamed, WithServiceName("custom"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	c.Close()
+}

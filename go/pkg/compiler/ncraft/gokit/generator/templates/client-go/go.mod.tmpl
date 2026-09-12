@@ -5,7 +5,8 @@ go 1.24.7
 require (
  {{.Go.ApiRepositoryPath}} v0.0.0
  github.com/go-kit/kit v0.13.0
- google.golang.org/grpc v1.40.0
+ github.com/ncraft-io/ncraft/go v0.0.0-20260912020610-54aba377d3c6
+ google.golang.org/grpc v1.58.2
 )
 {{if .CombinedAPI}}
 replace {{.Go.ApiRepositoryPath}} => {{.Go.ApiLocalPath}}

@@ -96,8 +96,9 @@ func PrepareService(service *data.Service) error {
 // code. Keep other native package names unless they conflict with generated code.
 func packageAliases(paths []string, names map[string]string, apiPath string) map[string]string {
 	used := map[string]bool{"pb": true}
-	for _, name := range strings.Fields(`bytes context jsoniter fmt io http url reflect strings
-		endpoint httptransport grpc metadata Client ClientOption Endpoints GrpcClient
+	for _, name := range strings.Fields(`bytes context jsoniter fmt io http url reflect strings time
+		endpoint httptransport grpc metadata log Client ClientOption Endpoints GrpcClient
+		DiscoveryClient discoveryRequest discoveryConnection
 		HTTPError FullServiceName clientConfig ctx request req response remote config
 		endpoints options conn err c e r target body instance base clientOptions result ok client`) {
 		used[name] = true

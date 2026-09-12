@@ -3,7 +3,92 @@
 Generated HTTP and gRPC clients live in `pkg/<name>-client` and share the Go API
 module `{{.Go.ApiRepositoryPath}}`. They do not import the service implementation.
 
-Use `NewHttpClient(baseURL, options...)` for HTTP, `NewGrpc(connection, options...)`
+The default discovery entry point is `NewClient(ctx, sdConfig, options...)`.
+Pass a `*sd.Config` from `github.com/ncraft-io/ncraft/go/pkg/gokit/sd` at creation.
+It supports NCraft direct, etcd and Nacos discovery, follows instance updates,
+and balances calls round-robin. Registry keys default to `FullServiceName`;
+override with `WithServiceName`. Transport defaults to `grpc`, matching NCraft
+servers; set `Transport: "http"` for HTTP. Always close the discovery client.
+
+```go
+settings := &sd.Config{
+    Mode: "direct",
+    Transport: "http",
+    Direct: map[string]*direct.Config{
+        client.FullServiceName: {Urls: []string{"http://localhost:8080"}},
+    },
+}
+c, err := client.NewClient(ctx, settings)
+if err != nil { return err }
+defer c.Close()
+```
+
+Here `client` is the generated package, and `direct` is
+`github.com/ncraft-io/ncraft/go/pkg/gokit/sd/direct`.
+For gRPC, supply connection options using `WithGRPCDialOptions`, including
+`grpc.WithTransportCredentials(...)`. `WithGRPCOptions` sets per-call options.
+Use `WithLogger` to receive discovery and endpoint creation diagnostics.
+
+For automatic configuration, call `NewClientFromConfig(ctx, options...)`.
+It delegates to `github.com/ncraft-io/ncraft/go/pkg/gokit/client.LoadConfig`
+using `FullServiceName` as the service selector. NCraft's configuration manager
+owns loading sources, including the current working directory's `configs`.
+Configuration is merged in this order (later settings override earlier fields):
+
+1. Standalone `sd` settings.
+2. Common `client` settings.
+3. `client.<FullServiceName>` settings for this service.
+
+NCraft also supports the corresponding `ncraft.*` sections. To select a custom
+configuration key, use `NewClientFromServiceConfig(ctx, "book", options...)`.
+The selector is independent of `serviceName`, which specifies the registry key.
+`LoadSDConfig()` returns only the merged SD settings for `FullServiceName`.
+
+```yaml
+sd:
+  mode: direct
+  transport: http
+  direct:
+    your.package.YourService: # use the generated FullServiceName
+      urls:
+        - http://localhost:8080
+client:
+  http:
+    timeout: 5000
+    headers: [Authorization, X-Request-ID]
+    enveloped: true
+  grpc:
+    dialTimeout: 3000
+    waitForReady: false
+    maxRecvMsgSize: 4194304
+    maxSendMsgSize: 4194304
+  your.package.YourService:
+    http:
+      timeout: 1000
+      enveloped: false
+```
+
+HTTP headers and envelope settings come from `http.headers` and
+`http.enveloped`. HTTP settings do not add gRPC metadata. Both HTTP timeout and
+gRPC dial timeout are milliseconds. A positive dial timeout waits for the gRPC
+connection to become ready; zero leaves dialing behavior to the caller's options
+and context. Positive message limits are bytes; zero uses gRPC's defaults.
+Explicit options are applied after loaded settings, and gRPC credentials still
+come from `WithGRPCDialOptions`. `CtxValuesToSend` adds runtime context keys for
+both transports. `NewClient(ctx, sdConfig, options...)` continues to use only the
+explicitly supplied settings.
+
+Loading errors are returned to the caller. If there is no configuration, NCraft
+returns empty settings and discovery client construction reports the missing
+settings; the generated client does not perform its own file search or parse
+bare SD files. Configuration files should use `sd` / `client` sections.
+
+Optional `retry: {enable: true, max: 3, timeout: 1000}` uses NCraft's retry
+policy (`max` is total attempts; timeout is milliseconds). Retries are disabled
+by default; enable them only when the service operations can be retried safely.
+Middleware wraps the entire logical call, including its retries.
+
+Use `NewHttpClient(baseURL, options...)` for direct HTTP, `NewGrpc(connection, options...)`
 for a caller-owned gRPC connection, or `NewGrpcClient(ctx, target, options, dialOptions...)`
 to create an owned connection. Close an owned gRPC client when finished.
 

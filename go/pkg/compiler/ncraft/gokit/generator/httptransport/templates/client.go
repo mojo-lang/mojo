@@ -59,6 +59,10 @@ jsoniter "github.com/json-iterator/go"
 // An instance may include a URL path prefix and default query parameters.
 func NewHttpClient(instance string,options ...ClientOption)(*Endpoints,error){
  config,err:=newClientConfig(options);if err!=nil{return nil,err}
+ return newHTTP(instance,config)
+}
+
+func newHTTP(instance string,config clientConfig)(*Endpoints,error){
  if !strings.Contains(instance,"://"){instance="http://"+instance}
  base,err:=url.Parse(instance)
  if err!=nil{return nil,err}
