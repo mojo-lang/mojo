@@ -85,6 +85,14 @@ func TestGeneratedHTTPAndGRPCClients(t *testing.T) {
 		require.NoDirExists(t, filepath.Join(output, name+"-client"))
 	}
 	require.NoDirExists(t, filepath.Join(root, "service-go"))
+	for _, file := range []string{"endpoints.go", "grpc.go", "http_client.go"} {
+		code, err := os.ReadFile(filepath.Join(output, "pkg/book-client", file))
+		require.NoError(t, err)
+		require.Contains(t, string(code), "core.Null")
+		require.Contains(t, string(code), `pb "example.com/acme/library/go/pkg/sample/v1"`)
+		require.Contains(t, string(code), "pb.")
+		require.NotContains(t, string(code), "*sample.")
+	}
 	// Client-only builds keep the same layout, including a custom module name
 	// and a relocated output directory pointing back to the shared API module.
 	t.Setenv("PATH", bin+string(os.PathListSeparator)+originalPath)

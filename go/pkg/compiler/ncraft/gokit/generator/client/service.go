@@ -2,6 +2,9 @@ package client
 
 import (
 	"fmt"
+	"go/token"
+	"go/types"
+	"path"
 	"sort"
 	"strings"
 
@@ -23,29 +26,32 @@ func PrepareService(service *data.Service) error {
 	}
 	service.Extensions["ClientPackage"] = strcase.ToSnake(service.Interface.BaredName) + "_client"
 	paths := make(map[string]bool)
+	names := map[string]string{service.Go.ApiImportPath: service.Go.PackageName}
 	for _, method := range service.Interface.Methods {
 		for _, msg := range []*data.Message{method.Request, method.Response} {
 			if msg == nil || msg.Go == nil || msg.Go.ImportPath == "" || msg.Decl == nil {
 				return fmt.Errorf("client %s.%s: missing request or response Go type", service.Interface.Name, method.Name)
 			}
 			paths[msg.Go.ImportPath] = true
+			names[msg.Go.ImportPath] = msg.Go.PackageName
 		}
 	}
 	var sorted []string
-	for p := range paths {
+	for p := range names {
 		sorted = append(sorted, p)
 	}
 	sort.Strings(sorted)
-	aliases := map[string]string{service.Go.ApiImportPath: "pb"}
+	aliases := packageAliases(sorted, names, service.Go.ApiImportPath)
+	service.Extensions["ClientAPIAlias"] = aliases[service.Go.ApiImportPath]
 	var imports, external []Import
 	for _, p := range sorted {
 		alias := aliases[p]
-		if alias == "" {
-			alias = fmt.Sprintf("api%d", len(external))
-			aliases[p] = alias
+		if p != service.Go.ApiImportPath {
 			external = append(external, Import{alias, p})
 		}
-		imports = append(imports, Import{alias, p})
+		if paths[p] {
+			imports = append(imports, Import{alias, p})
+		}
 	}
 	service.Extensions["ClientImports"] = imports
 	service.Extensions["ClientExternalImports"] = external
@@ -84,6 +90,52 @@ func PrepareService(service *data.Service) error {
 		}
 	}
 	return nil
+}
+
+// Reserve pb for the service's generated Protobuf/gRPC API, matching server
+// code. Keep other native package names unless they conflict with generated code.
+func packageAliases(paths []string, names map[string]string, apiPath string) map[string]string {
+	used := map[string]bool{"pb": true}
+	for _, name := range strings.Fields(`bytes context jsoniter fmt io http url reflect strings
+		endpoint httptransport grpc metadata Client ClientOption Endpoints GrpcClient
+		HTTPError FullServiceName clientConfig ctx request req response remote config
+		endpoints options conn err c e r target body instance base clientOptions result ok client`) {
+		used[name] = true
+	}
+	preferred := make(map[string]bool)
+	for _, p := range paths {
+		if p == apiPath {
+			continue
+		}
+		name := names[p]
+		if name == "" {
+			name = strings.ReplaceAll(path.Base(p), "-", "_")
+		}
+		if !token.IsIdentifier(name) || name == "_" {
+			name = "pkg"
+		}
+		names[p] = name
+		preferred[name] = true
+	}
+	aliases := map[string]string{apiPath: "pb"}
+	for _, p := range paths {
+		if p == apiPath {
+			continue
+		}
+		name := names[p]
+		alias := name
+		for suffix := 2; used[alias] || types.Universe.Lookup(alias) != nil; suffix++ {
+			alias = fmt.Sprintf("%s%d", name, suffix)
+			// Do not consume another dependency's native name.
+			for preferred[alias] {
+				suffix++
+				alias = fmt.Sprintf("%s%d", name, suffix)
+			}
+		}
+		aliases[p] = alias
+		used[alias] = true
+	}
+	return aliases
 }
 
 func accessor(field *data.Field) string {

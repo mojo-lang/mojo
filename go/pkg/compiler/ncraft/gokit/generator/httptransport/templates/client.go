@@ -25,7 +25,7 @@ func EncodeHTTP{{.Label}}Request(_ context.Context,r *http.Request,request inter
  }
  r.Header.Set("Content-Type","application/octet-stream")
  {{else}}
- body,err:=json.Marshal({{.Extensions.ClientBodyAccessor}})
+ body,err:=jsoniter.Marshal({{.Extensions.ClientBodyAccessor}})
  if err!=nil{return err}
  r.Header.Set("Content-Type","application/json; charset=utf-8")
  {{end}}
