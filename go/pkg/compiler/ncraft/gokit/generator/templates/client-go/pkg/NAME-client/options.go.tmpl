@@ -10,7 +10,6 @@ import (
  "time"
 
  "github.com/go-kit/kit/endpoint"
- "github.com/go-kit/kit/log"
  "google.golang.org/grpc"
  "google.golang.org/grpc/metadata"
 )
@@ -23,7 +22,6 @@ type clientConfig struct {
  middleware []endpoint.Middleware
  enveloped bool
  serviceName string
- logger log.Logger
  dialOptions []grpc.DialOption
  dialTimeout time.Duration
 }
@@ -35,13 +33,6 @@ func WithServiceName(name string) ClientOption {
  return func(c *clientConfig)error{
   if strings.TrimSpace(name)==""{return fmt.Errorf("service name is empty")}
   c.serviceName=name;return nil
- }
-}
-
-func WithLogger(logger log.Logger) ClientOption {
- return func(c *clientConfig)error{
-  if logger==nil{return fmt.Errorf("logger is nil")}
-  c.logger=logger;return nil
  }
 }
 
@@ -79,7 +70,7 @@ func WithEnvelope() ClientOption {
 }
 
 func newClientConfig(options []ClientOption)(clientConfig,error){
- config:=clientConfig{httpClient:http.DefaultClient,serviceName:FullServiceName,logger:log.NewNopLogger()}
+ config:=clientConfig{httpClient:http.DefaultClient,serviceName:FullServiceName}
  for _,option:=range options{
   if option==nil{return config,fmt.Errorf("nil client option")}
   if err:=option(&config);err!=nil{return config,err}
