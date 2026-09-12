@@ -348,6 +348,11 @@ func (s *SugaredLogger) Sync() error {
 	return s.Logger.Sync()
 }
 
+func (s *SugaredLogger) Log(keyvals ...interface{}) error {
+	s.Infow("", keyvals...)
+	return nil
+}
+
 func baseLogger(sugar *zap.SugaredLogger) *zap.Logger {
 	p := unsafe.Pointer(sugar)
 	offset := uintptr(0)
