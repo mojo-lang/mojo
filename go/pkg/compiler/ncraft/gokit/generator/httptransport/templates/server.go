@@ -206,7 +206,7 @@ func errorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
 		}
 	}
 	if e == nil {
-		e = core.NewErrorFrom(500, err.Error())
+		e = core.NewErrorFrom(500, "%s", err.Error())
 	}
 
 	w.Header().Set("Content-Type", contentType)

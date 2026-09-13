@@ -1,5 +1,5 @@
-// Package handlers manages the exported methods in the service handler code
-// adding/removing exported methods to match the service definition.
+// Package handlers discovers RPC implementations across a Go package and appends
+// missing methods without replacing user implementations.
 package handlers
 
 import (
@@ -9,6 +9,9 @@ import (
 	"go/printer"
 	"go/token"
 	"io"
+	"path"
+	"sort"
+	"strings"
 
 	"github.com/mojo-lang/mojo/go/pkg/logs"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/core/strcase"
@@ -19,10 +22,6 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/render"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
 )
-
-// NewInterface is an exported func that creates a new service
-// it will not be defined in the service definition but is required
-const ignoredFunc = "NewService"
 
 // ServerHandlerPath is the relative path to the server handler templates file
 const ServerHandlerPath = "pkg/NAME-service/handlers/handlers.go.tmpl"
@@ -49,286 +48,243 @@ func GetHandlersTemplate() string {
 	return templates.Handlers + handlerInterface + handlerMethods + handlerExtension
 }
 
-// New returns a render.Renderer capable of updating server handlers.
-// New should be passed the previous version of the server handler to parse.
+// New preserves the single-file API for callers without a package snapshot.
 func New(svc *data.Interface, prev io.Reader) (render.Renderer, error) {
-	var h handler
-	// logs.WithField("Interface Methods", len(svc.Methods)).Debug("Handler being created")
-	h.methodMap = newMethodMap(svc.Methods)
-	h.service = svc
-
-	if prev == nil {
-		return &h, nil
+	files := map[string][]byte{}
+	if prev != nil {
+		source, err := io.ReadAll(prev)
+		if err != nil {
+			return nil, err
+		}
+		files["handlers.go"] = source
 	}
-
-	h.fileSet = token.NewFileSet()
-	var err error
-	if h.ast, err = parser.ParseFile(h.fileSet, "", prev, parser.ParseComments); err != nil {
-		return nil, err
-	}
-
-	return &h, nil
+	return NewPackage(svc, "handlers.go", files)
 }
 
-// methodMap stores all defined service methods by name and is updated to
-// remove service methods already in the handler file.
-type methodMap map[string]*data.Method
-
-func newMethodMap(meths []*data.Method) methodMap {
-	mMap := make(methodMap, len(meths))
-	for _, m := range meths {
-		mMap[m.Name] = m
+// NewPackage reads a snapshot of the immediate handlers package. It never
+// changes sibling files and does not require generated imports to compile.
+func NewPackage(svc *data.Interface, target string, files map[string][]byte) (render.Renderer, error) {
+	h := &handler{service: svc, target: target, fileSet: token.NewFileSet(), files: map[string]*ast.File{}, sources: map[string][]byte{}}
+	names := make([]string, 0, len(files))
+	for name := range files {
+		names = append(names, name)
 	}
-	return mMap
+	sort.Strings(names)
+	for _, name := range names {
+		if path.Dir(name) != path.Dir(target) || !isSourceFile(name) {
+			continue
+		}
+		file, err := parser.ParseFile(h.fileSet, name, files[name], parser.ParseComments)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot parse handler package file %s", name)
+		}
+		h.files[name] = file
+		h.sources[name] = append([]byte(nil), files[name]...)
+	}
+	return h, nil
 }
 
 type handler struct {
-	fileSet   *token.FileSet
-	service   *data.Interface
-	methodMap methodMap
-	ast       *ast.File
+	service *data.Interface
+	target  string
+	fileSet *token.FileSet
+	files   map[string]*ast.File
+	sources map[string][]byte
 }
 
-// Render returns a go code server handler that has functions for all
-// InterfaceMethods in the service definition.
+func isSourceFile(name string) bool {
+	base := path.Base(name)
+	return strings.HasSuffix(base, ".go") && !strings.HasSuffix(base, "_test.go") && !strings.HasPrefix(base, "_") && !strings.HasPrefix(base, ".")
+}
+
+// Render appends missing direct RPC methods, preserving existing declarations
+// and bodies. Incompatible signatures must be resolved explicitly by the user.
 func (h *handler) Render(alias string, service *data.Service) (io.Reader, error) {
 	if alias != ServerHandlerPath {
 		return nil, errors.Errorf("cannot render unknown file: %q", alias)
 	}
-	if h.ast == nil {
-		return applyServerTmpl(service)
+	skeleton, err := applyServerTmpl(service)
+	if err != nil {
+		return nil, err
 	}
-
-	// Remove exported methods not defined in service definition
-	// and remove methods defined in the previous file from methodMap
-	logs.Debugw("Before prune", "Interface Methods", len(h.methodMap))
-
-	var prunedDecls []ast.Decl
-	h.ast.Decls, prunedDecls = h.methodMap.pruneDecls(h.ast.Decls, strcase.ToLowerCamel(service.Interface.ServerName))
-	logs.Debugw("After prune", "Interface Methods", len(h.methodMap))
-
-	if len(prunedDecls) > 0 {
-		var comments []*ast.CommentGroup
-		for _, comment := range h.ast.Comments {
-			if !commentOfDecls(h.fileSet, comment, prunedDecls) {
-				comments = append(comments, comment)
-			}
+	source, err := io.ReadAll(skeleton)
+	if err != nil {
+		return nil, err
+	}
+	expectedSet := token.NewFileSet()
+	expected, err := parser.ParseFile(expectedSet, "generated-handlers.go", source, parser.ParseComments)
+	if err != nil {
+		return nil, err
+	}
+	goName, ok := service.FuncMap["GoName"].(func(string) string)
+	if !ok {
+		return nil, errors.New("handler template requires GoName func(string) string")
+	}
+	receiver := strcase.ToLowerCamel(service.Interface.ServerName)
+	methods := map[string]*ast.FuncDecl{}
+	for _, decl := range expected.Decls {
+		if fn, ok := decl.(*ast.FuncDecl); ok && receiverName(fn) == receiver {
+			methods[fn.Name.Name] = fn
 		}
-		h.ast.Comments = comments
 	}
-
-	// If there are no methods to templates then exit early
-	if len(h.methodMap) == 0 {
-		return h.buffer()
+	expectedMethods := map[string]*ast.FuncDecl{}
+	for _, method := range service.Interface.Methods {
+		name := goName(method.Name)
+		fn := methods[name]
+		if fn == nil {
+			return nil, errors.Errorf("handler template does not define %s.%s", receiver, name)
+		}
+		expectedMethods[name] = fn
 	}
-
-	// get the code out of the ast
-	code, err := h.buffer()
-	if err != nil {
-		return nil, err
+	// Sort diagnostics as well as newly generated declarations.
+	names := make([]string, 0, len(h.files))
+	for name := range h.files {
+		names = append(names, name)
 	}
-
-	// create a new handlerData, and add all methods not defined in the previous file
-	ex := &data.Service{
-		Interface: &data.Interface{
-			Name:       service.Interface.Name,
-			ServerName: service.Interface.ServerName,
-			Methods:    nil,
-		},
-		FuncMap: service.FuncMap,
-	}
-	for k, v := range h.methodMap {
-		logs.Infow("Generating handler from rpc definition", "Method", k)
-		ex.Interface.Methods = append(ex.Interface.Methods, v)
-	}
-
-	// render the server for all methods not already defined
-	newCode, err := applyServerMethsTmpl(ex)
-	if err != nil {
-		return nil, err
-	}
-
-	if _, err = code.ReadFrom(newCode); err != nil {
-		return nil, err
-	}
-
-	return code, nil
-}
-
-func (h *handler) buffer() (*bytes.Buffer, error) {
-	code := bytes.NewBuffer(nil)
-	err := printer.Fprint(code, h.fileSet, h.ast)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return code, nil
-}
-
-// pruneDecls constructs a new []ast.Decls with the exported funcs in decls
-// who's names are not keys in methodMap and/or does not have the function
-// receiver svcName + "Interface" ("Handler func")  removed.
-//
-// When a "Handler func" is not removed from decls that funcs name is also
-// deleted from methodMap, resulting in a methodMap only containing keys and
-// values for functions defined in the service but not in the handler ast.
-//
-// In addition, pruneDecls will update un-removed "Handler func"s input
-// parameters and output results to by the types described in methodMap's
-// serviceMethod for that "Handler func".
-func (m methodMap) pruneDecls(decls []ast.Decl, svcName string) ([]ast.Decl, []ast.Decl) {
-	var newDecls []ast.Decl
-	var prunedDecls []ast.Decl
-	for _, d := range decls {
-		switch x := d.(type) {
-		case *ast.FuncDecl:
-			name := x.Name.Name
-			// Special case NewInterface and ignore unexported
-			if name == ignoredFunc || !ast.IsExported(name) || x.Recv == nil {
-				logs.Debugw("Ignoring", "Func", name)
-				newDecls = append(newDecls, x)
+	sort.Strings(names)
+	found := map[string]string{}
+	declarations := map[string]bool{}
+	for _, name := range names {
+		file := h.files[name]
+		if file.Name.Name != expected.Name.Name {
+			continue
+		}
+		conditional := conditionalSource(name, file)
+		if name == h.target && conditional {
+			return nil, errors.Errorf("%s: handler output must not have build constraints", name)
+		}
+		for _, decl := range file.Decls {
+			fn, ok := decl.(*ast.FuncDecl)
+			if !ok || fn.Recv == nil {
+				if !conditional {
+					for _, name := range declaredNames(decl) {
+						declarations[name] = true
+					}
+				}
 				continue
 			}
-			if ok := isValidFunc(x, m, svcName); ok {
-				indexName := strcase.ToSnake(name)
-				updateParams(x, m[indexName])
-				updateResults(x, m[indexName])
-				newDecls = append(newDecls, x)
-				delete(m, indexName)
-			} else {
-				prunedDecls = append(prunedDecls, x)
+			if receiverName(fn) != receiver {
+				continue
 			}
-		default:
-			newDecls = append(newDecls, d)
+			want := expectedMethods[fn.Name.Name]
+			if want == nil {
+				continue
+			}
+			position := h.fileSet.Position(fn.Pos()).String()
+			// A common output cannot safely fill only some build configurations.
+			if conditional {
+				return nil, errors.Errorf("%s: RPC %s has build constraints; keep an unconditional handler entry point and move conditional logic into helpers", position, fn.Name.Name)
+			}
+			if previous := found[fn.Name.Name]; previous != "" {
+				return nil, errors.Errorf("%s: duplicate RPC %s (also declared at %s)", position, fn.Name.Name, previous)
+			}
+			actualSignature := signature(fn.Type, file)
+			wantedSignature := signature(want.Type, expected)
+			if actualSignature != wantedSignature {
+				return nil, errors.Errorf("%s: RPC %s signature mismatch: have %s; want %s; existing implementation was not modified", position, fn.Name.Name, actualSignature, wantedSignature)
+			}
+			found[fn.Name.Name] = position
 		}
 	}
-	return newDecls, prunedDecls
+	ex := *service
+	iface := *service.Interface
+	iface.Methods = nil
+	ex.Interface = &iface
+	for _, method := range service.Interface.Methods {
+		name := goName(method.Name)
+		if found[name] == "" {
+			iface.Methods = append(iface.Methods, method)
+		}
+	}
+	if current, exists := h.sources[h.target]; exists {
+		if h.files[h.target].Name.Name != expected.Name.Name {
+			return nil, errors.Errorf("%s: expected package %s", h.target, expected.Name.Name)
+		}
+		if len(iface.Methods) == 0 {
+			return bytes.NewReader(current), nil
+		}
+		additions, err := applyServerMethsTmpl(&ex)
+		if err != nil {
+			return nil, err
+		}
+		body, err := io.ReadAll(additions)
+		if err != nil {
+			return nil, err
+		}
+		// Reuse existing import aliases and add only the imports referenced by new
+		// declarations; gofmt alone cannot repair alias collisions.
+		return appendMethods(current, body, h.files[h.target], expected, h.fileSet)
+	}
+	// A user may also move the server type or constructor to another file.
+	// Generate the remaining skeleton without duplicating those declarations.
+	generated, err := applyServerTmpl(&ex)
+	if err != nil {
+		return nil, err
+	}
+	contents, err := io.ReadAll(generated)
+	if err != nil {
+		return nil, err
+	}
+	set := token.NewFileSet()
+	file, err := parser.ParseFile(set, h.target, contents, parser.ParseComments)
+	if err != nil {
+		return nil, err
+	}
+	var kept []ast.Decl
+	for _, decl := range file.Decls {
+		duplicate := false
+		for _, name := range declaredNames(decl) {
+			if declarations[name] {
+				duplicate = true
+			}
+		}
+		if !duplicate {
+			kept = append(kept, decl)
+		}
+	}
+	file.Decls = kept
+	removeUnusedImports(file)
+	var out bytes.Buffer
+	if err := printer.Fprint(&out, set, file); err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
-// updateParams updates the second param of f to be `X`.(m.Request.Name).
-// func ProtoMethod(ctx context.Context, *pb.Old) ...-> func ProtoMethod(ctx context.Context, *pb.(m.Request.Name))...
-func updateParams(f *ast.FuncDecl, m *data.Method) {
-	if f.Type.Params.NumFields() != 2 {
-		logs.Warnw("Function params signature should be func NAME(ctx context.Context, in *pb.TYPE), cannot fix", "Function", f.Name.Name)
-		return
-	}
-	updatePBFieldType(f.Type.Params.List[1].Type, m.Request.Name)
-}
-
-// updateResults updates the first result of f to be `X`.(m.Response.Name).
-// func ProtoMethod(...) (*pb.Old, error) ->  func ProtoMethod(...) (*pb.(m.Response.Name), error)
-func updateResults(f *ast.FuncDecl, m *data.Method) {
-	if f.Type.Results.NumFields() != 2 {
-		logs.Warnw("Function results signature should be (*pb.TYPE, error), cannot fix", "Function", f.Name.Name)
-		return
-	}
-	updatePBFieldType(f.Type.Results.List[0].Type, m.Response.Name)
-}
-
-// updatePBFieldType updates t if in the form X.Sel/*X.Sel to X.newType/*X.newType.
-func updatePBFieldType(t ast.Expr, newType string) {
-	// *pb.TYPE -> pb.TYPE
-	if ptr, _ := t.(*ast.StarExpr); ptr != nil {
-		t = ptr.X
-	}
-	// pb.TYPE -> TYPE
-	if sel, _ := t.(*ast.SelectorExpr); sel != nil {
-		// pb.SOMETYPE -> pb.newType
-		sel.Sel.Name = newType
-	}
-}
-
-// isValidFunc returns false if f is exported and does not exist in m with
-// receiver svcName + "Interface".
-func isValidFunc(f *ast.FuncDecl, m methodMap, svcName string) bool {
-	name := f.Name.String()
-	if !ast.IsExported(name) {
-		logs.Debugw("Unexported function; ignoring", "func", name)
-		return true
-	}
-
-	v := m[strcase.ToSnake(name)]
-	if v == nil {
-		logs.Infow("Method does not exist in service definition as a rpc; removing", "Method", name)
-		return false
-	}
-
-	rName := receiveTypeToString(f.Recv)
-	if rName != svcName {
-		logs.Infow("Func is exported with improper receiver; removing", "Func", name, "Receiver", rName)
-		return false
-	}
-
-	logs.Debugw("Method already exists in service definition; ignoring", "Func", name)
-	return true
-}
-
-// receiveTypeToString accepts an *ast.FuncDecl.Recv recv, and returns the
-// string of the recv type.
-//
-//	func (s Foo) Test() {} -> "Foo"
-func receiveTypeToString(recv *ast.FieldList) string {
-	if recv == nil ||
-		recv.List[0].Type == nil {
-		logs.Debug("Function has no receiver")
+func receiverName(fn *ast.FuncDecl) string {
+	if fn.Recv == nil || len(fn.Recv.List) != 1 {
 		return ""
 	}
-
-	return exprString(recv.List[0].Type)
-}
-
-// exprString returns the string representation of
-// ast.Expr for function receivers, parameters, and results.
-func exprString(e ast.Expr) string {
-	var prefix string
-	// *Foo -> Foo
-	if ptr, _ := e.(*ast.StarExpr); ptr != nil {
-		prefix = "*"
-		e = ptr.X
+	typ := fn.Recv.List[0].Type
+	if pointer, ok := typ.(*ast.StarExpr); ok {
+		typ = pointer.X
 	}
-	// *foo.Foo or foo.Foo
-	if sel, _ := e.(*ast.SelectorExpr); sel != nil {
-		// *foo.Foo -> foo.Foo
-		if ptr, _ := e.(*ast.StarExpr); ptr != nil {
-			prefix = "*"
-			e = ptr.X
-		}
-		// foo.Foo
-		if x, _ := sel.X.(*ast.Ident); x != nil {
-			return prefix + x.Name + "." + sel.Sel.Name
-		}
-		return ""
+	if name, ok := typ.(*ast.Ident); ok {
+		return name.Name
 	}
-
-	// Foo
-	if base, _ := e.(*ast.Ident); base != nil {
-		return prefix + base.Name
-	}
-
 	return ""
 }
 
-func commentOfDecls(file *token.FileSet, comment *ast.CommentGroup, decls []ast.Decl) bool {
-	for _, decl := range decls {
-		if commentOfDecl(file, comment, decl) {
-			return true
+func declaredNames(decl ast.Decl) []string {
+	if fn, ok := decl.(*ast.FuncDecl); ok && fn.Recv == nil {
+		return []string{fn.Name.Name}
+	}
+	var names []string
+	if gen, ok := decl.(*ast.GenDecl); ok {
+		for _, spec := range gen.Specs {
+			switch spec := spec.(type) {
+			case *ast.TypeSpec:
+				names = append(names, spec.Name.Name)
+			case *ast.ValueSpec:
+				for _, name := range spec.Names {
+					if name.Name != "_" {
+						names = append(names, name.Name)
+					}
+				}
+			}
 		}
 	}
-	return false
-}
-
-func commentOfDecl(file *token.FileSet, comment *ast.CommentGroup, decl ast.Decl) bool {
-	lb := file.Position(comment.Pos()).Line
-	le := file.Position(comment.End()).Line
-	ldb := file.Position(decl.Pos()).Line
-	lde := file.Position(decl.End()).Line
-
-	if lb >= (ldb-1) && le < lde {
-		return true
-	}
-
-	return false
+	return names
 }
 
 func applyServerTmpl(service *data.Service) (io.Reader, error) {

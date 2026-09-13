@@ -99,6 +99,10 @@ func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, g
 		}
 	}
 
+	previous, err := o.snapshotPreviousFiles()
+	if err != nil {
+		return nil, err
+	}
 	var codeGenFiles util.GeneratedFiles
 
 	// Remove the suffix "-service" since it's added back in by templatePathToActual
@@ -114,7 +118,18 @@ func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, g
 		// Re-derive the actual path for this file based on the service output
 		// path provided by the ncraft main.go
 		actualPath := templatePathToActual(tmplPath, ds.Go.PackageName, svcName)
-		file, err := generateTemplateFile(tmplPath, actualPath, ds, o.PreviousFiles[actualPath], getter)
+		var prev io.Reader
+		if source, ok := previous[actualPath]; ok {
+			prev = bytes.NewReader(source)
+		}
+		var handlerFiles map[string][]byte
+		if tmplPath == handlers.ServerHandlerPath {
+			handlerFiles, err = o.handlerSources(actualPath, previous)
+			if err != nil {
+				return nil, err
+			}
+		}
+		file, err := generateTemplateFile(tmplPath, actualPath, ds, prev, getter, handlerFiles)
 		if err != nil {
 			return nil, logs.NewErrorw("cannot render templates", "error", err.Error())
 		}
@@ -131,13 +146,13 @@ func (o *Options) generateTemplatedFiles(ds *data.Service, tmplPaths []string, g
 }
 
 // generateTemplateFile
-func generateTemplateFile(tmplPath string, actualPath string, ds *data.Service, prevFile io.Reader, getter templates.FileGetter) (io.Reader, error) {
+func generateTemplateFile(tmplPath string, actualPath string, ds *data.Service, prevFile io.Reader, getter templates.FileGetter, handlerFiles map[string][]byte) (io.Reader, error) {
 	var genCode io.Reader
 	var err error
 
 	switch tmplPath {
 	case handlers.ServerHandlerPath:
-		h, err := handlers.New(ds.Interface, prevFile)
+		h, err := handlers.NewPackage(ds.Interface, actualPath, handlerFiles)
 		if err != nil {
 			return nil, errors.Wrapf(err, "cannot parse previous handler: %q", actualPath)
 		}

@@ -1,6 +1,7 @@
 package gokit
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -115,9 +116,15 @@ func (b Builder) Build() error {
 				return nil
 			}
 
-			reader, err := os.Open(path)
-			name := strings.TrimPrefix(path, prefixPath)
-			conf.PreviousFiles[name] = reader
+			if !strings.HasSuffix(path, ".go") {
+				return nil
+			}
+			source, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			name := filepath.ToSlash(strings.TrimPrefix(path, prefixPath))
+			conf.PreviousFiles[name] = bytes.NewReader(source)
 			return nil
 		})
 		if err != nil {
