@@ -38,6 +38,11 @@ type Note {
 
 ## 在后端中使用
 
+`Get`、`List` 和 `BatchGet` 使用 GORM 的 `Preload(clause.Associations)`，
+加载 Entity 的全部直接关联，包括多个一对一、一对多关系。关联依据实际
+GORM 映射识别。标注 `@db.json` 的字段（包括 Entity 和 Entity 数组）作为
+JSON 列读取，不执行 Preload；不会递归加载关联对象的下一级关系。
+
 模型接收服务管理的 `*db.DB`，复用已有连接和配置：
 
 ```go

@@ -1,0 +1,20 @@
+package entity
+
+type Parent struct {
+ Id string `gorm:"primaryKey"`
+ Profile *Profile `gorm:"foreignKey:ParentID"`
+ Settings *Settings `gorm:"foreignKey:ParentID"`
+ Children []*Child `gorm:"foreignKey:ParentID"`
+ Notes []*Note `gorm:"foreignKey:ParentID"`
+ Details map[string]string `gorm:"serializer:json"`
+ JSONEntity *Snapshot `db:"json_entity,json"`
+ JSONEntities ParentSnapshots `db:"json_entities,json"`
+}
+
+type Profile struct { Id string `gorm:"primaryKey"`; ParentID string; Name string }
+type Settings struct { Id string `gorm:"primaryKey"`; ParentID string; Theme string }
+type Child struct { Id string `gorm:"primaryKey"`; ParentID string; Name string }
+type Note struct { Id string `gorm:"primaryKey"`; ParentID string; Text string }
+type Plain struct { Id string `gorm:"primaryKey"`; Name string }
+type Snapshot struct { Id string `gorm:"primaryKey"`; Label string }
+type ParentSnapshots []*Snapshot

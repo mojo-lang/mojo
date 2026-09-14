@@ -1,0 +1,74 @@
+package model
+
+import (
+ "context"
+ "errors"
+ "path/filepath"
+ "testing"
+
+ "example.com/preload/entity"
+ "github.com/mojo-lang/mojo/go/pkg/mojo/db"
+ "github.com/mojo-lang/mojo/go/pkg/mojo/db/query"
+ "gorm.io/gorm"
+)
+
+func TestPreload(t *testing.T) {
+ database := db.New(&db.Config{Driver:db.SqliteDriverName, Dsn:filepath.Join(t.TempDir(),"preload.db")})
+ if database==nil { t.Fatal("open sqlite") }
+ sqlDB,err:=database.DB.DB(); if err!=nil { t.Fatal(err) }; defer sqlDB.Close()
+ m,err:=NewParent(database); if err!=nil { t.Fatal(err) }
+ if err:=database.AutoMigrate(&entity.Profile{},&entity.Settings{},&entity.Child{},&entity.Note{}); err!=nil { t.Fatal(err) }
+ statement:=&gorm.Statement{DB:database.DB}
+ if err:=statement.Parse(&entity.Parent{}); err!=nil { t.Fatal(err) }
+ if len(statement.Schema.Relationships.Relations)!=4 { t.Fatalf("expected four relations, got %v",statement.Schema.Relationships.Relations) }
+ // Save records independently, then read fresh objects through generated APIs.
+ for _,record:=range []interface{}{
+  &entity.Parent{Id:"a",Details:map[string]string{"label":"json"},
+   JSONEntity:&entity.Snapshot{Id:"snapshot",Label:"stored as JSON"},
+   JSONEntities:entity.ParentSnapshots{{Id:"array",Label:"JSON array"}}},
+  &entity.Parent{Id:"b"},
+  &entity.Profile{Id:"p",ParentID:"a",Name:"profile"},
+  &entity.Settings{Id:"s",ParentID:"a",Theme:"dark"},
+  &entity.Child{Id:"c1",ParentID:"a",Name:"first"},
+  &entity.Child{Id:"c2",ParentID:"a",Name:"second"},
+  &entity.Note{Id:"n1",ParentID:"a",Text:"note one"},
+  &entity.Note{Id:"n2",ParentID:"a",Text:"note two"},
+ } { if err:=database.Create(record).Error; err!=nil { t.Fatal(err) } }
+ check:=func(value *entity.Parent) {
+  t.Helper()
+  if value==nil || value.Id!="a" { t.Fatalf("unexpected parent: %+v",value) }
+  if value.Profile==nil || value.Profile.Name!="profile" { t.Fatalf("profile: %+v",value.Profile) }
+  if value.Settings==nil || value.Settings.Theme!="dark" { t.Fatalf("settings: %+v",value.Settings) }
+  children:=map[string]string{}; for _,child:=range value.Children { children[child.Id]=child.Name }
+  if len(children)!=2 || children["c1"]!="first" || children["c2"]!="second" { t.Fatalf("children: %v",children) }
+  notes:=map[string]string{}; for _,note:=range value.Notes { notes[note.Id]=note.Text }
+  if len(notes)!=2 || notes["n1"]!="note one" || notes["n2"]!="note two" { t.Fatalf("notes: %v",notes) }
+  if value.Details["label"]!="json" { t.Fatalf("JSON field: %v",value.Details) }
+  if value.JSONEntity==nil || value.JSONEntity.Id!="snapshot" || value.JSONEntity.Label!="stored as JSON" { t.Fatalf("JSON entity: %+v",value.JSONEntity) }
+  if len(value.JSONEntities)!=1 || value.JSONEntities[0].Id!="array" || value.JSONEntities[0].Label!="JSON array" { t.Fatalf("JSON entities: %+v",value.JSONEntities) }
+ }
+ checkRows:=func(rows []*entity.Parent,err error) {
+  t.Helper(); if err!=nil || len(rows)!=2 { t.Fatalf("rows=%v err=%v",rows,err) }
+  for _,row:=range rows {
+   if row.Id=="a" { check(row) } else if row.Id=="b" {
+    if row.Profile!=nil || row.Settings!=nil || len(row.Children)!=0 || len(row.Notes)!=0 { t.Fatalf("associations leaked: %+v",row) }
+   } else { t.Fatalf("unexpected parent: %+v",row) }
+  }
+ }
+ ctx:=context.Background()
+ // No snapshot table exists: any attempt to preload these Entity fields fails.
+ if database.Migrator().HasTable(&entity.Snapshot{}) { t.Fatal("JSON Entity should not have an association table") }
+ got,err:=m.Get(ctx,"a"); if err!=nil { t.Fatal(err) }; check(got)
+ checkRows(m.List(ctx,nil))
+ checkRows(m.List(ctx,&query.Query{PageSize:2}))
+ checkRows(m.BatchGet(ctx,"a","b"))
+ rows,err:=m.List(ctx,&query.Query{PageSize:1}); if err!=nil || len(rows)!=1 { t.Fatalf("pagination: %v %v",rows,err) }
+ if rows[0].Id=="a" { check(rows[0]) }
+ if _,err:=m.Get(ctx,"missing"); !errors.Is(err,gorm.ErrRecordNotFound) { t.Fatalf("missing: %v",err) }
+ cancelled,cancel:=context.WithCancel(ctx); cancel()
+ if _,err:=m.List(cancelled,nil); !errors.Is(err,context.Canceled) { t.Fatalf("context: %v",err) }
+ plain,err:=NewPlain(database); if err!=nil { t.Fatal(err) }
+ if _,err:=plain.Create(ctx,&entity.Plain{Id:"plain",Name:"no associations"}); err!=nil { t.Fatal(err) }
+ value,err:=plain.Get(ctx,"plain"); if err!=nil || value.Name!="no associations" { t.Fatalf("plain: %v %v",value,err) }
+ values,err:=plain.List(ctx,nil); if err!=nil || len(values)!=1 { t.Fatalf("plain list: %v %v",values,err) }
+}
