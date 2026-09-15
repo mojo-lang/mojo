@@ -8,6 +8,7 @@ package server
 import (
     "context"
 	"fmt"
+    "errors"
 
 	"github.com/gorilla/mux"
 	"github.com/etherlabsio/healthcheck/v2"
@@ -29,23 +30,30 @@ import (
 	// Services
 	{{range $i := .AllInterfaces}}
 	{{ToSnake $i.BaredName}} "{{$.Go.RepositoryPath}}/internal/{{ToKebab $i.ServerName}}"
+    {{ToSnake $i.BaredName}}_handlers "{{$.Go.RepositoryPath}}/pkg/{{ToKebab $i.BaredName}}-service/handlers"
 	{{- end}}
 )
 
 // Run starts a new http server, gRPC server, and a debug server with the
 // passed config and logger
 func Run(cfg nserver.Config) {
-	// Mechanical domain.
-	errc := make(chan error)
+    ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+    defer stop()
 
-	// Interrupt handler.
-	go InterruptHandler(errc)
+    // Each transport can report once without blocking during shutdown.
+    errc := make(chan error, 3)
+    {{range $i := .AllInterfaces}}
+    {{ToSnake $i.BaredName}}Service := {{ToSnake $i.BaredName}}_handlers.NewService()
+    {{end}}
+    services := []interface{}{
+        {{range $i := .AllInterfaces}}{{ToSnake $i.BaredName}}Service,{{end}}
+    }
+    var started []interface{}
 
-	// Debug listener.
-	go func() {
-	    logs.Infow("begin debug server", "transport", "debug", "address", cfg.DebugAddr)
-
-		m := http.NewServeMux()
+    s := grpc.NewServer(grpc.UnaryInterceptor(unaryServerFilter))
+    r := mux.NewRouter()
+    httpServer := &http.Server{Addr: cfg.HttpAddr, Handler: cors.AllowAll().Handler(r)}
+    m := http.NewServeMux()
 		m.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
 		m.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
 		m.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
@@ -66,45 +74,79 @@ func Run(cfg nserver.Config) {
             })),
         ))
 
-		errc <- http.ListenAndServe(cfg.DebugAddr, m)
-	}()
+    debugServer := &http.Server{Addr: cfg.DebugAddr, Handler: m}
 
-	s := grpc.NewServer(grpc.UnaryInterceptor(unaryServerFilter))
-    r := mux.NewRouter()
+    // Stop transports before releasing dependencies used by in-flight requests.
+    // Successfully started services shut down in reverse order, including after
+    // partial startup failure. A failing Start must clean up its own resources.
+    defer func() {
+        shutdownCtx, cancel := context.WithTimeout(context.Background(), nserver.DefaultShutdownTimeout)
+        defer cancel()
+        if err := nserver.ShutdownServers(shutdownCtx, s, httpServer, debugServer); err != nil {
+            logs.Errorw("shutdown transports", "error", err)
+        }
+        for i := len(started)-1; i >= 0; i-- {
+            if shutdowner, ok := started[i].(nserver.Shutdowner); ok {
+                if err := shutdowner.Shutdown(shutdownCtx); err != nil {
+                    logs.Errorw("shutdown service", "service", fmt.Sprintf("%T", started[i]), "error", err)
+                }
+            }
+        }
+        logs.Info("{{.Go.PackageName}}.Unified.Server", " closed.")
+    }()
 
-	//register servers.
-	{{range $i := .AllInterfaces}}
-	{{ToSnake $i.BaredName}}.RegisterService(cfg, r, s)
-	{{- end}}
+    for _, service := range services {
+        if starter, ok := service.(nserver.Starter); ok {
+            if err := starter.Start(cfg); err != nil {
+                logs.Errorw("start service", "service", fmt.Sprintf("%T", service), "error", err)
+                return
+            }
+        }
+        started = append(started, service)
+    }
+    {{range $i := .AllInterfaces}}
+    {{ToSnake $i.BaredName}}.RegisterService(cfg, r, s, {{ToSnake $i.BaredName}}Service)
+    {{end}}
 
-	// HTTP transport.
-	go func() {
-	    logs.Infow("begin http server", "transport", "HTTP", "address", cfg.HttpAddr)
-		h := cors.AllowAll().Handler(r)
-		errc <- http.ListenAndServe(cfg.HttpAddr, h)
-	}()
+    // Bind all listeners before accepting requests; roll back on any bind error.
+    httpListener, err := net.Listen("tcp", cfg.HttpAddr)
+    if err != nil { logs.Errorw("listen HTTP", "error", err); return }
+    defer httpListener.Close()
+    grpcListener, err := net.Listen("tcp", cfg.GrpcAddr)
+    if err != nil { logs.Errorw("listen gRPC", "error", err); return }
+    defer grpcListener.Close()
+    debugListener, err := net.Listen("tcp", cfg.DebugAddr)
+    if err != nil { logs.Errorw("listen debug", "error", err); return }
+    defer debugListener.Close()
 
-	// gRPC transport.
-	go func() {
-	    logs.Infow("begin grpc server", "transport", "gRPC", "address", cfg.GrpcAddr)
-		ln, err := net.Listen("tcp", cfg.GrpcAddr)
-		if err != nil {
-			errc <- err
-			return
-		}
-		errc <- s.Serve(ln)
-	}()
+    // HTTP transport.
+    go func() {
+        logs.Infow("begin http server", "transport", "HTTP", "address", cfg.HttpAddr)
+        if err := httpServer.Serve(httpListener); err != nil && !errors.Is(err, http.ErrServerClosed) {
+            errc <- fmt.Errorf("HTTP server: %w", err)
+        }
+    }()
+    // gRPC transport.
+    go func() {
+        logs.Infow("begin grpc server", "transport", "gRPC", "address", cfg.GrpcAddr)
+        if err := s.Serve(grpcListener); err != nil && !errors.Is(err, grpc.ErrServerStopped) {
+            errc <- fmt.Errorf("gRPC server: %w", err)
+        }
+    }()
+    // Debug transport.
+    go func() {
+        logs.Infow("begin debug server", "transport", "debug", "address", cfg.DebugAddr)
+        if err := debugServer.Serve(debugListener); err != nil && !errors.Is(err, http.ErrServerClosed) {
+            errc <- fmt.Errorf("debug server: %w", err)
+        }
+    }()
 
-	//if watchObj, err := config.WatchFunc(level.ChangeLogLevel, level.LevelPath); err == nil {
-    //    defer func() { _ = watchObj.Close() }()
-    //} else {
-    //    panic(err.Error())
-    //}
-
-	// Run!
-	logs.Info("{{.Go.PackageName}}.Unified.Server", " started.")
-	logs.Info("{{.Go.PackageName}}.Unified.Server", <-errc)
-	logs.Info("{{.Go.PackageName}}.Unified.Server", " closed.")
+    logs.Info("{{.Go.PackageName}}.Unified.Server", " started.")
+    // ErrorSource channels are service-owned; nil/closed channels and nil errors
+    // are ignored. Cancellation is a normal shutdown, not a service failure.
+    if err := nserver.WaitForError(ctx, errc, started...); err != nil {
+        logs.Errorw("server stopped after an error", "error", err)
+    }
 }
 
 func getGrpcPort(addr string) string {
@@ -145,14 +187,4 @@ func unaryServerFilter(ctx context.Context,
 	//	return nil, core.NewError(http.StatusInternalServerError, err.Error())
 	//}
 	return
-}
-
-func InterruptHandler(errc chan<- error) {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
-	terminateError := fmt.Errorf("%s", <-c)
-
-	// Place whatever shutdown handling you want here
-
-	errc <- terminateError
 }
