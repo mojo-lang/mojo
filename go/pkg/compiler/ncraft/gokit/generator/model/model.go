@@ -11,7 +11,9 @@ import (
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/data"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/ncraft/gokit/generator/model/templates"
 	"github.com/mojo-lang/mojo/go/pkg/compiler/util"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/core"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/core/strcase"
+	"github.com/mojo-lang/mojo/go/pkg/mojo/db"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/lang"
 )
 
@@ -22,6 +24,7 @@ type Model struct{}
 type entityModel struct {
 	Name, ImportPath, KeyName, KeyType string
 	Fields                             []modelField
+	HasAssociations                    bool
 }
 
 type modelField struct {
@@ -69,6 +72,9 @@ func (m Model) GenerateEntities(entities []*data.Message) ([]*util.GeneratedFile
 			repeated := typ.IsArrayType()
 			if repeated && len(typ.GenericArguments) > 0 {
 				typ = typ.GenericArguments[0]
+			}
+			if !field.HasAttribute(db.JSONAttributeFullName) && typ.GetTypeDeclaration().GetStructDecl().HasAttribute(core.EntityAttributeName) {
+				model.HasAssociations = true
 			}
 			kind := "JSON"
 			switch typ.GetFullName() {

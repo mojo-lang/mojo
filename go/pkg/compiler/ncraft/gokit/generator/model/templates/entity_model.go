@@ -52,7 +52,7 @@ func(m *{{.Name}}) Create(ctx context.Context, value *entity.{{.Name}})(int64,er
 
 func(m *{{.Name}}) Get(ctx context.Context,id {{.KeyType}})(*entity.{{.Name}},error){
  value:=&entity.{{.Name}}{}
- err:=m.DB.WithContext(ctx).Preload(clause.Associations).Where(clause.Eq{Column:clause.Column{Name:m.keyColumn},Value:id}).First(value).Error
+ err:=m.DB.WithContext(ctx){{if .HasAssociations}}.Preload(clause.Associations){{end}}.Where(clause.Eq{Column:clause.Column{Name:m.keyColumn},Value:id}).First(value).Error
  if err!=nil{return nil,err};return value,nil
 }
 
@@ -105,7 +105,7 @@ func(m *{{.Name}}) updateAll(tx *gorm.DB,value *entity.{{.Name}}, keyColumn stri
 
 func(m *{{.Name}}) List(ctx context.Context,q *query.Query)([]*entity.{{.Name}},error){
  values:=make([]*entity.{{.Name}},0)
- tx:=m.DB.WithContext(ctx).Model(&entity.{{.Name}}{}).Preload(clause.Associations)
+ tx:=m.DB.WithContext(ctx).Model(&entity.{{.Name}}{}){{if .HasAssociations}}.Preload(clause.Associations){{end}}
  if q!=nil {
   if err:=q.Normalize();err!=nil{return nil,err}
   tx=q.Apply(tx,query.Fields{
@@ -127,7 +127,7 @@ func(m *{{.Name}}) BatchGet(ctx context.Context,ids ...{{.KeyType}})([]*entity.{
  values:=make([]*entity.{{.Name}},0)
  if len(ids)==0{return values,nil}
  keys:=make([]interface{},len(ids));for i,id:=range ids{keys[i]=id}
- err:=m.DB.WithContext(ctx).Preload(clause.Associations).Where(clause.IN{Column:clause.Column{Name:m.keyColumn},Values:keys}).Find(&values).Error
+ err:=m.DB.WithContext(ctx){{if .HasAssociations}}.Preload(clause.Associations){{end}}.Where(clause.IN{Column:clause.Column{Name:m.keyColumn},Values:keys}).Find(&values).Error
  if err!=nil{return nil,err};return values,nil
 }
 
