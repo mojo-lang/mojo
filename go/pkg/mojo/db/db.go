@@ -4,9 +4,9 @@ import (
 	dm "github.com/smilextay/gorm-dm"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
-	//"gorm.io/driver/sqlite"
-	"github.com/glebarez/sqlite"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	_ "modernc.org/sqlite"
 )
 
 const (
@@ -51,7 +51,9 @@ func New(cfg *Config) *DB {
 			return db
 		}
 	} else if db.Config.Driver == SqliteDriverName {
-		if d, err := gorm.Open(sqlite.Open(db.Config.Dsn), &gorm.Config{}); err != nil {
+		// Use the same pure-Go driver as the OpenAPI validator. The glebarez
+		// fork also registers "sqlite" and cannot coexist with modernc.
+		if d, err := gorm.Open(sqlite.New(sqlite.Config{DriverName: SqliteDriverName, DSN: db.Config.Dsn}), &gorm.Config{}); err != nil {
 			return nil
 		} else {
 			db.DB = d
