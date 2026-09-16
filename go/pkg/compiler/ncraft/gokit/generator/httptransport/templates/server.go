@@ -159,7 +159,7 @@ func init()  {
 func RegisterHttpHandler(router *mux.Router, endpoints Endpoints, tracer stdopentracing.Tracer, logger log.Logger)  {
 	{{- if .Interface.Methods}}
 		serverOptions := []httptransport.ServerOption{
-			httptransport.ServerBefore(headersToContext, queryToContext),
+			httptransport.ServerBefore(nhttp.RequestToContext, headersToContext, queryToContext),
 			httptransport.ServerErrorEncoder(errorEncoder),
 			httptransport.ServerErrorLogger(logger),
 			httptransport.ServerAfter(httptransport.SetContentType(contentType)),
@@ -298,6 +298,10 @@ func EncodeHTTP{{ToCamel $method.Name}}Response(_ context.Context, w http.Respon
 // EncodeHTTPGenericResponse is a transport/http.EncodeResponseFunc that encodes
 // the response as JSON to the response writer. Primarily useful in a server.
 func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	if writer, ok := nhttp.BoundResponseWriter(ctx, response); ok {
+		return writer.WriteHttpResponse(ctx, w)
+	}
+
 	if writer, ok := response.(nhttp.ResponseWriter); ok {
 		return writer.WriteHttpResponse(ctx, w)
 	}
