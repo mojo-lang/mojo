@@ -15,6 +15,10 @@ type HTTPBinding struct {
 	Verb string
 	Path string
 
+	// RoutePath retains server-side regex constraints. Path is the plain URI
+	// template used by HTTP clients and other transports.
+	RoutePath string
+
 	// BasePath is the longest static portion of the full PathTemplate, and is
 	// given to the net/http mux as the path for the route for this binding.
 	BasePath string
@@ -43,6 +47,13 @@ type JavaBinding struct {
 
 func (b *HTTPBinding) IsGet() bool {
 	return b != nil && strings.ToLower(b.Verb) == "get"
+}
+
+func (b *HTTPBinding) GetRoutePath() string {
+	if b.RoutePath != "" {
+		return b.RoutePath
+	}
+	return b.Path
 }
 
 func (b *HTTPBinding) GetResponseBody() *Field {

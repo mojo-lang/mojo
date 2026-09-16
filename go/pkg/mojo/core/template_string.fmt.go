@@ -5,19 +5,36 @@ import (
 	"regexp"
 )
 
-var segmentRegex *regexp.Regexp
-
-func init() {
-	segmentRegex = regexp.MustCompile(`\{[a-zA-Z\d_.]+\}`)
-}
+// A pattern may contain nested braces, e.g. {id:[0-9]{2,4}}. Match only the
+// opening name here and scan balanced braces for the complete segment.
+var segmentStartRegex = regexp.MustCompile(`\{[a-zA-Z\d_.]+[}:]`)
 
 func (x *TemplateString) Parse(str string) error {
 	if x != nil && len(str) > 0 {
-		index := segmentRegex.FindAllStringIndex(str, -1)
 		cur := 0
-		for _, i := range index {
-			left := i[0]
-			right := i[1]
+		for scan := 0; scan < len(str); {
+			index := segmentStartRegex.FindStringIndex(str[scan:])
+			if index == nil {
+				break
+			}
+			left, right := scan+index[0], scan+index[1]
+			if str[right-1] == ':' {
+				depth := 1
+				for right < len(str) && depth > 0 {
+					switch str[right] {
+					case '{':
+						depth++
+					case '}':
+						depth--
+					}
+					right++
+				}
+				// Preserve incomplete templates as literal text, as for {name.
+				if depth != 0 {
+					break
+				}
+			}
+			scan = right
 
 			// {{something}} will be skipped
 			if left > 0 && right < len(str) && str[left-1] == '{' && str[right] == '}' {

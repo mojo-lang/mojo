@@ -16,6 +16,7 @@ require (
 	github.com/goccy/go-graphviz v0.2.10
 	github.com/golang/geo v0.0.0-20260818125358-b200a1149890
 	github.com/google/uuid v1.6.0
+	github.com/gorilla/mux v1.8.0
 	github.com/jonas-p/go-shp v0.1.2-0.20190401125246-9fd306ae10a6
 	github.com/json-iterator/go v1.1.12
 	github.com/mholt/archives v0.1.5

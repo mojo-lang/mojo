@@ -539,6 +539,7 @@ func (s *Services) compileBindings(ctx context.Context, methodName string, path 
 	binding := &data.HTTPBinding{
 		Verb:       methodName,
 		Path:       p,
+		RoutePath:  compiler.CompileRoutePath(path),
 		Label:      strcase.ToCamel(method.Name) + data.EnglishNumber(index),
 		Parent:     dm,
 		Response:   &data.HTTPResponse{},

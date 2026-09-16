@@ -354,16 +354,32 @@ func compileResponses(ctx context.Context, method *lang.FunctionDecl) *openapi.R
 }
 
 func CompilePath(path string) (string, map[string]bool) {
+	return compilePath(path, false)
+}
+
+// CompileRoutePath preserves regular expressions for server routing. OpenAPI
+// and HTTP clients use CompilePath's plain parameter names instead.
+func CompileRoutePath(path string) string {
+	compiled, _ := compilePath(path, true)
+	return compiled
+}
+
+func compilePath(path string, keepPatterns bool) (string, map[string]bool) {
 	ts := core.NewTemplateString(path)
 	p := bytes.Buffer{}
 	parameters := make(map[string]bool)
 	for _, segment := range ts.Segments {
 		if segment.Templated {
+			name, pattern, hasPattern := strings.Cut(segment.Content, ":")
 			p.WriteByte('{')
-			p.WriteString(strings.ReplaceAll(segment.Content, ".", "_"))
+			p.WriteString(strings.ReplaceAll(name, ".", "_"))
+			if keepPatterns && hasPattern {
+				p.WriteByte(':')
+				p.WriteString(pattern)
+			}
 			p.WriteByte('}')
 
-			parameters[segment.Content] = true
+			parameters[name] = true
 		} else {
 			p.WriteString(segment.Content)
 		}

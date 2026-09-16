@@ -1,6 +1,9 @@
 package core
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 const TemplateStringTypeName = "TemplateString"
 const TemplateStringTypeFullName = "mojo.core.TemplateString"
@@ -34,7 +37,8 @@ func (x *TemplateString) Apply(values map[string]interface{}) (string, error) {
 	if x != nil {
 		for _, segment := range x.Segments {
 			if segment.Templated {
-				if value, ok := values[segment.Content]; ok {
+				name, _, _ := strings.Cut(segment.Content, ":")
+				if value, ok := values[name]; ok {
 					switch v := value.(type) {
 					case string:
 						segment.Templated = false

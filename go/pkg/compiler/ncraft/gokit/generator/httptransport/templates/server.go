@@ -175,7 +175,7 @@ func RegisterHttpHandler(router *mux.Router, endpoints Endpoints, tracer stdopen
 
 	{{range $method := .Interface.Methods}}
 		{{range $binding := $method.Bindings}}
-			router.Methods("{{$binding.Verb | ToUpper}}").Path("{{$binding.Path}}").Handler(
+			router.Methods("{{$binding.Verb | ToUpper}}").Path({{printf "%q" $binding.GetRoutePath}}).Handler(
 				httptransport.NewServer(
 					endpoints.{{ToCamel $method.Name}}Endpoint,
 					DecodeHTTP{{$binding.Label}}Request,{{/* {{if $binding.GetResponseBody}}
