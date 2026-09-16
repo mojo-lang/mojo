@@ -50,7 +50,7 @@ func (b *CreateCmd) Build() {
 		&cli.StringFlag{
 			Name:        "repo",
 			Aliases:     []string{"r"},
-			Usage:       "the git repository of NCraft releated code",
+			Usage:       "the git repository of NCraft related code",
 			Destination: &b.Repository,
 		},
 		&cli.StringFlag{

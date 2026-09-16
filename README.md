@@ -20,6 +20,13 @@ Use `mojo build -t api,service .` to generate backend services and entity CRUD
 models under `service-go/pkg/model`. See [the entity model guide](docs/entity-models.md)
 for primary keys, database initialization, and generated operations.
 
+For the complete workflow from project creation to implementing and running a
+Go kit service, see [NCraft 微服务开发指南](docs/ncraft.md).
+For data structures and service interface definitions, see
+[Mojo 简明语法](docs/syntax.md).
+For literals, operators, member access, and calls, see
+[Mojo 表达式说明](docs/expression.md).
+
 
 ## What can do
 
