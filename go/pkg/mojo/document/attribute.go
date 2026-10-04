@@ -14,7 +14,7 @@ func (x *Attribute) HasProperty(key string) bool {
 
 func (x *Attribute) GetStringProperty(key string) (string, error) {
 	if x != nil && x.Properties != nil {
-		if v, ok := x.Properties[key]; ok {
+		if v, ok := x.Properties[key]; ok && v != nil {
 			return v.GetString(), nil
 		}
 	}
@@ -23,7 +23,7 @@ func (x *Attribute) GetStringProperty(key string) (string, error) {
 
 func (x *Attribute) GetIntProperty(key string) (int64, error) {
 	if x != nil && x.Properties != nil {
-		if v, ok := x.Properties[key]; ok {
+		if v, ok := x.Properties[key]; ok && v != nil {
 			return v.GetInt64(), nil
 		}
 	}
@@ -32,7 +32,7 @@ func (x *Attribute) GetIntProperty(key string) (int64, error) {
 
 func (x *Attribute) GetBoolProperty(key string) (bool, error) {
 	if x != nil && x.Properties != nil {
-		if v, ok := x.Properties[key]; ok {
+		if v, ok := x.Properties[key]; ok && v != nil {
 			return v.GetBool(), nil
 		}
 	}
