@@ -26,17 +26,17 @@ func (x *Id) Format() string {
 }
 
 func (x *Id) Parse(value string) error {
-	v, err := strconv.Atoi(value)
+	v, err := strconv.ParseUint(value, 10, 64)
 	if err == nil {
-		x.SetInt(uint64(v))
+		x.SetInt(v)
 	} else {
 		uuid, err := ParseUuid(value)
-		if err != nil {
+		if err == nil {
 			x.SetUuid(uuid)
 		} else {
 			x.SetString(value)
 		}
 	}
 
-	return err
+	return nil
 }

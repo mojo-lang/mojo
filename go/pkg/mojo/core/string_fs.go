@@ -16,6 +16,7 @@ func (f stringFs) Open(name string) (fs.File, error) {
 	handle := &file{
 		name:    name,
 		content: bytes.NewBufferString(string(f)),
+		size:    int64(len(f)),
 	}
 	return handle, nil
 }
@@ -23,6 +24,7 @@ func (f stringFs) Open(name string) (fs.File, error) {
 type file struct {
 	name    string
 	content *bytes.Buffer
+	size    int64
 	closed  bool
 }
 
@@ -32,7 +34,7 @@ func (f *file) Stat() (fs.FileInfo, error) {
 	}
 	fi := fileInfo{
 		name: f.name,
-		size: int64(f.content.Len()),
+		size: f.size,
 	}
 	return &fi, nil
 }

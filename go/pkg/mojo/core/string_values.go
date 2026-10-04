@@ -37,7 +37,7 @@ func (x *StringValues) Contains(element string) bool {
 
 func (x *StringValues) Matched(expr string) bool {
 	if rgx, err := regexp.Compile(expr); err == nil {
-		for _, e := range x.Vals {
+		for _, e := range x.GetVals() {
 			if rgx.MatchString(e) {
 				return true
 			}
@@ -50,7 +50,7 @@ func (x *StringValues) Matches(expr string) *StringValues {
 	values := &StringValues{}
 
 	if rgx, err := regexp.Compile(expr); err == nil {
-		for _, e := range x.Vals {
+		for _, e := range x.GetVals() {
 			if rgx.MatchString(e) {
 				values.Vals = append(values.Vals, e)
 			}

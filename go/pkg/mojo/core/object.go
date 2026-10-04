@@ -9,9 +9,8 @@ import (
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/modern-go/reflect2"
-	"google.golang.org/protobuf/runtime/protoimpl"
-
 	"github.com/mojo-lang/mojo/go/pkg/mojo/core/strcase"
+	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const ObjectTypeName = "Object"
@@ -445,6 +444,7 @@ func (x *Object) Delete(key string) *Object {
 
 func (x *Object) Merge(obj *Object) *Object {
 	if x != nil {
+		x.init()
 		for k, v := range obj.GetVals() {
 			x.Vals[k] = v
 		}

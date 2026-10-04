@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/hex"
+	"reflect"
 	"strconv"
 )
 
@@ -26,11 +27,13 @@ func ToString(value interface{}) string {
 	case bool:
 		return strconv.FormatBool(v)
 	case int8, int16, int32, int64, int:
-		return strconv.FormatInt(value.(int64), 10)
+		return strconv.FormatInt(reflect.ValueOf(v).Int(), 10)
 	case uint8, uint16, uint32, uint64, uint:
-		return strconv.FormatUint(value.(uint64), 10)
-	case float32, float64:
-		return strconv.FormatFloat(value.(float64), 'e', 8, 10)
+		return strconv.FormatUint(reflect.ValueOf(v).Uint(), 10)
+	case float32:
+		return strconv.FormatFloat(float64(v), 'e', 8, 32)
+	case float64:
+		return strconv.FormatFloat(v, 'e', 8, 64)
 	case []byte:
 		return hex.EncodeToString(v)
 	case string:

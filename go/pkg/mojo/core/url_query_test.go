@@ -1,9 +1,11 @@
 package core
 
 import (
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestUrl_Query_Unmarshal_String_Slice_1(t *testing.T) {
@@ -294,4 +296,75 @@ func TestNewUrlQuery_Add(t *testing.T) {
 	query.Add("foo", true)
 	assert.Equal(t, "true", query.Get("foo"))
 	assert.Equal(t, true, query.GetBool("foo"))
+}
+
+func TestUrlQueryMutationAndConversion(t *testing.T) {
+	var query Url_Query
+	require.NotPanics(t, func() { query.Set("tag", "first").Add("tag", []string{"second", "third"}).Set("enabled", true) })
+	assert.Equal(t, []string{"first", "second", "third"}, query.GetValues("tag"))
+	assert.Equal(t, "first", query.Get("tag"))
+	assert.True(t, query.GetBool("enabled"))
+	assert.True(t, query.Has("tag"))
+	assert.ElementsMatch(t, []string{"tag", "enabled"}, query.GetKeys())
+	query.Set("tag", "replacement")
+	assert.Equal(t, []string{"replacement"}, query.GetValues("tag"))
+	query.Del("tag").Del("missing")
+	assert.False(t, query.Has("tag"))
+	assert.Empty(t, query.Get("tag"))
+	assert.Nil(t, query.GetValues("tag"))
+	source := url.Values{"q": {"a b", "c&d"}, "empty": {}}
+	copied := NewUrlQueryFrom(source)
+	assert.Equal(t, source, copied.ToUrlValues())
+	var parsed Url_Query
+	require.NoError(t, parsed.Parse("q=a+b&q=c%26d"))
+	assert.Equal(t, []string{"a b", "c&d"}, parsed.GetValues("q"))
+	assert.Equal(t, "q=a+b&q=c%26d", parsed.Format())
+	assert.Error(t, parsed.Parse("q=%zz"))
+	var added Url_Query
+	require.NotPanics(t, func() { added.Add("key", 1) })
+	assert.Equal(t, "1", added.Get("key"))
+}
+
+func TestUrlQueryNilAndMissingValues(t *testing.T) {
+	var absent *Url_Query
+	assert.False(t, absent.Has("x"))
+	assert.False(t, absent.GetBool("x"))
+	assert.Empty(t, absent.Get("x"))
+	assert.Nil(t, absent.GetValues("x"))
+	assert.Nil(t, absent.GetKeys())
+	assert.Nil(t, absent.ToUrlValues())
+	assert.Nil(t, absent.FromUrlValues(url.Values{"x": {"y"}}))
+	assert.Nil(t, absent.Set("x", "y"))
+	assert.Nil(t, absent.Add("x", "y"))
+	assert.Nil(t, absent.Del("x"))
+	assert.Empty(t, absent.Format())
+	assert.NoError(t, absent.Parse("x=y"))
+	for _, query := range []*Url_Query{nil, {}, {Vals: map[string]*StringValues{"nil": nil, "empty": {}}}} {
+		for _, key := range []string{"missing", "nil", "empty"} {
+			value := "unchanged"
+			require.NoError(t, query.Unmarshal(key, &value))
+			assert.Equal(t, "unchanged", value)
+			assert.Empty(t, query.Get(key))
+		}
+	}
+	query := &Url_Query{Vals: map[string]*StringValues{"nil": nil}}
+	assert.NotPanics(t, func() { assert.Empty(t, query.GetValues("nil")); assert.Empty(t, query.ToUrlValues()["nil"]) })
+}
+
+func TestUrlQueryUnmarshalPreservesValues(t *testing.T) {
+	query := NewUrlQuery("tag", []string{"alpha", "beta"})
+	for range 2 {
+		var decoded []string
+		require.NoError(t, query.Unmarshal("tag", &decoded))
+		assert.Equal(t, []string{"alpha", "beta"}, decoded)
+		assert.Equal(t, []string{"alpha", "beta"}, query.GetValues("tag"), "reading must not add quotes to stored values")
+	}
+	var number int
+	assert.Error(t, NewUrlQuery("n", "invalid").Unmarshal("n", &number))
+	var numbers []int
+	assert.Error(t, UnmarshalParam("1,invalid", &numbers))
+	assert.NoError(t, UnmarshalParam("", &number))
+	assert.NoError(t, UnmarshalParam("   ", &numbers))
+	assert.NotPanics(t, func() { assert.Error(t, UnmarshalParam("x", nil)) })
+	assert.NotPanics(t, func() { assert.Error(t, UnmarshalParam("x", "not a pointer")) })
 }

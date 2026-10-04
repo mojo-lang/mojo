@@ -29,5 +29,5 @@ func (codec *BytesValueCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream
 
 func (codec *BytesValueCodec) IsEmpty(ptr unsafe.Pointer) bool {
 	e := (*BytesValue)(ptr)
-	return e == nil && len(e.Val) > 0
+	return e == nil || len(e.Val) == 0
 }

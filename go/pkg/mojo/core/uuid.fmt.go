@@ -15,7 +15,7 @@ func (x *Uuid) Format() string {
 func (x *Uuid) Parse(value string) error {
 	id, err := uuid.Parse(value)
 	if err == nil {
-		x.Val = append(x.Val, id[:]...)
+		x.Val = append(x.Val[:0], id[:]...)
 	}
 	return err
 }

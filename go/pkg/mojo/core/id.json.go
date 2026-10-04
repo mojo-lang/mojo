@@ -2,6 +2,7 @@ package core
 
 import (
 	"errors"
+	"strconv"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -22,7 +23,11 @@ func NewIdCodec() *IdCodec {
 func (codec *IdCodec) DecodeAny(any jsoniter.Any) (*Id, error) {
 	switch any.ValueType() {
 	case jsoniter.NumberValue:
-		return NewIntId(any.ToUint64()), nil
+		value, err := strconv.ParseUint(any.ToString(), 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		return NewIntId(value), nil
 	case jsoniter.StringValue:
 		return ParseId(any.ToString())
 	}
@@ -30,23 +35,12 @@ func (codec *IdCodec) DecodeAny(any jsoniter.Any) (*Id, error) {
 }
 
 func (codec *IdCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	any := iter.ReadAny()
-	id := (*Id)(ptr)
-
-	switch any.ValueType() {
-	case jsoniter.NumberValue:
-		id.SetInt(any.ToUint64())
-	case jsoniter.StringValue:
-		value := any.ToString()
-		uuid, err := ParseUuid(value)
-		if err != nil {
-			id.SetUuid(uuid)
-		} else {
-			id.SetString(value)
-		}
-	default:
-		iter.ReportError("Id Decode", "invalid value type")
+	id, err := codec.DecodeAny(iter.ReadAny())
+	if err != nil {
+		iter.ReportError("Id Decode", err.Error())
+		return
 	}
+	(*Id)(ptr).Id = id.Id
 }
 
 func (codec *IdCodec) IsEmpty(ptr unsafe.Pointer) bool {

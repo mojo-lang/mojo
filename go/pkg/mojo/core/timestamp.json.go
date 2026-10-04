@@ -27,6 +27,7 @@ func (codec *TimestampCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator)
 
 		if number < int64(MaxInt) {
 			ts.Seconds = number
+			ts.Nanoseconds = 0
 		} else {
 			ts.Seconds = number / 1000
 			ts.Nanoseconds = int32((number - ts.Seconds*1000) * 1000000)

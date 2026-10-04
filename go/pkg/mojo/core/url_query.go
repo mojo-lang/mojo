@@ -46,7 +46,7 @@ func (x *Url_Query) ToUrlValues() url.Values {
 	if x != nil && x.Vals != nil {
 		values := make(url.Values)
 		for k, v := range x.Vals {
-			values[k] = v.Vals
+			values[k] = v.GetVals()
 		}
 		return values
 	}
@@ -88,7 +88,7 @@ func (x *Url_Query) GetValues(key string) []string {
 		return nil
 	}
 	if vs, ok := x.Vals[key]; ok {
-		return vs.Vals
+		return vs.GetVals()
 	}
 	return nil
 }
@@ -109,6 +109,9 @@ func (x *Url_Query) GetKeys() []string {
 // values.
 func (x *Url_Query) Set(key string, value interface{}) *Url_Query {
 	if x != nil {
+		if x.Vals == nil {
+			x.Vals = make(map[string]*StringValues)
+		}
 		x.Vals[key] = &StringValues{
 			Vals: queryValueToStrings(value),
 		}
@@ -120,6 +123,9 @@ func (x *Url_Query) Set(key string, value interface{}) *Url_Query {
 // values associated with key.
 func (x *Url_Query) Add(key string, value interface{}) *Url_Query {
 	if x != nil {
+		if x.Vals == nil {
+			x.Vals = make(map[string]*StringValues)
+		}
 		if x.Vals[key] == nil {
 			x.Vals[key] = &StringValues{}
 		}
@@ -176,12 +182,14 @@ func (x *Url_Query) Unmarshal(name string, value interface{}) error {
 		if len(param.Vals) == 1 {
 			sliceValue = param.Vals[0]
 		} else {
+			values := param.Vals
 			if isStringType {
-				for i := 0; i < len(param.Vals); i++ {
-					param.Vals[i] = QuoteString(param.Vals[i])
+				values = make([]string, len(param.Vals))
+				for i, value := range param.Vals {
+					values[i] = QuoteString(value)
 				}
 			}
-			sliceValue = "[" + strings.Join(param.Vals, ",") + "]"
+			sliceValue = "[" + strings.Join(values, ",") + "]"
 		}
 		return UnmarshalParam(sliceValue, value)
 	default:
@@ -198,6 +206,9 @@ func UnmarshalParam(str string, value interface{}) error {
 	}
 
 	v := reflect.Indirect(reflect.ValueOf(value))
+	if !v.IsValid() || !v.CanSet() {
+		return fmt.Errorf("couldn't decode parameter into %T: expected a non-nil pointer", value)
+	}
 	switch v.Kind() {
 	case reflect.String:
 		v.SetString(str)

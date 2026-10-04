@@ -1,9 +1,11 @@
 package core
 
 import (
+	"reflect"
+	"strings"
+
 	jsoniter "github.com/json-iterator/go"
 	"github.com/mojo-lang/mojo/go/pkg/logs"
-	"strings"
 )
 
 type Options map[string]interface{}
@@ -78,8 +80,10 @@ func (o Options) GetString(key string) string {
 func (o Options) GetInteger(key string) int64 {
 	if val, ok := o[key]; ok {
 		switch v := val.(type) {
-		case int8, int16, int32, int64, int, uint8, uint16, uint32, uint64:
-			return int64(v.(int))
+		case int8, int16, int32, int64, int:
+			return reflect.ValueOf(v).Int()
+		case uint8, uint16, uint32, uint64, uint:
+			return int64(reflect.ValueOf(v).Uint())
 		}
 	}
 	return 0
@@ -92,8 +96,10 @@ func (o Options) GetFloat(key string) float64 {
 			return float64(v)
 		case float64:
 			return v
-		case int8, int16, int32, int64, int, uint8, uint16, uint32, uint64:
-			return float64(v.(int))
+		case int8, int16, int32, int64, int:
+			return float64(reflect.ValueOf(v).Int())
+		case uint8, uint16, uint32, uint64, uint:
+			return float64(reflect.ValueOf(v).Uint())
 		default:
 			return 0
 		}

@@ -89,6 +89,10 @@ func NewValue(v interface{}) (*Value, error) {
 	case *Values:
 		return NewValuesValue(v), nil
 	default:
+		value := reflect.ValueOf(v)
+		if value.Kind() == reflect.Ptr && value.IsNil() {
+			return NewNullValue(), nil
+		}
 		if sv, ok := v.(StringLike); ok {
 			if sv == nil {
 				return NewNullValue(), nil
@@ -96,12 +100,10 @@ func NewValue(v interface{}) (*Value, error) {
 			return NewStringValue(sv.ToString()), nil
 		}
 
-		value := reflect.ValueOf(v)
-		typ := reflect.Indirect(value).Type()
 		if value.Kind() == reflect.Ptr {
 			value = value.Elem()
-			typ = reflect.Indirect(value).Type()
 		}
+		typ := value.Type()
 
 		if typ.Kind() == reflect.Slice || typ.Kind() == reflect.Array {
 			var values []*Value
@@ -112,10 +114,11 @@ func NewValue(v interface{}) (*Value, error) {
 				}
 				values = append(values, nv)
 			}
-			if len(values) > 0 {
-				return NewArrayValue(values...), nil
-			}
+			return NewArrayValue(values...), nil
 		} else if typ.Kind() == reflect.Map {
+			if typ.Key().Kind() != reflect.String {
+				return nil, fmt.Errorf("invalid map key type: %s", typ.Key())
+			}
 			values := make(map[string]*Value)
 			for iter := value.MapRange(); iter.Next(); {
 				val, err := NewValue(iter.Value().Interface())
@@ -124,9 +127,7 @@ func NewValue(v interface{}) (*Value, error) {
 				}
 				values[iter.Key().String()] = val
 			}
-			if len(values) > 0 {
-				return NewMapValue(values), nil
-			}
+			return NewMapValue(values), nil
 		} else if typ.Kind() == reflect.Struct {
 			if _, ok := registeredJsonEncoderTypes[typ.String()]; ok {
 				if json, err := jsoniter.ConfigFastest.Marshal(v); err != nil {
@@ -327,7 +328,7 @@ func (x *Value) ToInterface() interface{} {
 		}
 	case *Value_NegativeVal:
 		if v != nil {
-			return -v.NegativeVal
+			return -int64(v.NegativeVal)
 		}
 	case *Value_PositiveVal:
 		if v != nil {
@@ -458,8 +459,10 @@ func (x *Value) GetFloat32() float32 {
 func (x *Value) GetFloat64() float64 {
 	if v, ok := x.GetVal().(*Value_DoubleVal); ok {
 		return v.DoubleVal
+	} else if v, ok := x.GetVal().(*Value_PositiveVal); ok {
+		return float64(v.PositiveVal)
 	} else {
-		if  str, ok := x.GetVal().(*Value_StringVal); ok && len(str.StringVal) > 0 {
+		if str, ok := x.GetVal().(*Value_StringVal); ok && len(str.StringVal) > 0 {
 			f, _ := strconv.ParseFloat(str.StringVal, 64)
 			return f
 		} else {

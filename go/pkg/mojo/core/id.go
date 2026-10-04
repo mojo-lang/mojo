@@ -46,7 +46,7 @@ func (x *Id) GetString() string {
 		str := x.GetStringVal()
 		if len(str) == 0 {
 			if v := x.GetUint64Val(); v > 0 {
-				return strconv.Itoa(int(v))
+				return strconv.FormatUint(v, 10)
 			}
 		}
 		return str

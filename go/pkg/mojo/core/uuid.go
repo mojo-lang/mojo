@@ -11,14 +11,12 @@ const UuidTypeFullName = "mojo.core.Uuid"
 
 func NewUuid() *Uuid {
 	id := uuid.New()
-	uuid := &Uuid{}
-	copy(uuid.Val, id[:])
-	return uuid
+	return &Uuid{Val: append([]byte(nil), id[:]...)}
 }
 
 func (x *Uuid) ToUUID() uuid.UUID {
 	if x != nil && len(x.Val) > 0 {
-		id, err := uuid.ParseBytes(x.Val)
+		id, err := uuid.FromBytes(x.Val)
 		if err != nil {
 			return uuid.New()
 		}
@@ -54,6 +52,6 @@ func (x *Uuid) UnmarshalBinary(data []byte) error {
 	if len(data) != 16 {
 		return fmt.Errorf("invalid UUID (got %d bytes)", len(data))
 	}
-	copy(x.Val[:], data)
+	x.Val = append(x.Val[:0], data...)
 	return nil
 }

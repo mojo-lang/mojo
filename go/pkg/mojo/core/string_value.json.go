@@ -24,5 +24,5 @@ func (codec *StringValueCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Strea
 
 func (codec *StringValueCodec) IsEmpty(ptr unsafe.Pointer) bool {
 	e := (*StringValue)(ptr)
-	return e == nil && len(e.Val) > 0
+	return e == nil || len(e.Val) == 0
 }
