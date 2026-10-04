@@ -46,6 +46,7 @@ func (x *Expression_Source) Parse(value string) error {
 				if strings.HasPrefix(value, sourceHeaderPrefix) {
 					x.Location = Expression_LOCATION_HEADER
 					x.Name = value[len(sourceHeaderPrefix):]
+					x.Path = ""
 				} else {
 					return core.NewMalformedSyntaxError("invalid expression source in header: %s", value)
 				}
@@ -53,6 +54,7 @@ func (x *Expression_Source) Parse(value string) error {
 				if strings.HasPrefix(value, sourceQueryPrefix) {
 					x.Location = Expression_LOCATION_QUERY
 					x.Name = value[len(sourceQueryPrefix):]
+					x.Path = ""
 				} else {
 					return core.NewMalformedSyntaxError("invalid expression source in query: %s", value)
 				}
@@ -60,17 +62,19 @@ func (x *Expression_Source) Parse(value string) error {
 				if strings.HasPrefix(value, sourcePathPrefix) {
 					x.Location = Expression_LOCATION_PATH
 					x.Name = value[len(sourcePathPrefix):]
+					x.Path = ""
 				} else {
 					return core.NewMalformedSyntaxError("invalid expression source in path: %s", value)
 				}
 			case "body":
-				if strings.HasPrefix(value, sourceBodyPrefix) {
+				if value == sourceBodyPrefix || strings.HasPrefix(value, sourceBodyPrefix+"#") {
 					x.Location = Expression_LOCATION_BODY
+					x.Name, x.Path = "", ""
 					if len(value) > 4 {
-						x.Path = value[len(sourcePathPrefix):]
+						x.Path = value[len(sourceBodyPrefix)+1:]
 					}
 				} else {
-					return core.NewMalformedSyntaxError("invalid expression source in path: %s", value)
+					return core.NewMalformedSyntaxError("invalid expression source in body: %s", value)
 				}
 			default:
 				return core.NewMalformedSyntaxError("invalid expression source: %s", value)

@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"io"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -15,31 +16,48 @@ type ReferenceableSchemaCodec struct {
 }
 
 func (codec *ReferenceableSchemaCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	any := iter.ReadAny()
-	schema := (*ReferenceableSchema)(ptr)
-	if any.ValueType() == jsoniter.ObjectValue {
-		ref := any.Get("$ref")
-		if ref.ValueType() == jsoniter.StringValue {
-			r := &Reference{}
-			any.ToVal(r)
-			schema.SetReference(r)
-		} else {
-			s := &Schema{}
-			any.ToVal(s)
-			schema.SetSchema(s)
+	value := iter.ReadAny()
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
+	}
+	wrapper := (*ReferenceableSchema)(ptr)
+	if value.ValueType() == jsoniter.NilValue {
+		wrapper.ReferenceableSchema = nil
+		return
+	}
+	if value.ValueType() != jsoniter.ObjectValue {
+		iter.ReportError("ReferenceableSchemaCodec.Decode", "expected an object or null")
+		return
+	}
+	ref := value.Get("$ref")
+	switch ref.ValueType() {
+	case jsoniter.StringValue:
+		reference := &Reference{}
+		if decodeJSONValue(iter, value, reference) {
+			wrapper.SetReference(reference)
 		}
+	case jsoniter.InvalidValue:
+		inline := &Schema{}
+		if decodeJSONValue(iter, value, inline) {
+			wrapper.SetSchema(inline)
+		}
+	default:
+		iter.ReportError("ReferenceableSchemaCodec.Decode", "$ref must be a string")
 	}
 }
 
 func (codec *ReferenceableSchemaCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
-	schema := (*ReferenceableSchema)(ptr)
-	if s := schema.GetSchema(); s != nil {
-		stream.WriteVal(s)
-	} else if r := schema.GetReference(); r != nil {
-		stream.WriteVal(r)
+	wrapper := (*ReferenceableSchema)(ptr)
+	if value := wrapper.GetSchema(); value != nil {
+		stream.WriteVal(value)
+	} else if reference := wrapper.GetReference(); reference != nil {
+		stream.WriteVal(reference)
+	} else {
+		stream.WriteNil()
 	}
 }
 
 func (codec *ReferenceableSchemaCodec) IsEmpty(ptr unsafe.Pointer) bool {
-	return ((*ReferenceableSchema)(ptr)).ReferenceableSchema == nil
+	wrapper := (*ReferenceableSchema)(ptr)
+	return wrapper == nil || wrapper.ReferenceableSchema == nil
 }

@@ -69,6 +69,9 @@ func (x *PathItem) Merge(item *PathItem) *PathItem {
 	if x == nil {
 		return item
 	}
+	if item == nil {
+		return x
+	}
 
 	if len(item.Ref) > 0 {
 		x.Ref = item.Ref

@@ -12,8 +12,7 @@ var areas = []string{"110000", "110100", "110101", "110102", "110103", "110104",
 func Identify() string {
 	area := areas[gofakeit.IntRange(0, len(areas)-1)]
 
-	code := fmt.Sprint(gofakeit.IntRange(1, 999))
-	orderCode := code[0:3]
+	orderCode := fmt.Sprintf("%03d", gofakeit.IntRange(1, 999))
 
 	age := gofakeit.IntRange(1, 90)
 	duration := time.Duration(age*365*24)*time.Hour + time.Duration(gofakeit.IntRange(0, 300)*24)*time.Hour

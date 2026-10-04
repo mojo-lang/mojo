@@ -3,11 +3,13 @@ package openapi
 import (
 	_ "embed"
 	"os"
+	"path/filepath"
 	"testing"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/mojo-lang/mojo/go/pkg/mojo/core"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 //go:embed testdata/api-docs_v2.json
@@ -30,6 +32,72 @@ func TestOpenAPI_GetOperation(t *testing.T) {
 	assert.Equal(t, "/path/to/service", p)
 	assert.Equal(t, "GET", m)
 	assert.Equal(t, "test_operation_summary", api.Summary)
+}
+
+func TestOpenAPIEmptyAndLookupBoundaries(t *testing.T) {
+	api := New()
+	require.NotNil(t, api.Info)
+	require.NotNil(t, api.Paths.Vals)
+	require.NotNil(t, api.Components.Schemas)
+	for _, candidate := range []*OpenAPI{nil, {}, {Paths: &Paths{Vals: map[string]*PathItem{"/nil": nil}}}} {
+		assert.Nil(t, candidate.GetPath("/missing"))
+		assert.NotPanics(t, func() {
+			path, method, operation, err := candidate.GetOperation("missing")
+			assert.True(t, core.IsNotFoundError(err))
+			assert.Empty(t, path)
+			assert.Empty(t, method)
+			assert.Nil(t, operation)
+			candidate.GenerateExample()
+			candidate.SupplementExample()
+		})
+	}
+	assert.False(t, (*OpenAPI)(nil).CheckVersion("3"))
+	assert.False(t, (&OpenAPI{}).CheckVersion("3"))
+	assert.False(t, api.CheckVersion("invalid"))
+	item := &PathItem{}
+	for _, method := range []string{"GET", "PUT", "POST", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"} {
+		item.SetOperation(method, &Operation{OperationId: method})
+	}
+	api.Paths.Vals["/pets"] = item
+	for _, method := range []string{"GET", "PUT", "POST", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"} {
+		path, gotMethod, operation, err := api.GetOperation(method)
+		require.NoError(t, err)
+		assert.Equal(t, "/pets", path)
+		assert.Equal(t, method, gotMethod)
+		assert.Equal(t, method, operation.OperationId)
+	}
+	parameter := &Parameter{Schema: exampleSchema()}
+	item.Get.Parameters = []*ReferenceableParameter{NewReferenceableParameter(parameter)}
+	api.GenerateExample()
+	assert.Equal(t, "generated", parameter.Example.GetString())
+}
+
+func TestOpenAPIParseFileFormatsAndErrors(t *testing.T) {
+	const jsonDocument = `{"openapi":"3.0.3","info":{"title":"Pets","version":"1.0"},"paths":{}}`
+	const yamlDocument = "openapi: 3.0.3\ninfo:\n  title: Pets\n  version: '1.0'\npaths: {}\n"
+	for _, tt := range []struct{ name, content string }{{"api.json", jsonDocument}, {"api.yaml", yamlDocument}, {"api.yml", yamlDocument}} {
+		filename := filepath.Join(t.TempDir(), tt.name)
+		require.NoError(t, os.WriteFile(filename, []byte(tt.content), 0600))
+		api, err := ParseFile(filename)
+		require.NoError(t, err)
+		assert.Equal(t, "Pets", api.Info.Title)
+		assert.True(t, api.CheckVersion("3.0.3"))
+	}
+	for _, input := range []string{jsonDocument, yamlDocument} {
+		api, err := Parse([]byte(input))
+		require.NoError(t, err)
+		assert.Equal(t, "Pets", api.Info.Title)
+	}
+	for _, input := range []string{`{"openapi":`, `{"openapi":"3.0.3"}`} {
+		api, err := Parse([]byte(input))
+		assert.Error(t, err)
+		assert.Nil(t, api)
+	}
+	for _, name := range []string{"missing.json", "unsupported.txt"} {
+		api, err := ParseFile(filepath.Join(t.TempDir(), name))
+		assert.Error(t, err)
+		assert.Nil(t, api)
+	}
 }
 
 func TestOpenAPI_IsVersion(t *testing.T) {

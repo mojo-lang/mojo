@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"io"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -15,31 +16,48 @@ type ReferenceableLinkCodec struct {
 }
 
 func (codec *ReferenceableLinkCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	any := iter.ReadAny()
-	link := (*ReferenceableLink)(ptr)
-	if any.ValueType() == jsoniter.ObjectValue {
-		ref := any.Get("$ref")
-		if ref.ValueType() == jsoniter.StringValue {
-			r := &Reference{}
-			any.ToVal(r)
-			link.SetReference(r)
-		} else {
-			s := &Link{}
-			any.ToVal(s)
-			link.SetLink(s)
+	value := iter.ReadAny()
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
+	}
+	wrapper := (*ReferenceableLink)(ptr)
+	if value.ValueType() == jsoniter.NilValue {
+		wrapper.ReferenceableLink = nil
+		return
+	}
+	if value.ValueType() != jsoniter.ObjectValue {
+		iter.ReportError("ReferenceableLinkCodec.Decode", "expected an object or null")
+		return
+	}
+	ref := value.Get("$ref")
+	switch ref.ValueType() {
+	case jsoniter.StringValue:
+		reference := &Reference{}
+		if decodeJSONValue(iter, value, reference) {
+			wrapper.SetReference(reference)
 		}
+	case jsoniter.InvalidValue:
+		inline := &Link{}
+		if decodeJSONValue(iter, value, inline) {
+			wrapper.SetLink(inline)
+		}
+	default:
+		iter.ReportError("ReferenceableLinkCodec.Decode", "$ref must be a string")
 	}
 }
 
 func (codec *ReferenceableLinkCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
-	link := (*ReferenceableLink)(ptr)
-	if s := link.GetLink(); s != nil {
-		stream.WriteVal(s)
-	} else if r := link.GetReference(); r != nil {
-		stream.WriteVal(r)
+	wrapper := (*ReferenceableLink)(ptr)
+	if value := wrapper.GetLink(); value != nil {
+		stream.WriteVal(value)
+	} else if reference := wrapper.GetReference(); reference != nil {
+		stream.WriteVal(reference)
+	} else {
+		stream.WriteNil()
 	}
 }
 
 func (codec *ReferenceableLinkCodec) IsEmpty(ptr unsafe.Pointer) bool {
-	return ((*ReferenceableLink)(ptr)).ReferenceableLink == nil
+	wrapper := (*ReferenceableLink)(ptr)
+	return wrapper == nil || wrapper.ReferenceableLink == nil
 }

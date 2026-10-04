@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"io"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -15,31 +16,48 @@ type ReferenceableRequestBodyCodec struct {
 }
 
 func (codec *ReferenceableRequestBodyCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	any := iter.ReadAny()
-	requestBody := (*ReferenceableRequestBody)(ptr)
-	if any.ValueType() == jsoniter.ObjectValue {
-		ref := any.Get("$ref")
-		if ref.ValueType() == jsoniter.StringValue {
-			r := &Reference{}
-			any.ToVal(r)
-			requestBody.SetReference(r)
-		} else {
-			r := &RequestBody{}
-			any.ToVal(r)
-			requestBody.SetRequestBody(r)
+	value := iter.ReadAny()
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
+	}
+	wrapper := (*ReferenceableRequestBody)(ptr)
+	if value.ValueType() == jsoniter.NilValue {
+		wrapper.ReferenceableRequestBody = nil
+		return
+	}
+	if value.ValueType() != jsoniter.ObjectValue {
+		iter.ReportError("ReferenceableRequestBodyCodec.Decode", "expected an object or null")
+		return
+	}
+	ref := value.Get("$ref")
+	switch ref.ValueType() {
+	case jsoniter.StringValue:
+		reference := &Reference{}
+		if decodeJSONValue(iter, value, reference) {
+			wrapper.SetReference(reference)
 		}
+	case jsoniter.InvalidValue:
+		inline := &RequestBody{}
+		if decodeJSONValue(iter, value, inline) {
+			wrapper.SetRequestBody(inline)
+		}
+	default:
+		iter.ReportError("ReferenceableRequestBodyCodec.Decode", "$ref must be a string")
 	}
 }
 
 func (codec *ReferenceableRequestBodyCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
-	requestBody := (*ReferenceableRequestBody)(ptr)
-	if r := requestBody.GetRequestBody(); r != nil {
-		stream.WriteVal(r)
-	} else if r := requestBody.GetReference(); r != nil {
-		stream.WriteVal(r)
+	wrapper := (*ReferenceableRequestBody)(ptr)
+	if value := wrapper.GetRequestBody(); value != nil {
+		stream.WriteVal(value)
+	} else if reference := wrapper.GetReference(); reference != nil {
+		stream.WriteVal(reference)
+	} else {
+		stream.WriteNil()
 	}
 }
 
 func (codec *ReferenceableRequestBodyCodec) IsEmpty(ptr unsafe.Pointer) bool {
-	return ((*ReferenceableRequestBody)(ptr)).ReferenceableRequestBody == nil
+	wrapper := (*ReferenceableRequestBody)(ptr)
+	return wrapper == nil || wrapper.ReferenceableRequestBody == nil
 }

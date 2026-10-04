@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -33,6 +34,31 @@ func TestExpression_Format(t *testing.T) {
 		str := expr.Format()
 		assert.Equal(t, strs[i], str, "expect to %s, but %s", strs[i], str)
 	}
+}
+
+func TestExpressionParseBoundaries(t *testing.T) {
+	for _, input := range []string{"$url", "$method", "$statusCode", "$request.header.accept", "$request.query.id", "$request.path.id", "$response.body#/items/0"} {
+		t.Run(input, func(t *testing.T) {
+			expression, err := ParseExpression(input)
+			require.NoError(t, err)
+			assert.Equal(t, input, expression.Format())
+			assert.Equal(t, input, expression.ToString())
+		})
+	}
+	for _, input := range []string{"", "$", "$ur", "$url.extra", "$methods", "$status", "$request", "$request.unknown", "$response", "$response.unknown", "invalid"} {
+		t.Run("invalid "+input, func(t *testing.T) {
+			expression := &Expression{Type: Expression_TYPE_METHOD}
+			assert.Error(t, expression.Parse(input))
+			assert.Equal(t, "$method", expression.Format(), "failed parsing must retain the old value")
+		})
+	}
+	expression, err := ParseExpression("$request.path.id")
+	require.NoError(t, err)
+	require.NoError(t, expression.Parse("$url"))
+	assert.Nil(t, expression.Source, "a simple expression must clear the previous source")
+	assert.Equal(t, "$url", expression.Format())
+	assert.Empty(t, (*Expression)(nil).Format())
+	assert.NoError(t, (*Expression)(nil).Parse("$url"))
 }
 
 func TestExpression_Parse(t *testing.T) {

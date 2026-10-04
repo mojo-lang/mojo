@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path"
-	"reflect"
 	"strings"
 	"time"
 
@@ -238,15 +237,9 @@ func (x *OpenAPI) CheckVersion(version string) bool {
 func (x *OpenAPI) GetOperation(id string) (path string, method string, operation *Operation, err error) {
 	if x != nil && x.Paths != nil {
 		for k, v := range x.Paths.Vals {
-			for _, method = range []string{"Get", "Put", "Post", "Delete", "Options", "Head", "Patch", "Trace"} {
-				ok := false
-				op := reflect.ValueOf(v).Elem().FieldByName(method)
-				if !op.IsNil() {
-					if operation, ok = op.Interface().(*Operation); ok && operation.OperationId == id {
-						path = k
-						method = strings.ToUpper(method)
-						return
-					}
+			for _, op := range v.GetOperations() {
+				if op.Operation.OperationId == id {
+					return k, op.Method, op.Operation, nil
 				}
 			}
 		}

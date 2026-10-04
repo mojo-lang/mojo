@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"io"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -17,11 +18,19 @@ type ExpressionStringCodec struct {
 
 func (codec *ExpressionStringCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
 	any := iter.ReadAny()
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
+	}
 	e := (*Expression)(ptr)
-	if any.ValueType() == jsoniter.StringValue {
+	switch any.ValueType() {
+	case jsoniter.StringValue:
 		if err := e.Parse(any.ToString()); err != nil {
 			iter.ReportError("ExpressionStringCodec.Decode", err.Error())
 		}
+	case jsoniter.NilValue:
+		e.Type, e.Source = Expression_TYPE_UNSPECIFIED, nil
+	default:
+		iter.ReportError("ExpressionStringCodec.Decode", "expected a string or null")
 	}
 }
 

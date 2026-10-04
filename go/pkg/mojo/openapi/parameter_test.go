@@ -20,3 +20,22 @@ func TestParameter_SupplementExample(t *testing.T) {
 	param.SupplementExample(nil)
 	assert.Nil(t, param.Example)
 }
+
+func TestParameterExamplePreservation(t *testing.T) {
+	explicit := core.NewStringValue("explicit")
+	parameter := &Parameter{Schema: exampleSchema(), Example: explicit}
+	parameter.SupplementExample(nil)
+	assert.Same(t, explicit, parameter.Example)
+	parameter.GenerateExample(nil)
+	assert.Equal(t, "generated", parameter.Example.GetString())
+	parameter.Example = nil
+	parameter.Examples = map[string]*ReferenceableExample{"saved": NewReferenceableExample(&Example{Value: explicit})}
+	parameter.SupplementExample(nil)
+	assert.Nil(t, parameter.Example)
+	assert.NotPanics(t, func() {
+		(*Parameter)(nil).GenerateExample(nil)
+		(*Parameter)(nil).SupplementExample(nil)
+		(&Parameter{}).GenerateExample(nil)
+		(&Parameter{}).SupplementExample(nil)
+	})
+}

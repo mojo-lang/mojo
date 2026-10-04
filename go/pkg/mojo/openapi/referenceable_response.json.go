@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"io"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -15,31 +16,48 @@ type ReferenceableResponseCodec struct {
 }
 
 func (codec *ReferenceableResponseCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	any := iter.ReadAny()
-	response := (*ReferenceableResponse)(ptr)
-	if any.ValueType() == jsoniter.ObjectValue {
-		ref := any.Get("$ref")
-		if ref.ValueType() == jsoniter.StringValue {
-			r := &Reference{}
-			any.ToVal(r)
-			response.SetReference(r)
-		} else {
-			s := &Response{}
-			any.ToVal(s)
-			response.SetResponse(s)
+	value := iter.ReadAny()
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
+	}
+	wrapper := (*ReferenceableResponse)(ptr)
+	if value.ValueType() == jsoniter.NilValue {
+		wrapper.ReferenceableResponse = nil
+		return
+	}
+	if value.ValueType() != jsoniter.ObjectValue {
+		iter.ReportError("ReferenceableResponseCodec.Decode", "expected an object or null")
+		return
+	}
+	ref := value.Get("$ref")
+	switch ref.ValueType() {
+	case jsoniter.StringValue:
+		reference := &Reference{}
+		if decodeJSONValue(iter, value, reference) {
+			wrapper.SetReference(reference)
 		}
+	case jsoniter.InvalidValue:
+		inline := &Response{}
+		if decodeJSONValue(iter, value, inline) {
+			wrapper.SetResponse(inline)
+		}
+	default:
+		iter.ReportError("ReferenceableResponseCodec.Decode", "$ref must be a string")
 	}
 }
 
 func (codec *ReferenceableResponseCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
-	response := (*ReferenceableResponse)(ptr)
-	if s := response.GetResponse(); s != nil {
-		stream.WriteVal(s)
-	} else if r := response.GetReference(); r != nil {
-		stream.WriteVal(r)
+	wrapper := (*ReferenceableResponse)(ptr)
+	if value := wrapper.GetResponse(); value != nil {
+		stream.WriteVal(value)
+	} else if reference := wrapper.GetReference(); reference != nil {
+		stream.WriteVal(reference)
+	} else {
+		stream.WriteNil()
 	}
 }
 
 func (codec *ReferenceableResponseCodec) IsEmpty(ptr unsafe.Pointer) bool {
-	return ((*ReferenceableResponse)(ptr)).ReferenceableResponse == nil
+	wrapper := (*ReferenceableResponse)(ptr)
+	return wrapper == nil || wrapper.ReferenceableResponse == nil
 }

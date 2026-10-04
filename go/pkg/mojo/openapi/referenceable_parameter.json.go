@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"io"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -15,31 +16,48 @@ type ReferenceableParameterCodec struct {
 }
 
 func (codec *ReferenceableParameterCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	any := iter.ReadAny()
-	parameter := (*ReferenceableParameter)(ptr)
-	if any.ValueType() == jsoniter.ObjectValue {
-		ref := any.Get("$ref")
-		if ref.ValueType() == jsoniter.StringValue {
-			r := &Reference{}
-			any.ToVal(r)
-			parameter.SetReference(r)
-		} else {
-			s := &Parameter{}
-			any.ToVal(s)
-			parameter.SetParameter(s)
+	value := iter.ReadAny()
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
+	}
+	wrapper := (*ReferenceableParameter)(ptr)
+	if value.ValueType() == jsoniter.NilValue {
+		wrapper.ReferenceableParameter = nil
+		return
+	}
+	if value.ValueType() != jsoniter.ObjectValue {
+		iter.ReportError("ReferenceableParameterCodec.Decode", "expected an object or null")
+		return
+	}
+	ref := value.Get("$ref")
+	switch ref.ValueType() {
+	case jsoniter.StringValue:
+		reference := &Reference{}
+		if decodeJSONValue(iter, value, reference) {
+			wrapper.SetReference(reference)
 		}
+	case jsoniter.InvalidValue:
+		inline := &Parameter{}
+		if decodeJSONValue(iter, value, inline) {
+			wrapper.SetParameter(inline)
+		}
+	default:
+		iter.ReportError("ReferenceableParameterCodec.Decode", "$ref must be a string")
 	}
 }
 
 func (codec *ReferenceableParameterCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
-	parameter := (*ReferenceableParameter)(ptr)
-	if s := parameter.GetParameter(); s != nil {
-		stream.WriteVal(s)
-	} else if r := parameter.GetReference(); r != nil {
-		stream.WriteVal(r)
+	wrapper := (*ReferenceableParameter)(ptr)
+	if value := wrapper.GetParameter(); value != nil {
+		stream.WriteVal(value)
+	} else if reference := wrapper.GetReference(); reference != nil {
+		stream.WriteVal(reference)
+	} else {
+		stream.WriteNil()
 	}
 }
 
 func (codec *ReferenceableParameterCodec) IsEmpty(ptr unsafe.Pointer) bool {
-	return ((*ReferenceableParameter)(ptr)).ReferenceableParameter == nil
+	wrapper := (*ReferenceableParameter)(ptr)
+	return wrapper == nil || wrapper.ReferenceableParameter == nil
 }

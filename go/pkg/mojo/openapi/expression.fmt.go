@@ -38,16 +38,22 @@ func (x *Expression) Parse(value string) error {
 		if len(value) >= 4 {
 			switch value[0:4] {
 			case urlExprType:
+				if value != urlExprType {
+					return core.NewMalformedSyntaxError("invalid expression url type: %s", value)
+				}
 				x.Type = Expression_TYPE_URL
+				x.Source = nil
 			case "$met":
 				if value == methodExprType {
 					x.Type = Expression_TYPE_METHOD
+					x.Source = nil
 				} else {
 					return core.NewMalformedSyntaxError("invalid expression method type: %s", value)
 				}
 			case "$sta":
 				if value == statusCodeExprType {
 					x.Type = Expression_TYPE_STATUS_CODE
+					x.Source = nil
 				} else {
 					return core.NewMalformedSyntaxError("invalid expression statusCode type: %s", value)
 				}

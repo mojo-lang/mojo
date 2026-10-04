@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -59,8 +60,10 @@ func EasyLint(spec []byte) *LintResult {
 			}
 
 			operationPath := strings.Join([]string{"$.paths", path, method, "parameters"}, ".")
+			indexedPath := fmt.Sprintf("$.paths['%s'].%s.parameters", path, method)
 			for _, r := range result.Results {
-				if r.Path != operationPath {
+				if r.Path != operationPath && r.Path != indexedPath &&
+					!strings.HasPrefix(r.Path, operationPath+"[") && !strings.HasPrefix(r.Path, indexedPath+"[") {
 					continue
 				}
 

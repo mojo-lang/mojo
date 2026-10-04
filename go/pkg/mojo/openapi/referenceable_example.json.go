@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"io"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -15,31 +16,48 @@ type ReferenceableExampleCodec struct {
 }
 
 func (codec *ReferenceableExampleCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	any := iter.ReadAny()
-	example := (*ReferenceableExample)(ptr)
-	if any.ValueType() == jsoniter.ObjectValue {
-		ref := any.Get("$ref")
-		if ref.ValueType() == jsoniter.StringValue {
-			r := &Reference{}
-			any.ToVal(r)
-			example.SetReference(r)
-		} else {
-			s := &Example{}
-			any.ToVal(s)
-			example.SetExample(s)
+	value := iter.ReadAny()
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
+	}
+	wrapper := (*ReferenceableExample)(ptr)
+	if value.ValueType() == jsoniter.NilValue {
+		wrapper.ReferenceableExample = nil
+		return
+	}
+	if value.ValueType() != jsoniter.ObjectValue {
+		iter.ReportError("ReferenceableExampleCodec.Decode", "expected an object or null")
+		return
+	}
+	ref := value.Get("$ref")
+	switch ref.ValueType() {
+	case jsoniter.StringValue:
+		reference := &Reference{}
+		if decodeJSONValue(iter, value, reference) {
+			wrapper.SetReference(reference)
 		}
+	case jsoniter.InvalidValue:
+		inline := &Example{}
+		if decodeJSONValue(iter, value, inline) {
+			wrapper.SetExample(inline)
+		}
+	default:
+		iter.ReportError("ReferenceableExampleCodec.Decode", "$ref must be a string")
 	}
 }
 
 func (codec *ReferenceableExampleCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
-	example := (*ReferenceableExample)(ptr)
-	if s := example.GetExample(); s != nil {
-		stream.WriteVal(s)
-	} else if r := example.GetReference(); r != nil {
-		stream.WriteVal(r)
+	wrapper := (*ReferenceableExample)(ptr)
+	if value := wrapper.GetExample(); value != nil {
+		stream.WriteVal(value)
+	} else if reference := wrapper.GetReference(); reference != nil {
+		stream.WriteVal(reference)
+	} else {
+		stream.WriteNil()
 	}
 }
 
 func (codec *ReferenceableExampleCodec) IsEmpty(ptr unsafe.Pointer) bool {
-	return ((*ReferenceableExample)(ptr)).ReferenceableExample == nil
+	wrapper := (*ReferenceableExample)(ptr)
+	return wrapper == nil || wrapper.ReferenceableExample == nil
 }

@@ -60,7 +60,7 @@ func (x *Schema) ValidateValue(value *core.Value, index map[string]*Schema) erro
 				return fmt.Errorf("the example value type should only be integer")
 			}
 		case Schema_TYPE_NUMBER:
-			if value.GetKind() == core.ValueKind_VALUE_KIND_NUMBER {
+			if value.GetKind() == core.ValueKind_VALUE_KIND_NUMBER || value.GetKind() == core.ValueKind_VALUE_KIND_INTEGER {
 				return nil
 			} else if value.GetKind() == core.ValueKind_VALUE_KIND_STRING {
 				if _, err := strconv.ParseFloat(value.GetString(), 64); err != nil {
@@ -94,7 +94,7 @@ func (x *Schema) ValidateValue(value *core.Value, index map[string]*Schema) erro
 			}
 		case Schema_TYPE_OBJECT:
 			if value.GetKind() == core.ValueKind_VALUE_KIND_OBJECT {
-				vs := value.GetObject().ToMap().(map[string]*core.Value)
+				vs := value.GetObject().GetVals()
 				if len(x.Properties) > 0 { // struct
 					for k, v := range vs {
 						if s, ok := x.Properties[k]; ok {
@@ -248,6 +248,9 @@ func (x *Schema) Dependencies(index map[string]*Schema) []*Schema {
 func (x *Schema) appendSchema(schema *ReferenceableSchema, index map[string]*Schema, duplicates map[string]bool) []*Schema {
 	var dependencies []*Schema
 	s := schema.GetSchemaOf(index)
+	if s == nil {
+		return dependencies
+	}
 
 	if duplicates[s.Title] {
 		return dependencies
@@ -274,6 +277,9 @@ func (x *Schema) appendSchema(schema *ReferenceableSchema, index map[string]*Sch
 
 func (x *Schema) dependencies(index map[string]*Schema, duplicates map[string]bool) []*Schema {
 	var dependencies []*Schema
+	if x == nil {
+		return dependencies
+	}
 
 	if x.Type == Schema_TYPE_ARRAY {
 		if x.Title != core.ValuesTypeFullName {

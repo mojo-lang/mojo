@@ -18,15 +18,32 @@ type ReferenceCodec struct {
 
 func (codec *ReferenceCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
 	any := iter.ReadAny()
-	r := (*Reference)(ptr)
-	if any.ValueType() == jsoniter.ObjectValue {
-		ref := any.Get("$ref").ToString()
-		if url, err := core.NewUrl(ref); err != nil {
-			iter.ReportError("ReferenceCodec.Decode", err.Error())
-		} else {
-			r.Ref = url
-		}
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
 	}
+	r := (*Reference)(ptr)
+	if any.ValueType() == jsoniter.NilValue {
+		r.Ref, r.Summary, r.Description = nil, "", nil
+		return
+	}
+	if any.ValueType() != jsoniter.ObjectValue || any.Get("$ref").ValueType() != jsoniter.StringValue {
+		iter.ReportError("ReferenceCodec.Decode", "expected an object with a string $ref")
+		return
+	}
+	var value struct {
+		Ref         string          `json:"$ref"`
+		Summary     string          `json:"summary"`
+		Description *CachedDocument `json:"description"`
+	}
+	if !decodeJSONValue(iter, any, &value) {
+		return
+	}
+	url, err := core.NewUrl(value.Ref)
+	if err != nil {
+		iter.ReportError("ReferenceCodec.Decode", err.Error())
+		return
+	}
+	r.Ref, r.Summary, r.Description = url, value.Summary, value.Description
 }
 
 func (codec *ReferenceCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
@@ -42,15 +59,19 @@ func (codec *ReferenceCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream)
 			stream.WriteObjectField("summary")
 			stream.WriteVal(reference.Summary)
 		}
+		if reference.Description != nil {
+			stream.WriteMore()
+			stream.WriteObjectField("description")
+			stream.WriteVal(reference.Description)
+		}
 
 		stream.WriteObjectEnd()
-
-		if stream.Error != nil && stream.Error != io.EOF {
-			// stream.Error = fmt.Errorf("%v.%s", encoder.typ, stream.Error.Error())
-		}
+	} else {
+		stream.WriteNil()
 	}
 }
 
 func (codec *ReferenceCodec) IsEmpty(ptr unsafe.Pointer) bool {
-	return ((*Reference)(ptr)).Ref == nil
+	reference := (*Reference)(ptr)
+	return reference == nil || reference.Ref == nil
 }

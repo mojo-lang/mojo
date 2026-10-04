@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"io"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -17,12 +18,22 @@ type CachedDocumentCodec struct {
 
 func (codec *CachedDocumentCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
 	any := iter.ReadAny()
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
+	}
 	doc := (*CachedDocument)(ptr)
-	if any.ValueType() == jsoniter.ObjectValue {
-		doc.Val = &document.Document{}
-		any.ToVal(doc.Val)
-	} else if any.ValueType() == jsoniter.StringValue {
-		doc.Cache = any.ToString()
+	switch any.ValueType() {
+	case jsoniter.ObjectValue:
+		value := &document.Document{}
+		if decodeJSONValue(iter, any, value) {
+			doc.Val, doc.Cache = value, ""
+		}
+	case jsoniter.StringValue:
+		doc.Val, doc.Cache = nil, any.ToString()
+	case jsoniter.NilValue:
+		doc.Val, doc.Cache = nil, ""
+	default:
+		iter.ReportError("CachedDocumentCodec.Decode", "expected a string, document object, or null")
 	}
 }
 

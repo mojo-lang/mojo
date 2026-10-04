@@ -16,3 +16,16 @@ func TestComponents_GetSchema(t *testing.T) {
 		assert.Equal(t, "Foo", schema.Title)
 	}
 }
+
+func TestComponentsMissingSchema(t *testing.T) {
+	components := NewComponents()
+	components.Schemas["Pet"] = &Schema{Title: "Pet"}
+	for _, input := range []string{"#/components/schemas/Missing", "#/components/parameters/Pet", "#/schemas/Pet", ""} {
+		url, err := core.NewUrl(input)
+		assert.NoError(t, err)
+		assert.Nil(t, components.GetSchema(url), input)
+	}
+	assert.Nil(t, components.GetSchema(nil))
+	assert.Nil(t, (*Components)(nil).GetSchema(nil))
+	assert.Empty(t, NewComponents().Schemas)
+}

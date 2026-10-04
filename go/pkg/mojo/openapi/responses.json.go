@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"io"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -15,25 +16,38 @@ type ResponsesCodec struct {
 }
 
 func (codec *ResponsesCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	any := iter.ReadAny()
-	responses := (*Responses)(ptr)
-	if any.ValueType() == jsoniter.ObjectValue {
-		if responses.Vals == nil {
-			responses.Vals = make(map[string]*ReferenceableResponse)
-		}
-		any.ToVal(&responses.Vals)
+	value := iter.ReadAny()
+	if iter.Error != nil && iter.Error != io.EOF {
+		return
+	}
+	target := (*Responses)(ptr)
+	if value.ValueType() == jsoniter.NilValue {
+		target.Vals = nil
+		return
+	}
+	if value.ValueType() != jsoniter.ObjectValue {
+		iter.ReportError("ResponsesCodec.Decode", "expected an object or null")
+		return
+	}
+	values := make(map[string]*ReferenceableResponse, len(target.Vals))
+	for key, item := range target.Vals {
+		values[key] = item
+	}
+	if decodeJSONValue(iter, value, &values) {
+		target.Vals = values
 	}
 }
 
 func (codec *ResponsesCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
-	responses := (*Responses)(ptr)
-
-	if responses != nil && len(responses.Vals) > 0 {
-		stream.WriteVal(responses.Vals)
+	target := (*Responses)(ptr)
+	if target != nil && len(target.Vals) > 0 {
+		stream.WriteVal(target.Vals)
+	} else {
+		stream.WriteEmptyObject()
 	}
 }
 
 func (codec *ResponsesCodec) IsEmpty(ptr unsafe.Pointer) bool {
-	responses := (*Responses)(ptr)
-	return responses == nil || len(responses.Vals) == 0
+	target := (*Responses)(ptr)
+	return target == nil || len(target.Vals) == 0
 }
