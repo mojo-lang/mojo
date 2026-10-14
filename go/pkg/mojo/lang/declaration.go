@@ -23,6 +23,7 @@ const (
 	FunctionDeclName       = "FunctionDecl"
 	ConstructorDeclName    = "ConstructorDecl"
 	GenericParameterName   = "GenericParameter"
+	GroupDeclName          = "GroupDecl"
 )
 
 var declInfos map[reflect.Type]StructJsonInfo
@@ -42,6 +43,7 @@ func init() {
 		FunctionDecl{},
 		ConstructorDecl{},
 		GenericParameter{},
+		GroupDecl{},
 	)
 }
 

@@ -248,7 +248,7 @@ func (m *Field) SetNumber(number int32) *Field {
 
 func (m *Field) SetType(t string, options ...string) *Field {
 	if m != nil && m.Proto != nil {
-		typ := protoType(t)
+		typ := protoType(t, options...)
 		m.Proto.Type = &typ
 	}
 	return m
@@ -256,7 +256,7 @@ func (m *Field) SetType(t string, options ...string) *Field {
 
 func (m *Field) SetTypeName(name string, options ...string) *Field {
 	if m != nil && m.Proto != nil {
-		name = protoTypeName(name)
+		name = protoTypeName(name, options...)
 		m.Proto.TypeName = &name
 	}
 	return m
@@ -288,7 +288,7 @@ func protoType(t string, options ...string) descriptorpb.FieldDescriptorProto_Ty
 		}
 	case core.UInt64TypeName, core.UInt64TypeFullName:
 		if core.NewStringValues(options...).Contains(FixedAttributeName) {
-			return descriptorpb.FieldDescriptorProto_TYPE_FIXED32
+			return descriptorpb.FieldDescriptorProto_TYPE_FIXED64
 		}
 	case core.Int32TypeName, core.Int32TypeFullName:
 		values := core.NewStringValues(options...)

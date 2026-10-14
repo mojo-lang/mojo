@@ -27,7 +27,7 @@ func ApplyFilter(d *gorm.DB, filter *lang.Expression, fields Fields) (*gorm.DB, 
 // GenerateExpressionQuery
 // dialector: "postgres", "mysql", "sqlite"
 func GenerateExpressionQuery(dialector string, filter *lang.Expression, fields Fields) (string, []interface{}, error) {
-	if filter == nil && filter.Expression == nil {
+	if filter == nil || filter.Expression == nil {
 		return "", nil, nil
 	}
 
@@ -140,17 +140,21 @@ func GenerateExpressionQuery(dialector string, filter *lang.Expression, fields F
 						return "", nil, err
 					}
 
-					return lq + " BETWEEN " + blq + " AND " + brq, append(lbs, append(blbs, brbs...)...), nil
+					operator := " BETWEEN "
+					if op.Symbol == "!in" {
+						operator = " NOT BETWEEN "
+					}
+					return lq + operator + blq + " AND " + brq, append(lbs, append(blbs, brbs...)...), nil
 				} else if a := binary.RightArgument.GetArrayLiteralExpr(); a != nil {
 					rq, rbs, err := GenerateExpressionQuery(dialector, binary.RightArgument, fields)
 					if err != nil {
 						return "", nil, err
 					}
 					return lq + " " + toSQLOperator(dialector, op.Symbol, fields) + " " + rq, append(lbs, rbs...), nil
-				} else if s := binary.RightArgument.GetStringLiteralExpr(); isGeometry(s.Value) {
+				} else if s := binary.RightArgument.GetStringLiteralExpr(); s != nil && isGeometry(s.Value) {
 					return "ST_Within(" + lq + ", '" + s.Value + "')", lbs, nil
 				} else {
-					return "", nil, errors.New(fmt.Sprintf("not supported right argument (%s) in IN operator in SQL", b.RightArgument.String()))
+					return "", nil, errors.New(fmt.Sprintf("not supported right argument (%s) in IN operator in SQL", binary.RightArgument.String()))
 				}
 			case "&":
 				lq, lbs, err := GenerateExpressionQuery(dialector, binary.LeftArgument, fields)

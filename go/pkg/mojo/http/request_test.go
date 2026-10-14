@@ -1,12 +1,17 @@
 package http
 
 import (
+	"context"
+	"io"
 	"net/http"
+	"net/http/httptest"
 	"net/url"
+	"strings"
 	"testing"
 
 	"github.com/mojo-lang/mojo/go/pkg/mojo/core"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var getGoReq = &http.Request{
@@ -87,8 +92,45 @@ func TestRequest_SyncTo(t *testing.T) {
 	assert.Equal(t, getGoReq.Header["Foo"], req.Header["Foo"])
 }
 
-func TestRequest_SyncTo2(t *testing.T) {
+func TestRequestBodyRoundTrip(t *testing.T) {
+	url, err := core.NewUrl("https://example.com/item")
+	require.NoError(t, err)
+	for _, value := range []*core.Value{core.NewStringValue("hello"), core.NewBytesValue([]byte("hello"))} {
+		req := &Request{Method: Method_METHOD_POST, Url: url, Body: value}
+		standard, err := req.SyncTo()
+		require.NoError(t, err)
+		content, err := io.ReadAll(standard.Body)
+		require.NoError(t, err)
+		require.Equal(t, "hello", string(content))
+		standard.Body = io.NopCloser(strings.NewReader("reply"))
+		var restored Request
+		require.NoError(t, restored.SyncFrom(standard))
+		require.Equal(t, []byte("reply"), restored.Body.GetBytes())
+		require.Equal(t, Method_METHOD_POST, restored.Method)
+	}
+}
 
+func TestRequestDoAndCancellation(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusCreated)
+		_, _ = io.WriteString(w, "created")
+	}))
+	defer server.Close()
+	url, err := core.NewUrl(server.URL)
+	require.NoError(t, err)
+	req := &Request{Method: Method_METHOD_POST, Url: url}
+	response, err := req.Do(context.Background())
+	require.NoError(t, err)
+	require.Equal(t, int32(201), response.Status.Code)
+	require.Equal(t, []byte("created"), response.Body.GetBytes())
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	_, err = req.Do(ctx)
+	require.ErrorIs(t, err, context.Canceled)
+	_, err = (&Request{}).SyncTo()
+	require.Error(t, err)
+	_, err = (&Request{Url: url}).SyncTo()
+	require.Error(t, err)
 }
 
 func TestRequest_SyncFrom(t *testing.T) {

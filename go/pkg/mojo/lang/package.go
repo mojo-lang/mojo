@@ -85,7 +85,7 @@ func (x *Package) IsPadding() bool {
 	return x.Implicit && len(x.SourceFiles) == 0
 }
 
-var versionTag = regexp.MustCompile(`^(v[0-9]+)|(alpha[0-9]*)|(beta[0-9]*)`)
+var versionTag = regexp.MustCompile(`^(v[0-9]+|alpha[0-9]*|beta[0-9]*)$`)
 
 func (x *Package) IsVersionTag() bool {
 	if x != nil && versionTag.MatchString(x.Name) {
@@ -332,7 +332,7 @@ func (x *Package) directlyContainsService() bool {
 }
 
 func (x *Package) GetEntityNode(name string) *EntityNode {
-	if x != nil && x.EntityRelationSet != nil {
+	if x != nil {
 		typeName := GetTypeTypeName(name)
 		if node := x.EntityRelationSet.GetNode(typeName); node != nil {
 			return node

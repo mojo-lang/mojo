@@ -223,8 +223,9 @@ func (x *Headers) SyncTo(headers http.Header) *Headers {
 	if x != nil {
 		for key, values := range x.Vals {
 			if values != nil {
+				headers.Del(key)
 				for _, value := range values.Vals {
-					headers.Set(key, value)
+					headers.Add(key, value)
 				}
 			}
 		}

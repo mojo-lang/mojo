@@ -120,14 +120,15 @@ func GetBoolAttribute(attributes []*Attribute, name string) (bool, error) {
 func SetBoolAttribute(attributes []*Attribute, name string, value bool) []*Attribute {
 	for _, attribute := range attributes {
 		if attribute.IsSameName(name) {
-			if len(attribute.Arguments) > 0 {
-				attribute.Arguments[0].Value = NewBoolLiteralExpression(&BoolLiteralExpr{
-					Kind:     0,
-					Implicit: false,
-					Value:    value,
-				})
-				return attributes
+			if len(attribute.Arguments) == 0 {
+				attribute.Arguments = []*Argument{{}}
 			}
+			attribute.Arguments[0].Value = NewBoolLiteralExpression(&BoolLiteralExpr{
+				Kind:     0,
+				Implicit: false,
+				Value:    value,
+			})
+			return attributes
 		}
 	}
 
@@ -165,10 +166,11 @@ func GetIntegerAttribute(attributes []*Attribute, name string) (int64, error) {
 func SetIntegerAttribute(attributes []*Attribute, name string, value int64) []*Attribute {
 	for _, attribute := range attributes {
 		if attribute.IsSameName(name) {
-			if len(attribute.Arguments) > 0 {
-				attribute.Arguments[0] = NewIntegerLiteralArgument(NewIntegerLiteralExpr(value))
-				return attributes
+			if len(attribute.Arguments) == 0 {
+				attribute.Arguments = []*Argument{{}}
 			}
+			attribute.Arguments[0] = NewIntegerLiteralArgument(NewIntegerLiteralExpr(value))
+			return attributes
 		}
 	}
 
@@ -220,14 +222,15 @@ func GetStringValuesAttribute(attributes []*Attribute, name string) ([]string, e
 func SetStringAttribute(attributes []*Attribute, name string, value string) []*Attribute {
 	for _, attribute := range attributes {
 		if attribute.IsSameName(name) {
-			if len(attribute.Arguments) > 0 {
-				attribute.Arguments[0] = NewStringLiteralArgument(&StringLiteralExpr{
-					Kind:     0,
-					Implicit: false,
-					Value:    value,
-				})
-				return attributes
+			if len(attribute.Arguments) == 0 {
+				attribute.Arguments = []*Argument{{}}
 			}
+			attribute.Arguments[0] = NewStringLiteralArgument(&StringLiteralExpr{
+				Kind:     0,
+				Implicit: false,
+				Value:    value,
+			})
+			return attributes
 		}
 	}
 

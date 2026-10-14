@@ -49,7 +49,7 @@ func NewServiceFrom(file *File, proto *descriptorpb.ServiceDescriptorProto) *Ser
 	}
 
 	for _, method := range proto.Method {
-		service.AppendMethod(NewMethodFrom(service, method))
+		service.Methods = append(service.Methods, NewMethodFrom(service, method))
 	}
 
 	return service

@@ -2,6 +2,7 @@ package geom
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -15,6 +16,23 @@ func TestBox_Extend(t *testing.T) {
 	extend := box1.Extend(&box2)
 	assert.Equal(t, 121.1234, extend.LeftBottom.Longitude)
 	assert.Equal(t, 123.1234, extend.RightTop.Longitude)
+}
+
+func TestBoundingBoxParsingRejectsInvalidInput(t *testing.T) {
+	for _, input := range []string{"", "garbage", "[]", "[1,2,3]", "[[1,2],[3]]"} {
+		box, err := NewBoundingBoxFromString(input)
+		require.Error(t, err, input)
+		require.Nil(t, box)
+	}
+	box, err := NewBoundingBoxFromString("[3,4,1,2]")
+	require.NoError(t, err)
+	require.True(t, box.LeftBottom.Equal(NewLngLat(1, 2)))
+	require.True(t, box.RightTop.Equal(NewLngLat(3, 4)))
+	require.True(t, box.Center().Equal(NewLngLat(2, 3)))
+	require.Len(t, box.Vertexes(), 4)
+	require.Nil(t, box.Vertex(-1))
+	require.Nil(t, box.Vertex(4))
+	require.True(t, box.ToPolygon().LineStrings[0].IsClosed())
 }
 
 func TestBox_GeoHashCovering(t *testing.T) {

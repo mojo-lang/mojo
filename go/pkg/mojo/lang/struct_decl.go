@@ -141,7 +141,7 @@ func (x *StructDecl) GetBoolAttribute(name string) (bool, error) {
 func (x *StructDecl) SetBoolAttribute(name string, value bool) *Attribute {
 	if x != nil {
 		x.Attributes = SetBoolAttribute(x.Attributes, name, value)
-		return x.Attributes[len(x.Attributes)-1]
+		return GetAttribute(x.Attributes, name)
 	}
 	return nil
 }
@@ -169,7 +169,7 @@ func (x *StructDecl) GetIntegerAttribute(name string) (int64, error) {
 func (x *StructDecl) SetIntegerAttribute(name string, value int64) *Attribute {
 	if x != nil {
 		x.Attributes = SetIntegerAttribute(x.Attributes, name, value)
-		return x.Attributes[len(x.Attributes)-1]
+		return GetAttribute(x.Attributes, name)
 	}
 	return nil
 }
@@ -196,7 +196,7 @@ func (x *StructDecl) GetStringAttribute(name string) (string, error) {
 func (x *StructDecl) SetStringAttribute(name string, value string) *Attribute {
 	if x != nil {
 		x.Attributes = SetStringAttribute(x.Attributes, name, value)
-		return x.Attributes[len(x.Attributes)-1]
+		return GetAttribute(x.Attributes, name)
 	}
 	return nil
 }

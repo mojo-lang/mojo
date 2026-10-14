@@ -113,7 +113,7 @@ func (x *MultipartFormData) WriteTo(writer io.Writer) (int64, error) {
 				if bs, e := jsoniter.Marshal(part.Value); e != nil {
 					return 0, e
 				} else {
-					_, err = writer.Write(bs)
+					_, err = wr.Write(bs)
 				}
 			}
 			if err != nil {

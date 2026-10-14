@@ -19,7 +19,7 @@ func (x *Cookie) FromHttpCookie(cookie *http.Cookie) *Cookie {
 		x.MaxAge = int32(cookie.MaxAge)
 		x.Secure = cookie.Secure
 		x.HttpOnly = cookie.HttpOnly
-		x.SameSite = x.SameSite - 1
+		x.SameSite = SameSite(cookie.SameSite - 1)
 	}
 	return x
 }

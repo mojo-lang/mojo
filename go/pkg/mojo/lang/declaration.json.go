@@ -22,6 +22,10 @@ func (codec *DeclarationCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterato
 	if a.ValueType() == jsoniter.ObjectValue {
 		t := a.Get("@type").ToString()
 		switch t {
+		case GroupDeclName:
+			decl := &GroupDecl{}
+			a.ToVal(decl)
+			declaration.Declaration = &Declaration_GroupDecl{GroupDecl: decl}
 		case PackageDeclName:
 			decl := &PackageDecl{}
 			a.ToVal(decl)
@@ -86,6 +90,9 @@ func (codec *DeclarationCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Strea
 		typ := ""
 		var v reflect.Value
 		switch decl := declaration.Declaration.(type) {
+		case *Declaration_GroupDecl:
+			v = reflect.ValueOf(decl.GroupDecl).Elem()
+			typ = GroupDeclName
 		case *Declaration_PackageDecl:
 			v = reflect.ValueOf(decl.PackageDecl).Elem()
 			typ = PackageDeclName
@@ -127,7 +134,7 @@ func (codec *DeclarationCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Strea
 			typ = GenericParameterName
 		}
 
-		if v.IsValid() && !v.IsZero() {
+		if v.IsValid() {
 			stream.WriteObjectField("@type")
 			stream.WriteVal(typ)
 
@@ -150,7 +157,7 @@ func (codec *DeclarationCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Strea
 					k := field.Kind()
 					switch k {
 					case reflect.Map, reflect.Ptr, reflect.Interface, reflect.Struct, reflect.Slice:
-						if info.Encoder.IsEmpty(unsafe.Pointer(field.Pointer())) {
+						if info.Encoder.IsEmpty(field.Addr().UnsafePointer()) {
 							continue
 						}
 					}
@@ -167,6 +174,8 @@ func (codec *DeclarationCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Strea
 		if stream.Error != nil && stream.Error != io.EOF {
 			// stream.Error = fmt.Errorf("%v.%s", encoder.typ, stream.Error.Error())
 		}
+	} else {
+		stream.WriteNil()
 	}
 }
 

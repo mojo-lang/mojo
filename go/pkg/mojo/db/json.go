@@ -13,7 +13,7 @@ import (
 type JSONValuer struct{}
 
 func (v JSONValuer) Value(value interface{}) (driver.Value, error) {
-	if val := reflect.ValueOf(value); val.IsZero() {
+	if val := reflect.ValueOf(value); !val.IsValid() || val.IsZero() {
 		return nil, nil
 	}
 
@@ -26,7 +26,7 @@ func (s JSONScanner) Scan(value interface{}, src interface{}) error {
 	if src == nil {
 		return nil
 	}
-	if val := reflect.ValueOf(value); !val.IsValid() || (val.CanAddr() && val.IsNil()) {
+	if val := reflect.ValueOf(value); !val.IsValid() || (val.Kind() == reflect.Ptr && val.IsNil()) {
 		return nil
 	}
 

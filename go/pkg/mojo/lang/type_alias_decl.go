@@ -113,7 +113,7 @@ func (x *TypeAliasDecl) GetBoolAttribute(name string) (bool, error) {
 func (x *TypeAliasDecl) SetBoolAttribute(name string, value bool) *Attribute {
 	if x != nil {
 		x.Attributes = SetBoolAttribute(x.Attributes, name, value)
-		return x.Attributes[len(x.Attributes)-1]
+		return GetAttribute(x.Attributes, name)
 	}
 	return nil
 }
@@ -141,7 +141,7 @@ func (x *TypeAliasDecl) GetIntegerAttribute(name string) (int64, error) {
 func (x *TypeAliasDecl) SetIntegerAttribute(name string, value int64) *Attribute {
 	if x != nil {
 		x.Attributes = SetIntegerAttribute(x.Attributes, name, value)
-		return x.Attributes[len(x.Attributes)-1]
+		return GetAttribute(x.Attributes, name)
 	}
 	return nil
 }
@@ -168,7 +168,7 @@ func (x *TypeAliasDecl) GetStringAttribute(name string) (string, error) {
 func (x *TypeAliasDecl) SetStringAttribute(name string, value string) *Attribute {
 	if x != nil {
 		x.Attributes = SetStringAttribute(x.Attributes, name, value)
-		return x.Attributes[len(x.Attributes)-1]
+		return GetAttribute(x.Attributes, name)
 	}
 	return nil
 }

@@ -47,16 +47,20 @@ func NewMessageFrom(file *File, proto *descriptorpb.DescriptorProto) *Message {
 	//}
 
 	for _, enum := range proto.EnumType {
-		message.AppendInnerEnum(NewEnumFrom(file, enum))
+		wrapped := NewEnumFrom(file, enum)
+		wrapped.Parent = message
+		message.Enums = append(message.Enums, wrapped)
 	}
 	for _, msg := range proto.NestedType {
-		message.AppendMessage(NewMessageFrom(file, msg))
+		wrapped := NewMessageFrom(file, msg)
+		wrapped.Parent = message
+		message.Messages = append(message.Messages, wrapped)
 	}
 	for _, field := range proto.Field {
-		message.AppendField(NewFieldFrom(message, field))
+		message.Fields = append(message.Fields, NewFieldFrom(message, field))
 	}
 	for _, oneof := range proto.OneofDecl {
-		message.AppendOneof(NewOneofFrom(message, oneof))
+		message.Oneofs = append(message.Oneofs, NewOneofFrom(message, oneof))
 	}
 
 	// Resolve local references between fields and oneofs.

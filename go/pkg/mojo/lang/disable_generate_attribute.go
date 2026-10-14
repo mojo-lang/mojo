@@ -11,6 +11,9 @@ type GenerateOption map[string][]string
 func (g *GenerateOption) Parse(attribute *Attribute) error {
 	if g != nil && attribute != nil {
 		if mapLiteral := attribute.GetMapLiteralArgument(); mapLiteral != nil {
+			if *g == nil {
+				*g = make(GenerateOption)
+			}
 			for _, entry := range mapLiteral.Entries {
 				if null := entry.Value.GetNullLiteralExpr(); null != nil {
 					(*g)[entry.Key] = []string{}

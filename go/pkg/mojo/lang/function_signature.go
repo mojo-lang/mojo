@@ -25,7 +25,7 @@ func NewFunctionResult(result *NominalType) *FunctionSignature_Result {
 
 func (x *FunctionSignature) SetParameters(decls ...*ValueDecl) *FunctionSignature {
 	if x != nil && len(decls) > 0 {
-		if x.Parameter != nil {
+		if x.Parameter == nil {
 			x.Parameter = &FunctionSignature_Parameter{}
 		}
 		x.Parameter.Decls = decls
@@ -136,8 +136,8 @@ func (x *FunctionSignature) GetTerms() []interface{} {
 }
 
 func (x *FunctionSignature_Parameter) HasFollowingDocument() bool {
-	for _, param := range x.Decls {
-		if param.Document.Following {
+	for _, param := range x.GetDecls() {
+		if param.GetDocument().GetFollowing() {
 			return true
 		}
 	}
@@ -145,5 +145,5 @@ func (x *FunctionSignature_Parameter) HasFollowingDocument() bool {
 }
 
 func (x *FunctionSignature_Result) HasFollowingDocument() bool {
-	return x != nil && x.Type != nil && x.Type.Document.Following
+	return x.GetType().GetDocument().GetFollowing()
 }

@@ -163,6 +163,9 @@ func (codec *ExpressionCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream
 		case *Expression_FloatLiteralExpr:
 			v = reflect.ValueOf(exp.FloatLiteralExpr).Elem()
 			typ = FloatLiteralExprName
+		case *Expression_BoolLiteralExpr:
+			v = reflect.ValueOf(exp.BoolLiteralExpr).Elem()
+			typ = BoolLiteralExprName
 		case *Expression_StringLiteralExpr:
 			v = reflect.ValueOf(exp.StringLiteralExpr).Elem()
 			typ = StringLiteralExprName
@@ -243,7 +246,7 @@ func (codec *ExpressionCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream
 			typ = ErrorExprName
 		}
 
-		if v.IsValid() && !v.IsZero() {
+		if v.IsValid() {
 			stream.WriteObjectField("@type")
 			stream.WriteVal(typ)
 
@@ -266,7 +269,7 @@ func (codec *ExpressionCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream
 					k := field.Kind()
 					switch k {
 					case reflect.Map, reflect.Ptr, reflect.Interface, reflect.Struct, reflect.Slice:
-						if info.Encoder.IsEmpty(unsafe.Pointer(field.Pointer())) {
+						if info.Encoder.IsEmpty(field.Addr().UnsafePointer()) {
 							continue
 						}
 					}
@@ -283,6 +286,8 @@ func (codec *ExpressionCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream
 		if stream.Error != nil && stream.Error != io.EOF {
 			// stream.Error = fmt.Errorf("%v.%s", encoder.typ, stream.Error.Error())
 		}
+	} else {
+		stream.WriteNil()
 	}
 }
 

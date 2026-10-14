@@ -11,7 +11,10 @@ import (
 func init() {
 	jsoniter.RegisterTypeDecoder("lang.Statement", &StatementCodec{})
 	jsoniter.RegisterTypeEncoder("lang.Statement", &StatementCodec{})
+	stmtInfos = GetStructJsonInfos(jsoniter.Config{}, ReturnStmt{}, BreakStmt{}, ContinueStmt{}, MatchStmt{}, IfStmt{}, ForStmt{}, WhileStmt{}, RepeatStmt{}, BlockStmt{})
 }
+
+var stmtInfos map[reflect.Type]StructJsonInfo
 
 type StatementCodec struct {
 }
@@ -24,7 +27,7 @@ func (codec *StatementCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator)
 		switch t {
 		case PackageDeclName, ImportDeclName, EnumDeclName, StructDeclName, InterfaceDeclName, TypeAliasDeclName,
 			ConstantDeclName, VariableDeclName, AttributeDeclName, AttributeAliasDeclName, FunctionDeclName,
-			ConstructorDeclName, GenericParameterName:
+			ConstructorDeclName, GenericParameterName, GroupDeclName:
 			decl := &Declaration{}
 			a.ToVal(decl)
 			stmt.Statement = &Statement_Declaration{Declaration: decl}
@@ -68,6 +71,12 @@ func (codec *StatementCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator)
 			s := &BlockStmt{}
 			a.ToVal(s)
 			stmt.Statement = &Statement_BlockStmt{BlockStmt: s}
+		default:
+			expr := &Expression{}
+			a.ToVal(expr)
+			if expr.Expression != nil {
+				stmt.Statement = &Statement_Expression{Expression: expr}
+			}
 		}
 	}
 }
@@ -114,11 +123,11 @@ func (codec *StatementCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream)
 				typ = ReturnStmtName
 			}
 
-			if v.IsValid() && !v.IsZero() {
+			if v.IsValid() {
 				stream.WriteObjectField("@type")
 				stream.WriteVal(typ)
 
-				t := declInfos[v.Type()]
+				t := stmtInfos[v.Type()]
 
 				// iterator the fields
 				for i := 0; i < v.NumField(); i++ {
@@ -137,7 +146,7 @@ func (codec *StatementCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream)
 						k := field.Kind()
 						switch k {
 						case reflect.Map, reflect.Ptr, reflect.Interface, reflect.Struct, reflect.Slice:
-							if info.Encoder.IsEmpty(unsafe.Pointer(field.Pointer())) {
+							if info.Encoder.IsEmpty(field.Addr().UnsafePointer()) {
 								continue
 							}
 						}
@@ -155,6 +164,8 @@ func (codec *StatementCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream)
 				// stream.Error = fmt.Errorf("%v.%s", encoder.typ, stream.Error.Error())
 			}
 		}
+	} else {
+		stream.WriteNil()
 	}
 }
 

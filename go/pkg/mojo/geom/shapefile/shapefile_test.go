@@ -2,6 +2,7 @@ package shapefile
 
 import (
 	"github.com/stretchr/testify/assert"
+	"path/filepath"
 	"testing"
 )
 
@@ -16,10 +17,12 @@ func TestShapefile_WriteAll(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, features)
 
-	err = Shapefile{}.WriteAll(features, "./test_data/example_copy.shp")
+	output := filepath.Join(t.TempDir(), "example_copy.shp")
+	err = Shapefile{}.WriteAll(features, output)
 	assert.NoError(t, err)
 
-	newFeatures, err := Shapefile{}.ReadAll("./test_data/example_copy.shp")
+	newFeatures, err := Shapefile{}.ReadAll(output)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, newFeatures)
+	assert.Len(t, newFeatures, len(features))
 }

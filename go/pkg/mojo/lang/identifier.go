@@ -1,7 +1,6 @@
 package lang
 
 import (
-	"sort"
 	"strings"
 )
 
@@ -106,8 +105,8 @@ func (x *Identifier) EnclosingNames() []string {
 			names = append(names, enclosing.Name)
 			enclosing = enclosing.Enclosing
 		}
-		if len(names) > 0 {
-			sort.Sort(sort.Reverse(sort.StringSlice(names)))
+		for i, j := 0, len(names)-1; i < j; i, j = i+1, j-1 {
+			names[i], names[j] = names[j], names[i]
 		}
 		return names
 	}

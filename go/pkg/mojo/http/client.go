@@ -68,12 +68,12 @@ func Do(method Method, url string, headers *Headers, req interface{}, resp inter
 		switch r.Header.Get("Content-Encoding") {
 		case "gzip":
 			reader, err = gzip.NewReader(r.Body)
-			defer func() {
-				_ = reader.Close()
-			}()
 			if err != nil {
 				return errors.New("failed to read the gzip content")
 			}
+			defer func() {
+				_ = reader.Close()
+			}()
 		default:
 			reader = r.Body
 		}
@@ -84,8 +84,8 @@ func Do(method Method, url string, headers *Headers, req interface{}, resp inter
 		}
 
 		if len(content) > 0 && resp != nil {
-			if _, ok := resp.(*[]byte); ok {
-				resp = content
+			if result, ok := resp.(*[]byte); ok {
+				*result = content
 			} else {
 				if err = jsoniter.Unmarshal(content, resp); err != nil {
 					logs.Warnf("the response is: %s", logContent(content))

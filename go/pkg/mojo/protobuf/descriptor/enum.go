@@ -38,7 +38,7 @@ func NewEnumFrom(file *File, proto *descriptorpb.EnumDescriptorProto) *Enum {
 	}
 
 	for _, value := range proto.Value {
-		enum.AppendValue(NewEnumValueFrom(enum, value))
+		enum.Values = append(enum.Values, NewEnumValueFrom(enum, value))
 	}
 
 	return enum

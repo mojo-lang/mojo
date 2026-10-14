@@ -36,7 +36,7 @@ func NewImplicitFloatAttribute(pkg string, name string, value float64) *Attribut
 }
 
 func NewImplicitStringAttribute(pkg string, name string, value string) *Attribute {
-	return newStringAttribute(pkg, name, value, false)
+	return newStringAttribute(pkg, name, value, true)
 }
 
 // IsNumber return true if the attribute is number attribute

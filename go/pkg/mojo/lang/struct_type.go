@@ -116,6 +116,7 @@ func MergeFields(fields []*ValueDecl, merged []*ValueDecl) []*ValueDecl {
 	for _, field := range merged {
 		if f, ok := index[field.Name]; !ok {
 			fields = append(fields, field)
+			index[field.Name] = field
 		} else if f.Type.GetFullName() != field.Type.GetFullName() {
 			logs.Warnw("merge fields with same name but without same type, will skip it",
 				"name", field.Name,

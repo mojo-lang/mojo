@@ -87,13 +87,17 @@ func (m *InterfaceType) GetMethodGroups() map[string][]*FunctionDecl {
 
 	for _, function := range unprocessedFuncs {
 		name := pluralizing.Singular(function.Name)
+		var resource, suffix string
 		for group := range groups {
-			gn := "_" + group
-			if strings.HasSuffix(name, gn) {
-				function.SetImplicitStringAttribute(core.MethodAttributeName, strings.TrimSuffix(function.Name, gn))
-				function.SetImplicitStringAttribute(core.ResourceAttributeName, group)
-				groups[group] = append(groups[group], function)
+			gn := "_" + strcase.ToSnake(group)
+			if strings.HasSuffix(name, gn) && len(gn) > len(suffix) {
+				resource, suffix = group, gn
 			}
+		}
+		if resource != "" {
+			function.SetImplicitStringAttribute(core.MethodAttributeName, strings.TrimSuffix(name, suffix))
+			function.SetImplicitStringAttribute(core.ResourceAttributeName, resource)
+			groups[resource] = append(groups[resource], function)
 		}
 	}
 
@@ -103,6 +107,9 @@ func (m *InterfaceType) GetMethodGroups() map[string][]*FunctionDecl {
 func (x *FunctionDecl) parseStandardMethod() *MethodName {
 	if x != nil {
 		getMethodName := func(name string) *MethodName {
+			if len(x.Name) <= len(name)+1 {
+				return nil
+			}
 			return &MethodName{Method: name, Resource: strcase.ToCamel(pluralizing.Singular(x.Name[len(name)+1:]))}
 		}
 

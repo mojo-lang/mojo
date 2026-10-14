@@ -32,6 +32,7 @@ func (x *GeometryCollection) BoundingBox() *BoundingBox {
 				}
 			}
 		}
+		return box
 	}
 	return nil
 }
