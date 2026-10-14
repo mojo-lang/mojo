@@ -71,10 +71,10 @@ func ParsePackage(p interface{}, ctx context.Context, pkg *lang.Package) error {
 	}
 
 	if hk, ok := p.(PackagePreHook); ok {
-		err := hk.PrePackage(ctx, pkg)
-		if core.IsSkipError(err) {
-			return nil
-		} else {
+		if err := hk.PrePackage(ctx, pkg); err != nil {
+			if core.IsSkipError(err) {
+				return nil
+			}
 			return err
 		}
 	}
@@ -115,10 +115,10 @@ func ParseSourceFile(p interface{}, ctx context.Context, file *lang.SourceFile) 
 	}
 
 	if hk, ok := p.(SourceFilePreHook); ok {
-		err := hk.PreSourceFile(ctx, file)
-		if core.IsSkipError(err) {
-			return nil
-		} else {
+		if err := hk.PreSourceFile(ctx, file); err != nil {
+			if core.IsSkipError(err) {
+				return nil
+			}
 			return err
 		}
 	}

@@ -36,10 +36,10 @@ func CompilePackage(p interface{}, ctx context.Context, pkg *lang.Package) error
 	}
 
 	if hk, ok := p.(PackagePreHook); ok {
-		err := hk.PrePackage(ctx, pkg)
-		if core.IsSkipError(err) {
-			return nil
-		} else {
+		if err := hk.PrePackage(ctx, pkg); err != nil {
+			if core.IsSkipError(err) {
+				return nil
+			}
 			return err
 		}
 	}
@@ -80,10 +80,10 @@ func CompileSourceFile(p interface{}, ctx context.Context, file *lang.SourceFile
 	}
 
 	if hk, ok := p.(SourceFilePreHook); ok {
-		err := hk.PreSourceFile(ctx, file)
-		if core.IsSkipError(err) {
-			return nil
-		} else {
+		if err := hk.PreSourceFile(ctx, file); err != nil {
+			if core.IsSkipError(err) {
+				return nil
+			}
 			return err
 		}
 	}
@@ -103,19 +103,19 @@ func CompileSourceFile(p interface{}, ctx context.Context, file *lang.SourceFile
 		case *lang.Statement_Declaration:
 			switch decl := statement.GetDeclaration().Declaration.(type) {
 			case *lang.Declaration_StructDecl:
-				if err := CompileStruct(p, thisCtx, decl.StructDecl); err != nil {
+				if err := CompileStruct(p, thisCtx, decl.StructDecl); err != nil && !core.IsSkipError(err) {
 					return err
 				}
 			case *lang.Declaration_InterfaceDecl:
-				if err := CompileInterface(p, thisCtx, decl.InterfaceDecl); err != nil {
+				if err := CompileInterface(p, thisCtx, decl.InterfaceDecl); err != nil && !core.IsSkipError(err) {
 					return err
 				}
 			case *lang.Declaration_TypeAliasDecl:
-				if err := CompileTypeAlias(p, thisCtx, decl.TypeAliasDecl); err != nil {
+				if err := CompileTypeAlias(p, thisCtx, decl.TypeAliasDecl); err != nil && !core.IsSkipError(err) {
 					return err
 				}
 			case *lang.Declaration_EnumDecl:
-				if err := CompileEnum(p, thisCtx, decl.EnumDecl); err != nil {
+				if err := CompileEnum(p, thisCtx, decl.EnumDecl); err != nil && !core.IsSkipError(err) {
 					return err
 				}
 			}
@@ -134,10 +134,10 @@ func CompileInterface(p interface{}, ctx context.Context, decl *lang.InterfaceDe
 	}
 
 	if hk, ok := p.(InterfacePreHook); ok {
-		err := hk.PreInterface(ctx, decl)
-		if core.IsSkipError(err) {
-			return nil
-		} else {
+		if err := hk.PreInterface(ctx, decl); err != nil {
+			if core.IsSkipError(err) {
+				return nil
+			}
 			return err
 		}
 	}
@@ -195,10 +195,10 @@ func CompileTypeAlias(p interface{}, ctx context.Context, decl *lang.TypeAliasDe
 	}
 
 	if hk, ok := p.(TypeAliasPreHook); ok {
-		err := hk.PreTypeAlias(ctx, decl)
-		if core.IsSkipError(err) {
-			return nil
-		} else {
+		if err := hk.PreTypeAlias(ctx, decl); err != nil {
+			if core.IsSkipError(err) {
+				return nil
+			}
 			return err
 		}
 	}
@@ -225,10 +225,10 @@ func CompileEnum(p interface{}, ctx context.Context, decl *lang.EnumDecl) error 
 	}
 
 	if hk, ok := p.(EnumPreHook); ok {
-		err := hk.PreEnum(ctx, decl)
-		if core.IsSkipError(err) {
-			return nil
-		} else {
+		if err := hk.PreEnum(ctx, decl); err != nil {
+			if core.IsSkipError(err) {
+				return nil
+			}
 			return err
 		}
 	}

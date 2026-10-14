@@ -84,7 +84,7 @@ func (p *Map) ConvertTo(ctx context.Context, t *lang.NominalType) (string, strin
 
 	msgDescriptor.SetMapEntry(true)
 	message := context.MessageDescriptor(ctx)
-	if message != nil {
+	if message != nil && !message.IsMessageExist(msgDescriptor.GetName()) {
 		message.AppendMessage(msgDescriptor)
 	}
 

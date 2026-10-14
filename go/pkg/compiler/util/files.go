@@ -22,7 +22,7 @@ func DeepClearGeneratedFiles(path string, suffixes ...string) error {
 }
 
 func clearGeneratedFiles(path string, recursive bool, suffixes ...string) error {
-	return clearFiles(path, false, func(file string) bool {
+	return clearFiles(path, recursive, func(file string) bool {
 		matchedSuffix := false
 		for _, suffix := range suffixes {
 			if strings.HasSuffix(file, suffix) {
@@ -80,6 +80,9 @@ func clearFiles(path string, recursive bool, filter func(file string) bool) erro
 	var err error
 	if recursive {
 		err = filepath.Walk(path, func(path string, f os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
 			if f != nil && !f.IsDir() && filter(path) {
 				files = append(files, path)
 			}

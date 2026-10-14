@@ -38,6 +38,9 @@ func NewPlugins(plugins ...string) *Plugins {
 }
 
 func (p *Plugins) Next() *Plugins {
+	if p.cursor >= len(p.plugins) {
+		return nil
+	}
 	p.cursor++
 	if p.cursor == len(p.plugins) {
 		return nil

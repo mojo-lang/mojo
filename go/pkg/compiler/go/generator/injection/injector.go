@@ -49,48 +49,38 @@ func (i Injector) parseFile(fileName string, content []byte) (areas []Area, err 
 			continue
 		}
 
-		var importSpec *ast.ImportSpec
-		var typeSpec *ast.TypeSpec
 		for _, spec := range genDecl.Specs {
-			if ts, tsOK := spec.(*ast.TypeSpec); tsOK {
-				typeSpec = ts
-			} else if is, isOk := spec.(*ast.ImportSpec); isOk {
-				importSpec = is
+			if importSpec, ok := spec.(*ast.ImportSpec); ok && i.OnImport != nil {
+				i.OnImport(fileCtx, importSpec)
 			}
-		}
 
-		if importSpec != nil && i.OnImport != nil {
-			i.OnImport(fileCtx, importSpec)
-		}
+			typeSpec, ok := spec.(*ast.TypeSpec)
+			if !ok {
+				continue
+			}
+			structType, ok := typeSpec.Type.(*ast.StructType)
+			if !ok {
+				continue
+			}
+			structName := typeSpec.Name.Name
 
-		// skip if can't get type spec
-		if typeSpec == nil {
-			continue
-		}
+			structCtx := context.WithValue(context.WithValue(fileCtx, structTypeKey, structType), structNameKey, structName)
+			if i.PreStruct != nil {
+				i.PreStruct(structCtx, structType, structName)
+			}
 
-		// not a struct, skip
-		structType, ok := typeSpec.Type.(*ast.StructType)
-		if !ok {
-			continue
-		}
-		structName := typeSpec.Name.Name
-
-		structCtx := context.WithValue(context.WithValue(fileCtx, structTypeKey, structType), structNameKey, structName)
-		if i.PreStruct != nil {
-			i.PreStruct(structCtx, structType, structName)
-		}
-
-		if i.OnStructField != nil {
-			for _, field := range structType.Fields.List {
-				if len(field.Names) == 0 {
-					continue
+			if i.OnStructField != nil {
+				for _, field := range structType.Fields.List {
+					if len(field.Names) == 0 {
+						continue
+					}
+					i.OnStructField(structCtx, field, areasAppender)
 				}
-				i.OnStructField(structCtx, field, areasAppender)
 			}
-		}
 
-		if i.PostStruct != nil {
-			i.PostStruct(structCtx, areasAppender)
+			if i.PostStruct != nil {
+				i.PostStruct(structCtx, areasAppender)
+			}
 		}
 	}
 
