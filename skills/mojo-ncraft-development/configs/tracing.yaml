@@ -1,0 +1,5 @@
+tracing:
+  enable: false
+  # 当前组件使用 Jaeger UDP agent 地址，不是 OTLP/HTTP collector URL。
+  url: "127.0.0.1:6831"
+  param: 1                   # rate-limiting sampler：每秒采样上限

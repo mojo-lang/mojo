@@ -22,6 +22,14 @@ for primary keys, database initialization, and generated operations.
 
 For the complete workflow from project creation to implementing and running a
 Go kit service, see [NCraft 微服务开发指南](docs/ncraft.md).
+For AI agents developing services, use the reusable
+[Mojo / NCraft development skill](skills/mojo-ncraft-development/SKILL.md).
+Copy the whole `skills/mojo-ncraft-development/` directory into your agent's
+skills directory (for Codex, `${CODEX_HOME:-$HOME/.codex}/skills/`), then invoke
+`$mojo-ncraft-development`; its references cover regeneration, GORM, extension
+points, jsoniter, middleware, and configuration reuse. The skill includes
+reusable component YAML templates in `configs/` and `scripts/copy_configs.py`
+to copy selected templates without overwriting existing project configuration.
 For data structures and service interface definitions, see
 [Mojo 简明语法](docs/syntax.md).
 For literals, operators, member access, and calls, see

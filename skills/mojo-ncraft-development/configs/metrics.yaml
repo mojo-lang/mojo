@@ -1,0 +1,6 @@
+metrics:
+  # 按需启用生成 endpoint 的业务指标；此开关不会关闭 debug listener 的 /metrics。
+  enable: false
+  # 使用适合 Prometheus 指标名称的标识，例如字母、数字、下划线。
+  department: app
+  project: service

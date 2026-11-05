@@ -1,0 +1,6 @@
+# 同一进程沿用生成框架的监听器；多服务部署时调整端口避免冲突。
+server:
+  httpAddr: ":21101"
+  grpcAddr: ":21102"
+  # debug listener 提供 metrics / health / pprof；需要远程采集时按部署方式调整。
+  debugAddr: "127.0.0.1:21103"

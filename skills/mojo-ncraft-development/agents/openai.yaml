@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mojo / NCraft 微服务开发"
+  short_description: "按 Mojo 与 NCraft 规范创建、实现及演进 Go 微服务"
+  default_prompt: "使用 $mojo-ncraft-development 按当前项目版本实现微服务需求，检查接口再生成、数据库、jsoniter 序列化与配置规范。"

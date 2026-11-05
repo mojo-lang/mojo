@@ -1,0 +1,11 @@
+# 通用 PostgreSQL 模板；使用其他数据库时修改 driver 与对应的 DSN。
+# 启动前设置 DB_DSN，初始化服务时检查其非空；不要在模板中保存真实凭据。
+db:
+  driver: postgres
+  dsn: "${DB_DSN}"
+  debug: false
+  # 生产使用项目迁移流程；本地开发需要自动建表时可显式改为 false。
+  disableAutoMigrate: true
+  # 池参数需由初始化代码应用；当前生成 GetDB 只对 MySQL 自动应用这两项。
+  maxIdleConnections: 10
+  maxOpenConnections: 100

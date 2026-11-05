@@ -1,0 +1,14 @@
+# 使用 ncraft/redis 时注册所选实现，例如空导入 ncraft/redis/goredis。
+redis:
+  implementor: goredis
+  connections:
+    - "127.0.0.1:6379"
+  # 无密码的本地 Redis 可不设置；部署时通过环境注入。
+  password: "${REDIS_PASSWORD}"
+  dbNumber: 0
+  minIdleConnections: 10
+  maxActiveConnections: 100
+  # 以下字段是 Go time.Duration，JSON 扫描使用整数纳秒，不是毫秒或 "1s"。
+  readTimeout: 1000000000       # 1 秒
+  writeTimeout: 1000000000      # 1 秒
+  idleTimeout: 300000000000    # 5 分钟

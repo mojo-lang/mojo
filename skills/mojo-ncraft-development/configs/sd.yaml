@@ -1,0 +1,17 @@
+sd:
+  mode: direct
+  transport: grpc
+  # direct 模式无注册中心；当前生成 host 会跳过 URL 为空的服务注册。
+  # 生成客户端按 direct 表发现实例；切换 etcd/nacos 时填写真实 URL 及对应配置。
+  url: ""
+  retry:
+    # 只对可安全重试的调用启用；max 为总尝试次数，timeout 单位为毫秒。
+    enable: false
+    timeout: 1000
+    max: 3
+  direct: {}
+  # 调用下游服务时将上面的空对象替换为实际生成的 FullServiceName 映射，例如：
+  # direct:
+  #   sample.v1.Catalog:
+  #     urls: ["127.0.0.1:21102"]
+  # HTTP transport 改为 http，URL 使用 http(s)://...；gRPC 凭据由客户端 options 提供。

@@ -1,0 +1,18 @@
+# 组件名称和根节点均为 logs；部署平台收集标准输出时保留 console。
+logs:
+  level: info
+  encode: json
+  output: console
+  # 可通过环境设置，或直接改成项目自己的非敏感标识。
+  initFields:
+    package: "${SERVICE_PACKAGE}"
+    server: "${SERVICE_NAME}"
+    version: "${SERVICE_VERSION}"
+  # 仅配置 file 不会启用文件输出；需要时将 output 改为 file 或 "console,file"。
+  file:
+    path: "./logs/service.log"
+    encode: json
+    maxSize: 100              # MB
+    maxBackups: 10
+    maxAge: 28                # 天
+    compress: true

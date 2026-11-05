@@ -1,0 +1,8 @@
+jwt:
+  # 通用基线默认未启用 JWT；需要鉴权的项目必须开启、校验非空 key，并装配 JWT middleware。
+  enable: false
+  algorithm: HS256
+  key: "${JWT_KEY}"
+  expiredDuration: 24h        # Mojo Duration 字符串
+  ignoreTime: false
+  exceptions: []             # 按项目明确列出允许匿名访问的路径
