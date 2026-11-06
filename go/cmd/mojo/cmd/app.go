@@ -24,6 +24,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// version is set by scripts/build-release.sh through the Go linker.
+var version = "dev"
+
 type App struct {
 	cli.App
 
@@ -40,6 +43,8 @@ type App struct {
 func newApp() *App {
 	app := &App{
 		App: cli.App{
+			Name:                   "mojo",
+			Version:                version,
 			UseShortOptionHandling: true,
 		},
 	}

@@ -1,5 +1,16 @@
 # Mojo
 
+## Installing the CLI
+
+Download the archive for your OS and architecture from
+[GitHub Releases](https://github.com/mojo-lang/mojo/releases), verify it against
+`checksums.txt`, and place `mojo` (or `mojo.exe`) on your `PATH`.
+Releases include Linux, macOS, and Windows builds for amd64 and arm64.
+Run `mojo --version` to check the installed version.
+
+Pushing a `vMAJOR.MINOR.PATCH` tag automatically builds and publishes the CLI.
+See [the release guide](docs/releases.md) for local packaging and tag publishing.
+
 ## Project layout
 
 Package declarations are consolidated in `package.mojo`. Sources live in `mojo/`;

@@ -1,0 +1,67 @@
+name: Release Mojo CLI
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    env:
+      RELEASE_VERSION: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go/go.mod
+          cache-dependency-path: go/go.sum
+
+      - name: Test CLI and build commands
+        working-directory: go
+        run: go test -mod=readonly ./cmd/mojo/... ./pkg/compiler/cmd/...
+
+      - name: Build release archives
+        run: bash scripts/build-release.sh "$RELEASE_VERSION"
+
+      - name: Verify archives and smoke test Linux CLI
+        shell: bash
+        run: |
+          cd "dist/$RELEASE_VERSION"
+          sha256sum --check checksums.txt
+          mkdir -p "$RUNNER_TEMP/mojo-smoke"
+          tar -xzf "mojo_${RELEASE_VERSION}_linux_amd64.tar.gz" -C "$RUNNER_TEMP/mojo-smoke"
+          test "$("$RUNNER_TEMP/mojo-smoke/mojo" --version)" = "mojo version $RELEASE_VERSION"
+          "$RUNNER_TEMP/mojo-smoke/mojo" --help
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          # Keep a failed upload as a draft; reruns can finish the same release.
+          if ! gh release view "$RELEASE_VERSION" >/dev/null 2>&1; then
+            flags=()
+            if [[ ${RELEASE_VERSION%%+*} == *-* ]]; then
+              flags+=(--prerelease)
+            fi
+            gh release create "$RELEASE_VERSION" --verify-tag --draft \
+              --title "$RELEASE_VERSION" --generate-notes "${flags[@]}"
+          fi
+          gh release upload "$RELEASE_VERSION" "dist/$RELEASE_VERSION/"* --clobber
+          gh release edit "$RELEASE_VERSION" --draft=false
